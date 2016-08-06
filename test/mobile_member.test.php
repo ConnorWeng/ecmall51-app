@@ -19,17 +19,17 @@ function ajaxFunctionReturnJson($function, ...$params) {
 
 class Mobile_memberTest extends PHPUnit_Framework_TestCase {
 
-    private $mobileMemberApp;
+    private $mobile_member;
 
     function __construct() {
-        $this->mobileMemberApp = new Mobile_memberApp();
+        $this->mobile_member = new Mobile_memberApp();
     }
 
     function test_ajax_error_should_return_error_code_and_message() {
         $json = ajaxFunctionReturnJson(
-            function ($mobileMemberApp) {
-                $mobileMemberApp->ajax_error(400, 510001, 'error!');
-            }, $this->mobileMemberApp);
+            function ($mobile_member) {
+                $mobile_member->_ajax_error(400, 510001, 'error!');
+            }, $this->mobile_member);
         $error = json_decode($json);
         $this->assertEquals(true, $error->error);
         $this->assertEquals(510001, $error->code);
@@ -42,9 +42,9 @@ class Mobile_memberTest extends PHPUnit_Framework_TestCase {
         $member_stub = $this->getMockBuilder('MemberModel')->getMock();
         $member_stub->method('get')->willReturn(array('user_name' => 'fakeuser'));
         $json = ajaxFunctionReturnJson(
-            function ($mobileMemberApp, ...$params) {
-                $mobileMemberApp->_login('fakeuser', 'fakepassword', ...$params);
-            }, $this->mobileMemberApp, $user_stub, $member_stub);
+            function ($mobile_member, ...$params) {
+                $mobile_member->_login('fakeuser', 'fakepassword', ...$params);
+            }, $this->mobile_member, $user_stub, $member_stub);
         $user_info = json_decode($json);
         $this->assertEquals(1, $user_info->user_id);
         $this->assertEquals('fakeuser', $user_info->user_name);
@@ -54,9 +54,9 @@ class Mobile_memberTest extends PHPUnit_Framework_TestCase {
         $user_stub = $this->getMockBuilder('UcPassportUser')->getMock();
         $user_stub->method('auth')->willReturn(false);
         $json = ajaxFunctionReturnJson(
-            function ($mobileMemberApp, ...$params) {
-                $mobileMemberApp->_login('fakeuser', 'fakepassword', ...$params);
-            }, $this->mobileMemberApp, $user_stub, new MemberModel());
+            function ($mobile_member, ...$params) {
+                $mobile_member->_login('fakeuser', 'fakepassword', ...$params);
+            }, $this->mobile_member, $user_stub, new MemberModel());
         $this->assertEquals(510002, json_decode($json)->code);
     }
 }

@@ -17,14 +17,14 @@ class Mobile_memberApp extends FrontendApp {
             // FIXME: ensure security
             $this->_login($_POST['username'], $_POST['password'], $user_api, $mod_user);
         } else {
-            $this->ajax_error(400, 510001, 'not a post action');
+            $this->_ajax_error(400, 510001, 'not a post action');
         }
     }
 
     function _login($username, $password, $user_api, $mod_user) {
         $user_id = $user_api->auth($username, $password);
         if (!$user_id) {
-            $this->ajax_error(400, 510002, 'username or password not correct');
+            $this->_ajax_error(400, 510002, 'username or password not correct');
         } else {
             $user_info = $mod_user->get(array(
                 'conditions'    => "user_id = '{$user_id}'",
@@ -34,7 +34,7 @@ class Mobile_memberApp extends FrontendApp {
         }
     }
 
-    function ajax_error($http_code, $user_code, $message) {
+    function _ajax_error($http_code, $user_code, $message) {
         http_response_code($http_code);
         echo ecm_json_encode(array(
             'error' => true,
