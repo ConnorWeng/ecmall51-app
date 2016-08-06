@@ -1,0 +1,43 @@
+<div class="dataTables_wrapper">
+<div class="row">
+	<div class="col-xs-5">
+	 
+		<div class="dataTables_info">{sprintf lang=total_item var1=page_info.start_number var2=page_info.end_number var3=page_info.item_count}</div>
+	  
+	</div>
+	<div class="col-xs-7">
+		<div class="dataTables_paginate">
+			
+			<ul class="pagination">
+			    <li class="paginate_button previous {if !$page_info.prev_link}disabled{/if}">
+			    	<!--{if $page_info.prev_link}-->
+				    <a href="{$page_info.prev_link}">上页</a>
+				    <!--{else}-->
+				    <a href="javascript:;">上页</a>
+				    <!--{/if}-->
+			    </li>
+			    
+			    <!--{foreach from=$page_info.page_links key=page item=link}-->
+			    <li class="paginate_button {if $page_info.curr_page eq $page}active{/if}">
+				    <!--{if $page_info.curr_page eq $page}-->
+				    <a href="javascript:;">{$page}</a>
+				    <!--{else}-->
+				    <a href="{$link}">{$page}</a>
+				    <!--{/if}-->
+				</li>
+			    <!--{/foreach}-->
+			    
+			    <li class="paginate_button next {if !$page_info.next_link}disabled{/if}">
+			    	<!--{if $page_info.next_link}-->
+				    <a href="{$page_info.next_link}">下页</a>
+				    <!--{else}-->
+				    <a href="javascript:;">下页</a>
+				    <!--{/if}-->
+			    </li>
+			
+			</ul>
+			
+		</div>
+	</div>
+</div>
+</div>

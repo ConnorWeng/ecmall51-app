@@ -1,0 +1,261 @@
+{include file=member.header.html}
+<script src="{lib file=js/echarts.js}"></script>
+<script type="text/javascript">
+    require.config({
+        paths: {
+            echarts: '{lib file=js}'
+        }
+    });
+    require(
+    [
+        'echarts',
+        'echarts/chart/pie',
+        'echarts/chart/bar',
+        'echarts/chart/line',
+        'echarts/chart/map'
+    ],
+    function (ec) {
+        //--- 折柱 ---
+        var myChart = ec.init(document.getElementById('main'));
+        var labelRight = {normal: {label : {position: 'right'}}};
+        myChart.setOption({
+            title: {
+                text: '用户资金统计',
+                subtext: 'From 51zwd',
+                sublink: 'http://e.weibo.com/1341556070/AjwF2AgQm'
+            },
+            tooltip : {
+                trigger: 'axis',
+                axisPointer : {            // 坐标轴指示器，坐标轴触发有效
+                    type : 'shadow'        // 默认为直线，可选为：'line' | 'shadow'
+                }
+            },
+            toolbox: {
+                show : true,
+                feature : {
+                    mark : {show: true},
+                    dataView : {show: true, readOnly: false},
+                    magicType : {show: true, type: ['line', 'bar']},
+                    restore : {show: true},
+                    saveAsImage : {show: true}
+                }
+            },
+            grid: {
+                y: 80,
+                y2: 30
+            },
+            xAxis : [
+                {
+                    type : 'value',
+                    position: 'top',
+                    splitLine: {lineStyle:{type:'dashed'}},
+                }
+            ],
+            yAxis : [
+                {
+                    type : 'category',
+                    axisLine: {show: false},
+                    axisLabel: {show: false},
+                    axisTick: {show: false},
+                    splitLine: {show: false},
+                    data : [ '交易金额', '充值金额', '转入转出', '提现', '全额退款']
+                }
+            ],
+            series : [
+                {
+                    name:'金额',
+                    type:'bar',
+                    stack: '总量',
+                    itemStyle : { normal: {
+                            color: 'orange',
+                            borderRadius: 5,
+                            label : {
+                                show: true,
+                                position: 'left',
+                                formatter: '{b}'
+                            }
+                        }},
+//                      {value:{$one}, name:'交易金额'},
+//                            {value:{$two}, name:'充值金额'},
+//                            {value:{$three}, name:'转入转出'},
+//                            {value:{$four}, name:'提现'},
+//                            {value:{$five}, name:'全额退款'},
+                    data:[
+{$one},
+{$two},
+{$three},
+{$four},
+{$five}
+
+                    ]
+                }
+            ]
+        });
+    }
+);
+</script>
+<script language = "JavaScript">
+    function tousers()
+    {
+
+
+        if (document.to_users.to_user.value=="")
+        {
+            alert("{$lang.zhuanyideyonghubunengweikong}！");
+            document.to_users.to_user.focus();
+            return false;
+        }
+  
+        if (document.to_users.to_money.value=="")
+        {
+            alert("{$lang.tianxiezhuanyidejine}！");
+            document.to_users.to_money.focus();
+            return false;
+        }
+        /*提交按钮警告 */
+        if(confirm('{$lang.quedingyaozhuanchuma}？'))
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+
+
+        return true;  
+    }
+
+
+
+
+</script>
+<?php
+$shuzi1 = round(rand(1,8));
+$shuzi2 = round(rand(1,8));
+$shuzi3 = round(rand(1,8));
+
+$quzimu1= round(rand(65,72));
+$quzimu2= round(rand(65,72));
+$quzimu3= round(rand(65,72));
+
+$zimu1 = chr($quzimu1);
+$zimu2 = chr($quzimu2);
+$zimu3 = chr($quzimu3);
+?>
+<div class="content">
+    {include file=member.menu.html}
+    <div id="right">
+        <ul class="tab">
+            <li class="active">{$lang.wodezhanghu}</li>
+            <li class="normal"><a href="index.php?app=my_money&act=buyer">{$lang.mairuchaxun}</a></li>
+            <li class="normal"><a href="index.php?app=my_money&act=seller">{$lang.maichuchaxun}</a></li>
+            <!--				<li class="normal"><a href="index.php?app=my_money&act=intolog">{$lang.zhuanruchaxun}</a></li>
+                                            <li class="normal"><a href="index.php?app=my_money&act=outlog">{$lang.zhuanchuchaxun}</a></li>-->
+            <li class="normal"><a href="index.php?app=my_money&act=flow">{$lang.flow}</li>
+        </ul>
+
+        <div class="wrap margin1">
+            <div class="public table">
+                <div class="information_index" style="overflow:hidden; margin: 0px 0 -15px;">
+                    <div class="info">
+                        <h3 class="margin2">
+                            <span>{$lang.hello}！{$visitor.user_name}</span>
+                        </h3>
+                        <table class="width6">
+                            <tr>
+                                <td><span style="font-size:14px">
+                                        <!--{foreach from=$my_money item=val key=key}-->
+                                        {$lang.zhanghuzongjinere}<span style="font-size:16px;font-weight:bold; color:#FE5400;">{$val.money}</span>
+                                        &nbsp;{$lang.yuan}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{$lang.dongjiejine}<span style="color:blue;">{$val.money_dj}</span>&nbsp;{$lang.yuan}
+                                        <!--&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{$lang.jifen}<span style="color:blue;">{$val.jifen}</span>-->
+
+                                    </span>
+                                    <!--{/foreach}-->
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>{$lang.shangcidengluip}: {$visitor.last_ip}<br>
+                                    {$lang.shangcidenglushijian}:{$visitor.last_login|date:complete}<br> 
+
+                                    &nbsp;<A 
+                                        href="index.php?app=my_money&act=paylist">{$lang.lijichongzhi}</A>&nbsp;|&nbsp;<A 
+                                        class=G href="index.php?app=my_money&act=txlist"><span style="color:green;">{$lang.tixian}</span></A>  
+                                </td> 
+
+                            </tr>
+                                <!--{foreach from=$my_money item=val key=key}-->
+                                <!--{if $isbehalf==1}-->
+                             <tr>
+                                <td><span style="color:redx;">应该冻结金额: {$shoud.shouddj}</span>
+                                    &nbsp;|&nbsp;
+                                    <span style="color:red;">实际冻结金额: {$shoud.sjdj}</span>
+                                     &nbsp;|&nbsp;
+                                    <span style="color:red;">已额外解冻金额:{$shoud.exdj}</span>
+                                    &nbsp;|&nbsp;
+                                    <span style="color:red;">不可额外授权~20%冻结金额: {$shoud.twdj}</span>
+                                     &nbsp;|&nbsp;
+                                    <span style="color:red;">还可以额外提现金额: {$cantx}</span>
+                                </td> 
+
+                            </tr>
+                            <!--{/if}-->
+                                <!--{/foreach}-->
+                        </table>
+                    </div>
+
+                </div>			
+            </div>
+        </div>
+        <div id="main" style="height:500px;border:1px solid #ccc;padding:10px;"></div>	
+        <br>
+        日志稽核总额为  : {$six};
+        </br>
+        <div class="wrap"  style ="display: none">
+            <div class="public table">
+                <h3 class="title" style="margin: -10px 0 20px; color:#3E3E3E">{$lang.yuezhuanzhang}</h3>
+                <div style="color:#646665;float:left;font-size:12px;font-weight:normal;line-height:30px;">
+                    <!--{foreach from=$my_money item=val key=key}-->
+                    <form name="to_users" onSubmit="return tousers();" action="index.php?app=my_money&act=to_user" method="post">
+                        <span>{$lang.mubiaoyonghu}：</span>
+                        <input name="to_user" type="text" id="to_user" size="10">
+                        {$lang.zhuanchujine}：<input name="to_money" type="text" id="to_money" size="6">
+                        &nbsp;{$lang.yuan}
+                        &nbsp; &nbsp;
+                        <BR>
+                        <!--{if $val.mibao_id}-->
+                        <span>{$lang.dongtaimima}：</span>
+                        <b><font color="red">
+                            <?php echo $shuzi1.$zimu1;?><input type="text" id="user_shuzi1" name="user_shuzi1"  size="3" maxlength="3"/>    
+                            <?php echo $shuzi2.$zimu2;?><input type="text" id="user_shuzi2" name="user_shuzi2"  size="3" maxlength="3"/>    
+                            <?php echo $shuzi3.$zimu3;?><input type="text" id="user_shuzi3" name="user_shuzi3"  size="3" maxlength="3"/>
+                            </font></b><BR><font color="red">{$lang.qingtianxiedongtaimimaduiyingdeshuzi}</font>
+                        <input name="user_zimuz1" id="user_zimuz1" type="hidden" value="<?php echo $zimu1.$shuzi1;?>" />
+                        <input name="user_zimuz2" id="user_zimuz2" type="hidden" value="<?php echo $zimu2.$shuzi2;?>" />
+                        <input name="user_zimuz3" id="user_zimuz3" type="hidden" value="<?php echo $zimu3.$shuzi3;?>" />
+                        <!--{else}-->
+                        <span>{$lang.zhifumima}：</span>
+                        <input name="zf_pass" type="password" id="zf_pass"  size="16" maxlength="16"/>
+                        <BR>
+                        <font color="red">{$lang.zhuanzhangqianqingshuruzhifumima}</font>&nbsp;&nbsp;&nbsp;&nbsp;<a href="index.php?app=my_money&act=find_password" style="color:#0000FF;" target="_blank">{$lang.wangjizhifumima}</a>
+                        <!--{/if}-->
+                        <BR><BR>
+
+
+                        <span><input type="submit" class="money_btn" value="{$lang.querenzhuanchu}" /></span>
+                    </form>	
+                    <!--{/foreach}-->
+                </div>
+            </div>
+        </div>
+
+
+        <div class="clear"></div>
+        <div class="adorn_right1"></div>
+        <div class="adorn_right2"></div>
+        <div class="adorn_right3"></div>
+        <div class="adorn_right4"></div>
+    </div>
+
+    <div class="clear"></div>
+    {include file=footer.html}

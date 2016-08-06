@@ -1,0 +1,66 @@
+{include file=member.header.html}
+<div class="content">
+    {include file=member.menu.html}
+    <div id="right">
+          <ul class="tab">
+				<li class="active">礼品兑换</li>
+				<li class="normal"><a href="index.php?app=my_money&act=duihuan_jilu">兑换记录</a></li>
+          </ul>
+          
+        <div class="wrap margin1">
+            <div class="public table">
+				<div class="information_index" style="overflow:hidden; margin: 0px 0 -15px;">
+公告：等待您编辑公告呢。。。		
+                </div>
+             </div>
+        </div>
+
+<!--开始-->
+           
+          
+<!--{foreach from=$index item=val key=key}-->
+<!--{if $smarty.foreach.v.last}--><div class="wrap"><!--{else}--> <div class="wrap margin1"><!--{/if}-->          
+<table width="700" border="1">
+  <tr>
+    <td width="160" rowspan="4"><!--{if $val.wupin_img}--><img src="{$val.wupin_img}" width="160" height="160" /><!--{else}--><img src="data/system/default_goods_image.gif" width="160" height="160" /><!--{/if}--></td>
+    <td width="418">名称：{$val.wupin_name}</td>
+    <td width="100">可兑换数：{$val.shuliang}</td>
+  </tr>
+  <tr>
+    <td><font color="#FF0000">兑换积分：{$val.jifen}</font>&nbsp;&nbsp;（价值：{$val.jiazhi}元）</td>
+    <td>已兑换数：{$val.yiduihuan}</td>
+  </tr>
+  <tr>
+    <td valign="top">说明：</td>
+    <td valign="top"><a href="index.php?app=my_money&amp;act=jifen_post&id={$val.id}">我要兑换&gt;&gt;</a></td>
+  </tr>
+  <tr>
+    <td valign="top">{$val.log_text}</td>
+    <td valign="top">&nbsp;</td>
+  </tr>
+</table>
+        		
+           </div><!--{/foreach}-->  		
+<!--结束-->
+<!--开始-->
+
+           	
+<!--{if $index}-->
+<!--{if $smarty.foreach.v.last}--><div class="wrap"><!--{else}--> <div class="wrap margin1"><!--{/if}-->  
+{include file=member.page.bottom.html}
+</div>
+<!--{/if}-->
+
+<!--结束-->	
+        <div class="clear"></div>
+        <div class="adorn_right1"></div>
+        <div class="adorn_right2"></div>
+        <div class="adorn_right3"></div>
+        <div class="adorn_right4"></div>
+    </div>
+    <div class="clear"></div>
+</div>
+<div class="clear"></div>
+<iframe id='iframe_post' name="iframe_post" frameborder="0" width="0" height="0">
+</iframe>
+{include file=footer.html}

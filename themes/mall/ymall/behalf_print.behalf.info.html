@@ -1,0 +1,65 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<base href="{$site_url}/" />
+<!-- Use IE7 mode -->
+<!-- <meta http-equiv="X-UA-Compatible" content="IE=EmulateIE7 charset=$charset" /> -->
+<meta http-equiv="Content-Type" content="text/html; charset={$charset}" />
+{$page_seo}
+
+<meta name="author" content="51zwd.com" />
+<meta name="copyright" content="51zwd.com. All Rights Reserved" />
+<link href="{res file=css/global.css}" rel="stylesheet" type="text/css" />
+<link href="{lib file=easyui/themes/bootstrap/easyui.css}" rel="stylesheet" type="text/css" />
+<link href="{lib file=easyui/themes/icon.css}" rel="stylesheet" type="text/css" />
+<link href="{res file=css/print.css}" rel="stylesheet" type="text/css" />
+<script type="text/javascript" src="{lib file=easyui/jquery.min.js}" charset="utf-8"></script>
+<script type="text/javascript" src="{lib file=easyui/jquery.easyui.min.js}" charset="utf-8"></script>
+<script type="text/javascript" src="{lib file=easyui/locale/easyui-lang-zh_CN.js}" charset="utf-8"></script>
+<script type="text/javascript">
+var SITE_URL = "{$site_url}";
+var REAL_SITE_URL = "{$real_site_url}";
+var PRICE_FORMAT = '{$price_format}';
+</script>
+</head>
+<body class="easyui-layout" style="padding:30px;">
+	<div class="easyui-panel" title="发件人信息" style="width:500px;">
+		<div style="padding:10px 60px 20px 60px">
+			<form id="behalf_form" method="post">
+				<table cellpadding="5">
+					<tr>
+						<td>发件人：</td>
+						<td><input class="easyui-textbox" type="text" value="{$behalf.owner_name}" data-options="required:true"></input></td>
+					</tr>
+					<tr>
+						<td>单位名称：</td>
+						<td><input class="easyui-textbox" type="text" value="{$behalf.bh_name}" data-options="required:true"></input></td>
+					</tr>
+					<tr>
+						<td>发件省市区：</td>
+						<td><input class="easyui-textbox" type="text" value="{$behalf.region_name}" data-options="required:true" style="width:240px"></input></td>
+					</tr>
+					<tr>
+						<td>详细地址：</td>
+						<td><input class="easyui-textbox" type="text" value="{$behalf.bh_address}" data-options="required:true" style="width:240px"></input></td>
+					</tr>
+					<tr>
+						<td>电话：</td>
+						<td><input class="easyui-textbox" type="text" value="{$behalf.bh_tel}" data-options="required:true"></input></td>
+					</tr>
+					<tr>
+						<td>邮编：</td>
+						<td><input class="easyui-textbox" type="text" value="{$behalf.zipcode}" data-options="required:true"></input></td>
+					</tr>
+				
+				
+				</table>
+			
+			
+			
+			</form>	
+	</div>
+   </div>
+
+</body>
+</html>

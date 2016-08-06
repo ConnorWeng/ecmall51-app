@@ -1,0 +1,40 @@
+{include file="header.html"}
+{include file="header.nav.html"}
+
+<div id="main">
+   <div class="nav">
+      <ul>
+         <li class="current"><a hidefocus="true" href="index.php">{$lang.index}</a><b class="rc-lt"></b><b class="rc-rt"></b></li>
+         <!--{foreach from=$navs.middle item=nav}-->
+         <li><a hidefocus="true" href="{$nav.link}"{if $nav.open_new} target="_blank"{/if}>{$nav.title|escape}</a></li>
+         <!--{/foreach}-->
+      </ul>
+   </div>
+   <div class="hd">
+      <div class="widget_service" area="service" widget_type="area">
+         <!--{widgets page=index area=service}-->
+      </div>
+      <div class="center" area="center" widget_type="area">
+         <!--{widgets page=index area=center}-->
+      </div>
+      <div class="expressway" area="expressway" widget_type="area">
+         <!--{widgets page=index area=expressway}-->
+      </div>
+      <div class="clr"></div>
+   </div>
+   <div class="hd">
+      <div class="main-cate" area="catalog" widget_type="area">
+      <!--{widgets page=index area=catalog}-->
+      </div>
+      <div class="right" area="mainright" widget_type="area">
+         <!--{widgets page=index area=mainright}-->
+      </div>
+      <div class="clr"></div>
+   </div>
+   <div class="main-goodslist" area="goodslist" widget_type="area">
+      <!--{widgets page=index area=goodslist}-->
+   </div>
+</div>
+{include file="service.html"}
+{include file="footer.html"}
+

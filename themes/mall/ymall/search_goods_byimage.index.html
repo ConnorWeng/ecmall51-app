@@ -1,0 +1,37 @@
+{include file=header.html}
+<div class="h10"></div>
+<div class="w overflowHidden">
+	
+          	
+             			
+
+
+</div>
+<script type="text/javascript">
+$(function(){
+	jQuery.get("index.php?app=search_goods_byimage&act=search&img={$smarty.get.img|escape:url}",function(data){
+		$('body').html(data);
+	},'html');
+});
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

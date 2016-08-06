@@ -1,0 +1,138 @@
+        <div class="user">
+            <div class="user_photo">
+                <h2>{$store.store_name|escape}</h2>
+                <div class="photo"><a href="{url app=store&id=$store.store_id}"><img src="{$store.store_logo}" width="100" height="100" /></a></div>
+                <!-- <p><a href="javascript:collect_store({$store.store_id})">{$lang.collect_the_store}</a></p> -->
+            </div>
+
+            <div class="user_data">
+                <p>{$lang.dangkou_address}: {$store.mk_name}-{$store.dangkou_address}</p>
+                <p>
+                    <span>{$lang.store_owner}: </span>{$store.store_owner.user_name|escape}
+                    <a target="_blank" href="{url app=message&act=send&to_id=$store.store_owner.user_id|escape}"><img src="{res file=images/web_mail.gif}" alt="{$lang.send_pm}" /></a>
+                </p>
+                <p>
+                    <span>{$lang.credit_value}: </span><span class="fontColor1">{$store.credit_value}</span>
+                    <!--{if $store.credit_value ge 0}--><img src="{$store.credit_image}" alt="" /><!--{/if}-->
+                </p>
+                <!--{if $OEM neq 'nc'}-->
+                <p>{$lang.store_grade}: {$store.sgrade}</p>
+                <!--{/if}-->
+                <p>{$lang.store_add_time}: {$store.add_time|date}</p>
+                <!--{if $store.certifications}-->
+                <p>
+                    <span>{$lang.certification}: </span>
+                    <span>
+                        <!--{foreach from=$store.certifications item=cert}-->
+                        <!--{if $cert eq "autonym"}-->
+                        <a href="{url app=article&act=system&code=cert_autonym}" target="_blank" title="{$lang.cert_autonym}"><img src="{res file=images/cert_autonym.gif}" /></a>
+                        <!--{elseif $cert eq "material"}-->
+                        <a href="{url app=article&act=system&code=cert_material}" target="_blank" title="{$lang.cert_material}"><img src="{res file=images/cert_material.gif}" /></a>
+                        <!--{/if}-->
+                        <!--{/foreach}-->
+                    </span>
+                </p>
+                <!-- {/if} -->
+                
+                <!--{if $OEM neq 'nc'}-->
+                <p>{$lang.youhui}: {$store.see_price}</p>
+                <!--{/if}-->
+                                
+                <!--{if $store.tel}-->
+                <p>{$lang.tel}: {$store.tel|escape}</p>
+                <!--{/if}-->
+                <p>
+                    <!--{if $store.im_qq}-->
+                    <a href="http://wpa.qq.com/msgrd?V=1&amp;Uin={$store.im_qq|escape}&amp;Site={$store.store_name|escape}&amp;Menu=yes" target="_blank"><img src="http://wpa.qq.com/pa?p=1:{$store.im_qq|escape}:4" alt="QQ"></a>
+                    <!--{/if}-->
+                    <!--{if $store.im_ww}-->
+                    <a target="_blank" href="http://amos.im.alisoft.com/msg.aw?v=2&uid={$store.im_ww|escape:url}&site=cntaobao&s=2&charset={$charset}" ><img border="0" src="http://amos.im.alisoft.com/online.aw?v=2&uid={$store.im_ww|escape:url}&site=cntaobao&s=2&charset={$charset}" alt="Wang Wang" /></a>
+                    <!--{/if}-->
+                    
+                </p>
+                <p>{$lang.special_service}:                
+				   <!--{if $store.serv_sendgoods }-->
+				   <i class="icon_send" title="{$lang.service_send}"><a href="javascript:;" title="{$lang.service_send}" class="block"></a></i><!--{/if}-->
+				   <!--{if $store.serv_refund }-->
+				   <i class="icon_cash" title="{$lang.service_cash}"><a href="javascript:;" title="{$lang.service_cash}" class="block"></a></i><!--{/if}-->
+				   <!--{if $store.serv_exchgoods }-->
+				   <i class="icon_change" title="{$lang.service_pattern}"><a href="javascript:;" title="{$lang.service_pattern}" class="block"></a></i><!--{/if}--></span>
+                </p>
+                 <p class="collect_btn">
+                <!--{if $store.shop_http }--><a href="{$store.shop_http}" target="_blank">{$lang.taobao_shop}</a><!--{/if}-->
+                <a href="javascript:collect_store({$store.store_id})"><i class="star5"></i> {$lang.collect_shop}</a>
+                </p>
+            </div>
+
+            <div class="clear"></div>
+        </div>
+
+        <div class="module_common">
+            <h2 class="common_title veins1">
+                <div class="ornament1"></div>
+                <div class="ornament2"></div>
+                <span class="ico1"><span class="ico2">{$lang.search_in_store}</span></span>
+            </h2>
+            <div class="wrap">
+                <div class="wrap_child">
+                    <div class="web_search">
+                        <form id="" name="" method="get" action="index.php">
+                            <input type="hidden" name="app" value="store" />
+                            <input type="hidden" name="act" value="search" />
+                            <input type="hidden" name="id" value="{$store.store_id}" />
+                            <input class="text width4" type="text" name="keyword" style="vertical-align:middle;"/>
+                            <input class="btn" type="submit" value="搜索" style="vertical-align:middle;"/>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+       <!-- recommended  -->
+		<div class="goods-recommended-left">
+		   <h2>
+		     <span>{$lang.goods_recommend}</span>
+		   </h2>
+		   <ul>
+		     <!--{foreach from=$rgoods_list item=rgoods name=fe_rgoods}-->
+		       <li>
+		         <div class="pic"><a href="{url app=goods&id=$rgoods.goods_id}" title="{$rgoods.goods_name|escape}" target="_blank"><img src="data/system/empty.gif" class="lazyload" data-ks-lazyload="{$rgoods.default_image}"></a></div>
+		         <div class="title"><a href="{url app=goods&id=$rgoods.goods_id}" title="{$rgoods.goods_name|escape|truncate:120}" target="_blank">{$rgoods.goods_name|escape|truncate:120}</a></div>
+		         <div class="name">
+		        	 <a href="{url app=store&id=$rgoods.store_id}" target="_blank">{$rgoods.store_name}</a>&nbsp;&nbsp;
+		         	 <a href="{url app=store&id=$rgoods.store_id}" target="_blank">{$rgoods.mk_name|escape}&nbsp;{$rgoods.dangkou_address|escape}</a>
+                    <!--{if $rgoods.im_ww}-->
+                    		<a title="与{$rgoods.store_name}店主交谈" href="http://amos.im.alisoft.com/msg.aw?v=2&uid={$rgoods.im_ww|escape:url}&site=cntaobao&s=2&charset={$charset}" target="_blank"><img border="0" src="http://amos.im.alisoft.com/online.aw?v=2&uid={$rgoods.im_ww|escape:url}&site=cntaobao&s=2&charset={$charset}" alt="与{$rgoods.store_name}店主交谈" align="absmiddle"/></a>
+                    <!--{/if}-->
+		         </div>
+		         <div class="price">
+		         <span class="left">{$rgoods.price|price}</span>
+		           <span class="right">
+                		<a class="icon-tb mr2" href="{url app=item_upload&dest=Taobao&goods_id=$goods.goods_id}" target="_blank" title="上传淘宝">淘宝</a>
+                		<a class="icon-al mr2" href="{url app=item_upload&dest=Alibaba&goods_id=$goods.goods_id}" target="_blank" title="上传阿里">阿里</a>
+                		<a class="icon-pp" href="{url app=item_upload&dest=Paipai&goods_id=$goods.goods_id}" target="_blank" title="上传拍拍">拍拍</a>
+                	</span>
+		         </div>
+		       </li>
+		     <!--{/foreach}-->
+		   </ul>		
+		</div>
+
+        <!--{if $smarty.get.app eq "goods"}-->
+        <div class="module_common">
+            <h2 class="common_title veins1">
+                <div class="ornament1"></div>
+                <div class="ornament2"></div>
+                <span class="ico1"><span class="ico2">{$lang.goods_history}</span></span>
+            </h2>
+            <div class="wrap">
+                <div class="wrap_child">
+                    <ul class="annals">
+                        <!--{foreach from=$goods_history item=gh_goods}-->
+                        <li><a href="{url app=goods&id=$gh_goods.goods_id}"><img src="{$gh_goods.default_image}" width="50" height="50" alt="{$gh_goods.goods_name|truncate:20|escape}" title="{$gh_goods.goods_name|escape}" /></a></li>
+                        <!--{/foreach}-->
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <!--{/if}-->

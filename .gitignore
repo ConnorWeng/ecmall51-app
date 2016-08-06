@@ -1,0 +1,6 @@
+.svn
+.project
+.buildpath
+.settings
+temp/
+config.inc.php

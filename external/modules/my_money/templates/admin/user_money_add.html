@@ -1,0 +1,97 @@
+{include file="header.html"}
+
+<style> 
+.ovrit 
+{ 
+background: #FFCC33; 
+} 
+.cross 
+{ 
+background: #FF0000; 
+} 
+
+.titl 
+{ 
+background: #f0f0f0; 
+} 
+</style>
+<div id="rightTop">
+    <p>{$lang.index_yonghuzijinguanli}</p>
+    <ul class="subnav">
+		<li><a class="btn3" href="index.php?module=my_money&act=user_money_list">{$lang.index_zijinliebiao}</a></li>
+		<li><span>{$lang.index_zengjiayonghuzijin}</span></li>
+		<li><a class="btn3" href="index.php?module=my_money&act=user_money_log">资金水流</a></li>
+                 <li><a class="btn3" href="index.php?module=my_money&act=user_money_statistics">资金统计</a></li>
+                <li><a class="btn3" href="index.php?module=my_money&act=user_money_alicheck">阿里充值稽核</a></li>
+		<li><a class="btn3" href="index.php?module=my_money&act=index">{$lang.index_fanhuidaohang}</a></li>
+    </ul>
+</div>
+
+<div class="info">
+
+            <table class="infoTable">
+    <form method="post">
+            <tr>
+                <th class="paddingT15">{$lang.money_add_yonghuming}</th>
+                <td class="paddingT15 wordSpacing5">
+				<input name="user_name" type="text" value="<!--{foreach from=$index item=val}-->{$val.user_name}<!--{/foreach}-->" size="20">
+				</td>
+            </tr>
+            <tr>
+                <th class="paddingT15">{$lang.money_add_caozuojine}</th>
+              <td class="paddingT15 wordSpacing5">
+				<input name="post_money" type="text" id="post_money" value="" size="10">
+				{$lang.money_add_yuan}
+				</td>
+            </tr>
+            <tr>
+                <th class="paddingT15">{$lang.money_add_caozuoleixing}</th>
+           <td class="paddingT15 wordSpacing5">{$lang.money_add_zengjia}<input name="jia_or_jian" type="radio" value="jia" checked="CHECKED" />
+		   {$lang.money_add_jianshao}<input type="radio" name="jia_or_jian" value="jian" />
+                     *手动解冻>> <input type="radio" name="jia_or_jian" value="jiedong" />
+                      *手动冻结>> <input type="radio" name="jia_or_jian" value="dongjie" />
+		   <font color="#FF0000">----------{$lang.money_add_zhuyixuanze}</font>
+			  </td>
+            </tr>
+<!--{foreach from=$index item=val}-->
+            <tr>
+                <th class="paddingT15">{$lang.money_add_keyongyue}</th>
+                <td class="paddingT15 wordSpacing5">
+				<font color="#FF0000">{$val.money}</font>
+				</td>
+            </tr>
+            <tr>
+                <th class="paddingT15">{$lang.money_add_dongjiejine}</th>
+                <td class="paddingT15 wordSpacing5">{$val.money_dj}
+				</td>
+            </tr>
+<!--{/foreach}-->
+			<tr>
+                <th class="paddingT15">{$lang.money_add_jiluliushui}</th>		
+                <td class="paddingT15 wordSpacing5">
+				
+
+
+<input name="log_text" type="text" id="log_text" value="{$visitor.user_name}{$lang.money_add_guanliyuanshougongcaozuoyonghuzijin}" size="60">
+
+
+
+<div id="time_from2">
+
+</div>
+</td>
+            </tr>
+	
+            <tr>
+            <th></th>
+            <td class="ptb20">
+                <input class="formbtn" type="submit" name="Submit" value="{$lang.submit}" />
+                <input class="formbtn" type="reset" name="Submit2" value="{$lang.reset}" />
+            </td>
+            </tr>
+    </form>
+
+
+      </table>	
+</div>
+{include file="footer.html"}

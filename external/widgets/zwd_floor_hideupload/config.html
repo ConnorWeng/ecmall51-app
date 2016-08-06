@@ -1,0 +1,61 @@
+<script type="text/javascript">
+var _d = DialogManager.get('config_dialog');
+_d.setWidth(400);
+_d.setPosition('center');
+
+
+$("select[name='img_recom_id']").change(function(){
+    switchRecommend(this.value, 'img_cate_id');
+});
+$("select[name='img_recom_id1']").change(function(){
+    switchRecommend(this.value, 'img_cate_id1');
+});
+
+switchRecommend($("select[name='img_recom_id']").val(), 'img_cate_id');
+switchRecommend($("select[name='img_recom_id1']").val(), 'img_cate_id1');
+
+function switchRecommend(recomId, selectName)
+{
+    if (recomId >= 0)
+    {
+        $("select[name='" + selectName + "']").hide();
+    }
+    else
+    {
+        $("select[name='" + selectName + "']").show();
+    }
+}
+
+</script>
+
+<div class="field_item">
+    <label>楼层号码</label>
+    <p><input type="text" name="floor_num" value="{$options.floor_num}"/>(如：1F)</p>
+</div>
+<div class="field_item">
+    <label>模块标题</label>
+    <p><input type="text" name="model_name" value="{$options.model_name}"/></p>
+</div>
+
+
+<div class="field_item">
+    <label>热门关键字（顶部右侧）:(<span>多个关键字之间用空格隔开</span>)</label>
+    <p><textarea name="keyword_list" style="width:300px;height:55px;">{$options.keyword_list}</textarea></p>
+</div>
+
+<div class="field_item">
+    <label>商品推荐类型:</label>
+    <p><select name="img_recom_id">
+        <option value="0">请选择...</option>
+        <!-- {foreach from=$recommends key=recom_id item=recom_name} -->
+        <option value="{$recom_id}"{if $options.img_recom_id eq $recom_id} selected="selected"{/if}>{$recom_name|escape}</option>
+        <!-- {/foreach} -->
+    </select>
+    <select name="img_cate_id">
+        <option value="0">请选择分类...</option>
+        <!-- {html_options options=$gcategories selected=$options.img_cate_id} -->
+    </select>
+	</p>
+</div>
+
+

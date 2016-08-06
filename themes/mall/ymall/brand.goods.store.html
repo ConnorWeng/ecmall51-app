@@ -1,0 +1,282 @@
+{include file=header.html}
+<script type="text/javascript" src="{lib file=search_store.js}" charset="utf-8"></script>
+<script type="text/javascript">
+//<!CDATA[  
+ 
+$(function (){
+    var order = '{$smarty.get.order}';
+	var css = '';
+	
+	<!--{if $smarty.get.order}-->
+	order_arr = order.split(' ');
+	switch (order_arr[1]){
+		case 'desc' : 
+			css = 'order-down btn-order-cur';
+		break;
+		case 'asc' :
+			css = 'order-up btn-order-cur';
+		break;
+		default : 
+			css = 'order-down-gray';
+	}
+	$('.btn-order a[ectype='+order_arr[0]+']').attr('class','btn-order-click '+css);
+	<!--{/if}-->
+	
+	$(".btn-order a").click(function(){
+		if(this.id==''){
+			dropParam('order');// default order
+			return false;
+		}
+		else
+		{
+			dd = " desc";
+			if(order != '') {
+				order_arr = order.split(' ');
+				if(order_arr[0]==this.id && order_arr[1]=="desc")
+					dd = " asc";
+				else dd = " desc";
+			}
+			replaceParam('order', this.id+dd);
+			return false;
+		}
+	});
+	
+	$('.list-fields li .row_3 a').click(function(){
+		var cl=$(this).attr('class');
+		if(cl=='expand'){
+			$(this).attr('class','fold');	
+			$(this).html('{$lang.pull_goods}');
+		}else{
+			$(this).attr('class','expand');	
+			$(this).html('{$lang.expand_goods}');
+		}
+		$(this).parent().parent().parent('.store-info').next('.store-goods').toggle();
+	});
+	
+	$('.search-by .show-more').click(function(){
+		$(this).parent().children().find('.toggle').toggle();
+		if($(this).find('span').html()=='{$lang.expand}'){
+			$(this).find('span').html('{$lang.fold}');
+			$(this).children().children('i').css('background-position','0 -1488px');
+		} else {
+			$(this).find('span').html('{$lang.expand}');
+			$(this).children().children('i').css('background-position','0 -1497px');
+		}
+	});
+
+	$('.by-cate-wrapper').mouseover(function(){
+	    $(this).children('.by-cate-cont').show();
+	});
+	$('.by-cate-wrapper').mouseout(function(){
+	     $(this).children('.by-cate-cont').hide();
+	});	
+
+});
+
+//]]>
+</script>
+<div class="w mt10 mb10" area="top" widget_type="area">
+		<!--{widgets page=behalf_goods area=top}-->
+</div>
+<div id="main" class="w-full">
+<div id="page-search-store" class="w mt10 mb10">  
+	{include file=curlocal.html}
+    <div class="w mb10 border">
+	     
+	    <div class="search-by by-category relative clearfix">
+		   <dl style="overflow:visible;">
+		     <dt class="float-left"><a id="" href="javascript:;" style="color:#000;">{$lang.by_search_category}</a></dt>
+			 <dd class="float-left">			  
+			     <a class="by-cate-title-a {if !$smarty.get.cate_id }u_choice_select{/if}" ectype="cate" href="javascript:;" id="">{$lang.search_all}</a>			   		 
+				<!--{foreach from=$scategorys item=scategory name=fe_scategory}-->               
+				     <a class="by-cate-title-a {if $smarty.get.cate_id eq $scategory.id }u_choice_select{/if}" ectype="cate" href="javascript:;" id="{$scategory.id}">{$scategory.value|escape}</a>            
+				<!--{/foreach}-->
+			</dd>
+			<div class="clear"></div>
+		   </dl>
+		</div>
+        
+        <?php if( OEM != 'nc' ){  ?>
+        <!--{if $markets}-->
+		<div id="search-by-market" class="search-by by-market relative clearfix">
+		   <dl style="border:0;">
+		     <dt class="float-left"><a id="" href="javascript:;" style="color:#000;">{$lang.by_market}</a></dt>
+			 <dd class="float-left">	
+			    <a href="javascript:void(0);" class="{if !$smarty.get.mkid}u_choice_select{/if}" title="{$lang.all}" ectype="market" id="">{$lang.all}</a>		    
+			 	<!--{foreach from=$markets item=market name=fe_market}-->		 
+			      <a href="javascript:void(0);" class="{if $smarty.get.mkid eq $market.mk_id }u_choice_select{/if}" title="{$market.mk_name|escape}" ectype="market" id="{$market.mk_id}">{$market.mk_name|escape}</a>
+				<!--{/foreach}-->			  
+			</dd>
+		   </dl>
+		</div>
+       <!--{/if}-->
+      <?php }  ?>
+      
+    </div>
+
+     
+    <div class="shops-list w clearfix">
+        
+          
+			<div class="search-type clearfix" style="display:block;">
+				<div class="float-left btn-type">
+					<a href="{url app=brand_goods&act=index}" style="background:#f5f5f5;">精品宝贝</a>
+					<a href="{url app=brand_goods&act=store}" class="current" style="border-right:1px solid #DDDddd;">精品档口</a>
+					
+				</div>
+				                      
+			</div>
+			
+            <div  class="sort-type padding5 border {if $oem eq 'nc'} border-t-0{/if}  mb10 clearfix">
+               <div class="clearfix float-left btn-order">
+                    <a class="btn-order-click default-sort" id="" href="javascript:;">{$lang.default_sort}</a>
+                    <a class="btn-order-click order-down-gray" id="credit_value" href="javascript:;">{$lang.credit_grade}<i></i></a>
+                    <!-- <a class="btn-order-click order-down-gray" id="add_time" href="javascript:;">{$lang.add_time}<i></i></a>
+                    <a class="btn-order-click order-down-gray" id="praise_rate" href="javascript:;">{$lang.praise_rate}<i></i></a>
+                    <a class="btn-order-click order-down-gray" id="region_name" href="javascript:;">{$lang.dangkou_address}<i></i></a> -->
+                </div>
+                <div class="float-left ml20" style="line-height:22px;">
+                  <dd  ectype='service_toggle'>	
+				  <a href="javascript:void(0);" title="{$lang.service_send}" ectype="service_send" id="{$smarty.get.service_send}" class="{if $smarty.get.service_send}service_send_on on{else}service_send{/if} mr5" style="{if $smarty.get.service_send}color:#900;{/if}">{$lang.service_send}</a>
+				  <a href="javascript:void(0);" title="{$lang.service_cash}" ectype="service_cash" id="{$smarty.get.service_cash}" class="{if $smarty.get.service_cash}service_cash_on on{else}service_cash{/if} mr5" style="{if $smarty.get.service_cash}color:#900;{/if}">{$lang.service_cash}</a>
+				  <a href="javascript:void(0);" title="{$lang.service_pattern}" ectype="service_pattern" id="{$smarty.get.service_pattern}" class="{if $smarty.get.service_pattern}service_pattern_on on{else}service_pattern{/if}" style="{if $smarty.get.service_pattern}color:#900;{/if}">{$lang.service_pattern}</a>
+			      </dd>
+                </div>
+               <div class="clearfix float-right">
+                    <a class="select-param"  href="javascript:;">
+                    	{$lang.credit_grade}
+                        <span><i></i></span>
+                        <ul class="tan" ectype="credit_value">
+                        	<li v="4">{$lang.goldens}</li>
+                        	<li v="3">{$lang.crowns}</li>
+                            <li v="2">{$lang.diamonds}</li>
+                            <li v="1">{$lang.hearts}</li>
+                            <li v="">{$lang.no_limit}</li>
+                        </ul>
+                    </a>
+                    <a class="select-param"  href="javascript:;">
+                    	{$lang.recommended}
+                        <span><i></i></span>
+                        <ul class="tan" ectype="recommended">
+                        	<li v="1">{$lang.yes}</li>
+                        	<li v="0">{$lang.no}</li>
+                            <li v="">{$lang.no_limit}</li>
+                        </ul>
+                    </a>
+                    <a class="select-param"  href="javascript:;">
+                    	{$lang.praise_rate}
+                        <span><i></i></span>
+                        <ul class="tan" ectype="praise_rate">
+                        	<li v="90">{$lang.gt90}</li>
+                        	<li v="80">{$lang.gt80}</li>
+                            <li v="70">{$lang.gt70}</li>
+                            <li v="60">{$lang.gt60}</li>
+                            <li v="50">{$lang.gt50}</li>
+                            <li v="">{$lang.no_limit}</li>
+                        </ul>
+                    </a>
+                    <a class="select-param"  href="javascript:;">
+                        {$lang.sgrade}
+                        <span><i></i></span>
+                        <ul class="tan" ectype="sgrade">
+                        	<!--{foreach from=$sgrades item=sgrade key=key}-->
+                        	<li v="{$key}">{$sgrade}</li>
+                            <!--{/foreach}-->
+                            <li v="">{$lang.no_limit}</li>
+                        </ul>
+                    </a>
+                </div>
+            </div>
+            
+           
+            <div class="list-fields w mb10">
+                 <!--{foreach from=$stores item=mstore}-->
+                 	<dl id="floor_{$mstore.mkid}" data-scroll-index="{$mstore.mkid}">
+                 		<!--{if $mstore.mk_name}--><dt class="fs18 fbu pb10 pt20 pl10" style="border-bottom:1px solid #ddd;">{$mstore.mk_name}</dt><!--{/if}-->
+                 		<dd>
+                 		  <ul class="clearfix">
+								<!--{foreach from=$mstore.stores item=store name=fe_store}-->
+			            		<li>
+			                        <div  class="simple-store-info relative fs14  clearfix">                           
+			                           <p class="dk_address float-left fs14 fbu">{$store.dangkou_address|escape}</p>
+			                           <div class="float-left relative store-detail fbu">
+			                               【<a href="{url app=shop&id=$store.store_id}" id="store_{$store.store_id}"  class="show-pop-async btn btn-info fs14 fbu" data-placement="auto" data-sinfo="{$store.store_id}" target="_blank">{$store.store_name|escape}</a>】                              	                        
+			                           </div>
+			                           <p class="dk_address aaa float-left ml5">
+			                                 <!--{if $store.credit_value ge 0}-->
+						                     <img src="{$store.credit_image}" class="show-pop" alt="{$lang.credit_value_desc}:{$store.credit_value}" style="vertical-align:middle;" />
+						                     <!--{else}-->
+						                     {$store.credit_value}
+						                     <!--{/if}-->
+			                           </p>
+			                           <!--{if $store.serv_refund }--><p class="float-left ml5"><i class="tui_pi" title="{$lang.service_cash}"><a href="javascript:;" title="{$lang.service_cash}" class="block"></a></i></p><!--{/if}-->
+			                           <!--{if $store.recommended}--><p class="float-left ml5"><em style="background:#9c0;color:white;border-radius:3px;padding:1px 3px;">优</em></p><!--{/if}-->
+			                        </div> 
+			                      </li>				                    
+			                    <!--{/foreach}-->
+			                    
+			            	</ul>
+                 		</dd>
+                 	</dl>
+                 <!-- {foreachelse} -->
+			           <div class="store-empty padding10 mb10">{$lang.no_store}</div>
+                 <!--{/foreach}-->
+				
+            </div>        
+    </div>
+</div>
+</div>	
+	
+<script src="{lib file='jquery.plugins/popModal/jquery.webui-popover.min.js'}"></script>		
+<script>
+$(function(){	
+	var settings = {
+			trigger:'mouseover',
+			title:"{$lang.store_detail}",
+			content:'welcome to 51zwd.com!',
+			width:300,						
+			multi:true,						
+			closeable:false,
+			style:'',
+			padding:true
+	};
+	function initPopover(){	
+		$('a.show-pop-async').each(function(i,item){
+			var sid = $(this).attr('data-sinfo');
+			var stitle = $(this).text();
+			var asyncSettings = {	
+					    width:260,
+						height:150,
+						title:stitle,
+						closeable:true,
+						padding:true,
+						cache:false,
+						url:'index.php?app=search&act=get_store_info&sid='+sid,
+						type:'async',
+						content:function(data){
+						return data;
+					}};
+			$(this).webuiPopover('destroy').webuiPopover($.extend({},settings,asyncSettings)); 
+		});
+		$('img.show-pop').each(function(j,jtem){
+			var credit_value = $(this).attr('alt');
+			var imgSettings = {
+				width:120,
+				height:40,
+				title:'',
+				closeable:false,
+				padding:true,
+				cache:false,
+				content:credit_value,
+			};
+			$(this).webuiPopover('destroy').webuiPopover($.extend({},settings,imgSettings));
+		});
+		
+ }
+	
+	initPopover();
+});
+
+</script>
+		
+{include file=footer.html}

@@ -1,0 +1,272 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<base href="{$site_url}/" />
+<!-- Use IE7 mode -->
+<meta http-equiv="X-UA-Compatible" content="IE=EmulateIE7 charset={$charset}" />
+<meta http-equiv="Content-Type" content="text/html; charset={$charset}" />
+{$page_seo}
+<link href="{res file=css/user.css}" rel="stylesheet" type="text/css" />
+<meta name="author" content="ecmall.shopex.cn" />
+<meta name="copyright" content="ShopEx Inc. All Rights Reserved" />
+<script type="text/javascript" src="index.php?act=jslang"></script>
+<script type="text/javascript" src="{lib file=jquery.js}" charset="utf-8"></script>
+<script language="javascript" src="{lib file=lodop/LodopFuncs.js}"></script>
+<object  id="LODOP_OB" classid="clsid:2105C259-1E0C-4534-8141-A753534CB4CA" width=0 height=0> 
+       <embed id="LODOP_EM" type="application/x-print-lodop" width=0 height=0></embed>
+</object>
+<script type="text/javascript">
+  var SITE_URL = "{$site_url}";
+  var REAL_SITE_URL = "{$real_site_url}";
+  var PRICE_FORMAT = '{$price_format}';
+  /************************************************/
+  var jjname="{$behalf.owner_name}";
+  var jjtel="{$behalf.bh_tel}";
+  var jjadr="{$behalf.region_name}";
+  var LODOP=getLodop(document.getElementById('LODOP_OB'),document.getElementById('LODOP_EM'));
+  function CreatePrintPage(strJJName,strJJTel,strSJName,strSJTel,strJJAdr,strSJAdr,strOrder_sn,strInvocie,strDestCity,strGoodsInfo)
+  {
+	  LODOP.NewPage();
+	  LODOP.ADD_PRINT_SETUP_BKIMG("<img src='"+SITE_URL+"/data/system/printTemplate/yuantong/ytmd.jpg"+"' border=0/>"); 
+	  LODOP.SET_SHOW_MODE("BKIMG_WIDTH","100mm"); 
+	  LODOP.SET_SHOW_MODE("BKIMG_HEIGHT","180mm"); 
+	  
+	  LODOP.ADD_PRINT_TEXT(4,26,331,56,strDestCity);
+	  LODOP.SET_PRINT_STYLEA(0,"FontSize",15);
+	  LODOP.SET_PRINT_STYLEA(0,"Bold",1);
+	  LODOP.ADD_PRINT_TEXT(81,122,143,20,strOrder_sn);
+	  LODOP.SET_PRINT_STYLEA(0,"FontSize",14);
+	  LODOP.ADD_PRINT_LINE(116,-5,117,374,2,1);
+	  LODOP.ADD_PRINT_BARCODE(126,102,198,43,"Code39",strInvocie);
+	  LODOP.ADD_PRINT_LINE(179,-1,180,378,2,1);
+	  LODOP.ADD_PRINT_TEXT(189,7,58,20,"收件人：");
+	  LODOP.ADD_PRINT_TEXT(190,76,106,20,strSJName);
+	  LODOP.SET_PRINT_STYLEA(0,"FontSize",14);
+	  LODOP.ADD_PRINT_TEXT(189,185,158,20,strSJTel);
+	  LODOP.ADD_PRINT_LINE(245,-37,246,342,2,1);
+	  LODOP.ADD_PRINT_LINE(315,-35,316,344,2,1);
+	  LODOP.ADD_PRINT_LINE(185,347,385,348,2,1);
+	  LODOP.ADD_PRINT_TEXT(248,353,24,60,"签收联");
+	  LODOP.ADD_PRINT_TEXT(259,2,58,20,"寄件人：");
+	  LODOP.ADD_PRINT_TEXT(259,67,75,20,strJJName);
+	  LODOP.ADD_PRINT_TEXT(259,153,142,20,strJJAdr);
+	  LODOP.ADD_PRINT_TEXT(285,67,142,20,strJJTel);
+	  LODOP.ADD_PRINT_TEXT(324,5,105,20,"收件人/代收人：");
+	  LODOP.ADD_PRINT_LINE(318,167,384,168,2,1);
+	  LODOP.ADD_PRINT_TEXT(324,173,105,20,"签收时间：");
+	  LODOP.ADD_PRINT_TEXT(364,219,105,20,"年  月  日");
+	  LODOP.ADD_PRINT_BARCODE(405,162,198,43,"Code39",strInvocie);
+	  LODOP.ADD_PRINT_TEXT(462,10,58,20,"寄件人：");
+	  LODOP.ADD_PRINT_TEXT(462,75,75,20,strJJName);
+	  LODOP.ADD_PRINT_TEXT(462,161,142,20,strJJAdr);
+	  LODOP.ADD_PRINT_TEXT(488,75,142,20,strJJTel);
+	  LODOP.ADD_PRINT_TEXT(503,353,24,60,"收件联");
+	  LODOP.ADD_PRINT_LINE(454,347,672,348,2,1);
+	  LODOP.ADD_PRINT_LINE(510,-37,511,342,2,1);
+	  LODOP.ADD_PRINT_TEXT(513,9,58,20,"收件人：");
+	  LODOP.ADD_PRINT_TEXT(514,78,75,20,strSJName);
+	  LODOP.ADD_PRINT_TEXT(515,155,189,20,strSJTel);
+	  LODOP.ADD_PRINT_TEXT(536,78,264,37,strSJAdr);
+	  LODOP.ADD_PRINT_TEXT(575,6,338,97,strGoodsInfo);
+	  //LODOP.ADD_PRINT_RECT(589,4,335,87,0,1);
+
+	 /*  LODOP.ADD_PRINT_TEXT(83,111,120,26,strJJName); //寄件人姓名
+	  LODOP.ADD_PRINT_TEXT(80,282,116,26,strJJTel); //寄件人电话
+	  LODOP.ADD_PRINT_TEXT(76,468,118,27,strSJName); //收件人姓名
+	  LODOP.ADD_PRINT_TEXT(77,636,111,27,strSJTel); //收货人电话
+	  LODOP.ADD_PRINT_TEXT(166,71,328,51,strJJAdr); //寄件人地址
+	  LODOP.ADD_PRINT_TEXT(164,435,319,46,strSJAdr);//收件人地址
+	  LODOP.ADD_PRINT_TEXT(253,122,152,25,strNJPinm);//内件品名
+	  LODOP.ADD_PRINT_TEXT(251,322,69,25,strNJCount); //内件数量 */
+  }
+  
+  $(function(){
+	  $("#get_all_invoice_no").click(function(){
+		 $.post('index.php?app=behalf_member&act=get_invoice_no',{ids:'{$ids}'},function(data){
+			 if(eval(data))
+				window.location.reload(true);
+		 },'json'); 
+	  });
+	  $("#async_shipped").click(function(){
+		 $.post('index.php?app=behalf_member&act=print_async_shipped',{ids:'{$ids}'},function(data){
+			 if(eval(data))
+				window.location.reload(true);
+		 },'json'); 
+	  });
+	  $("#all").click(function(){
+		  $(".items").attr("checked",this.checked);
+	  });
+	 $(".items").click(function(){
+		$.each($(".items").attr('checked'),function(i,h){
+			if(!this.checked)
+				$("#all").attr('checked',false);
+		}); 
+	 });
+	 $("#template_edit").click(function(){
+		//open("static/printTemplate/yuantong/yt.html","_blank"); 
+		/*  LODOP2=getLodop(document.getElementById('LODOP2'),document.getElementById('LODOP_EM2'));
+		 LODOP2.PRINT_INITA(0,0,1200,600,"套打圆通的模板");
+		 LODOP2.SET_SHOW_MODE("DESIGN_IN_BROWSE",1); */
+		 LODOP.PRINT_INITA("0mm","0mm","100mm","180mm","套打圆通的模板"); 
+		 LODOP.SET_PRINT_PAGESIZE(1,'100mm','180mm','');
+		 CreatePrintPage("寄件人姓名","寄件人电话","收件人姓名","收货人电话","寄件人地址","收件人地址","订单编号","快递单号","目的城市","商品信息");
+		 var design_result = LODOP.PRINT_DESIGN();
+		 //$('#get_print_value').html(design_result);
+	 });
+	 /* $("#get_value_btn").click(function(){
+		 LODOP2=getLodop(document.getElementById('LODOP2'),document.getElementById('LODOP_EM2'));
+		$("#get_print_value").html(LODOP2.GET_VALUE("ProgramCodes",0)); 
+	 }); */
+	 $("#print_preview").click(function(){
+		 LODOP.PRINT_INITA(0,0,"100mm","180mm","套打圆通的模板"); 
+		 LODOP.SET_PRINT_PAGESIZE(1,'100mm','180mm','');	
+		 LODOP.SET_SHOW_MODE("BKIMG_IN_PREVIEW",1);
+		 <!--{foreach from=$orders item=order1 name=fee_order1}-->
+		 CreatePrintPage(jjname,jjtel,"{$order1.consignee}","{$order1.phone_mob} {$order1.phone_tel}",jjadr,"{$order1.region_name}  {$order1.address}","{$order1.order_sn}","{$order1.invoice_no|default:51zwd.com}","{$order1.region_name}","{$order1.goods_info}");
+		 <!--{/foreach}-->
+		
+		LODOP.PREVIEW(); 
+	 });
+	 $("#print_setup").click(function(){
+		 LODOP.PRINT_INITA(0,0,"100mm","180mm","套打圆通的模板"); 
+		 LODOP.SET_PRINT_PAGESIZE(1,'100mm','180mm','');
+		 CreatePrintPage("寄件人姓名","寄件人电话","收件人姓名","收货人电话","寄件人地址","收件人地址","订单编号","快递单号","目的城市","商品信息");
+			LODOP.PRINT_SETUP(); 
+	 });
+	 $("#print_start").click(function(){
+		 LODOP.PRINT_INITA(0,0,"100mm","180mm","套打圆通的模板"); 
+		 LODOP.SET_PRINT_PAGESIZE(1,'100mm','180mm','');
+		 <!--{foreach from=$orders item=order2 name=fee_order2}-->
+		 CreatePrintPage(jjname,jjtel,"{$order2.consignee}","{$order2.phone_mob} {$order2.phone_tel}",jjadr,"{$order2.region_name}  {$order2.address}","{$order2.order_sn}","{$order2.invoice_no|default:51zwd.com}","{$order2.region_name}","{$order2.goods_info}");
+		 <!--{/foreach}-->
+			LODOP.PRINT(); 
+	 });
+  });
+  
+  function get_failinfo(order_id)
+  {
+	  $.post('index.php?app=behalf_member&act=get_failinfo',{id:order_id},function(data){
+		 alert(data); 
+	  });
+  }
+  function restore_invoice(order_id)
+  {
+	  $.post('index.php?app=behalf_member&act=get_invoice_no',{ids:order_id},function(data){
+		 alert(data); 
+	  });
+  }
+
+</script>
+<style>
+ .content{width:1200px;margin:0 auto;}
+  .center{text-align:center;}
+  table{text-align:center;}
+.goods_list{border-bottom:1px solid #ccc;border-right:1px solid #ccc;}
+.goods_list td{border-top:1px solid #ccc;border-left:1px solid #ccc;padding:5px;min-height:24px;}
+.goods_list th{border-top:1px solid #ccc;border-left:1px solid #ccc;padding:5px;height:24px;}
+.goods_list a{text-decoration:none;color:#333;}
+.goods_list a:hover{text-decoration:underline;color:#f44;}
+</style>
+</head>
+<body>
+<div class="content" style="padding-top:10px;">
+ <table width="100%" height="60" border="0" cellspacing="0" cellpadding="0">
+   <tr>
+	   <td width="20%" rowspan="2">
+	   		<h1 title="{$site_title}" style="text-align:left;"><a href="index.php"><img height="47" src="{$site_logo}" alt="{$site_title}" /></a></h1>
+	   </td>
+	   <td width="30%"></td>
+	   <td width="50%"><h2 class="center" style="font-size:22px;">快递单打印</h2></td>
+   </tr>   
+ </table>
+ 
+  <table width="100%" class="goods_list" cellspacing="0" cellpadding="0">
+    <tr>
+      <th>{$lang.goods_no}</th>
+      <th>{$lang.seller_em}</th>
+      <th>{$lang.seller_name}</th>
+      <th>{$lang.seller_phone_tel}</th>
+      <th>{$lang.seller_region}</th>
+      <th>{$lang.seller_remark}</th>
+    </tr>
+    <tr>
+      <td>1</td>
+      <td><a href="{url app=behalf_member&act=set_behalf}" target="_blank">{$behalf.bh_name}</a></td>
+      <td>{$behalf.owner_name}</td>
+      <td>{$behalf.bh_tel}</td>
+      <td>{$behalf.region_name}&nbsp;&nbsp;{$behalf.bh_address}</td>
+      <td></td>
+    </tr>
+  </table>
+  <div style="border:1px solid #eee;border-radius:5px;padding:10px;margin-top:20px;line-height:24px;">
+  	<h4 style="font-size:14px;color:red;">使用须知</h4>
+  	<p>1. 获取所有订单快递单号。目前只能获取<font color="#f40">“圆通快递”</font>的电子面单号。</p>
+  	<p>2. 打印电子面单。检查订单列表中是否有<font color="#f40">“快递单号为空”</font>的订单，以免打印没有快递单号的订单。 </p>
+  	<p>3. 同步发货。<font color="#f40">请打印电子面单之后再同步发货</font>，否则订单发货之后便转换为已发货订单（不提供打印功能），只有未发货订单提供打印功能。</p>
+  </div>
+  <div style="height:20px;"></div>
+  <div style="margin:10px;padding:5px;">
+    <!--  <object id="LODOP2" classid="clsid:2105C259-1E0C-4534-8141-A753534CB4CA" width=1200 height=600> 
+	  <param name="Caption" value="内嵌显示区域">
+	  <param name="Border" value="1">
+	  <param name="Color" value="#C0C0C0">
+	  <embed id="LODOP_EM2" TYPE="application/x-print-lodop" width=1200 height=600 PLUGINSPAGE="install_lodop.exe">
+	</object> -->
+      <input type="button" value="{$lang.get_all_invoice_no}" id="get_all_invoice_no">
+      <input type="button" value="{$lang.edit_template}" id="template_edit"> 
+      <!-- <input type="button" value="get value" id="get_value_btn"> -->
+      <!-- <input type="button" value="lang.print_setup" id="print_setup"> -->
+      <input type="button" value="{$lang.print_preview}" id="print_preview">
+      <input type="button" value="{$lang.print_start}" id="print_start">
+      <input type="button" value="{$lang.async_shipped}" id="async_shipped">
+      
+  </div>
+           <!--{if $orders}-->
+           <table width="100%" class="goods_list" cellspacing="0" cellpadding="0">
+              <tr>
+                <th style="display:none;">{$lang.all}<input type="checkbox" id="all" style="margin-left:5px;"></th>
+                <th>{$lang.export_taobao_order.order_sn}</th>
+                <th>{$lang.export_taobao_order.consignee}</th>
+                <th>{$lang.buyer_phone_tel}</th>
+                <th>{$lang.export_taobao_order.consignee_region}</th>
+                <th>{$lang.goods_totalcount}</th>
+                <th>{$lang.buyer_remark}</th>
+                <th>快递公司</th>
+                <th>快递单号</th>
+                <th>操作</th>
+              </tr>
+            <!--{foreach from=$orders item=order name=fee_order}-->
+               <tr>
+                 <td style="display:none;"><input type="checkbox" name="orders[]" class="items"></td>
+                 <td><a href="{url app=behalf_member&act=view&order_id=$order.order_id}" target="_blank">{$order.order_sn}</a></td>
+                 <td>{$order.consignee}</td>
+                 <td>{$order.phone_mob}&nbsp;{$order.phone_tel}</td>
+                 <td>{$order.region_name}&nbsp;&nbsp;{$order.address}</td>
+                 <td>{$order.goods_count}</td>
+                 <td>{$order.postscript}</td>
+                 <td>{$order.dl_name}</td>
+                 <td>{$order.invoice_no|default:-}</td>
+                 <td>
+                 <!--{if !$order.invoice_no}-->
+                 <a href="javascript:restore_invoice({$order.order_id});" style="color:blue;">获取单号</a><br>
+                 <a href="javascript:get_failinfo({$order.order_id})">失败原因</a>
+                 <!--{/if}-->
+                 <!-- <a href="" style="color:blue;">获取单号</a> --></td>
+               </tr>
+            <!--{/foreach}-->
+           </table>
+            <!--{else}-->
+                <div class="order_form member_no_records">
+                    <span>{$lang.no_records}</span>
+                </div>
+           <!--{/if}-->
+           
+           
+ 
+ 
+
+</div>
+
+<div id="get_print_value"></div>
+</body>
+</html>

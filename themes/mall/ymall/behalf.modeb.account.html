@@ -1,0 +1,75 @@
+{include file=member.header.html}
+<style>
+.borline td { padding:10px 0px; }
+.ware_list th { text-align:left; }
+#right dl{margin-bottom:20px;border-bottom:1px dashed #cccccc;padding:20px;}
+#right dl dt{font-size:14px;font-weight:400;background:#eeeeee;padding:2px 10px;}
+#right dl dd{padding:5px 10px;}
+#right dl dd input{width:210px;height:24px;line-height:24px;padding:0 3px;}
+#right dl dd label{color:#999999;padding-left:13px;}
+</style>
+<script type="text/javascript">
+
+$(function(){
+	/*
+	jQuery.extend(jQuery.validator.messages, {
+		 number: "请输入合法的数字",
+	});
+    $('#profile_form').validate({
+         errorPlacement: function(error, element){
+            $(element).parent('span').after(error);
+        },
+        rules : {
+        	fees : {
+                number:true,
+            }
+        },
+        messages : {
+        	fees : {
+                number:'{$lang.not_number}',
+            }
+        } 
+    });
+*/   
+});
+</script>
+<div class="content">
+    {include file=member.menu.html}
+    <div id="right">            
+            <div class="wrap">
+                <div class="public">
+                <form method="post" enctype="multipart/form-data" id="profile_form">
+                    <div class="information">                        
+                        <div class="info individual">
+                            <h2 class="fs18 mb10">HI,{$behalf.bh_name|escape}</h2>
+                            <p class="lh24 f66 mb10 pl10">请设置您的电子面单账号信息：</p>
+                            <div class="mb10 padding10" style="line-height:24px;">
+                              <dl>
+                              	<dt>圆通电子面单</dt>
+                              	<dd>账号：<input type="text" name="yto_account" value="{$infos.yto_account}"><label>大小写敏感</label></dd>
+                              	<dd>密钥：<input type="password" name="yto_pass" value="{$infos.yto_pass}"><label>大小写敏感！</label></dd>
+                              </dl>
+                              <dl>
+                              	<dt>中通电子面单</dt>
+                              	<dd>账号：<input type="text" name="zto_account" value="{$infos.zto_account}"><label>大小写敏感</label></dd>
+                              	<dd>密钥：<input type="password" name="zto_pass" value="{$infos.zto_pass}"><label>大小写敏感！</label></dd>
+                              </dl>
+                            </div>
+                            <div><input type="submit" class="btn" value="{$lang.save_edit}" /></div>
+                        </div>
+                    </div>
+                </form>
+                </div>
+                <div class="wrap_bottom"></div>
+            </div>
+
+            <div class="clear"></div>
+            <div class="adorn_right1"></div>
+            <div class="adorn_right2"></div>
+            <div class="adorn_right3"></div>
+            <div class="adorn_right4"></div>
+        </div>
+        <div class="clear"></div>
+    </div>
+</div>
+{include file=footer.html}

@@ -1,0 +1,208 @@
+{include file="header.html"}
+<div class="w">
+{include file="curlocal.html"}
+
+<style media="screen" type="text/css">
+/*自定义*/
+.location{margin:10px auto;width:1200px;}
+.clue_on,.order_information,.buy{margin:10px auto;line-height:24px;color:#f30;font-size:14px;}
+
+.clue_on{line-height:24px;}
+.clue_on h4{font-size:18px;color:#f30;}
+.clue_on p{color:#666;padding-left:13px;}
+
+.clue_head{height:36px;line-height:36px;overflow:hidden;border-bottom:1px solid #ccc;}
+.clue_head h2{font-size:16px;font-family:'microsoft yahei';padding-left:13px;color:#434343;float:left;}
+.clue_head span{float:right;padding:0 13px;}
+
+.order_information{line-height:24px;}
+.order_information h3{color:#f30;padding-left:13px;}
+.order_information h3 b{color:#666;font-weight:normal;margin-right:10px;font-size:16px;}
+.order_information h3 b span{color:#f30;font-weight:bold;}
+.order_information h3 .order_detail{background:#12a000;border:1px solid green;border-radius:3px;padding:2px 8px;color:white;}
+.order_information p{padding-left:13px;}
+/*下面字体大小记得要删掉*/
+.divs{margin:0;text-align:center;over-flow:hidden;height:100%;}
+UL{list-style-type:none; margin:0px;}
+/* 标准盒模型 */
+.ttl{height:18px;}
+.ctt{height:auto;padding:6px;clear:both;border:1px solid #ff6d00;border-top:0;text-align:left;}
+.w936{margin:2px 0;clear:both;width:820px;/*这里调整整个滑动门的宽度*/}
+/* TAB 切换效果 */
+.tb_{background-image: url('{res file=images_sft/cashier.payment_1.gif}'); background-repeat: repeat-x;background-color: #ffffff;}/*按钮底色   图片：上行一横*/
+.tb_ ul{height:24px;}
+.tb_ li{float:left;height: 24px;line-height:1.9;width: 94px;cursor:pointer;}
+/* 用于控制显示与隐藏的css类 */
+.normaltab   { background-image:url('{res file=images_sft/cashier.payment_2.gif}'); background-repeat: no-repeat; color:#f5f5f5 ;}/*无选时字体颜色 图片：无选时图片*/
+.hovertab    { background-image: url('{res file=images_sft/cashier.payment_3.gif}'); background-repeat: no-repeat; color:#ff6600; font-weight:bold }/*已选时字体颜色*/
+.dis{display:block;}
+.undis{display:none;}
+
+
+.defrays { margin-bottom: 20px; }
+/* 灰色线下支付 css类 */
+.defrays dt { height: 28px; line-height: 28px; background: #f5f5f5; padding-left: 20px; font-weight: bold; color: #333; }
+.defrays dd { width: 682px; overflow: hidden; padding-top: 10px; }
+.defrays dd .radio { float: left; width: 40px; text-align: center; padding-top: 14px; }
+.defrays dd .logo { float: left; width: 140px; }
+.defrays dd .explain { float: left; width: 477px; line-height: 20px; color: #787878; }
+.defrays dd .dongtai { float: left; width: 677px; line-height: 40px; }
+
+</style>
+<script type="text/javascript" language="javascript">
+function g(o){return document.getElementById(o);}
+function HoverLi(n){
+//如果有N个标签,就将i<=N;
+//本功能非常OK,兼容IE7,FF,IE6
+for(var i=1;i<=3;i++){g('tb_'+i).className='normaltab';g('tbc_0'+i).className='undis';}g('tbc_0'+n).className='dis';g('tb_'+n).className='hovertab';
+}
+//如果要做成点击后再转到请将<li>中的onmouseover 改成 onclick;
+</script>
+
+
+<div class="flow_chart">
+    <div class="pos_x1 bg_a2" title="{$lang.shopping_step_one}"></div>
+    <div class="pos_x2 bg_b2" title="{$lang.shopping_step_two}"></div>
+    <div class="pos_x3 bg_c1" title="{$lang.shopping_step_three}"></div>
+</div>
+
+<div class="content">
+
+    <div class="module_common">
+        <div class="step_main">
+    <form action="index.php?app=my_money&act=payment&order_id={$order.order_id}" method="POST" id="zft_pay">
+            <div style="margin:0 auto;border:1px solid #ccc;border-radius:3px;background:#f7f7f7;">
+                <div class="clue_head">
+                   <h2>{$lang.order_sn}&nbsp;:&nbsp;{$order.order_sn}&nbsp;&nbsp;&nbsp;&nbsp;<font color="#12A000">{$order.status|modifier:order_status}</font></h2><span>{$lang.add_time}: <font color="#666">{$order.add_time|date:Y-m-d H:i}</font></span>
+                </div>	           
+	            <div class="order_information">
+	                <h3>	                   
+	                    <b>{$lang.order_amount}&nbsp;:&nbsp;<span>{$order.order_amount|price}</span></b><a class="order_detail" href="{url app=buyer_order&amp;act=view&amp;order_id=$order.order_id}" target="_blank">{$lang.member_view_order}</a>
+					  <input name="post_money" type="hidden" value="{$order.order_amount}" />
+	                </h3>
+	                <h3 class="mt20" style="line-height:26px;">
+	                	<b>{$lang.consignee_info}&nbsp;:&nbsp;<strong>{$orderextm.consignee|escape}</strong></b>
+	                	<b>{$orderextm.region_name|escape} {$orderextm.address|escape}</b>
+	                	<b>
+	                	<!--{if $orderextm.phone_mob}-->
+	                	   {$orderextm.phone_mob|escape}
+	                	<!--{else}-->
+	                	    {$orderextm.phone_tel|escape}
+	                	<!--{/if}-->
+	                	</b>
+	                	<b>{$orderextm.zipcode|escape|default:000000} </b>
+	                </h3>
+	                
+	            </div>
+            </div>
+            <div class="buy">
+                <h3><b class="ico">{$lang.select_payment}</b></h3>
+            </div>
+			
+
+
+<div align="center"><!--居中-->
+
+<div class="divs">
+ <div id="tb_" class="tb_">
+   <ul>
+   <li id="tb_1" class="hovertab">{$lang.payment_shangfutong}</li>
+   <!--
+    <li id="tb_1" class="hovertab" onclick="a:HoverLi(1);">{$lang.payment_shangfutong}</li>
+	 <li id="tb_2" class="normaltab" onclick="b:HoverLi(2);">{$lang.online_payment}</li>
+    <li id="tb_3" class="normaltab" onclick="c:HoverLi(3);">{$lang.offline_payment}</li> -->
+   </ul>
+ </div>
+ <div class="ctt">
+
+  <div class="dis" id="tbc_01"><!--滑门 开始-->
+<!--支付方式 开始-->
+<!--{foreach from=$sft item=val key=key}-->
+<?php
+$shuzi1 = round(rand(1,8));
+$shuzi2 = round(rand(1,8));
+$shuzi3 = round(rand(1,8));
+
+$quzimu1= round(rand(65,72));
+$quzimu2= round(rand(65,72));
+$quzimu3= round(rand(65,72));
+
+$zimu1 = chr($quzimu1);
+$zimu2 = chr($quzimu2);
+$zimu3 = chr($quzimu3);
+
+$user_zimuz1 = $zimu1.$shuzi1;
+$user_zimuz2 = $zimu2.$shuzi2;
+$user_zimuz3 = $zimu3.$shuzi3;
+?>
+                    <!--{foreach from=$money item=val key=key}--><dl class="defrays">
+                    <dt>
+					{$lang.payment_shangfutong}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font color="#FF0000">{$lang.payment_money}
+
+{$val.money}
+</font>{if $val.money < $order.order_amount}<font style="margin-left:30px;font-weight:normal;">{$lang.not_enough_goto_recharge}</font><a href="{url app=my_money&amp;act=paylist}" target="blank" class="ml5 f44 font-normal" style="background:#12a000;border:1px solid green;padding:2px 8px;color:white;border-radius:3px;">{$lang.for_recharge}</a>{/if}</dt>
+                    <dd>
+                        <p class="radio"><input name="payment_id" type="radio" id="payment_sft" value="sft" checked="checked" />
+                        </p>
+                        <p class="logo"><label for="payment_sft"><img src="{res file=images_sft/logo.gif}" alt="{$lang.shangfutongzhifu}" title="{$lang.payment_shangfutong}" width="125" height="47" /></label></p>
+
+
+<!--检测动态密码-->
+<!--{if $val.mibao_id eq 0}-->
+{$lang.payment_zhifu}<input name="zf_pass" type="password" id="zf_pass">
+<a href="index.php?app=my_money&act=newpassword" target="_blank"><font color="#FF3300">{$lang.payment_zhaohuizhifumima}</font></a>
+<BR><font color="#999999">({$lang.payment_zhifu_desc}<a href="index.php?app=my_money&act=newpassword" class="aaa" target="_blank">{$lang.setup}</a>)</font>
+<!--{else}-->
+{$lang.payment_dongtai}
+<font color="#FF3300"><B>
+<?php echo $shuzi1.$zimu1;?>&nbsp;<input type="text" id="user_shuzi1" name="user_shuzi1"  size="3" maxlength="3"/>    
+<?php echo $shuzi2.$zimu2;?>&nbsp;<input type="text" id="user_shuzi2" name="user_shuzi2"  size="3" maxlength="3"/>    
+<?php echo $shuzi3.$zimu3;?>&nbsp;<input type="text" id="user_shuzi3" name="user_shuzi3"  size="3" maxlength="3"/>
+</B></font>
+<BR><font color="#999999">{$lang.payment_dongtai_desc}</font>
+<input name="user_zimuz1" id="user_zimuz1" type="hidden" value="<?php echo $user_zimuz1;?>" />
+<input name="user_zimuz2" id="user_zimuz2" type="hidden" value="<?php echo $user_zimuz2;?>" />
+<input name="user_zimuz3" id="user_zimuz3" type="hidden" value="<?php echo $user_zimuz3;?>" />
+<!--{/if}-->
+</dd></dl><!--{/foreach}-->
+
+            <div class="make_sure" style="text-align:left;padding:10px;padding-left:380px;background-color:#f5f5f5;">
+                <p>
+                    <a href="javascript:$('#zft_pay').submit();" class="btn">{$lang.confirm_pay}</a>
+                </p>
+            </div>
+   
+
+<!-- {foreachelse} -->
+  <div class="dis" id="tbc_01">
+                    <dl class="defrays">
+                    <dt>{$lang.payment_code_zft_no}</dt>
+  </div>
+<!--{/foreach}-->
+<!--支付方式 结束-->
+</div><!--滑门 结束-->
+  </form> 
+
+
+
+
+   </form>
+ </div>
+
+</div><!--居中-->
+
+
+</div>
+
+
+
+
+ 
+
+            <div class="clear"></div>
+        </div>
+    </div>
+</div>
+</div>
+{include file="footer.html"}
+

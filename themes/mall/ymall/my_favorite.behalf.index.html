@@ -1,0 +1,65 @@
+{include file=member.header.html}
+<div class="content">
+    <div class="totline"></div><div class="botline"></div>
+    {include file=member.menu.html}
+    <div id="right">
+        {include file=member.submenu.html}
+        <div class="wrap">
+            <div class="public table">
+                <table>
+                    <!--{if $collect_behalf}-->
+                    <tr class="line_bold">
+                        <th class="width1"><input type="checkbox" id="all" class="checkall"/></th>
+                        <th class="align1" colspan="7">
+                            <label for="all"><span class="all">{$lang.checkall}</span></label>
+                            <a href="javascript:void(0);" class="delete" uri="index.php?app=my_favorite&act=drop&type=behalf" name="item_id" presubmit="confirm('{$lang.drop_confirm}')" ectype="batchbutton">{$lang.drop}</a>
+                        </th>
+                    </tr>
+                    <!--{/if}-->
+                    <!--{foreach from=$collect_behalf item=behalf name=v}-->
+                    <!--{if $smarty.foreach.v.last}--><tr class="line_bold"><!--{else}--><tr class="line"><!--{/if}-->
+                        <td class="align2"><input type="checkbox" class="checkitem" value="{$behalf.bh_id}"/></td>
+                        <td>
+                            <p class="ware_pic"><a href="{url app=bhstore&id=$behalf.bh_id}" target="_blank"><img src="{$behalf.bh_logo}" width="50" height="50"  /></a></p>
+                        </td>
+                        <td>
+                            <p class="ware_text"><a href="{url app=bhstore&id=$behalf.bh_id}" target="_blank">{$behalf.bh_name|escape}</a></p>
+                        </td>
+                        <td class="width2">{$behalf.user_name|escape}</td>
+                        <td class="width2"><a target="_blank" href="{url app=message&act=send&to_id=$behalf.bh_id}" class="email" title="{$lang.send_message}"></a></td>
+                        <td class="width5">{$behalf.region_name|escape}</td>
+                        <td class="width2"><a href="javascript:drop_confirm('{$lang.drop_confirm}', 'index.php?app=my_favorite&amp;act=drop&type=behalf&item_id={$behalf.bh_id}');" class="delete">{$lang.drop}</a></td>
+                    </tr>
+                    <!--{foreachelse}-->
+                    <tr>
+                        <td colspan="6" class="member_no_records">{$lang.no_behalfs}</td>
+                    </tr>
+                    <!--{/foreach}-->
+                    <!--{if $collect_behalf}-->
+                    <tr>
+                        <th><input type="checkbox" id="all2" class="checkall"/></th>
+                        <th colspan="7">
+                            <p class="position1">
+                                <label for="all2"><span class="all">{$lang.checkall}</span></label>
+                                <a href="javascript:void(0);" class="delete" uri="index.php?app=my_favorite&act=drop&type=behalf" name="item_id" presubmit="confirm('{$lang.drop_confirm}')" ectype="batchbutton">{$lang.drop}</a>
+                            </p>
+                            <p class="position2">
+                                 {include file=member.page.bottom.html}
+                            </p>
+                        </th>
+                    </tr>
+                    <!--{/if}-->
+                </table>
+            </div>
+            <div class="wrap_bottom"></div>
+        </div>
+        <div class="clear"></div>
+        <div class="adorn_right1"></div>
+        <div class="adorn_right2"></div>
+        <div class="adorn_right3"></div>
+        <div class="adorn_right4"></div>
+    </div>
+    <div class="clear"></div>
+</div>
+<iframe name="iframe_post" width="0" height="0"></iframe>
+{include file=footer.html}

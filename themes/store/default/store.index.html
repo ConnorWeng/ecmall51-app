@@ -1,0 +1,216 @@
+{include file=header.html}
+{include file=top.html}
+<script type="text/javascript">
+var store_id = {$smarty.get.id};
+/* 替换参数 */
+function replaceParam(key, value)
+{
+        if(location.search == '')
+        {
+                var params = new Array();
+                params.push("app=shop");
+                params.push('id='+store_id);
+        }
+        else
+        {
+                var params = location.search.substr(1).split('&');
+        }
+    var found  = false;
+    for (var i = 0; i < params.length; i++)
+    {
+        param = params[i];
+        arr   = param.split('=');
+        pKey  = arr[0];
+        if (pKey == 'page')
+        {
+            params[i] = 'page=1';
+        }
+        if (pKey == key)
+        {
+            params[i] = key + '=' + value;
+            found = true;
+        }
+    }
+    if (!found)
+    {
+        value = transform_char(value);
+        params.push(key + '=' + value);
+    }
+    location.assign(SITE_URL + '/index.php?' + params.join('&'));
+}
+
+/* 删除参数 */
+function dropParam(key)
+{
+        if(location.search == '')
+        {
+                var params = new Array();
+                params.push("app=shop");
+                params.push('id='+store_id);
+        }
+        else
+        {
+                var params = location.search.substr(1).split('&');
+        }
+    for (var i = 0; i < params.length; i++)
+    {
+        param = params[i];
+        arr   = param.split('=');
+        pKey  = arr[0];
+        if (pKey == 'page')
+        {
+            params[i] = 'page=1';
+        }
+        if (pKey == key)
+        {
+            params.splice(i, 1);
+        }
+    }
+    location.assign(SITE_URL + '/index.php?' + params.join('&'));
+}
+
+$(function(){
+        var order = '{$smarty.get.order}';
+        var css = '';
+
+        <!--{if $smarty.get.order}-->
+        order_arr = order.split(' ');
+        switch (order_arr[1]){
+                case 'desc' :
+                        css = 'order-down btn-order-cur';
+                break;
+                case 'asc' :
+                        css = 'order-up btn-order-cur';
+                break;
+                default :
+                        css = 'order-down-gray';
+        }
+        $('.btn-order a[ectype='+order_arr[0]+']').attr('class','btn-order-click '+css);
+        <!--{/if}-->
+
+        $(".btn-order a").click(function(){
+                if(this.id==''){
+                        dropParam('order');// default order
+                        return false;
+                }
+                else
+                {
+                        dd = " desc";
+                        if(order != '') {
+                                order_arr = order.split(' ');
+                                if(order_arr[0]==this.id && order_arr[1]=="desc")
+                                        dd = " asc";
+                                else dd = " desc";
+                        }
+                        replaceParam('order', this.id+dd);
+                        return false;
+                }
+        });
+
+});
+</script>
+
+<div id="content">
+    <div id="left">
+        {include file=left.html}
+    </div>
+
+    <div id="right">
+        <div class="die6">{$store.description|escape:editor}</div>
+
+        <div class="module_special">
+            <h2 class="common_title veins2">
+                <div class="ornament1"></div>
+                <div class="ornament2"></div>
+                <!-- <span class="ico1"><span class="ico2">&nbsp;</span></span> -->
+                <div>
+                   <form id="" name="" method="get" action="index.php">
+                            <input type="hidden" name="app" value="shop" />
+                            <input type="hidden" name="act" value="search" />
+                            <input type="hidden" name="id" value="{$store.store_id}" />
+                            <input class="text width4" type="text" name="keyword" style="vertical-align:middle;height:22px;line-height:22px;padding-left:3px;"/>
+                            <input class="btn" type="submit" value="{$lang.shop_search}" style="vertical-align:middle;"/>
+                        </form>
+                </div>
+                <div class="btn-order">
+                              <!--{foreach from=$orders item=order key=k name=fe_order}-->
+                                        <!--{if !$k}-->
+                                        <a class="btn-order-click default-sort" id="{$k}" href="javascript:;">{$order}</a>
+                                        <!--{else}-->
+                                        <a class="btn-order-click order-down-gray" ectype="{$k}" id="{$k}" href="javascript:;">{$order}<i></i></a>
+                                        <!--{/if}-->
+                              <!--{/foreach}-->
+                        </div>
+            </h2>
+            <div class="wrap">
+                <div class="wrap_child">
+                    <!--{if $new_goods}-->
+                    <div class="major">
+                        <ul class="list">
+                            <!--{foreach from=$new_goods item=ngoods name=ngood_fee}-->
+                            <li {if $smarty.foreach.ngood_fee.iteration % 4 eq 0}style="margin-right:0;"{/if}>
+                                <div class="pic" style="width:215px;height:215px;"><a href="{url app=goods&id=$ngoods.goods_id}" target="_blank" class="relative" style="overflow:hidden;display:table-cell;vertical-align:middle;text-align:center;width:215px;height:215px;">
+                                <!--{if $ngoods.realpic and ngoods.serv_realpic}-->
+                                                                   <i class="shipa" title="{$lang.service_detail}"></i>
+                                                                   <!--{/if}-->
+                                                                   <!--{if $store.serv_refund }-->
+                                                                   <i class="tuixian" title="{$lang.service_send}"></i>
+                                                                   <!--{/if}-->
+                                <img src="data/system/empty.gif" data-ks-lazyload="{$ngoods.default_image}"  style="max-width:215px;max-height:215px;width:auto;height:auto;"/></a></div>
+                                <h3 style="margin-bottom:3px;text-align:left;width:220px;">
+                                <a href="{url app=goods&id=$ngoods.goods_id}" target="_blank" style="color:#666;">{$ngoods.goods_name|escape}</a></h3>
+                                <div class="price_upload" style="overflow:hidden;">
+                                   <span class="price" style="float:left;"><!--{if $ngoods.price lte 600 }-->{$ngoods.price|price}<!--{else}--><strong class="yahei fs16">{$lang.prepare_sell}</strong><!--{/if}--></span>
+                                   <span style="float:right">
+                                   <!--{if $ngoods.realpic }-->
+                                                                   <i class="icon_detail" title="{$lang.service_detail}"><a href="javascript:;"  class="block"></a></i>
+                                                                <!--{/if}-->
+                                    <!--{if $store.serv_sendgoods }-->
+                                   <i class="icon_send" title="{$lang.service_send}"><a href="javascript:;" title="{$lang.service_send}" class="block"></a></i><!--{/if}-->
+                                   <!--{if $store.serv_refund }-->
+                                   <i class="icon_cash" title="{$lang.service_cash}"><a href="javascript:;" title="{$lang.service_cash}" class="block"></a></i><!--{/if}-->
+                                   <!--{if $store.serv_exchgoods }-->
+                                   <i class="icon_change" title="{$lang.service_pattern}"><a href="javascript:;" title="{$lang.service_pattern}" class="block"></a></i><!--{/if}-->
+                                   </span>
+                                </div>
+                                <div class="store_name" style="overflow:hidden;">
+                                   <span style="float:left;">
+                                      <a href="{url app=shop&id=$store.store_id}" target="_blank">{$store.mk_name|escape}&nbsp;{$store.dangkou_address|escape}</a>
+                                   </span>
+                                   <span style="float:right;">
+                                     <a href="{url app=shop&id=$store.store_id}" target="_blank">{$store.store_name}</a>
+                                   </span>
+
+                                </div>
+                                <div class="collect_databag" style="overflow:hidden;">
+                                  <span id="collect_goods_em_{$ngoods.goods_id}" class="collect_star" style="float:left;">
+                                        <a class="inline-block pointer clearfix" title="收藏宝贝" style="border:1px solid #ccc;border-radius:3px;padding:1px 5px;height:16px;line-height:16px;" href="javascript:collect_goods({$ngoods.goods_id});">
+                                                                        <i class="star5 float-left"></i>
+                                                                        <strong class="ml5 font-normal inline-block float-left" style="height:16px;">{$lang.collect_goods}</strong>
+                                                                        </a>
+                                  </span>
+                                  <span style="float:right;">
+                                        <span class="upload"><a class="icon-tb" href="{url app=item_upload&dest=Taobao&goods_id=$ngoods.goods_id}" title="上传淘宝" target="_blank">淘宝</a><a class="icon-al" href="{url app=item_upload&dest=Alibaba&goods_id=$ngoods.goods_id}" title="上传阿里" target="_blank">阿里</a><a class="icon-pp" href="{url app=item_upload&dest=Paipai&goods_id=$ngoods.goods_id}" title="上传拍拍" target="_blank">拍拍</a></span>
+                                  </span>
+                                </div>
+
+                            </li>
+                            <!--{/foreach}-->
+                        </ul>
+                    </div>
+                    <!--{else}-->
+                    <div class="nothing"><p>{$lang.no_records}</p></div>
+                    <!--{/if}-->
+                </div>
+            </div>
+        </div>
+
+        {include file=page.bottom.html}
+    </div>
+
+    <div class="clear"></div>
+
+
+</div>
+
+{include file=footer.html}

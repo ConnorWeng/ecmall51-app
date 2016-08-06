@@ -1,0 +1,106 @@
+{include file=member.header.html}
+{$build_upload}
+<style>
+    h2.title a.fold {position: absolute; top: 4px; right: 8px; width: 13px; height: 13px; overflow: hidden; display: block;}
+    .span_close {background: url({res file=images/member/close.gif});}
+    .span_open {background: url({res file=images/member/open.gif});}
+    .title {line-height: 24px; height: 24px; position: relative; background: #f5f5f5; font-size: 12px; color: #3e3e3e; padding-left: 20px; word-spacing: 3px; cursor: pointer;}
+
+    .btn { background:transparent url({res file=images/member/btn.gif}) repeat scroll 0 -590px; color:#3E3E3E; display:block; float:left; height: 24px; line-height:20px; margin: 0 3px; text-align:center; text-decoration:none; width:78px;}
+    .f_l{ float:left; }
+    .sub_btn {background:transparent url({res file=images/member/btn.gif}) no-repeat scroll 0 -253px; border:0 none; color:#3F3D3E; cursor:pointer; font-weight:bold; height:32px; width:120px; }
+    .gray{color: #B9B9B9; line-height: 22px; margin-left: 10px; }
+    .select select { color: #3D3D3D; padding: 2px; }
+    .table_text td { height : 30px; vertical-align:middle; }
+</style>
+<script type="text/javascript">
+function add_uploadedfile(file_data)
+{
+    $('label.right').show();
+}
+function uploadSuccess(file, serverData) {
+    try {
+        eval('serverData = '+serverData);
+        var errorMsg = '';
+        var progress = new FileProgress(file,  this.customSettings);
+        if (serverData.done) {
+            serverData.retval.file_name = file.name;
+            add_uploadedfile(serverData.retval);
+            progress.setStatus(lang.finish);
+            progress.setComplete();
+            progress.toggleCancel(false);
+        } else {
+            progress.setStatus(lang.error);
+            progress.toggleCancel(false);
+            if(typeof(serverData.msg) == 'object'){
+                $.each(serverData.msg, function(i, val){
+                    errorMsg += lang.get(val.msg) + '[' + val.obj + ']\n';
+                });
+            } else {
+                errorMsg += lang.get(serverData.msg);
+            }
+            if(errorMsg != ''){
+                swfupload_error(errorMsg);
+            }
+        }
+    } catch (ex) {
+        this.debug(ex);
+    }
+}
+
+function swfupload_error(str)
+{
+    $('#warning').append('<label class="error">' + str + '</label>');
+    $('#warning').show();
+}
+</script>
+<div class="content">
+    <div class="totline"></div>
+    <div class="botline"></div>
+    {include file=member.menu.html}
+    <div id="right">
+        <div class="wrap">
+            <div class="public">
+                <form method="post" enctype="multipart/form-data" id="orders_form">
+                    <h2 class="title">
+                        数据包管理
+                    </h2>
+                    <ul{if $step eq 2} style="display:none"{/if}>
+                        <table class="table_text word_spacing5" style="margin-top:15px">
+                            <tr>
+                                <td valign="top"><p>{$lang.select_file}: </p></td>
+                                <td><input type="file" name="datapack_zip" id="datapack_zip" /> <span class="gray">仅支持zip格式，大小不超过10MB</span></td>
+                            </tr>
+                            <tr>
+                                <td valign="top">{$lang.file_format}: </td>
+                                <td>zip文件</td>
+                            </tr>
+                            <tr>
+                                <td valign="top"><p>现有数据包: </p></td>
+                                <td>
+                                    <!--{if $datapack}-->
+                                    <span class="gray" style="display:block;"><a style="color:blue" href="{url app=my_datapack&act=download_datapack&store_id=$store_id}">下载</a></span>
+                                    <!--{else}-->
+                                    <span class="gray" style="display:block;color:black;">无</span>
+                                    <!--{/if}-->
+                                </td>
+                            </tr>
+                        </table>
+                        <div class="send_out">
+                            <!--{if $datapack}-->
+                            <input class="sub_btn" type="submit" value="替换" />
+                            <a href="{url app=my_datapack&act=delete_datapack}">删除数据包</a>
+                            <!--{else}-->
+                            <input class="sub_btn" type="submit" value="上传" />
+                            <!--{/if}-->
+                        </div>
+                    </ul>
+
+
+                </form>
+            </div>
+        </div>
+    </div>
+    <div class="clear"></div>
+</div>
+{include file=footer.html}

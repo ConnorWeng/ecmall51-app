@@ -1,0 +1,62 @@
+{include file=member.header.html}
+<style>
+.borline td { padding:10px 0px; }
+.ware_list th { text-align:left; }
+</style>
+<script type="text/javascript">
+
+$(function(){
+	jQuery.extend(jQuery.validator.messages, {
+		 number: "请输入合法的数字",
+	});
+    $('#profile_form').validate({
+         errorPlacement: function(error, element){
+            $(element).parent('span').after(error);
+        },
+        rules : {
+        	fees : {
+                number:true,
+            }
+        },
+        messages : {
+        	fees : {
+                number:'{$lang.not_number}',
+            }
+        } 
+    });
+   
+});
+</script>
+<div class="content">
+    {include file=member.menu.html}
+    <div id="right">            
+            <div class="wrap">
+                <div class="public">
+                <form method="post" enctype="multipart/form-data" id="profile_form">
+                    <div class="information">                        
+                        <div class="info individual">
+                            <h2 class="fs18 mb10">HI,{$behalf.bh_name|escape}</h2>
+                            <p class="lh24 f66 mb10 pl10">请选择您的可发快递：</p>
+                            <div class="mb10 border padding10" style="line-height:24px;">
+                               <!--{foreach  from=$deliveries item=d name=d_fee}-->  
+                                   <span class="mr10 inline-block" style="width:160px;"><input type="checkbox" name="deliveries[]" class="mr5" value="{$d.dl_id}" {if in_array($d['dl_id'],$exist_deliveries)}checked="checked"{/if}/><em class="f66">{$d.dl_name}</em></span>
+                               <!--{/foreach}-->   
+                            </div>
+                            <div><input type="submit" class="btn" value="{$lang.save_edit}" /></div>
+                        </div>
+                    </div>
+                </form>
+                </div>
+                <div class="wrap_bottom"></div>
+            </div>
+
+            <div class="clear"></div>
+            <div class="adorn_right1"></div>
+            <div class="adorn_right2"></div>
+            <div class="adorn_right3"></div>
+            <div class="adorn_right4"></div>
+        </div>
+        <div class="clear"></div>
+    </div>
+</div>
+{include file=footer.html}

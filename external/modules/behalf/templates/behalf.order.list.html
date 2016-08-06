@@ -1,0 +1,330 @@
+{include file=header.whole.html}
+<script type="text/javascript">
+/* String.prototype.trim=function() {
+	    return this.replace(/(^\s*)|(\s*$)/g,'');
+	}
+
+	//截取字符串 包含中文处理 
+	//(串,长度,增加...) 
+	function subString(str, len, hasDot) 
+	{ 
+		var newLength = 0; 
+		var newStr = ""; 
+		var chineseRegex = /[^\x00-\xff]/g; 
+		var singleChar = ""; 
+		var strLength = str.replace(chineseRegex,"**").length; 
+		for(var i = 0;i < strLength;i++) 
+		{ 
+		    singleChar = str.charAt(i).toString(); 
+		    if(singleChar.match(chineseRegex) != null) 
+		    { 
+		        newLength += 2; 
+		    }     
+		    else 
+		    { 
+		        newLength++; 
+		    } 
+		    if(newLength > len) 
+		    { 
+		        break; 
+		    } 
+		    newStr += singleChar; 
+		} 
+		
+		if(hasDot && strLength > len) 
+		{ 
+		    newStr += "..."; 
+		} 
+		return newStr; 
+	}  */
+
+    function pre_load_format()
+    {
+    	return "<div class='text-center text-default'><img src='{res file=images/loading.gif}'> 玩命加载中，请稍后……</div>";
+    }
+
+	function format ( d ) {
+		var goods = d.order_goods;
+		var goods_str ="<div class='row'><div class='col-xs-12 text-default'><span class='text-default'>订单商品：</span>共 <strong>"+d.total_quantity+"</strong> 件,";
+		for(i=0;i<goods.length;i++)
+		{
+			goods_str += goods[i].goods_seller_bm +" "+goods[i].specification+" "+goods[i].quantity+"件；";
+		}
+		goods_str += '</div></div>';
+		var refund_str ="<div class='col-xs-1'></div>";
+		var append_str ="<div class='col-xs-1'></div>";
+		var deal_order ="<div class='col-xs-2 text-right'><a href='index.php?module=behalf&act=show_order_detail&order_id="+d.order_id+"'  class='btn btn-primary btn-xs'>处理订单</a></div>"
+		if(d.refunds)
+		{
+			refund_str="<div class='col-xs-1'><a class='btn btn-danger btn-xs' href='index.php?module=behalf&act=show_order_detail&order_id="+d.order_id+"'>退款申请 <span class='badge'>1</span></a></div>"
+		}
+		if(d.apply_fee)
+		{
+			append_str="<div class='col-xs-1'><a class='btn btn-warning btn-xs' href='index.php?module=behalf&act=show_order_detail&order_id="+d.order_id+"'>补差申请  <span class='badge'>1</span></a></div>"
+		}
+		var receiver_address = "<div class='row'><div class='col-xs-10'><span class='text-default'>收货地址：</span>"+d.consignee+"，"+d.consignee_region+" "+d.consignee_address+"，"+d.phone_mob+"；</div></div>"
+	    var date_str ="<div class='row'><div class='col-xs-2'><span class='text-default'>下单时间：</span>"+d.add_time+
+	    "</div><div class='col-xs-2'><span class='text-default'>支付时间：</span>"+d.pay_time+
+	    "</div><div class='col-xs-2'><span class='text-default'>发货时间：</span>"+d.ship_time+
+	    "</div><div class='col-xs-2'><span class='text-default'>成交时间：</span>"+d.finished_time+
+	    "</div>"+ refund_str + append_str + deal_order +
+	    "</div>";
+		return "<div class='container-fluid gray999'>"+
+	      goods_str + receiver_address + date_str +
+	    "</div>";
+	}
+
+  $(function(){
+	    // Array to track the ids of the details displayed rows
+	    var detailRows = [];
+		
+		var dt = $("#order_list_table").DataTable({
+					"ordering":true,
+				    "paging":false,
+				    "info":false,
+				    "searching":false,
+					"language":{
+						"url":"{lib file='/DataTables/zn.json'}"
+					},
+					"pagingType":'simple_numbers',
+					"columnDefs":[
+					              {
+					            	  "orderable":false,
+					            	  "targets":[0]
+					              }
+					              
+					]
+				});
+		
+		$('#order_list_table tbody').on( 'click','tr td.details_control',function () {
+			
+			var order_id = $(this).siblings().find("input[type=checkbox]").val();
+			var tr = $(this).closest('tr');
+	        var row = dt.row( tr );
+	        var idx = $.inArray( tr.attr('id'), detailRows );
+	        
+	        if ( tr.hasClass('details') ) {
+	            tr.removeClass( 'details' );
+	            row.child.hide();
+	 
+	            // Remove from the 'open' array
+	            detailRows.splice( idx, 1 );
+	        }
+	        else {
+	            tr.addClass( 'details' );
+	            
+	            $.post("index.php?module=behalf&act=show_order_details",{'id':order_id,'ajax':1},function(json){
+	            	row.child(pre_load_format()).show();
+	            	if(json.done)
+	            	{
+	            		row.child(format(json.retval)).show();
+	            	}
+	            },'json');
+	            
+	            //row.child( format(row.data())).show();
+	 
+	            // Add to the 'open' array
+	            if ( idx === -1 ) {
+	                detailRows.push( tr.attr('id') );
+	            }
+	        }
+	        
+	    } );
+	 
+	    // On each draw, loop over the `detailRows` array and show any child rows
+	    dt.on( 'draw', function () {
+	        $.each( detailRows, function ( i, id ) {
+	            $('#'+id+' td.details_control').trigger( 'click' );
+	        } );
+	    } );
+	  
+	
+  });
+  
+ 
+
+</script>
+<div class="container-fluid">
+	<div style="height:10px;"></div>
+	<div class="">
+	 	<ul class="nav nav-tabs">
+	            <!--{foreach from=$_member_submenu item=_s_m name=member_submenu}-->
+	            <!--{if $_curmenu eq $_s_m.name}-->
+	            <li role="presentation" class="active"><a href="javascript:;">{$_s_m.text}</a></li>
+	            <!--{else}-->
+	                <li role="presentation"><a href="{$_s_m.url}">{$_s_m.text}</a></li>
+	            <!--{/if}-->
+	            <!--{/foreach}-->
+	     </ul>
+     </div>
+    <!--搜索面板-->
+    <div class="order-list" style="margin-top:10px;">
+	    <div class="panel panel-default" style="margin-bottom:0px;">
+	    	<div class="panel-body">
+	    		<form class="form-inline">
+	    			<div class="form-group">
+	    				<label for="inp_order_sn">{$lang.order_sn1}</label>
+	    				<input type="text" id="inp_order_sn" class="form-control input-sm" name="order_sn" value="{$query.order_sn}">
+	    			</div>
+	    			<div class="form-group">
+		    			<label class="text-success">商品编码</label>
+		    			<input type="text" name="goods_no" class="form-control input-sm">
+		    		</div>
+	    			<div class="form-group">
+	    				<label for="add_time_from">{$lang.pay_time}</label>
+	    				<div class='input-group date' id='add_time_from_wrapper'>
+		                    <input type="text" class="form-control input-sm" name="add_time_from"  value="{$query.add_time_from}">
+		                    <span class="input-group-addon">
+		                        <span class="glyphicon glyphicon-time"></span>
+		                    </span>
+		                </div>
+	    				-
+	    				<div class='input-group date' id='add_time_to_wrapper'>
+		                    <input type="text" class="form-control input-sm" name="add_time_to" value="{$query.add_time_to}">
+		                    <span class="input-group-addon">
+		                        <span class="glyphicon glyphicon-time"></span>
+		                    </span>
+		                </div>
+	    			</div>
+	    			<div class="form-group">
+	    				<label for="inp_buyer_name">{$lang.buyer_name}</label>
+	    				<input type="text" id="inp_buyer_name" class="form-control input-sm" name="buyer_name" value="{$query.buyer_name}">
+	    			</div>
+	    			<div class="form-group">
+	    				<label for="inp_goods_seller_bm">{$lang.goods_seller_bm}</label>
+	    				<input type="text" id="inp_goods_seller_bm" class="form-control input-sm" name="goods_seller_bm" value="{$query_goods_seller_bm}">
+	    			</div>
+	    			<div class="form-group">
+	    				<label for="inp_goods_name">{$lang.goods_name}</label>
+	    				<input type="text" id="inp_goods_name" class="form-control input-sm" name="goods_name" value="{$query_goods_name|escape}">
+	    			</div>
+	    			<div class="form-group">
+	    				<label for="inp_invoice_no">{$lang.invoice}</label>
+	    				<input type="text" id="inp_invoice_no" class="form-control input-sm" name="invoice_no" value="{$query.invoice_no|escape}">
+	    			</div>
+	    			<div class="form-group">
+	    				<div class="input-group input-group-sm">
+		    				<label for="inp_exp_delivery" class="input-group-addon">{$lang.delivery_name}</label>
+		    				<select id="inp_exp_delivery" name="exp_delivery" class="form-control selectpicker">
+	                             	   <option value="0">{$lang.all_deliveries}</option>
+	                             	   <!--{foreach from=$related_delivery item=deli}-->
+	                             	   <option value="{$deli.dl_id}" {if $query_dl eq $deli.dl_id}selected{/if}>{$deli.dl_name|escape}</option>
+	                             	   <!--{/foreach}-->
+	               			</select>
+               			</div>
+	    			</div>
+	    			<!--{if $smarty.get.type eq 'accepted' or $smarty.get.type eq 'shipped'}-->
+	    			<div class="form-group">
+	    				<label for="inp_oos">{$lang.oos_query}</label>
+	    				<select name="oos" id="inp_oos" class="form-control input-sm">
+		                	<option value="0">{$lang.oos_select}</option>
+		                	<option value="1" {if $query_oos}selected{/if}>{$lang.yes}</option>
+		                </select>
+	    			</div>
+	    			<!--{/if}-->
+	    			<input type="hidden" name="module" value="behalf" />
+	                <input type="hidden" name="act" value="order_list" />
+	                <input type="hidden" name="type" value="{$type}" />
+	                <input type="hidden" name="order" value=""/>
+	                <div class="form-group">
+	                	<input type="submit" class="btn btn-default btn-sm" id="query_order" value="{$lang.search}" />
+	                </div>
+	                <!--{if $query.buyer_name or $query.add_time_from or $query.add_time_to or $query.order_sn or $query_goods_name or $query_goods_seller_bm or $query_oos or $query.invoice_no or $query_dl}-->
+                    	<div class="form-group">
+                    		<a class="btn btn-info btn-sm" href="{url module=behalf&act=order_list&type=$query.type}">{$lang.cancel_query}</a>
+                    	</div>
+                <!--{/if}-->
+	    		</form>
+	    	</div>
+	    </div>
+    </div>
+    <!-- 订单列表 -->
+	<table id="order_list_table" class="table table-striped table-bordered table-hover" celllspacing="0" border="0" width="100%">
+		<thead>
+			<tr>
+				<th class="text-center" style="width:30px;"></th>
+				<th class="col-xs-1 text-center">订单号</th>
+				<th class="col-xs-1 text-center">会员</th>
+				<th class="col-xs-1 text-center">下单时间</th>
+				<th class="col-xs-1 text-center">订单总价</th>
+				<th class="col-xs-1 text-center">邮费</th>
+				<th class="col-xs-1 text-center">快递公司</th>
+				<th class="col-xs-1 text-center">收件人</th>
+				<th class="col-xs-2 text-center">收件人省市区</th>
+				<th class="col-xs-1 text-center">收件人手机</th>
+				<th class="col-xs-1 text-center">订单状态</th>
+				<th class="col-xs-1 text-center">订单详情</th>
+			</tr>
+		</thead>
+		<tfoot>
+			    <th class="text-center"></th>
+				<th class="col-xs-1 text-center"></th>
+				<th class="col-xs-1 text-center"></th>
+				<th class="col-xs-1 text-center"></th>
+				<th class="col-xs-1 text-center"></th>
+				<th class="col-xs-1 text-center"></th>
+			    <th class="col-xs-1 text-center"></th>
+				<th class="col-xs-1 text-center"></th>
+				<th class="col-xs-2 text-center"></th>
+				<th class="col-xs-1 text-center"></th>
+				<th class="col-xs-1 text-center"></th>
+				<th class="col-xs-1 text-center"></th>
+		</tfoot>
+		<tbody>
+		<!--{foreach from=$orders item=order}-->
+		    <tr id="row_{$order.order_id}">
+		    	<td class="text-center">
+		    		<input type="checkbox" value="{$order.order_id}" class="checkitem" <!--{if $order.status eq ORDER_FINISHED || $order.status eq ORDER_CANCELED}--> disabled="disabled" <!--{/if}-->/>
+		    	</td>
+		    	<td class="col-xs-1 text-center">
+		    		<a href="index.php?module=behalf&act=show_order_detail&order_id={$order.order_id}&hisuri={$smarty.server.SERVER_NAME|escape:url]}{$smarty.server.REQUEST_URI|escape:url}">{$order.order_sn|escape}</a>
+		    	</td>
+		    	<td class="col-xs-1 text-center">
+		    		{$order.buyer_name|escape}
+		    	</td>
+		    	<td class="col-xs-1 text-center">
+		    		<small>{$order.add_time|date:Y-m-d H:i}</small>
+		    	</td>
+		    	<td class="col-xs-1 text-center">
+		    	    {$order.order_amount|price}
+		    	</td>
+		    	<td class="col-xs-1 text-center">
+		    	   <span class="{if $order.shipping_fee lt 1}text-danger{/if}">{$order.shipping_fee|price}</span>
+		    	</td>
+		    	<td class="col-xs-1 text-center">
+		    	   {if $order.delivery_bm and $order.invoice_no}<a  href="http://www.kuaidi100.com/chaxun?com={$order.delivery_bm|escape}&nu={$order.invoice_no|escape}" target="_blank" >{$order.dl_name|escape}{else}{$order.dl_name|escape}{/if}</a>
+		    	</td>
+		    	<td class="col-xs-1 text-center">
+		    		{$order.consignee}
+		    	</td>
+		    	<td class="col-xs-2 text-center">
+		    		<small>{$order.consignee_region}</small>
+		    	</td>
+		    	<td class="col-xs-1 text-center">
+		    		{$order.phone_mob}
+		    	</td>
+		    	<td class="col-xs-1 text-center">
+		    		<span class="{if $order.status eq ORDER_CANCELED}text-danger{elseif $order.status eq ORDER_SHIPPED}text-success{elseif $order.status eq ORDER_FINISHED}text-info{/if}">
+		    		{$order.status|modifier:order_status}</span>
+		    	</td>
+		    	<td class="col-xs-1 text-center details_control">
+		    	
+		    	</td>
+		    </tr>
+			
+		<!--{/foreach}-->
+		</tbody>
+	
+	
+	</table>
+
+    {include file=page.bottom.html}
+
+</div>
+<script type="text/javascript">
+	$(function(){		
+		$('#add_time_from_wrapper').datetimepicker({format:'YYYY-MM-DD HH:mm:ss'});
+		$('#add_time_to_wrapper').datetimepicker({format:'YYYY-MM-DD HH:mm:ss'});
+	});
+</script>
+{include file=footer.whole.html}

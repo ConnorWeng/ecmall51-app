@@ -1,0 +1,75 @@
+/*left*/
+.content-behalf .bleft{width:900px;min-height:600px;background-color:#fff;}
+.content-behalf .bleft .behalf-ad{width:100%;overflow:hidden;}
+.content-behalf .bleft .behalf-filter h3{font-size:14px;font-weight:normal;height:36px;line-height:36px;color:#666;border-bottom:1px solid #ddd;}
+.content-behalf .bleft .behalf-filter h3 .behalf-number{color:#f60;font-weight:bold;padding:0 3px;}
+.content-behalf .bleft .behalf-filter dl{min-height:40px;line-height:40px;color:#666;overflow:hidden;background-color:#fff;}
+.content-behalf .bleft .behalf-filter dl dt{float:left;width:110px;height:100%;text-align:center;padding:5px;}
+.content-behalf .bleft .behalf-filter dl dd{float:left;width:760px;height:100%;background-color:#fff;padding:5px;}
+.content-behalf .bleft .behalf-filter dl dd span{margin-right:3px;}
+.content-behalf .bleft .behalf-filter .start-filter{padding:5px 15px;cursor:pointer;}
+.content-behalf .bleft .behalf-filter .start-filter:hover{background-color:#F4A7A7;color:white;}
+.content-behalf .bleft .behalf-behalvies dl.behalf-item{border-bottom:1px dashed #eee;padding:20px 10px;overflow:hidden;}
+.content-behalf .bleft .behalf-behalvies dl.behalf-item dt{float:left;width:120px;}
+.content-behalf .bleft .behalf-behalvies dl.behalf-item dd{float:left;width:730px;color:#666;}
+.content-behalf .bleft .behalf-behalvies dl.behalf-item dd div.title strong{font-family:'microsoft yahei'}
+.content-behalf .bleft .behalf-behalvies dl.behalf-item dd div.title .add-behalf{font-size:16px;width:100px;height:24px;
+                 position:absolute;top:0;right:0;line-height:24px;border:1px solid #aaa;text-align:center;cursor:pointer;}
+.content-behalf .bleft .behalf-behalvies dl.behalf-item dd div.title .add-behalf b{float:left;padding-left:23px;font-size:32px;color:#aaa;}
+.content-behalf .bleft .behalf-behalvies dl.behalf-item dd div.title .add-behalf:hover{border:1px solid #F4A7A7;color:#333;}
+.content-behalf .bleft .behalf-behalvies dl.behalf-item dd div.title .add-behalf:hover b{color:#ff4444;}
+.content-behalf .bleft .behalf-behalvies dl.behalf-item dd .region{height:30px;line-height:30px;}
+.content-behalf .bleft .behalf-behalvies dl.behalf-item dd .desc{line-height:24px;}
+
+/*right*/
+.content-behalf .bright{width:280px;min-height:600px;background-color:#fff;}
+.content-behalf .bright .behalf-login{height:36px;line-height:36px;
+                 background-color:#559fde;color:white;text-align:center;font-size:16px;font-family:'microsoft yahei';cursor:pointer;}
+.content-behalf .bright h3{font-size:16px;font-family:'microsoft yahei';padding-left:3px;height:30px;line-height:30px;margin-top:15px;color:#666;}
+.content-behalf .bright .new-deal th{font-weight:normal;background-color:#ccc;height:24px;line-height:24px;text-align:center;}
+.content-behalf .bright .new-deal td{font-weight:normal;background-color:#fff;height:31px;line-height:31px;text-align:center;color:#666;}
+.content-behalf .bright .new-behalf{border-top:1px solid #eee;}
+.content-behalf .bright .new-behalf li{float:left;width:80px;height:80px;margin-right:20px;margin-bottom:10px;}
+
+/*bhstore*/
+/*left*/
+.content-bhstore .bleft{width:230px;min-height:600px;background-color:#fff;}
+.content-bhstore .bleft .bh-store{border:1px solid #ddd;padding-bottom:10px;}
+.content-bhstore .bleft .bh-store h3{font-size:14px;font-weight:bold;height:32px;line-height:32px;
+                 color:#434343;border-bottom:1px solid #eee;background-color:#f5f5f5;font-family:'microsoft yahei';}
+.content-bhstore .bleft .bh-store dl dt .bh-title{height:42px;line-height:42px;}
+.content-bhstore .bleft .bh-store dl dt .bh-logo{margin-bottom:5px;}
+.content-bhstore .bleft .bh-store dl dt .bh-ma{height:16px;line-height:16px;color:#999;cursor:pointer;}
+.content-bhstore .bleft .bh-store dl dt .bh-ma img{vertical-align:middle;margin-right:8px;}
+.content-bhstore .bleft .bh-store dl dd{padding:7px 13px;color:#666;}
+.content-bhstore .bleft .bh-store dl dd p{height:24px;line-height:24px;}
+.content-bhstore .bleft .bh-store dl dd p img {vertical-align:middle;}
+.content-bhstore .bleft .bh-store dl dd p.btn a{
+    background: -moz-linear-gradient(center top , #ededed, #d8d8d8) repeat scroll 0 0 rgba(0, 0, 0, 0);
+    border: 1px solid #aaa;
+    border-radius: 2px;
+    box-shadow: 0 1px 1px rgba(0, 0, 0, 0.2);
+    color: #666;
+    cursor: pointer;
+    display: inline-block;
+    font-size: 12px;
+    height: 24px;
+    line-height: 24px;
+    padding: 0 20px;
+    position: relative;
+    text-align: center;
+    vertical-align: middle;}
+
+/*right*/
+.content-bhstore .bright{width:948px;min-height:600px;background-color:#fff;}
+.content-bhstore .bright .biaoyu{font-size:14px;color:#aaa;font-weight:bold;padding-left:13px;
+    height:36px;line-height:36px;border-bottom:1px dashed #eee;}
+.content-bhstore .bright .behalf-intro{font-size:14px;color:#434343;font-weight:bold;
+    height:36px;line-height:36px;border-bottom:2px solid #eee;}
+.content-bhstore .bright .behalf-intro span{display:block;height:36px;line-height:36px;
+    width:130px;text-align:center;border-bottom:2px solid #3a3a3a;}
+.content-bhstore .bright .behalf-related{padding-top:10px;padding-left:7px;}
+.content-bhstore .bright .behalf-related dl{line-height:24px;color:#666;font-size:14px;}
+.content-bhstore .bright .behalf-related dl dt{float:left;width:60px;text-align:center;}
+.content-bhstore .bright .behalf-related dl dd{float:left;width:860px;}
+.content-bhstore .bright .behalf-related dl dd span{margin-right:3px;}

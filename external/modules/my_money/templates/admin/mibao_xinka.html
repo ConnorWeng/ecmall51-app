@@ -1,0 +1,82 @@
+{include file="header.html"}
+<script language="javascript">
+$(function(){
+    $('#sotime,#endtime').datepicker({dateFormat: 'yy-mm-dd'});
+});
+</script>
+
+<div id="rightTop">
+    <p>{$lang.index_dongtaimibaoguanli}</p>
+    <ul class="subnav">
+		<li><a class="btn3" href="index.php?module=my_money&act=mibao_zhengchang">{$lang.index_zhengchangshiyong}</a></li>
+		<li><a class="btn3" href="index.php?module=my_money&act=mibao_zanting">{$lang.index_yizanting}</a></li>
+		<li><a class="btn3" href="index.php?module=my_money&act=mibao_guoqi">{$lang.index_yiguoqi}</a></li>
+		<li><span>{$lang.index_xinkaliebiao}</span></li>
+		<li><a class="btn3" href="index.php?module=my_money&act=mibao_sn_pi">{$lang.index_xinkashengcheng}</a></li>
+		<li><a class="btn3" href="index.php?module=my_money&act=index">{$lang.index_fanhuidaohang}</a></li>
+    </ul>
+</div>
+<div class="mrightTop">
+    <div class="fontl">
+        <form method="get">
+            <div class="left">
+              <input name="module" type="hidden" id="module" value="my_money" />
+              <input name="act" type="hidden" id="act" value="mb_soso" />
+              {$lang.so_mibaosn}
+              <input name="sombsn" type="text" id="sombsn" />
+			  {$lang.so_bangdingshijian}
+              <input name="sotime" type="text" id="sotime" value="<?php echo $_GET["sotime"];?>" size="10" maxlength="10" />
+              {$lang.so_zhi}<input name="endtime" type="text" id="endtime" value="<?php echo $_GET["endtime"];?>" size="10" maxlength="10" />
+                
+                <input type="submit" class="formbtn" value="{$lang.query}" />
+          </div>
+            <!--{if $soso}-->
+            <a class="left formbtn1" href="index.php?module=my_money&act=index">{$lang.cancel_query}</a>
+            <!--{/if}-->
+      </form>
+    </div>
+  <div class="fontr">{include file=page.top.html}</div>
+</div>
+
+<div class="tdare">
+    <table width="100%" cellspacing="0">
+
+        <tr class="tatr1">
+            <td width="20" class="firstCell"><input id="checkall_1" type="checkbox" class="checkall"/></td>
+            <td align="left">{$lang.mb_id}</td>
+            <td>{$lang.mb_mibaosnhao}</td>
+            <td width="120">{$lang.mb_shengchengshijian}</td>
+            <td>生成管理员</td>
+            <td>{$lang.mb_guanlicaozuo}</td>
+        </tr>
+
+        <!--{foreach from=$index item=val}-->
+        <tr class="tatr2">
+            <td width="20" class="firstCell"><input type="checkbox" class="checkitem" value="{$val.id}" /></td>
+            <td align="left"><b>{$val.id}</b></td>
+            <td align="left">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font color="#FF0000">{$val.mibao_sn}</font></td>
+            <td>{$val.add_time|date:y-m-d H:i}</td>
+			<td>{$val.admin_name}</td>
+            <td>
+			<a href="index.php?module=my_money&act=mibao_bangding&id={$val.id}">{$lang.mb_bangdingyonghu}</a>&nbsp;&nbsp;|&nbsp;&nbsp;
+			<a href="index.php?module=my_money&act=mibao_edit_xinka&id={$val.id}">{$lang.mb_bianjimibao}</a>
+			
+			</td>
+        </tr>
+        <!--{foreachelse}-->
+        <tr class="no_data">
+            <td colspan="8">{$lang.no_data}</td>
+        </tr>
+        <!--{/foreach}-->
+    </table>
+    <!--{if $index}-->
+<div id="dataFuncs">
+    <div id="batchAction" class="left paddingT15"><input type="checkbox" class="checkall" />
+      <input class="formbtn batchButton" type="button" value="{$lang.drop}" name="id" uri="index.php?module=my_money&act=mibao_drop_pi" presubmit="confirm('{$lang.mb_piliangshangchutishi}');" />
+    </div>
+    <div class="pageLinks">{include file=page.bottom.html}</div>
+    <div class="clear"></div>
+  </div>
+  <!--{/if}-->
+</div>
+{include file="footer.html"}

@@ -1,0 +1,67 @@
+{include file="header.html"}
+<div id="rightTop">
+  <p>档口优惠设置</p>
+  <ul class="subnav">
+    <li><a class="btn1" href="index.php?app=behalf&amp;act=behalf_discount">档口管理</a></li>
+    <li><span>已设置</span></li>
+    
+  </ul>
+</div>
+<div class="mrightTop">
+  <div class="fontl">
+    
+  </div>
+  <div class="fontr">{include file=page.top.html} </div>
+</div>
+<div class="tdare">
+  <table width="100%" cellspacing="0" class="dataTable">
+    <!--{if $stores}-->
+    <tr class="tatr1">
+      <td width="20" class="firstCell"><input type="checkbox" class="checkall" /></td>
+      <td width="120">{$lang.owner_user_name} | {$lang.owner_real_name}</td>
+      <td width="80"><span ectype="order_by" fieldname="store_name">{$lang.store_name}</span></td>
+      <td width="80"><span ectype="order_by" fieldname="mk_name">市场</span></td>
+      <td width="80"><span ectype="order_by" fieldname="dangkou_address">档口地址</span></td>
+      
+      <td width="80"><span ectype="order_by" fieldname="sgrade">{$lang.sgrade}</span></td>
+      
+      <td class="table-center" width="80"><span ectype="order_by" fieldname="state">{$lang.state}</span></td>
+      
+      <td class="handler" >{$lang.handler}</td>
+    </tr>
+    <!--{/if}-->
+    <!--{foreach from=$stores item=store}-->
+    <tr class="tatr2">
+      <td class="firstCell"><input type="checkbox" class="checkitem" value="{$store.store_id}" /></td>
+      <td>{$store.user_name|escape} | {$store.owner_name|escape}</td>
+      <td>{$store.store_name|escape}</td>
+      <td>{$store.mk_name|escape|default:-}</td>
+       <td>{$store.dangkou_address|escape}</td>
+      
+      <td>{$store.sgrade}</td>
+     
+      <td class="table-center">{$store.state}</td>
+      
+      <td class="handler" style="width:160px;">
+        <!--{if !$smarty.get.wait_verify}-->
+         <a target="_blank" href="{$site_url}/index.php?app=store&amp;id={$store.store_id}">首页 | <a target="_blank" href="index.php?app=store&amp;act=add_discount_model&amp;id={$store.store_id}">优惠设置</a>
+        <!--{else}-->
+        <a href="index.php?app=store&amp;act=view&amp;id={$store.store_id}">{$lang.view}</a>
+        <!--{/if}--></td>
+    </tr>
+    <!--{foreachelse}-->
+    <tr class="no_data">
+      <td colspan="12">{$lang.no_data}</td>
+    </tr>
+    <!--{/foreach}-->
+  </table>
+  <!--{if $stores}-->
+  <div id="dataFuncs">
+    <div class="pageLinks">{include file=page.bottom.html}</div>
+    
+  </div>
+  <div class="clear"></div>
+  <!--{/if}-->
+
+</div>
+{include file="footer.html"}

@@ -1,0 +1,262 @@
+{include file=member.header.html}
+<style>
+#bank_from2 input,#bank_from1 input{height:20px;}
+</style>
+<script type="text/javascript">
+/*修改密码表单*/
+function editpass()
+{
+   if (document.edit_pass.y_pass.value=="")
+  {
+    alert("{$lang.mimabunengweikong}");
+	document.edit_pass.y_pass.focus();
+	return false;
+  }
+  
+  if (document.edit_pass.my_pass.value=="")
+  {
+    alert("{$lang.mimabunengweikong}");
+	document.edit_pass.my_pass.focus();
+	return false;
+  }
+
+  if (document.edit_pass.my_pass2.value=="")
+  {
+    alert("{$lang.mimabunengweikong}");
+	document.edit_pass.my_pass2.focus();
+	return false;
+  }
+  return true;  
+}
+
+/*提现帐户表单*/
+/* $(function(){
+
+	$('#bank_edit').click(function(){
+		var $bank_edit = $("#bank_edit").attr("checked");
+		var $bank_from1 = $('#bank_from1');
+		var $bank_from2 = $('#bank_from2');
+		if($bank_edit == true){
+			$bank_from1.show();
+			$bank_from2.hide();
+		}else{
+			$bank_from2.show();
+			$bank_from1.hide();
+		}
+	});
+
+}); */
+/*删除密保表单*/
+function Del_mibao()
+{
+
+	if(confirm('{$lang.jiechujinggao}'))
+	{
+		return true;
+	}
+	else
+	{
+		return false;
+	}
+}
+</script>
+<?php
+$shuzi1 = round(rand(1,8));
+$shuzi2 = round(rand(1,8));
+$shuzi3 = round(rand(1,8));
+
+$quzimu1= round(rand(65,72));
+$quzimu2= round(rand(65,72));
+$quzimu3= round(rand(65,72));
+
+$zimu1 = chr($quzimu1);
+$zimu2 = chr($quzimu2);
+$zimu3 = chr($quzimu3);
+
+?>	
+<div class="content">
+    <div class="totline"></div><div class="botline"></div>
+    {include file=member.menu.html}
+    <div id="right">
+          <ul class="tab">
+				<li class="active">{$lang.zhanghushezhi}</li>
+				<li class="normal"><a href="?app=my_money&act=password">{$lang.zhifumimaxiugai}</a></li>
+               
+          </ul>
+        <div class="wrap margin1">
+            <div class="public table">
+				<div class="information_index" style="overflow:hidden; margin: 0px 0 -15px;">
+                   <div class="info">
+                        <h3 class="margin2">
+                            <span>{$lang.hello}！{$visitor.user_name}</span>
+                        </h3>
+                      <table class="width6">
+                      <tr>
+					  <td><span style="font-size:14px">
+					  <!--{foreach from=$my_money item=val key=key}-->
+{$lang.zhanghuzongjinere}<span style="font-size:16px;font-weight:bold; color:#FE5400;">{$val.money}</span>
+&nbsp;{$lang.yuan}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{$lang.dongjiejine}<span style="color:blue;">{$val.money_dj}</span>&nbsp;{$lang.yuan}
+<!--&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{$lang.jifen}<span style="color:blue;">{$val.jifen}</span>-->
+
+                                              </span>
+					  <!--{/foreach}-->
+					  </td>
+                      </tr>
+                      <tr>
+                      <td>{$lang.shangcidengluip}: {$visitor.last_ip}<br>
+                                    {$lang.shangcidenglushijian}:{$visitor.last_login|date:complete}<br> 
+                                    
+                                    &nbsp;<A 
+href="index.php?app=my_money&act=paylist">{$lang.lijichongzhi}</A>&nbsp;|&nbsp;<A 
+class=G href="index.php?app=my_money&act=txlist"><span style="color:green;">{$lang.tixian}</span></A>  
+					  </td> 
+
+                      </tr>
+                      </table>
+                 </div>
+             </div>
+         </div>
+      </div>
+
+
+	<div class="wrap">
+         <div class="public table">
+			<form name="bank_set" onSubmit="return user_set();" action="index.php?app=my_money&act=bank_set" method="post">
+				  <h3 class="title" style="margin: -10px 0 20px; color:#3E3E3E">提现帐户设置
+				  
+				  <span style="font-size:12px; font-weight:normal; color:#666666">{$lang.shifouxiugai}
+                  <input name="bank_edit" type="checkbox" id="bank_edit" value="YES"/>
+				  </span>
+			      </h3>
+                  
+
+			
+<div id="bank_from1" style="display: none; color:#646665;float:left;font-size:12px;font-weight:normal;line-height:30px;">
+    
+                支付宝<input type="radio" name="zhifubao" value="1" checked="checked"  class="distance_left">
+                银行<input type="radio" name="zhifubao" value="0" class="distance_left">
+<!--		<span id="change1" style="display: block">支付宝名称：</span>
+		<span id="change2" style="display: none">{$lang.yinhangmingcheng}：</span>
+                           <input type="text" name="yes_bank_name" value="{$val.bank_name}">-->
+                   <div id="change3" style="display: none">
+                        <span>{$lang.yinhangmingcheng}：</span>
+                        <input type="text" name="yes_bank_name" value="{$val.bank_name}"><br>
+                    	<span>{$lang.kaihudiqu}：</span>
+                    	<input type="text" name="yes_bank_add" value="{$val.bank_add}">
+                   </div>
+                    <div id="change4">
+	                    <span id="tixianzhanghu">{$lang.tixianzhanghu}：</span>
+	                    <input type="text" name="yes_bank_sn" value="<!--{if !$val.bank_name }-->{$val.bank_sn}<!--{/if}-->">
+	                    <br>
+						<span>{$lang.querenzhenghu}：</span>
+	                    <input type="text" name="yes_bank_sn_queren" value="">
+	                    <br>
+	                    <span>开户姓名：</span>
+	                    <input type="text" name="yes_bank_username" value="<!--{if !$val.bank_name }-->{$val.bank_username}<!--{/if}-->" size="10" maxlength="6">
+						<br><br>
+						</div>
+						<!--{if $val.mibao_id==0}-->
+						<span>51{$lang.zhifumima}：</span>
+						<input name="zf_pass" type="password" id="zf_pass" />
+	<!--					<br>-->
+	<!--					<span><font color="#FF0000">{$lang.baocunshezhiqianqingtianxiezhifumimatishihuidayanzheng}</font></span>-->
+						<!--{else}-->
+	                    <span>{$lang.dongtaimima}</span>                    
+					<b>
+					<font color="red">
+					<?php echo $shuzi1.$zimu1;?><input type="text" id="user_shuzi1" name="user_shuzi1"  size="3" maxlength="3"/>    
+					<?php echo $shuzi2.$zimu2;?><input type="text" id="user_shuzi2" name="user_shuzi2"  size="3" maxlength="3"/>    
+					<?php echo $shuzi3.$zimu3;?><input type="text" id="user_shuzi3" name="user_shuzi3"  size="3" maxlength="3"/>
+					</font>
+					</b>
+					<input name="user_zimuz1" id="user_zimuz1" type="hidden" value="<?php echo $zimu1.$shuzi1;?>" />
+					<input name="user_zimuz2" id="user_zimuz2" type="hidden" value="<?php echo $zimu2.$shuzi2;?>" />
+					<input name="user_zimuz3" id="user_zimuz3" type="hidden" value="<?php echo $zimu4.$shuzi3;?>" />
+					<br>
+					<span><font color="#FF0000">{$lang.baocunshezhiqianqingtianxiedongtaimima}</font></span>
+					<!--{/if}-->
+					<span><BR><BR>
+					<input type="submit" class="money_btn" value="{$lang.baocunshezhi}" />
+					</span>
+</div>
+					
+<div id="bank_from2" style="color:#646665;float:left;font-size:12px;font-weight:normal;line-height:30px;">
+<!--					<span>账号名称</span>
+                    <input type="text" value="{$val.bank_name}" readonly disabled>
+                    <br>-->
+                    <span>{$lang.dangqianzhanghu}</span>
+                    <input type="text" value="{$val.bank_sn}" readonly disabled>
+                    <br>
+                    <span>{$lang.dangqianhuming}</span>
+                    <input type="text" value="{$val.bank_username}" size="10" maxlength="6" readonly disabled>
+
+</div>
+</form>				  
+				
+		
+         </div>
+	</div>		
+
+
+        <div class="clear"></div>
+        <div class="adorn_right1"></div>
+        <div class="adorn_right2"></div>
+        <div class="adorn_right3"></div>
+        <div class="adorn_right4"></div>
+    </div>
+    <div class="clear"></div>
+</div>
+<div class="clear"></div>
+<script>
+$(function(){
+	var member_account = "{$my_money[0].bank_name}";	
+	//tiq
+	 $("input[name='zhifubao']").click(function(){	
+		$("#change4 input").val('');		
+		if($(this).val() == 1)
+		{
+			$("#tixianzhanghu").html("支付宝账户：");
+			$("#change3").hide();	
+			if(member_account == "")
+			{	
+				$("input[name='yes_bank_sn']").val("{$my_money[0].bank_sn}");
+				$("input[name='yes_bank_username']").val("{$my_money[0].bank_username}");
+			}
+		}
+		else
+		{
+			$("#tixianzhanghu").html("银行账户：");
+			$("#change3").show();
+			if(member_account != "")
+			{				
+				$("input[name='yes_bank_sn']").val("{$my_money[0].bank_sn}");
+				$("input[name='yes_bank_username']").val("{$my_money[0].bank_username}");
+				$("input[name='yes_bank_name']").val("{$my_money[0].bank_name}");
+				$("input[name='yes_bank_add']").val("{$my_money[0].bank_add}");
+			}
+		}			
+	}); 
+	 $("#bank_edit").click(function(){
+		 
+		if($(this).attr("checked"))
+		{			
+			if(member_account != "")
+			{
+				$("input[name='zhifubao'][value=0]").click();				
+			}
+			$("#tixianzhanghu").html("支付宝账户：");
+			$("#bank_from1").show();
+			$("#bank_from2").hide();
+		} 
+		else
+		{			
+			$("#bank_from2").show();
+			$("#bank_from1").hide();
+		}
+	});	 
+	
+});
+</script>
+<iframe id='iframe_post' name="iframe_post" frameborder="0" width="0" height="0">
+</iframe>
+{include file=footer.html}

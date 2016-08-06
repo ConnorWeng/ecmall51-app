@@ -1,0 +1,450 @@
+{include file=header.whole.html}
+<script type="text/javascript">
+/*
+$.fn.dataTableExt.oApi.fnReloadAjax = function ( oSettings, sNewSource, fnCallback, bStandingRedraw )
+{
+    if ( sNewSource !== undefined && s NewSource !== null ) {
+        oSettings.sAjaxSource = sNewSource;
+    }
+
+    // Server-side processing should just call fnDraw
+    if ( oSettings.oFeatures.bServerSide ) {
+        this.fnDraw();
+        return;
+    }
+
+    this.oApi._fnProcessingDisplay( oSettings, true );
+
+    var that = this;
+    var iStart = oSettings._iDisplayStart;
+    var aData = [];
+
+    this.oApi._fnServerParams( oSettings, aData );
+
+    oSettings.fnServerData.call( oSettings.oInstance, oSettings.sAjaxSource, aData, function(json) {
+        // Clear the old information from the table /
+        that.oApi._fnClearTable( oSettings );
+
+        // Got the data - add it to the table /
+        var aData =  (oSettings.sAjaxDataProp !== "") ?
+            that.oApi._fnGetObjectDataFn( oSettings.sAjaxDataProp )( json ) : json;
+
+        for ( var i=0 ; i<aData.length ; i++ )
+        {
+            that.oApi._fnAddData( oSettings, aData[i] );
+        }
+
+        oSettings.aiDisplay = oSettings.aiDisplayMaster.slice();
+
+        that.fnDraw();
+
+        if ( bStandingRedraw === true )
+        {
+            oSettings._iDisplayStart = iStart;
+            that.oApi._fnCalculateEnd( oSettings );
+            that.fnDraw( false );
+        }
+
+        that.oApi._fnProcessingDisplay( oSettings, false );
+
+        // Callback user function - for event handlers etc /
+        if ( typeof fnCallback == 'function' && fnCallback !== null )
+        {
+            fnCallback( oSettings );
+        }
+    }, oSettings );
+};
+*/
+//
+//Pipelining function for DataTables. To be used to the `ajax` option of DataTables
+//
+$.fn.dataTable.pipeline = function ( opts ) {
+ // Configuration options
+ var conf = $.extend( {
+     pages: 5,     // number of pages to cache
+     url: '',      // script url
+     data: null,   // function or object with parameters to send to the server
+                   // matching how `ajax.data` works in DataTables
+     method: 'GET' // Ajax HTTP method
+ }, opts );
+
+ // Private variables for storing the cache
+ var cacheLower = -1;
+ var cacheUpper = null;
+ var cacheLastRequest = null;
+ var cacheLastJson = null;
+
+ return function ( request, drawCallback, settings ) {
+     var ajax          = false;
+     var requestStart  = request.start;
+     var drawStart     = request.start;
+     var requestLength = request.length;
+     var requestEnd    = requestStart + requestLength;
+      
+     if ( settings.clearCache ) {
+         // API requested that the cache be cleared
+         ajax = true;
+         settings.clearCache = false;
+     }
+     else if ( cacheLower < 0 || requestStart < cacheLower || requestEnd > cacheUpper ) {
+         // outside cached data - need to make a request
+         ajax = true;
+     }
+     else if ( JSON.stringify( request.order )   !== JSON.stringify( cacheLastRequest.order ) ||
+               JSON.stringify( request.columns ) !== JSON.stringify( cacheLastRequest.columns ) ||
+               JSON.stringify( request.search )  !== JSON.stringify( cacheLastRequest.search )
+     ) {
+         // properties changed (ordering, columns, searching)
+         ajax = true;
+     }
+      
+     // Store the request for checking next time around
+     cacheLastRequest = $.extend( true, {}, request );
+
+     if ( ajax ) {
+         // Need data from the server
+         if ( requestStart < cacheLower ) {
+             requestStart = requestStart - (requestLength*(conf.pages-1));
+
+             if ( requestStart < 0 ) {
+                 requestStart = 0;
+             }
+         }
+          
+         cacheLower = requestStart;
+         cacheUpper = requestStart + (requestLength * conf.pages);
+
+         request.start = requestStart;
+         request.length = requestLength*conf.pages;
+
+         // Provide the same `data` options as DataTables.
+         if ( $.isFunction ( conf.data ) ) {
+             // As a function it is executed with the data object as an arg
+             // for manipulation. If an object is returned, it is used as the
+             // data object to submit
+             var d = conf.data( request );
+             if ( d ) {
+                 $.extend( request, d );
+             }
+         }
+         else if ( $.isPlainObject( conf.data ) ) {
+             // As an object, the data given extends the default
+             $.extend( request, conf.data );
+         }
+
+         settings.jqXHR = $.ajax( {
+             "type":     conf.method,
+             "url":      conf.url,
+             "data":     request,
+             "dataType": "json",
+             "cache":    false,
+             "success":  function ( json ) {
+                 cacheLastJson = $.extend(true, {}, json);
+
+                 if ( cacheLower != drawStart ) {
+                     json.data.splice( 0, drawStart-cacheLower );
+                 }
+                 json.data.splice( requestLength, json.data.length );
+                  
+                 drawCallback( json );
+             }
+         } );
+     }
+     else {
+         json = $.extend( true, {}, cacheLastJson );
+         json.draw = request.draw; // Update the echo for each response
+         json.data.splice( 0, requestStart-cacheLower );
+         json.data.splice( requestLength, json.data.length );
+
+         drawCallback(json);
+     }
+ }
+};
+
+//Register an API method that will empty the pipelined data, forcing an Ajax
+//fetch on the next draw (i.e. `table.clearPipeline().draw()`)
+$.fn.dataTable.Api.register( 'clearPipeline()', function () {
+ return this.iterator( 'table', function ( settings ) {
+     settings.clearCache = true;
+ } );
+} );
+
+
+
+
+  $(function(){
+	    
+	  
+	  $('#query_time_form').bootstrapValidator({
+		  feedbackIcons: {
+	            valid: 'glyphicon glyphicon-ok',
+	            invalid: 'glyphicon glyphicon-remove',
+	            validating: 'glyphicon glyphicon-refresh'
+	        }, 
+		  fields:{
+			  goods_action:{
+				  validators:{
+					  notEmpty:{
+						  message:'至少选择一项！'
+					  }
+				  }
+			  },
+			  goods_no:{
+				  validators:{
+					  notEmpty:{},
+					  regexp:{
+						  regexp:/^\d{14,20}$/,
+						  message:'请输入14位-20位数字的商品编码'
+					  },
+					   remote:{
+						  url:"index.php?module=behalf&act=check_goodsno"
+					  } 
+				  }
+			  }
+			  
+		  }
+	  }).on('success.field.bv', function(e,data) {
+		 
+		 if(data.field == 'goods_no')
+		 {
+			 
+			  // Prevent form submission
+	          e.preventDefault();
+			 
+	          // Get the form instance
+	          var $form = $(e.target);
+
+	          // Get the BootstrapValidator instance
+	          var bv = $form.data('bootstrapValidator');
+			  var postData = {'goods_no':$form[0].value,'goods_action':$("input[name='goods_action']:checked").val()};
+	          // Use Ajax to submit form data
+	       
+	            $.post($form.attr('action'), postData, function(result) {
+	              //var json = $.parseJSON(result);$form.serialize()
+	             var botbox = bootbox.alert(result.msg);
+	              //redraw data table
+	             
+	              //console.log(botbox);
+	              setTimeout(function(){
+	            	  botbox.modal('hide');
+	    	          $('#goods_no').val('').focus();
+	    	          dt.clearPipeline().draw();
+	              },800);
+	              
+	              
+	          }, 'json'); 
+	          //console.log(postData);
+	          $form.bootstrapValidator('resetForm', true);      
+			  
+		 }
+		  
+          
+       
+      });
+	  
+	  	  
+	 var dt = $('#goods_list_tb').DataTable( {
+	        "processing": true,
+	        "serverSide": true,
+	        "columns": [
+	                    {"data":"id"},
+	                    { "data": "goods_no" },
+	                    { "data": "goods_image" },
+	                    { "data": "goods_name" },
+	                    { "data": "goods_attr_value" },
+	                    { "data": "goods_specification" },
+	                    { "data": "goods_price" },
+	                    { "data": "store_bargin" },
+	                    { "data": "goods_status" }
+	                ],
+	        "ajax": $.fn.dataTable.pipeline( {
+	            url: "index.php?module=behalf&act=get_pipe_goods",
+	            pages: 5 // number of pages to cache
+	        } ),
+	        "columnDefs":[
+	                      
+	                      {
+	                    	  "render": function(data, type, row) {
+	                              return '<img src="'+data+'" width="50" height="50"/>';
+	                          },
+	                          "targets": [2]
+	                      },
+	                      {
+	                    	  "render": function(data, type, row) {
+	                              return '&yen;'+data;
+	                          },
+	                          "targets": [6]
+	                      },
+	                      {
+	                    	  "render": function(data, type, row) {
+	                    		  if(data > 0)
+	                              	return '&yen;'+data;
+	                              else return '';
+	                          },
+	                          "targets": [7]
+	                      },
+	                      {
+	                    	  "render": function(data, type, row) {	                    		  
+	                    		  return switch_goods_status(data);
+	                          },
+	                          "targets": [8]
+	                      },
+	                      {
+	                    	  "orderable":false,
+	                    	  "targets":0
+	                      },
+	                      {
+	                    	  "visible":false,
+	                    	  "targets":0
+	                      },
+	                      {
+	                    	  "orderable":false,
+	                    	  "targets":[2]
+	                      },
+	                      {
+	                    	  "orderable":false,
+	                    	  "targets":[8]
+	                      }
+	                      ],
+	        "createdRow":function(row,data,index){
+	        	$('td',row).eq(1).addClass('text-center').end()
+	        	.eq(5).addClass('text-center').end()
+	        	.eq(6).addClass('text-center');
+	        },
+	        "language":{
+	        	"sProcessing": "处理中...",
+	            "sLengthMenu": "显示 _MENU_ 项结果",
+	            "sZeroRecords": "没有匹配结果",
+	            "sInfo": "显示第 _START_ 至 _END_ 项结果，共 _TOTAL_ 项",
+	            "sInfoEmpty": "显示第 0 至 0 项结果，共 0 项",
+	            "sInfoFiltered": "(由 _MAX_ 项结果过滤)",
+	            "sInfoPostFix": "",
+	            "sSearch": "商品编码搜索:",
+	            "sUrl": "",
+	            "sEmptyTable": "表中数据为空",
+	            "sLoadingRecords": "载入中...",
+	            "sInfoThousands": ",",
+	            "oPaginate": {
+	                "sFirst": "首页",
+	                "sPrevious": "上页",
+	                "sNext": "下页",
+	                "sLast": "末页"
+	            },
+	            "oAria": {
+	                "sSortAscending": ": 以升序排列此列",
+	                "sSortDescending": ": 以降序排列此列"
+	            }
+			},
+			"pagingType":'full_numbers'
+	    } );
+	 // console.log(dt);
+	//add table no
+	 /*  dt.on('order.dt search.dt',
+			    function() {
+			        dt.column(0, {
+			            search: 'applied',
+			            order: 'applied'
+			        }).nodes().each(function(cell, i) {
+			            cell.innerHTML = i + 1;
+			        });
+			    }).draw();   */
+	
+  });
+  
+  function switch_goods_status(s)
+  {
+	  
+	  var className = 'label-default';
+	  var chValue = '备货中';
+	  
+	  
+	  if(s== 0){}
+	  else if(s==10){className='label-primary';chValue='已备货';}
+	  else if(s==20){className='label-warning';chValue='明天';}
+	  else if(s==30){className='label-warning';chValue='未出货';}
+	  else if(s==40){className='label-warning';chValue='已下架';}
+	  else if(s==11){className='label-success';chValue='已发货';}
+	  else if(s==50){className='label-danger';chValue='已退货';}
+	  
+	  return '<label class="label '+ className +'">'+chValue+'</label>';
+	  
+  }
+  
+
+</script>
+
+<div class="container-fluid">
+    
+	<div class="panel panel-default">
+		<div class="panel-body">
+			<div class="container-fluid">
+				<div class="row">
+					<form id="query_time_form" class="form" method="post">
+						<div class="form-group">
+				       		<div class="row">				       			
+				       			<div class="col-xs-7">
+				       				<div class="radio-inline">
+					       				<label>
+					       					<input type="radio" name="goods_action" value="warehouse" checked /> 已备货
+					       				</label>
+				       			    </div>
+				       			    <div class="radio-inline">
+					       				<label>
+					       					<input type="radio" name="goods_action" value="tomorrow" /> 明天有
+					       				</label>
+					       			</div>
+				       				<div class="radio-inline">
+					       				<label>
+					       					<input type="radio" name="goods_action" value="unformed" /> 未出货
+					       				</label>
+					       			</div>
+				       				<div class="radio-inline">
+					       				<label>
+					       					<input type="radio" name="goods_action" value="outdated" /> 已下架
+					       				</label>
+					       			</div>
+				       			</div>
+				       		</div>
+				       </div>
+						<div class="form-group">
+							<div class="row">
+								<div class="col-xs-4">
+									<div class='input-group'>
+					   				    <label class="input-group-addon" for="goods_no">商品编码</label>
+					                    <input type="text" id="goods_no" class="form-control" name="goods_no" >					                    
+					                </div>
+								</div>
+							</div>
+				       </div>
+				       
+				       <!-- <input type="hidden" name="module" value="behalf" />
+				       <input type="hidden" name="act" value="manage_goods_warehouse" /> -->
+				       <div class="form-group">
+			            	<div clss="input-group-btn">
+					                    	<button type="submit" class="btn btn-primary" id="query_submit">确 定</button>
+					        </div>
+			           </div>
+					</form>
+				</div>
+			  </div>
+			</div>
+	  </div>
+	
+	  <table id="goods_list_tb" class="table table-striped table-bordered" width="100%">
+	  	<thead>
+	  		<tr>
+	  			<th class="text-center ">序号</th>
+	  			<th class="text-center ">商品编码</th>
+	  			<th class="text-center ">商品图片</th>
+	  			<th class="text-center ">商品名称</th>
+	  			<th class="text-center ">商家编码</th>
+	  			<th class="text-center ">颜色尺寸</th>
+	  			<th class="text-center ">价格</th>
+	  			<th class="text-center ">档口优惠</th>
+	  			<th class="text-center ">状态</th>
+	  		</tr>
+	  	</thead>
+	  	
+	  </table> 
+</div>
+{include file=footer.whole.html}

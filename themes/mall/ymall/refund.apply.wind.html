@@ -1,0 +1,148 @@
+{include file="header.html"}
+<style type="text/css">
+.mall-nav{ display:none}
+</style>
+<script type="text/javascript">
+
+$(function(){
+	
+	function cal_category()
+	{
+		var goods_choice = $("input[type='checkbox'][name='ginfo[]']:checked").size();
+		$('#goods_category').text(goods_choice);
+		
+		var goods_amount = 0;
+		$("input[type='checkbox'][name='ginfo[]']:checked").each(function(){
+			srg = $(this).attr('data-price').split(":");
+			goods_amount = goods_amount + srg[0] * srg[1];
+		});		
+		$('#goods_total_amount').text(number_format(goods_amount,2));
+		if(goods_amount > 0)
+		{
+			$('#submit_btn').removeClass('btn_disable').addClass('btn');
+		}
+	}
+	
+	$('#checkall').click(function(){
+		$("input[type='checkbox'][name='ginfo[]']").attr('checked',this.checked);
+		cal_category();
+	});
+	$("input[type='checkbox'][name='ginfo[]']").click(function(){
+		if(!this.checked) { 
+			$('#checkall').attr('checked',this.checked); 
+	    }
+		cal_category();
+	});
+	
+	$('#submit_btn').click(function(){
+		if($(this).hasClass('btn'))
+		{
+			$('#refund_form').submit();
+			return false;
+		}
+	});
+	
+});
+
+</script>
+<div id="main" class="w-full">
+<div id="page-cart" class="w cart-index mb20">
+   <div class="step step1 mt10 clearfix">
+      <span class="fs14 strong fff">{$lang.refund_goods_choice}</span>
+      <span class="fs14 strong">{$lang.refund_fill_sheet}</span>
+      <span class="fs14 strong">{$lang.refund_handle}</span>
+      <span class="fs14 strong">{$lang.refund_finished}</span>
+   </div>
+   
+   <ul class="mod-tab mt10" style="margin-bottom:-1px;position:relative;">
+   		<li class="f33" style="font-size:13px;">
+                   <!--{if $order_info.status eq $smarty.const.ORDER_ACCEPTED}-->
+                    {$lang.seller_unshipped_goods}
+                   <!--{elseif $order_info.status eq $smarty.const.ORDER_SHIPPED or $order_info.status eq $smarty.const.ORDER_FINISHED}-->
+                    {$lang.seller_shipped_goods}
+                    <!--{/if}-->
+                    (<span class="f60">{$order_goods|modifier:count}</span>)</li>
+   </ul>
+   <div class="cartbox w mb10" style="padding:15px;width:1170px;border:1px solid #CAE1FE;">
+      <div class="amount mb10 mt10">
+      	<span class="fs14 strong f66">{$lang.please_choose_your_refund_goods}</span>         
+      </div>
+      <div class="title clearfix mb10" style="background:#f5f5f5;border-top:1px solid #CAE1FE;">
+         <span class="sellect-all" style="width:196px;">
+             <span class="selectAllGoods" style="text-align:left;">&nbsp;
+                <!--{if $order_info.status neq $smarty.const.ORDER_ACCEPTED}-->
+                <input type="checkbox" id="checkall"/>{$lang.selectAll}
+                <!--{/if}-->
+             </span>
+         </span>
+         <span class="col-desc">{$lang.store_goods}</span>
+         <span>{$lang.price}</span>
+         <span>{$lang.quantity}</span>
+         <span>{$lang.payed_amount}</span>
+         <span>{$lang.goods_status}</span>
+      </div>
+      <div class="content">
+                 
+         <div class="store-each">
+            <div class="store-name pb1"></div>
+            <form id="refund_form" action="{url app=buyer_order&amp;act=fill_refund_sheet}" method="post">
+            <!--{foreach from=$order_goods item=goods name=fe_goods}-->
+            <dl class="goods-each clearfix" id="cart_item_{$goods.rec_id}">
+               <dd class="select">
+                   <!--{if $order_info.status neq $smarty.const.ORDER_ACCEPTED}-->
+                   <input type="checkbox" name="ginfo[]" value="{$goods.goods_id}" data-price="{$goods.price}:{$goods.quantity}"/>
+                   <!--{/if}-->
+               </dd>
+               <dd class="pic"><a class="block" href="{url app=goods&id=$goods.goods_id}" target="_blank"><img src="{$goods.goods_image}" alt="{$goods.goods_name|escape}" width="48" height="48" /></a></dd>
+               <dd class="desc">
+                  <p><a href="{url app=goods&id=$goods.goods_id}" target="_blank">{$goods.goods_name|escape}</a></p>
+                  <span class="f66">{$goods.specification|escape}</span>
+               </dd>
+               
+               <dd class="price">{$goods.price|price}</dd>
+               <dd class="quantity">
+                  {$goods.quantity}
+               </dd>
+               <dd class="price">{$goods.subtotal|price}</dd>
+               <dd class="price">
+                   {$order_info.status|modifier:order_status}
+               </dd>
+            </dl>            
+            <!-- {/foreach} -->
+            <input type="hidden" name="order_id" value="{$order_info.order_id}">
+            <!--{if $order_info.status neq $smarty.const.ORDER_ACCEPTED}-->
+            <div class="mt20 w auto mb10 clearfix" style="width:1170px;">            	
+            	<div class="text-right">{$lang.gyz} <span class="f60 strong" id="goods_category">0</span> {$lang.zhp}</div>
+            	<div class="text-right f33 fs14 strong">{$lang.this_refund_amount} <span class="f60 strong" id="goods_total_amount">0.00</span> {$lang.yuan}</div>
+            	<ul class="mt5">
+            		<li class="text-right f099" style="list-style-type:disc;">{$lang.refund_intro1}<li>
+            		<li class="text-right f099" style="list-style-type:disc;">{$lang.refund_intro2}<li>
+            	</ul>
+            </div>
+            <!--{/if}-->
+            </form>
+            <div class="cart-amount mt20 w auto mb10 clearfix" style="border:none;width:1170px;">
+               
+               <div class="btn-amount">
+                  <p>
+                     <!--{if $order_info.status neq $smarty.const.ORDER_ACCEPTED}-->
+                     <button id="submit_btn" class="inline-block btn_disable fs14 center fff strong">{$lang.confirm_refund_goods}</button>
+                     <!--{else}-->
+                     <a href="{url app=buyer_order&amp;act=fill_refund_sheet&amp;order_id=$order_info.order_id}" class="inline-block btn fs14 center fff strong">申请退款</a>
+                     <!--{/if}-->
+                  </p>
+               </div>
+            </div>
+         </div>
+         
+      </div>
+      
+      <!-- //tiq -->
+      
+      
+      
+   </div>
+  
+</div>
+</div>
+{include file="footer.html"}

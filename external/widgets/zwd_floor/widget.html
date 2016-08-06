@@ -1,0 +1,82 @@
+<div class="home_floor clearfix mb10 {$widget_data.class_name}">
+    <div class="floor_title clearfix">
+	      <ul>
+		    <!-- {foreach from=$widget_data.keyword_list item=keyword name=fe_keyword_list} -->
+            
+            <li><a class="f66" href="{url app=search&keyword=$keyword}">{$keyword}</a></li>
+            <!-- {if !$smarty.foreach.fe_keyword_list.last} -->
+            <li class="f66">|</li>
+            <!-- {/if} -->
+            <!-- {/foreach} -->
+		   </ul>
+	   <!--{if $widget_data.ad6_image_url}-->
+	     <img width="200" height="46" src="{$widget_data.ad6_image_url}" />
+	   <!--{else}-->
+         <h2 class="fs22 f66">{$widget_data.model_name}</h2>
+	   <!--{/if}-->	   
+	</div>
+    <div class="floor_con clearfix">
+        <div class="float-left floor_left" style="border:1px solid #ddd;">        	
+        	<ul>            	
+        		<li style="border:none;">
+                    <a style="border:none;" href="{$widget_data.top_title1_url}" target="_blank" title="{$widget_data.top_title1}"><span>{$widget_data.top_title1}</span></a>
+               </li> 
+			   <li style="border:none;">
+                   <a style="border:none;" href="{$widget_data.top_title2_url}" target="_blank" title="{$widget_data.top_title2}"><span>{$widget_data.top_title2}</span></a>
+               </li> 
+        	</ul>
+			<dl class="mt10 cat-con overflowHidden">
+            	<!--{foreach from=$widget_data.cate item=cate}-->
+        		<dd>
+                    <a class="f55" href="{$cate.url}" target="_blank" title="{$cate.txt}"><span>{$cate.txt}</span></a>
+               </dd>
+               <!--{/foreach}-->					
+        	</dl>
+			<a class="block mt10 center" href="{$widget_data.ad2_link_url}" target="_blank" style="border:none;margin-bottom:10px;"><img width="180" height="170" src="{$widget_data.ad2_image_url}" /></a>
+        </div>
+        <div class="float-left floor_content clearfix">
+            <ul class="agoods clearfix">
+            	<!--{foreach from=$widget_data.goods_list item=goods name=fe_goods}-->
+                <li {if $smarty.foreach.fe_goods.iteration % 4 eq 0} style="border-right:none;padding-left:15px"{/if}>
+                    <a href="{url app=goods&id=$goods.goods_id}" target="_blank"><img width="160" height="160" src="{$goods.default_image}" /></a>
+                    <a href="{url app=goods&id=$goods.goods_id}" target="_blank" class="name">{$goods.goods_name|escape|truncate:50}</a>
+					<a class="store-name" href="{url app=store&id=$goods.store_id}">{$goods.store_name|escape}</a>
+                    <p><em class="float-right"><a class="icon-tb" href="#" title="上传淘宝">淘宝</a><a class="icon-al" href="#" title="上传阿里">阿里</a><a class="icon-pp" href="#" title="上传拍拍">拍拍</a></em><strong>{$goods.price|price}</strong></p>
+                </li>
+                <!--{/foreach}-->
+            </ul>
+        </div>
+        <div class="float-right" style="width:245px;border:1px solid #ddd;"> 
+		    <div style="height:30px;line-height:30px;border-bottom:1px solid #ddd;background-color:#f5f5f5;font-size:14px;padding-left:13px;">商品排行</div>
+            <div style="height:300px;padding:0px 10px 10px 10px;overflow:hidden;">
+			   <ul class="order-goods clearfix">
+            	<!--{foreach from=$widget_data.goods_list1 item=goods name=fe_goods}-->
+				 {if $smarty.foreach.fe_goods.iteration lt 4}
+					<li class="rp{$smarty.foreach.fe_goods.iteration} relative">
+					    <table cellpadding="0" cellspacing="0">
+						  <tr>
+						    <td class="relative"><a class="block" style="border:1px solid #eee;" href="{url app=goods&id=$goods.goods_id}" target="_blank" title="{$goods.goods_name|escape}"><img width="60" height="60" src="{$goods.default_image}" /></a></td>
+							<td style="padding-left:5px;"><a href="{url app=goods&id=$goods.goods_id}" target="_blank" class="name f66" title="{$goods.goods_name|escape}">{$goods.goods_name|escape|truncate:50}</a>						
+						<p><strong class="fs16 f60" style="line-height:30px;">{$goods.price|price}</strong></p></td>
+						  </tr>
+						</table>
+						<em class="num absolute block"></em>
+					</li>
+				 {else}
+                    <li class="rp{$smarty.foreach.fe_goods.iteration}">						
+						<a href="{url app=goods&id=$goods.goods_id}" target="_blank" class="name f66" title="{$goods.goods_name|escape}">{$goods.goods_name|escape|truncate:30}</a>						
+					</li>
+				 {/if}
+                <!--{/foreach}-->
+            </ul>
+			</div>
+            <a class="block mt10 center mb10" href="{$widget_data.ad4_link_url}" target="_blank"><img width="225" height="171" src="{$widget_data.ad4_image_url}" /></a>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+

@@ -1,0 +1,52 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<base href="{$site_url}/" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+{$page_seo}
+
+<meta name="author" content="www.51zwd.com" />
+<meta name="generator" content="www.51zwd.com" />
+<meta name="copyright" content="www.51zwd.com. All Rights Reserved" />
+<link rel="shortcut icon" href="{$site_url}/favicon.ico"/>
+<link rel="bookmark" href="{$site_url}/favicon.ico"/>
+<link type="text/css" href="{res file=css/header.css}" rel="stylesheet" />
+<link type="text/css" href="{res file=css/main.css}" rel="stylesheet"  />
+<link type="text/css" href="{res file=css/footer.css}" rel="stylesheet" />
+
+<script type="text/javascript" src="index.php?act=jslang"></script>
+<script type="text/javascript" src="{lib file=jquery.js}" charset="utf-8"></script>
+<script type="text/javascript" src="{lib file=ecmall.js}" charset="utf-8"></script>
+<script type="text/javascript" src="{lib file=cart.js}" charset="utf-8"></script>
+<script type="text/javascript" src="{lib file=jquery.plugins/jquery.lazyload.js}" charset="utf-8"></script>
+<script type="text/javascript" src="{res file=js/main.js}" charset="utf-8"></script> 
+<!--{if $index }-->
+<script type="text/javascript" src="{lib file=jquery.plugins/jquery.SuperSlide.js}" charset="utf-8"></script>
+<!--{/if}-->
+
+<!--[if lte IE 6]>
+<script type="text/javascript" language="Javascript" src="{res file=js/hoverForIE6.js}"></script>
+<![endif]-->
+
+<script type="text/javascript">
+//<!CDATA[
+var SITE_URL = "{$site_url}";
+var REAL_SITE_URL = "{$real_site_url}";
+var PRICE_FORMAT = '{$price_format}';
+$(function(){
+	$('img.lazyload').lazyload();
+});
+//]]>
+</script>
+
+{$_head_tags}
+<!--<editmode></editmode>-->
+</head>
+<body><!-- half 584px margin:10px -->
+<div style="width:1178px;overflow:hidden;">
+	<div area="top" widget_type="area">
+		<!--{widgets page=goods_detail area=top}-->
+	</div>
+</div>
+</body>
+</html>

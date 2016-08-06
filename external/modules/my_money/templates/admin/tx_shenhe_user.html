@@ -1,0 +1,162 @@
+{include file="header.html"}
+
+<div id="rightTop">
+    <p>{$lang.index_tixianshenheguanli}</p>
+    <ul class="subnav">
+		<li><a class="btn3" href="index.php?module=my_money&act=tx_index_shenhe">{$lang.index_chakanquanbu}</a></li>
+		<li><a class="btn3" href="index.php?module=my_money&act=tx_wei_shenhe">{$lang.index_weishenhe}</a></li>
+		<li><a class="btn3" href="index.php?module=my_money&act=tx_yi_shenhe">{$lang.index_yishenhe}</a></li>
+		<li><a class="btn3" href="index.php?module=my_money&act=index">{$lang.index_fanhuidaohang}</a></li>
+    </ul>
+</div>
+
+<div class="info">
+    <form id="tx_shenhe_form" method="post">
+            <table class="infoTable">
+<!--{foreach from=$log item=val key=key}--> 
+            <tr>        
+              <th class="paddingT15">{$lang.tx_shenqingren}</th>
+              <td class="paddingT15 wordSpacing5">{$val.user_name}&nbsp;&nbsp;<a href="index.php?module=my_money&act=logs_user_shouru&user_name={$val.user_name}">{$lang.tx_chakan}{$val.user_name}{$lang.tx_zuijinshouru}</a></td>
+            </tr>
+
+            <tr>
+              <th class="paddingT15">{$lang.tx_shenqingjine}</th>
+              <td class="paddingT15 wordSpacing5"><font color="#FF0000">{$val.money_zs}{$lang.tx_xq_yuan}，实到{$val.money_sd}</font>
+              <input name="money_djs" type="hidden" id="money_djs" value="{$val.money_zs}" />
+               <input type="hidden" id="shenheBack_dj" value="{$val.money_zs}"/></td>
+            </tr>
+            <tr>
+              <th class="paddingT15">{$lang.tx_shenqingshijian}</th>
+              <td class="paddingT15 wordSpacing5">{$val.add_time|date:Y-m-d H:i:s}</td>
+            </tr>
+			<tr>
+              <th class="paddingT15">&nbsp;</th>
+            </tr>
+
+<!--{/foreach}-->
+<!--{foreach from=$user item=val key=key}--> 
+            <tr>
+                <th class="paddingT15">{$lang.tx_xq_yonghukeyongyue}</th>
+                <td class="paddingT15 wordSpacing5">{$val.money}</td>
+            </tr>	
+			<tr>
+                <th class="paddingT15">{$lang.tx_xq_yonghudongjiejine}</th>
+                <td class="paddingT15 wordSpacing5">{$val.money_dj}
+                <font color="#FF0000">{$lang.tx_xq_shifoukouchu}</font><input name="money_chu" type="checkbox" id="money_chu" checked="checked" onclick="return false;" value="YES" /></td>
+            </tr>
+			<tr>
+                <th class="paddingT15">{$lang.tx_xq_tixianzhanghuleixing}</th>
+                <td class="paddingT15 wordSpacing5">{$val.bank_name|default:支付宝}</td>
+            </tr>
+			<tr>
+                <th class="paddingT15">{$lang.tx_xq_tixianzhanghuregion}</th>
+                <td class="paddingT15 wordSpacing5">{$val.bank_add}</td>
+            </tr>
+			<tr>
+                <th class="paddingT15">{$lang.tx_xq_tixianzhanghao}</th>
+                <td class="paddingT15 wordSpacing5">{$val.bank_sn}</td>
+            </tr>
+			<tr>
+                <th class="paddingT15">{$lang.tx_xq_tixianhuming}</th>
+                <td class="paddingT15 wordSpacing5">{$val.bank_username}</td>
+            </tr>
+<!--{/foreach}-->	
+<!--{foreach from=$log item=val key=key}-->
+			<tr>
+                <th class="paddingT15">{$lang.tx_xq_zhuanzhangchenggongjiaoyihao}</th>
+                <td class="paddingT15 wordSpacing5">
+				<input name="order_sn" type="text" id="order_id" {if $val.caozuo eq 61 or $val.caozuo eq 62}disabled="true"{/if} value="{$val.order_sn}" size="30" />
+				<label class="field_notice">{$lang.tx_xq_zhuanzhangchenggongjiaoyihao_note}</label>
+                </td>
+            </tr>
+			<tr>
+                <th class="paddingT15">{$lang.tx_xq_gengxinrizhishuoming}</th>
+                <td class="paddingT15 wordSpacing5">
+				<input name="log_text" type="text" id="log_text" {if $val.caozuo eq 61 or $val.caozuo eq 62}disabled="true"{/if} value="{$val.log_text}" size="60" />
+                </td>
+            </tr>
+			<tr>
+                <th class="paddingT15">{$lang.tx_xq_shifoushenhe}</th>
+                <td class="paddingT15 wordSpacing5">
+					{$lang.tx_xq_shi}<input name="caozuo" type="radio" value="61" {if $val.caozuo==61}checked="checked" disabled="true"{/if} />
+					{$lang.tx_xq_fou}<input name="caozuo" type="radio" value="60" {if $val.caozuo==60 or $val.caozuo ==62}checked="checked"{/if} {if $val.caozuo eq 61}disabled="true"{/if}/>
+					<label class="field_notice"></label>
+                </td>
+            </tr>	
+<!--{/foreach}-->					
+        <tr>
+            <th></th>
+            <td class="ptb20">
+             <h2 style="color:red;font-size:22px;font-family:microsoft yahei;">
+               <!--{if $val.caozuo eq 61}-->
+            	   已审核通过
+               <!--{/if}-->
+               <!--{if $val.caozuo eq 62}-->
+                	已打回申请
+               <!--{/if}-->
+               </h2>
+              <!--{if $val.caozuo eq 60}-->
+                <input class="formbtn" type="submit"  name="Submit" value="{$lang.tx_xq_shenhe}" />
+                <input class="formbtn" type="reset"  name="Submit2" value="{$lang.reset}" />
+                <input id="shenheBack_inp" class="formbtn" type="button" value="打回申请" />
+              <!--{/if}-->
+            </td>
+        </tr>
+
+        </table>
+    </form>
+    
+</div>
+<script type="text/javascript">
+//validate by tiq
+$(function(){
+	$("#shenheBack_inp").click(function(){
+		var uid={$smarty.get.user_id};
+		var logid = {$smarty.get.log_id};
+		var djmoney = $("#shenheBack_dj").val();
+                var log = $("#log_text").val();
+		$.post("index.php?module=my_money&act=shenheBack",{uid:uid,jdmoney:djmoney,logid:logid,log:log},function(retData){
+			location.href="index.php?module=my_money&act=tx_index_shenhe";
+		});
+	});
+	
+	
+	$("#tx_shenhe_form").validate({
+		errorPlacement: function(error, element){
+            $(element).next('.field_notice').hide();
+            $(element).after(error);
+        },
+        success       : function(label){
+            label.addClass('right').text('OK!');
+        },
+        submitHandler:function(form){
+        	//alert($('input[name="caozuo"]:checked').val());
+        	if($('input[name="caozuo"]:checked').val() == 60)
+        	{
+        		alert('是否审核，请选择：是');
+        		return;
+        	}
+        	else
+        	{
+        		form.submit();
+        	}        	
+        },
+        onkeyup    : false,
+        rules:{
+        	order_id:{
+        		required:true,
+        		digits:true,
+        		min:1
+        	}
+        },
+        messages:{
+        	order_id:{
+        		required:'{$lang.required}',
+        		digits:'{$lang.digits}',
+        		min:'{$lang.min}'
+        	}
+        }
+	});
+});
+</script>
+{include file="footer.html"}

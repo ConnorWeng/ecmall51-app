@@ -1,0 +1,53 @@
+{include file=header.whole.html}
+<script type="text/javascript">
+<!--
+  $(function(){
+	  jQuery("#checkall").on('ifChecked ifUnchecked',function(){			 
+			 var checkall = this.checked ? 'check':'uncheck';
+			 jQuery("input[name='user_id[]']").iCheck(checkall);
+			
+		 });
+  });
+//-->
+</script>
+<div class="alert alert-warning">
+	订单数指已付款、已发货、已完成的订单数量之和。<label class="label label-warning">客户超过10天未下单，黄色预警。</label>
+</div>
+  		<table class="table  table-striped table-bordered table-hover">
+  		<caption><h3 class="page-header  text-info">客户列表</h3></caption>                            
+         <thead>
+         	<tr>
+         		<th><input type="checkbox" id="checkall"/></th>
+         		<th>会员账号</th>
+         		<th>真实名称</th>
+         		<th>手机</th>
+         		<th>QQ</th>
+         		<th>旺旺</th>         		
+         		<th>订单数&nbsp;&nbsp;<a href="index.php?module=behalf&act=member_list&order=orders" target="_self" {if $smarty.get.order neq '' and $smarty.get.order neq 'orders'}class="text-muted"{/if}><span class="glyphicon glyphicon-sort-by-attributes-alt"></span></a></th>
+         		<th>最后支付时间&nbsp;&nbsp;<a href="index.php?module=behalf&act=member_list&order=pay_time" target="_self" {if $smarty.get.order neq 'pay_time'}class="text-muted"{/if}><span class="glyphicon glyphicon-sort-by-attributes-alt"></span></a></th>
+         		<th>状态</th>
+         		<th>操作</th>
+         	</tr>
+         </thead>
+         <tbody>
+         <!--{foreach from=$members item=user name=fe_user}-->
+			<tr>
+				<td><input type="checkbox" name="user_id[]" value="{$user.user_id}"></td>
+				<td>{$user.user_name|escape}</td>
+				<td>{$user.real_name|escape}</td>				
+				<td>{$user.phone_mob}</td>
+				<td>{imqq uin=$user.im_qq&site=$user.user_name|escape:url}{$user.im_qq} </td>
+				<td>{imww touid=$user.im_aliww|escape:url&charset=$charset}{$user.im_aliww}</td>
+				<td>{$user.orders|default:0}</td>
+				<td><!--{if $user.red}--><label class="label label-warning">{$user.pay_time|date:complete}</label><!--{else}-->{$user.pay_time|date:complete}<!--{/if}--></td>
+				<td></td>
+				<td>
+					<button class="btn btn-danger btn-xs">提升VIP</button>
+					<button class="btn btn-default btn-xs">加入黑名单</button>
+				</td>
+			</tr>
+         <!--{/foreach}-->
+         </tbody>
+        </table>
+        {include file=page.bottom.html}
+{include file=footer.whole.html}

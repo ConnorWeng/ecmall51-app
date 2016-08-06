@@ -1,0 +1,43 @@
+<div class="clear" style="height:10px;"></div>
+<div id="floor{$widget_data.model_id}" class="home_floor clearfix {$widget_data.class_name}">
+    <div class="floor_title relative pl10 mb10 clearfix border-b2-9c0" style="height:40px;line-height:54px;">
+        <ul>
+           <!--{foreach from=$widget_data.cate item=cate name=fe_cate}-->
+             <li><a class="f66 fs14 yahei"  href="{$cate.url}" target="_blank" title="{$cate.txt}"><span>{$cate.txt}</span></a></li>        
+           <!--{/foreach}-->
+         </ul>     
+         <b class="inline-block bg_index_icon mr10 fs18 center absolute" style="width:28px;height:40px;color:white;line-height:33px;top:0px;left:0;">{$widget_data.floor_name}</b>
+         <h2 class="fs20 f66 strong yahei" style="margin-left:28px;height:40px;line-height:40px;">{$widget_data.model_name}</h2>
+   </div>
+    <div class="floor_con_new clearfix">        
+        <div class="floor_content clearfix">
+            <ul class="goods clearfix" style="width:1230px;">
+              <!--{foreach from=$widget_data.goods_list item=goods name=fe_goods}-->
+                <li class="floor_index_li float-left padding10 overflowHidden yahei relative" style="margin-right:22px;{if $smarty.foreach.fe_goods.iteration % 5 eq 0}mrgin-right:0;margin-left:1px;{else}mrgin-right:22px;{/if}" >
+                    <div class="img relative" style="width:200px;height:200px;display:table-cell;vertical-align:middle;text-align:center;z-index:4;">
+                       <a class="block" href="{url app=goods&id=$goods.goods_id}" target="_blank"><img  class="index-floor-goods-img lazyload" style="max-width:200px;max-height:200px;z-index:5;" alt="{$goods.goods_name|escape}" data-ks-lazyload="{$goods.default_image}" src="data/system/empty.gif"/></a>
+                       <a class="hidden store yellow-transparent absolute" href="{url app=shop&id=$goods.store_id}" title="{$goods.store_name|escape}" style="top:176px;left:-10px;padding:1px 5px;width:210px;height:22px;line-height:22px;">{$goods.store_name|escape} | {$goods.mk_name|default:-}</a>
+                    </div>                    
+                    <a href="{url app=goods&id=$goods.goods_id}" title="{$goods.goods_name|escape}" target="_blank" class="name block mt10 overflowHidden" style="height:36px;line-height:18px;">{$goods.goods_name|escape|truncate:60}</a>
+                    <a class="store-name hidden mt5 aaa" href="{url app=shop&id=$goods.store_id}">{$goods.store_name|escape}</a>                    
+                    <div class="clearfix mt5 overflowHidden" style="height:32px;line-height:32px;">
+                      <span class="float-left fs14"><span class="f44 mr5">&yen;</span><span class="f44 strong">{$goods.price}</span></span>
+                      <p class="float-right" style="margin-top:5px;"><a class="icon-tb bg_upload mr5" href="{url app=item_upload&dest=Taobao&goods_id=$goods.goods_id}" target="_blank" title="上传淘宝">淘宝</a><a class="icon-al bg_upload mr5" href="{url app=item_upload&dest=Alibaba&goods_id=$goods.goods_id}" target="_blank" title="上传阿里">阿里</a><a class="icon-pp bg_upload" href="{url app=item_upload&dest=Paipai&goods_id=$goods.goods_id}" target="_blank" title="上传拍拍">拍拍</a></p>
+                    </div> 
+                </li>
+                <!--{/foreach}-->
+            </ul>
+        </div>       
+    </div>
+</div>
+<script>
+   $("#floor{$widget_data.model_id} .floor_con_new ul.goods").randomize();
+  /*  $.each($("#floor{$widget_data.model_id} .floor_con_new ul.goods li"),function(index,value){
+		  if((index+1)%5 == 0){ 
+			  $(this).css('margin-right','0px'); 
+		   }
+		  else{ 
+			  $(this).css('margin-right','22px'); 
+		  }
+	  }); */
+</script>

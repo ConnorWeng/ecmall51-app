@@ -1,0 +1,63 @@
+{include file=header.whole.html}
+         
+        
+  		<h2 class="page-header text-success">Welcome to 51zwd.com!</h2>
+  		<div>
+  		<div class="alert alert-success">
+  		<!--{if $behalf}-->
+  		<h4 class="text-success"><span class="glyphicon glyphicon-triangle-right"></span>&nbsp;&nbsp;{$behalf.bh_name|escape}，{$behalf.region_name|escape} {$behalf.bh_address|escape}，<abbr>Tel</abbr>:{$behalf.bh_tel|escape}</h4>
+  		<!--{else}-->
+  		<h4 class="text-success"><span class="glyphicon glyphicon-ok"></span>&nbsp;&nbsp;{$member.user_name|escape}，{$member.real_name|escape} 欢迎您！</h4>
+  		<!--{/if}-->
+  		</div>
+  		<div class="row">
+  			<div class="col-md-3 col-sm-6 col-xs-12">
+  				<div class="bg-info db-box db-box-info pull-left">
+  					<span class="glyphicon glyphicon-shopping-cart"></span>
+  				</div>
+  				<dl class="pull-left">
+  					<dd class="text-muted pl13 lh24"> 待拿货商品</dd>
+  					<dt class="pl13 lh24"><strong>{$accepted_goods|default:0}件</strong></dt>
+  				</dl>
+  			</div>
+  			<div class="col-md-3 col-sm-6 col-xs-12">
+  				<div class="bg-info db-box db-box-danger pull-left">
+  					<span class="glyphicon glyphicon-send"></span>
+  				</div>
+  				<dl class="pull-left">
+  					<dd class="text-muted pl13 lh24">待发货</dd>
+  					<dt class="pl13 lh24"><strong>{$accepted_orders|default:0}单</strong></dt>
+  				</dl>
+  			</div>
+  			<div class="col-md-3 col-sm-6 col-xs-12">
+  				<div class="bg-info db-box db-box-success pull-left">
+  					<span class="glyphicon glyphicon-stats"></span>
+  				</div>
+  				<dl class="pull-left">
+  					<dd class="text-muted pl13 lh24">昨日发货</dd>
+  					<dt class="pl13 lh24"><strong>{$shipped_orders|default:0}单</strong></dt>
+  				</dl>
+  			</div>
+  			<div class="col-md-3 col-sm-6 col-xs-12">
+  				<div class="bg-info db-box db-box-warning pull-left">
+  					<span class="glyphicon glyphicon-list"></span>
+  				</div>
+  				<dl class="pull-left">
+  					<dd class="text-muted pl13 lh24">中通可用面单数</dd>
+  					<dt class="pl13 lh24"><strong>{$mail_counter}单</strong></dt>
+  				</dl>
+  			</div>
+  		</div>
+	  		<h5 class="alert alert-warning">如果您有意见或建议，请提交给 <a href="mailto:tanaiquan@51zwd.com" class="">我们</a>，感谢您的宝贵意见！</h5>
+		  	<h4 class="page-header text-success"><span class="glyphicon glyphicon-bell"></span> 面单发货提醒</h4>
+		  	<ul class="list-group text-muted">
+				<li class="list-group-item"><span class="">圆通、中通可获取电子面单号。建议网络不繁忙时操作，成功率高！</span></li>
+				<li class="list-group-item">一键发货。</li>
+		  	</ul>
+	  	
+	  	<p><a class="btn btn-success btn-lg" href="#" role="button">Learn more</a></p>
+  		</div>
+  		
+       
+
+{include file=footer.whole.html}

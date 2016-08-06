@@ -1,0 +1,59 @@
+{include file=header.whole_nolefttop.html}
+<script type="text/javascript">
+	$(function(){
+		
+		
+		
+	    $("#cancelbtn").on('click',function(){
+	    	window.parent.js_success(0);
+	    });
+		
+		
+	});
+</script>
+
+<div class="container-fluid">
+	<form class="form-horizontal">
+		<div class="form-group">
+			<label class="col-xs-2 text-right control-label">{$lang.apply_fee_reason}</label>
+			<div class="col-xs-9">
+				<input type="text" value="{$refund.refund_reason|escape}" class="form-control">
+			</div>
+		</div>
+		<div class="form-group">
+			<label class="col-xs-2 text-right control-label">{$lang.refund_amount}</label>
+			<div class="col-xs-9">
+				<input type="text" value="{$refund.apply_amount|price}" class="form-control">
+			</div>
+		</div>
+		<div class="form-group">
+			<label class="col-xs-2 text-right control-label">{$lang.apply_intro}</label>
+			<div class="col-xs-9">
+				<textarea name="refund_intro" class="form-control disabled">{$refund.refund_intro|escape}</textarea>
+			</div>
+	     </div>
+		
+		 <div class="form-group">
+			<label class="col-xs-2 text-right control-label"></label>
+			<div class="col-xs-9">
+				<button class="btn btn-success" id="cancelbtn">关 闭</button>
+			</div>
+	     </div>
+	</form>
+
+
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+{include file=footer.whole.html}

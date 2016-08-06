@@ -1,0 +1,235 @@
+{include file=header.whole_noleft.html}
+<script type="text/javascript">
+	function tag_printer(rows)
+	{
+		//console.log(rows);
+		  LODOP = getLodop();
+		  if(!confirm("下面会产生大量的实际打印操作，确定继续吗？")) return;
+		  
+		  LODOP.PRINT_INITA(0,0,326,121,"51zwd_代发_拿货单_标签打印");
+		  LODOP.SET_PRINT_PAGESIZE(1,860,320,"");
+		  
+		  for(i=0;i<rows.length;i++)
+		  {
+			  if(i%2 == 0)
+			  {
+			  	LODOP.NewPage();
+			  	LODOP.ADD_PRINT_RECT(8,8,145,112,2,0);
+			  	LODOP.ADD_PRINT_TEXT(13,13,140,20,rows[i][8]);//商家编码
+			  	LODOP.SET_PRINT_STYLEA(0,'Bold',1);
+			  	LODOP.ADD_PRINT_TEXT(33,13,140,34,rows[i][9]);//颜色尺寸
+			  	LODOP.ADD_PRINT_BARCODE(68,13,140,44,"128A",rows[i][2]);//商品编码
+			  	LODOP.ADD_PRINT_TEXT(52,90,30,14,rows[i][12]);//档口优惠
+			  	LODOP.ADD_PRINT_RECT(50,114,32,16,2,1);
+			  	LODOP.ADD_PRINT_TEXT(52,116,10,14,rows[i][14]);//快递
+			  	LODOP.ADD_PRINT_TEXT(52,136,10,14,rows[i][13]);//订单多件
+			  }
+			  else
+			  {
+			  	LODOP.ADD_PRINT_RECT(8,165,145,112,2,0);
+			  	LODOP.ADD_PRINT_TEXT(13,170,140,20,rows[i][8]);
+			  	LODOP.SET_PRINT_STYLEA(0,'Bold',1);
+			  	LODOP.ADD_PRINT_TEXT(33,170,140,34,rows[i][9]);//颜色尺寸
+			  	LODOP.ADD_PRINT_BARCODE(68,170,140,44,"128A",rows[i][2]);//商品编码
+			  	LODOP.ADD_PRINT_TEXT(52,247,30,14,rows[i][12]);//档口优惠
+			  	LODOP.ADD_PRINT_RECT(50,271,32,16,2,1);
+			  	LODOP.ADD_PRINT_TEXT(52,273,10,14,rows[i][14]);
+			  	LODOP.ADD_PRINT_TEXT(52,293,10,14,rows[i][13]);
+			  }
+			  
+			  if((i+1)%20 == 0)
+			  {
+				  LODOP.SET_PRINT_MODE("TAG_PRINT_TASK","拿货单标打印" + (i+1)/20 );
+				  LODOP.PRINT();
+			  }
+			  
+		  }
+		  
+		  if((rows.length)%20 != 0)
+		  {
+			  LODOP.SET_PRINT_MODE("TAG_PRINT_TASK","拿货单标打印" + "end");
+			  LODOP.PRINT();			  
+		  }
+		 
+	}
+	
+   
+  $(function(){
+	 
+	  
+	  
+	  var dt = $("#goods_list_table").DataTable({
+			"ordering":true,
+		    "paging":true,
+		    "info":true,
+		    "searching":true,
+		    "columnDefs":[
+		       {"orderable":false,"targets":0},           
+		       {"orderable":false,"targets":[1]},           
+		       {"orderable":false,"targets":[11]},           
+		       {"visible":false,"targets":[12]},           
+		       {"visible":false,"targets":[13]},           
+		       {"visible":false,"targets":[14]}           
+		     ],
+		     "order":[
+		        [0,null]      
+		     ],
+		     //dom:"Bfrtip",
+		     dom:"<'container-fluid' <'row' <'col-xs-2' l><'col-xs-8' B><'col-cs-2' f> > <t> <'row' <'col-xs-4' i><'col-xs-8 text-right' p>  >  >",
+		     "buttons":[
+		       'copy','excel','print','colvis',{
+		    	   text:'标签打印',
+		    	   className:'btn btn-info',
+		    	   action:function(e,dt,node,config){
+							tag_printer(dt.data());
+		    	   }
+		       }
+		     ],
+			"language":{
+				"url":"{lib file='/DataTables/zn.json'}",
+				"buttons":{
+					"copy":"复制表格",
+					"excel":"导出为EXCEL",
+					"print":"打印表格",
+					"colvis":"隐藏/显示列"
+				}
+			},
+			"pagingType":'full_numbers'
+		});
+	  //add table no
+	   dt.on('order.dt search.dt',
+			    function() {
+			        dt.column(0, {
+			            search: 'applied',
+			            order: 'applied'
+			        }).nodes().each(function(cell, i) {
+			            cell.innerHTML = i + 1;
+			        });
+			    }).draw(); 
+	   
+	 
+	  
+	  
+		  
+		  
+		  
+		 
+  });
+
+</script>
+<div class="container-fluid">
+    
+	  <!--{if $goods_list}-->
+	 <div class="panel panel-default">
+		<div class="panel-body">	
+			<div class="row">
+				<div class="col-xs-2">
+					<a href="index.php?module=behalf&act=manage_taker_list" class="btn btn-primary">返回拿货单列表</a>
+				</div>
+				<div class="col-xs-10">
+					<!-- <b class="text-danger">统计：</b> -->
+					
+				</div>
+			</div>
+		</div>	
+	</div>
+		
+			<table id="goods_list_table" class="table table-condensed table-striped table-bordered table-hover" width="100%">
+		  	<thead>
+		  		<tr>
+		  		    <th class="text-center" width="30">NO</th>
+		  			<th class="text-center col-xs-1">商品图片</th>
+		  			<th class="text-center col-xs-1">商品编码</th>
+		  			<th class="text-center col-xs-1">订单编码</th>
+		  			<th class="text-center col-xs-2">商品名称</th>
+		  			<th class="text-center col-xs-1">所属市场</th>
+		  			<th class="text-center col-xs-1">商品单价</th>
+		  			<th class="text-center col-xs-1">货号</th>
+		  			<th class="text-center col-xs-1">商家编码</th>
+		  			<th class="text-center col-xs-1">颜色尺寸</th>
+		  			<th class="text-center col-xs-1">档口优惠</th>
+		  			<th class="text-center col-xs-1">买家留言</th>
+		  			<th class="text-center">优惠打印</th>
+		  			<th class="text-center">订单商品总数</th>
+		  			<th class="text-center">快递简称</th>
+		  			<th>商品状态</th>
+		  		</tr>
+		  	</thead>
+		  	<tbody>
+		  	<!--{foreach from=$goods_list item=goods}-->
+		  		<tr>
+		  		    <td class="text-center" width="30"></td>
+		  			<td class="text-center col-xs-1"><img src="{$goods.goods_image}" width="50"></td>
+		  			<td class="text-center col-xs-1">{$goods.goods_no}</td>
+		  			<td class="text-center col-xs-1"><a href="javascript:void(0);" data-toggle="popover" data-id="{$goods.order_id}">{$goods.order_sn}</a></td>
+		  			<td class="text-center col-xs-2">{$goods.goods_name}</td>
+		  			<td class="text-center col-xs-1">{$goods.market_name}_{$goods.floor_name}_{$goods.store_address}</td>
+		  			<td class="text-center col-xs-1">{$goods.goods_price|price}</td>
+		  			<td class="text-center col-xs-1">{$goods.goods_sku|escape}</td>
+		  			<td class="text-center col-xs-1">{$goods.goods_attr_value}</td>
+		  			<td class="text-center col-xs-1">{$goods.goods_specification}</td>
+		  			<td class="text-center col-xs-1"><!--{if $goods.store_bargin}-->{$goods.store_bargin|price}<!--{/if}--></td>
+		  			<td class="text-center col-xs-1">{$goods.order_postscript|escape}</td>
+		  			<td class="text-center"><!--{if $goods.store_bargin gt 0}-->{$goods.store_bargin}/H<!--{/if}--></td>
+		  			<td class="text-center">{if $goods.order_goods_quantity gt 1}D{/if}</td>
+		  			<td class="text-center">{$goods.delivery_name}</td>
+		  			<td class="text-center">
+		  			{include file=behalf.goods.status.single.html}
+		  			</td>
+		  		</tr>
+		  	<!--{/foreach}-->
+		  	</tbody>
+		  </table>
+	   
+	  </div>
+	  <!--{else}-->
+	  <div class="alert alert-warning">抱歉！没有找到相关的数据，请继续挖掘吧……</div>
+	  <!--{/if}-->
+	  
+	  <div id="modal-nhd" class="modal fade">
+	  	<div class="modal-dialog">
+	  		<div class="modal-content">
+	  		   <form method="post" id="form-nhd" action="index.php?module=behalf&act=save_nhd">
+	  			<div class="modal-header">
+       	 			<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        			<h4 class="modal-title">拿货单信息</h4>
+      			</div>
+      			<div class="modal-body">
+        			<div class="container-fluid">
+        				
+        					<div class="form-group">
+        						<label class="control-label col-xs-12">拿货单名称</label>
+        						<div class="col-xs-12">
+        							<input type="text" name="nhd_name" class="form-control">
+        					    </div>
+        					</div>
+        					<div class="form-group">
+        						<label class="col-xs-12">拿货员</label>
+        						<div class="col-xs-12">
+	        						<select class="form-control" name="nhd_taker">
+	        							<!--{foreach from=$takers item=tak}-->
+	        							<option value="{$tak.user_id}">{$tak.user_name} | {$tak.real_name}</option>
+	        							<!--{/foreach}-->
+	        						</select>
+	        					</div>
+        					</div>
+        					<input type="hidden" name="goods_count" value="{$total_count}">
+        					<input type="hidden" name="goods_amount" value="{$total_amount}">
+        					<input type="hidden" name="store_bargin" value="{$store_bargin}">
+        					<input type="hidden" name="behalf" value="{$bh_id}">
+        					<input type="hidden" name="market_id" value="{$mkids}">
+        					<input type="hidden" name="market_name" value="{$mknames}">
+        					<input type="hidden" name="content" value="{$content}">
+        				
+        			</div>
+      			</div>
+      			<div class="modal-footer">
+      				<button type="submit" class="btn btn-primary" id="savebtn-nhd">保 存</button>
+        			<button type="button" class="btn btn-default" data-dismiss="modal">关 闭</button>
+     			</div>
+     			</form>
+	  		</div>
+	  	</div>
+	  </div>
+</div>
+{include file=footer.whole.html}

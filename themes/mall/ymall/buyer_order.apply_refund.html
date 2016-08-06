@@ -1,0 +1,166 @@
+<script type="text/javascript">
+$(function(){
+    $('#confirm_cancel').click(function(){
+        DialogManager.close('buyer_order_apply_refund');
+    });
+    
+    $("#order_apply_refund_form").validate({
+        errorPlacement: function(error, element){
+            var error_td = element.siblings('label');
+            error_td.append(error);
+        },
+        success: function(label){
+            label.hide();
+        },
+        submitHandler:function(form)
+        {   
+        	form.submit();
+        },
+        onkeyup: false,
+        rules: {               
+        	refund_reason: {
+               required: true
+            },
+            refund_amount:{
+            	required: true,                
+                number: true,
+                min:1,
+                <!--{if $order.status eq ORDER_ACCEPTED}-->
+                max:{$order.order_amount}
+                <!--{else}-->
+                max:{$order.goods_amount}
+                <!--{/if}-->
+            },
+          invoice_no:{
+        	  required:function(){
+        		  if($("#refund_reason_select").get(0).selectedIndex == 2)
+        		    return true;
+        		  else
+        		    return false;
+        	  }
+          },
+          delivery_name:{
+        	  required:function(){
+        		  if($("#refund_reason_select").get(0).selectedIndex == 2)
+        		    return true;
+        		  else
+        		    return false;
+        	  }
+          }
+        },
+        messages: {               
+        	refund_reason: {
+                required: '{$lang.select_required}'
+            },
+            refund_amount:{
+            	required: '{$lang.input_required}',
+                number: '{$lang.num_for_payAmount}',
+                min: '{$lang.min_for_payAmount}',
+                <!--{if $order.status eq ORDER_ACCEPTED}-->
+                max: '{$lang.max_for_payAmount}'+'{$order.order_amount|price}'
+                <!--{else}-->
+                max: '{$lang.max_for_payAmount}'+'{$order.goods_amount|price}'
+                <!--{/if}-->
+                
+            },
+            invoice_no: {
+                required: '{$lang.input_required}'
+            },
+            delivery_name: {
+                required: '{$lang.select_required}'
+            }
+        }
+    });
+    
+    $("#refund_reason_select").change(function(){
+    	//alert($(this).get(0).selectedIndex);
+    	if($(this).get(0).selectedIndex == 2)
+    	{
+    		$("#goods_table").show();
+    		$("#txtarea").hide();
+    	}
+    	else
+    	{
+    		$("#goods_table").hide();
+    		$("#txtarea").show();
+    	}
+    });
+});
+</script>
+<ul class="tab">
+    <li class="active">{$lang.apply_refund_note}</li>
+</ul>
+<div class="content1">
+<div id="warning"></div>
+<form id="order_apply_refund_form" action="index.php?app=buyer_order&act=apply_refund&order_id={$order.order_id}&ajax" method="post" target="iframe_post">
+    <p>{$lang.refund_reason}<em class="red">*</em>:
+    	<select id="refund_reason_select" name="refund_reason" style="height:22px;line-height:22px;padding:1px 3px;width:120px;">
+    	  <option value="">{$lang.please_select_refund_reason}</option>
+    	  <option value="{$lang.change_order_goods}">{$lang.change_order_goods}</option>
+    	  <option value="{$lang.refund_order_goods}">{$lang.refund_order_goods}</option>
+    	  <!-- <option value="{$lang.refund_order_post}">{$lang.refund_order_post}</option> -->
+    	  <!--{if $order.status eq ORDER_ACCEPTED}-->
+    	  <option value="{$lang.refund_order_all}">{$lang.refund_order_all}</option>
+    	  <!--{/if}-->
+    	</select><label></label>
+    </p>
+    <p>
+     {$lang.refund_amount}<em class="red">*</em>:
+     <input type="text" name="refund_amount" class="text1" style="width:100px;"/> <span style="font-size:12px;font-weight:normal;">{$lang.zuiduo}<!--{if $order.status eq ORDER_ACCEPTED}-->
+                {$order.order_amount}
+                <!--{else}-->
+                {$order.goods_amount}
+                <!--{/if}--></span><label></label>
+    </p>
+    
+    <p id="txtarea">
+     {$lang.refund_intro}:<label></label>
+     <textarea name="refund_intro" style="width:340px;height:120px;font-size:12px;" placeholder="{$lang.welcome_again}"></textarea>
+    </p>
+    <div id="goods_table" class="hidden">
+        <p>
+          {$lang.delivery_name_back}<em class="red">*</em>:
+          <select name="delivery_name">
+            <option value="">{$lang.please_selected}</option>
+            <!--{foreach from=$deliverys item=delivery}-->
+              <option value="{$delivery.dl_id}:{$delivery.dl_name}:{$delivery.dl_desc}">{$delivery.dl_name|escape}</option>
+            <!--{/foreach}-->
+          </select>
+          <label></label>
+        </p>
+        <p>
+          {$lang.invoice_no_back}<em class="red">*</em>:
+          <input type="text" name="invoice_no" class="text1" style="width:160px;"/><label></label>
+        </p>
+	    <table>
+	      <tr>
+	       <td colspan="3" style="padding:5px 0;border-bottom:1px dotted #ccc;">{$lang.please_select_goods}:</td>
+	      </tr>
+	      <tr>
+	        <td colspan="3" height="5"></td>
+	      </tr>
+	      <!--{if $levy_reback_goods_fee}-->
+	      <tr>
+	      	 <td colspan="3">{$lang.levy_reback_goods_fee_note}</td>
+	      </tr>
+	      <tr>
+	        <td colspan="3" height="5"></td>
+	      </tr>
+	      <!--{/if}-->
+	      <!--{foreach from=$order.gwh item=goods}-->
+	         <tr>
+	           <td style="vertical-align:top;"><input type="checkbox" name="goods_ids[]" value="{$goods.id}" checked></td>
+	           <td style="vertical-align:top;width:248px;">商品编码：<span class="color9">{$goods.goods_no}</span></td>
+	           <td style="vertical-align:top;">{$goods.goods_price|price}</td>
+	           <!-- <td style="vertical-align:top;">{$goods.quantity}</td> -->
+	         </tr>
+	      <!--{/foreach}-->
+	    </table>
+    </div>
+    <div class="btn">
+        <input type="submit" id="confirm_yes" class="btn1" value="{$lang.confirm}" />
+        <input type="button" id="confirm_cancel" class="btn2" value="{$lang.cancel}" />
+    </div>
+</form>
+</div>
+

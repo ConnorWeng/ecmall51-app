@@ -1,0 +1,37 @@
+{include file=header.whole.html}
+
+<script type="text/javascript">
+$(function(){    
+	
+	jQuery('#zto_btn').on('click',function(){
+		 $.getJSON("index.php?module=behalf&act=getMailCounter_ajax",function(result){			
+			 
+			 if(result == 'false')
+			 {
+				 $('#infos').html("抱歉，暂未提供该快递查询服务！");
+			 }
+			 if(result.result == 'true')
+		     {
+				 $('#infos').html("您的可用单号数量："+result.counter.available);
+		     }
+			 if(result.result == 'false')
+		     {
+				 $('#infos').html(result.remark);
+		     }
+			 
+		 });
+	  });
+        
+});
+
+</script>
+<div>
+	<h3 class="page-header text-info">电子运单号可用数量</h3>
+    <button class="btn btn-success" id="zto_btn">中通快递</button> 
+    <div style="height:20px;"></div>
+   	<div id="infos" class="alert alert-success">
+   	
+   	</div>
+    			
+</div>
+{include file=footer.whole.html}

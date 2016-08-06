@@ -1,0 +1,99 @@
+{include file=header.html}
+<script type="text/javascript">
+   
+</script>
+<div class="content-bhstore w mt10 clearfix">
+    <!-- left start -->    
+    <div class="bleft mr10 float-left">
+       <div class="bh-store">
+          <h3 class="pl10">{$lang.bhstore_name}</h3>
+          <dl>
+            <dt>
+              <ul>
+                <li class="fs18 center yahei strong bh-title">{$behalf.bh_name|escape}</li>
+                <li class="center bh-logo">
+                   <!--{if $behalf.bh_logo}-->
+                     <img src="{$site_url}/{$behalf.bh_logo}" width="100" height="100"/>
+                    <!--{else}-->
+                       <img src="{$site_url}/data/system/default_behalf_logo.gif" width="100" height="100"/>
+                    <!--{/if}--> 
+                </li>
+                <li class="center bh-ma" title="{$lang.scan_address}">
+                  <img src="{$site_url}/static/images/ma16.gif" width="16" height="16"/>{$lang.scan_address}
+                </li>
+              </ul>
+            </dt>
+            <dd>
+              <p class="region">{$lang.region}:&nbsp;{$behalf.region_name}</p> 
+              <p class="address">{$lang.address}:&nbsp;{$behalf.bh_address}</p> 
+              <p class="ww">{$lang.ww}:&nbsp;{$behalf.bh_ww|defalut:-}
+              <a href="http://amos1.taobao.com/online.ww?v=2&uid={$behalf.bh_ww}&s=2"><img src="http://amos1.taobao.com/online.ww?v=2&uid={$behalf.bh_ww}&s=2"/></a>
+              </p> 
+              <p class="bqq">{$lang.qq}:&nbsp;{$behalf.bh_qq|defalut:-}
+               <!--{if $behalf.bh_qq}-->
+                   <a href="http://wpa.qq.com/msgrd?v=3&uin={$behalf.bh_qq}&site=qq&menu=yes"><img src="{$site_url}/data/system/qq_light.gif" width="16" height="16"/></a>
+               <!--{/if}-->
+              </p> 
+              <p class="wx">{$lang.wx}:&nbsp;{$behalf.bh_wx|defalut:-}</p> 
+              <p class="tel">{$lang.tel}:&nbsp;{$behalf.bh_tel|defalut:-}</p> 
+              <p class="zipcode">{$lang.zipcode}:&nbsp;{$behalf.zipcode|defalut:-}</p>     
+              <p class="btn mt5">
+                      <!--{if in_array($smarty.session.user_info.user_id,$behalf['collect_users'])}-->
+                        <a class="mr10" href="javascript:;">{$lang.bh_collect_success}</a>
+                      <!--{else}-->
+                       <a class="mr10" href="javascript:collect_behalf({$behalf.bh_id})">{$lang.bh_collect}</a>
+                      <!--{/if}-->
+                      <!--{if in_array($smarty.session.user_info.user_id,$behalf['signed_users'])}-->
+                        <a  href="javascript:;">{$lang.bh_qianyue_success}</a>
+                      <!--{else}-->
+                        <a  href="javascript:collect_sbehalf({$behalf.bh_id})">{$lang.bh_qianyue}</a>
+                      <!--{/if}-->
+              </p>       
+            </dd>
+          </dl>
+       </div>
+    </div>
+    <!-- left end -->
+    <!-- right start -->
+    <div class="bright float-right">
+       <div class="biaoyu yahei">
+          {$lang.biaoyu}
+       </div>
+       <h3 class="behalf-intro yahei mt10"><span>{$lang.behalf_intro}</span></h3>
+       <div class="behalf-related">
+          <dl class="clearfix">
+            <dt>{$lang.bhstore_fee}:</dt>
+            <dd>{$lang.behalf_free_forall}</dd>
+          </dl>
+          <dl class="clearfix">
+            <dt>{$lang.behalf_market}:</dt>
+            <dd>
+              <!-- {if $markets} -->
+                 <!-- {foreach from=$markets item=m} -->
+                     <span>{$m.mk_name|escape}</span>
+                 <!-- {/foreach} -->
+              <!-- {else} -->
+                {$lang.not_related_data}
+              <!-- {/if} -->
+            </dd>
+          </dl>
+          <dl class="clearfix">
+            <dt>{$lang.behalf_delivery}:</dt>
+            <dd>
+              <!-- {if $deliveries} -->
+                 <!-- {foreach from=$deliveries item=d} -->
+                     <span>{$d.dl_name|escape}</span>
+                 <!-- {/foreach} -->
+              <!-- {else} -->
+                {$lang.not_related_data}
+              <!-- {/if} -->
+            </dd>
+          </dl>
+       </div>
+      
+    </div>
+    <!-- right end -->
+    <div class="clearboth"></div>
+</div>
+
+{include file=footer.html}

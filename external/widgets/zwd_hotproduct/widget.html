@@ -1,0 +1,56 @@
+﻿<div id="hotproduct_recommend" class="mt10">
+    <div class="relative">
+        <ul class="hd tab_menu title relative">     
+           <!--{foreach from=$widget_data.cate_name item=cname name=fee_cname}-->
+              <!--{if $smarty.foreach.fee_cname.first}-->
+                 <li class="current"><a href="{$cname.cate_url}" target="_blank">{$cname.cate_name}</a></li>
+              <!--{else}-->
+                 <li><a href="{$cname.cate_url}" target="_blank">{$cname.cate_name}</a></li>
+              <!--{/if}-->
+           <!-- {/foreach} -->  
+         </ul>        
+          <b class="inline-block bg_index_icon mr10 fs18 center absolute" style="width:28px;height:40px;color:white;line-height:33px;left:0;top:-2px;">H</b>
+	      <div class="recommend_support_shop absolute yahei fs22 f66 strong yahei">热卖精品</div>
+	  </div>
+	<div class="clr"></div>
+	<div class="relative" style="width:1200px;height:320px;overflow:hidden;">
+   <div class="bd tab_box">
+   <!--{foreach from=$widget_data.goods_list item=good_list name=fee_good_list}-->         
+                 <div class="content">
+			      	<ul class="goods clearfix">
+			      	<!--{foreach from=$good_list item=goods name=fe_goods}-->
+				      <li class="floor_index_li float-left mt10 overflowHidden yahei" style="{if $smarty.foreach.fe_goods.iteration % 5 eq 0}margin-right:0;{else}margin-right:22px;{/if}" >
+	                    <div class="img relative pt10" style="width:220px;height:200px;display:table-cell;vertical-align:middle;text-align:center;">
+	                       <a class="block"  href="{url app=goods&id=$goods.goods_id}" target="_blank"><img class="index-floor-goods-img lazyload" src="data/system/empty.gif" style="max-width:200px;max-height:200px;" alt="{$goods.goods_name|escape}" data-ks-lazyload="{$goods.default_image}" /></a>
+	                       <a class="hidden store yellow-transparent absolute" href="{url app=shop&id=$goods.store_id}" title="{$goods.store_name|escape}" style="top:186px;left:-10px;padding:1px 5px;width:220px;height:22px;line-height:22px;">{$goods.store_name|escape} | {$goods.mk_name|default:-}</a>
+	                    </div>                    
+	                    <a href="{url app=goods&id=$goods.goods_id}" title="{$goods.goods_name|escape}" target="_blank" class="name block mt10 overflowHidden" style="height:36px;line-height:18px;padding:0px 10px;">{$goods.goods_name|escape|truncate:60}</a>
+	                    <a class="store-name hidden mt5 aaa" href="{url app=shop&id=$goods.store_id}">{$goods.store_name|escape}</a>
+	                    <div class="clearfix mt10 overflowHidden" style="height:36px;line-height:36px;bckground:#f5f5f5;padding:0px 10px;">
+	                      <span class="float-left fs14"><span class="f44 mr5">&yen;</span><span class="f44 strong">{$goods.price}</span></span>
+	                      <p class="float-right" style="margin-top:7px;"><a class="icon-tb mr5" href="{url app=item_upload&dest=Taobao&goods_id=$goods.goods_id}" target="_blank" title="上传淘宝">淘宝</a><a class="icon-al mr5" href="{url app=item_upload&dest=Alibaba&goods_id=$goods.goods_id}" target="_blank" title="上传阿里">阿里</a><a class="icon-pp" href="{url app=item_upload&dest=Paipai&goods_id=$goods.goods_id}" target="_blank" title="上传拍拍">拍拍</a></p>
+	                    </div> 
+	                </li>
+			      <!--{/foreach}-->
+			      </ul>
+			   </div>
+   <!--{/foreach}-->
+  </div>
+</div>
+  <script>
+    $(function(){    	 
+    	var hp_len = $('#hotproduct_recommend .tab_menu li').length;
+		var hp_rand = getRandom(hp_len);
+		for(i=hp_rand;i<hp_len;i++){  				
+			$('#hotproduct_recommend .tab_menu li').eq(i).insertBefore($('#hotproduct_recommend .tab_menu li').eq(i-hp_rand));
+			$('#hotproduct_recommend .tab_box div.content').eq(i).insertBefore($('#hotproduct_recommend .tab_box div.content').eq(i-hp_rand));
+		}		
+    	jQuery("#hotproduct_recommend").slide({
+    		effect:'leftLoop',
+    		autoPlay:true,
+    	});  		
+  	});   	
+  
+   </script>
+</div> 
+<div class="clr"></div>

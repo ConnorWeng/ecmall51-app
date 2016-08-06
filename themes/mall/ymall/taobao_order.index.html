@@ -1,0 +1,209 @@
+{include file=member.header.html}
+<script type="text/javascript">
+$(function(){
+    $('#add_time_from').datepicker({dateFormat: 'yy-mm-dd'});
+    $('#add_time_to').datepicker({dateFormat: 'yy-mm-dd'});
+    $('.checkall_s').click(function(){
+        var if_check = $(this).attr('checked') || false;
+        $('.checkitem').each(function(){
+            if(!this.disabled)
+            {
+                $(this).attr('checked', if_check);
+            }
+        });
+        $('.checkall_s').attr('checked', if_check);
+    });
+    $('a[ectype="batchdelete"]').click(function(){
+        if (confirm('{$lang.confirm_delete_order}')) {
+            if($('.checkitem:checked').length == 0){
+                return false;
+            }
+            if($(this).attr('presubmit')){
+                if(!eval($(this).attr('presubmit'))){
+                    return false;
+                }
+            }
+            var items = '';
+            $('.checkitem:checked').each(function(){
+                items += this.value + ',';
+            });
+            items = items.substr(0, (items.length - 1));
+
+            var uri = $(this).attr('uri');
+            uri = uri + '&' + $(this).attr('name') + '=' + items;
+            var id = 'batch_delete_order';
+            var title = $(this).attr('dialog_title') ? $(this).attr('dialog_title') : '';
+            //var url = $(this).attr('uri');
+            var width = '500';
+            window.location = uri;
+        }
+    });
+    $('.sync_btn').click(function() {
+        var $btn = $(this);
+        if ($btn.hasClass('clicked')) {
+            return false;
+        } else {
+            $btn.addClass('clicked');
+            return true;
+        }
+    });
+
+    var status = '{$query.status}';
+    if (status) {
+        $('select[name=status]').val(status);
+    }
+
+    var interval = setInterval(function() {
+        var color = $('.sync_btn').css('color');
+        if (color === 'rgb(255, 0, 0)') {
+            $('.sync_btn').css('color', 'blue');
+        } else {
+            $('.sync_btn').css('color', 'red');
+        }
+    }, 500);
+
+    setTimeout(function() {
+        $('.sync_btn').css('color', 'red');
+        clearInterval(interval);
+    }, 10000);
+});
+</script>
+<div class="content">
+    {include file=member.menu.html}
+    <div id="right">{include file=member.submenu.html}
+        <div class="wrap">
+            <div class="scarch_order">
+                <form method="get">
+                    <div style="float:left;">
+                        <span class="title">{$lang.order_sn}:</span>
+                        <input class="text_normal" type="text" name="order_sn" value="{$query.order_sn|escape}" />
+                        <span class="title hidden">{$lang.add_time}:</span>
+                        <input class="text_normal width2 hidden" type="text" name="add_time_from" id="add_time_from" value="{$query.add_time_from}" /> <!--&#8211;--> <input class="text_normal width2 hidden" id="add_time_to" type="text" name="add_time_to" value="{$query.add_time_to}" />
+                        <span class="title">{$lang.buyer_name}:</span>
+                        <input class="text_normal" type="text" name="buyer_name" value="{$query.buyer_name|escape}" />
+                        <span class="title">{$lang.daifa_order_status}:</span>
+                        <select name="status">
+                            <option value=""></option>
+                            <option value="50">{$lang.vendor_order_unhandled}</option>
+                            <option value="51">{$lang.vendor_order_pending}</option>
+                            <option value="52">{$lang.vendor_order_accepted}</option>
+                            <option value="53">{$lang.vendor_order_shipped}</option>
+                            <option value="54">{$lang.vendor_order_synced}</option>
+                        </select>
+                        <input type="hidden" name="app" value="taobao_order" />
+                        <input type="hidden" name="act" value="index" />
+                        <input type="hidden" name="type" value="{$type}" />
+                        <input type="hidden" name="vendor" value="{$vendor}"/>
+                        <input type="submit" class="btn" value="{$lang.search}" />
+                    </div>
+                    <!--{if $query.buyer_name or $query.add_time_from or $query.add_time_to or $query.order_sn or $query.status}-->
+                    <a class="detlink" href="{url app=taobao_order&vendor=$vendor}">{$lang.cancel_query}</a>
+                    <!--{/if}-->
+                </form>
+            </div>
+            <div class="public_index table">
+                <table>
+                    <tr <!--{if $orders}--> class="table_line"<!--{/if}-->>
+                        <th class="width1"><input id="all" type="checkbox" class="checkall_s" /></th>
+                        <th class="align1" colspan="7">
+                            <label for="all"><span class="all">{$lang.checkall}</span></label>
+                            <!--{if $vendor eq 0}-->
+                            <a class="sync_btn" style="color:red; font-weight:bold" href="index.php?app=taobao_order&act=syncWithTaobao">&nbsp;{$lang.sync_with_taobao}</a>
+                            <a class="sync_back_all_btn" style="color:green; font-weight:bold" href="index.php?app=taobao_order&act=syncAllBackToTaobao">&nbsp;{$lang.sync_all_back_to_taobao}</a>
+                            <!--{/if}-->
+                            <!--{if $vendor eq 1}--><a href="javascript:;" name="order_id" class="delete" ectype="batchdelete" uri="index.php?app=taobao_order&act=deleteOrder" onclick="return ">&nbsp;{$lang.batch_delete}</a><!--{/if}-->
+                        </th>
+                    </tr>
+                    <!--{if $orders}-->
+                    <tr class="line tr_bgcolor">
+                        <th></th>
+                        <th width="120">{$lang.order_sn}</th>
+                        <th>{$lang.buyer_name}</th>
+                        <th width="80">{$lang.consignee}</th>
+                        <th>{$lang.phone_tel}</th>
+                        <th>{$lang.payment_name}</th>
+                        <th>{$lang.order_amount}</th>
+                        <th width="90">{$lang.daifa_order_status}</th>
+                    </tr>
+                    <!--{/if}-->
+                    <!-- 循环开始 -->
+                    <!--{foreach from=$orders item=order}-->
+                    <tr class="color2">
+                        <td class="align2"><input type="checkbox" value="{$order.order_id}" class="checkitem" <!--{if $order.status neq VENDOR_ORDER_UNHANDLED}--> disabled="disabled" <!--{/if}-->/></td>
+                        <td class="alian2"><a class="color3" href="http://trade.taobao.com/trade/detail/trade_item_detail.htm?bizOrderId={$order.order_sn}" target="_blank">{$order.order_sn}</a></td>
+                        <td class="align2">{$order.buyer_name|escape}</td>
+                        <td class="align2">{$order.receiver_name|escape}</td>
+                        <td class="align2">{$order.receiver_mobile|escape}<br />
+                        </td>
+                        <td class="align2">{$lang.alipay}</td>
+                        <td class="align2 padding1"><strong>{$order.payment}</strong></td>
+                        <td class="align2"><span class="color4">{$order.status|modifier:vendor_order_status}</span></td>
+                    </tr>
+                    <tr class="">
+                        <td colspan="8">
+                            <div class="particular" style="width:768px;">
+                                <!--{foreach from=$order.goods_vendor item=goods}-->
+                                <div class="ware_list" style="width:768px;">
+                                    <div class="ware_pic"><img src="{$goods.default_image}" width="50" height="50"  /></div>
+                                    <div class="ware_text" style="width:680px;">
+                                        <div class="ware_text1" style="width:390px;">
+                                            <a href="{$goods.good_http}" target="_blank">{$goods.goods_name|escape}</a>
+                                            {if $group_id}<a target="_blank" href="{url app=groupbuy&id=$group_id}"><strong class="color8">[{$lang.groupbuy}]</strong></a>{/if}
+                                            <br />
+                                            <span>{$goods.spec_value_1|escape}&nbsp;{$goods.spec_value_2|escape}</span>
+                                            <span>&nbsp;{$goods.outer_iid|escape}</span>
+                                        </div>
+                                        <div class="ware_text2">
+                                            <span>{$lang.quantity}&nbsp;:&nbsp;<strong>{$goods.num}</strong></span>
+                                            <span>{$lang.goods_price}&nbsp;:&nbsp;<strong>{$goods.price}</strong></span>
+                                            <!--{if $goods.sku}--><span>{$lang.sku}&nbsp;:&nbsp;<strong>{$goods.sku}</strong></span><!--{/if}-->
+                                        </div>
+                                    </div>
+                                </div>
+                                <!--{/foreach}-->
+                            </div>
+                        </td>
+                    </tr>
+                    <tr class="line_bottom">
+                        <td colspan="8" align="right" class="order_form1">
+                            <div class="button_wrap">
+                                <input type="button" value="{$lang.quick_daifa}" class="btn1" ectype="dialog" uri="index.php?app=taobao_order&amp;act=quick_daifa&order_id={$order.order_id}" dialog_title="{$lang.quick_daifa}" dialog_id="taobao_order_quick_daifa" dialog_width="900" id="order{$order.order_id}_action_daifa"{if $order.status eq VENDOR_ORDER_SYNCED or $order.status eq VENDOR_ORDER_ACCEPTED or $order.status eq VENDOR_ORDER_PENDING or $order.status eq VENDOR_ORDER_SHIPPED} style="display:none"{/if} />
+                                <a href="index.php?app=cashier&order_id={$order.ecm_order_id}" target="_blank" id="order{$order.ecm_order_id}_action_pay" class="btn1"{if $order.status eq VENDOR_ORDER_UNHANDLED or $order.status eq VENDOR_ORDER_SYNCED or $order.status eq VENDOR_ORDER_ACCEPTED or $order.status eq VENDOR_ORDER_SHIPPED} style="display:none"{/if}>付款</a>
+                                <input type="button" value="取消订单" class="btn1" ectype="dialog" dialog_width="400" dialog_title="取消订单" dialog_id="buyer_order_cancel_order" uri="index.php?app=buyer_order&act=cancel_order&order_id={$order.ecm_order_id}&ajax" id="order{$order.ecm_order_id}_action_cancel"{if $order.status eq VENDOR_ORDER_UNHANDLED or $order.status eq VENDOR_ORDER_SYNCED or $order.status eq VENDOR_ORDER_ACCEPTED or $order.status eq VENDOR_ORDER_SHIPPED} style="display:none"{/if}>
+                                <a href="index.php?app=taobao_order&act=syncBackToTaobao&ecm_order_id={$order.ecm_order_id}&order_sn={$order.order_sn}" target="_blank" id="order{$order.ecm_order_id}_action_sync" class="btn1"{if $order.status eq VENDOR_ORDER_UNHANDLED or $order.status eq VENDOR_ORDER_SYNCED or $order.status eq VENDOR_ORDER_ACCEPTED or $order.status eq VENDOR_ORDER_PENDING} style="display:none"{/if}>淘宝发货</a>
+                                <a class="btn1" href="http://trade.taobao.com/trade/detail/trade_item_detail.htm?bizOrderId={$order.order_sn}" target="_blank"{if $vendor neq 0} style="display:none"{/if}>{$lang.view_taobao_order}</a>
+                                <a class="btn1" href="{url app=buyer_order&act=view&order_id=$order.ecm_order_id}" target="_blank"{if $order.status eq VENDOR_ORDER_UNHANDLED} style="display:none"{/if}>{$lang.view_daifa_order}</a>
+                                <a href="index.php?app=taobao_order&act=deleteOrder&order_id={$order.order_id}" onclick="return confirm('{$lang.confirm_delete_order}');" id="order{$order.ecm_order_id}_action_delete" class="btn1"{if $order.status neq VENDOR_ORDER_UNHANDLED or $vendor neq 1} style="display:none"{/if}>删除</a>
+                            </div>
+                        </td>
+                    </tr>
+                    <!--{foreachelse}-->
+                    <tr><td class="member_no_records" colspan="8">{$lang.no_records}</td></tr>
+                    <!--{/foreach}-->
+                    <!--{if $orders}-->
+                    <tr><th class="width1"><input id="all2" type="checkbox" class="checkall_s" /></th>
+                        <th class="align1" colspan="7">
+                            <p class="position1">
+                                <label for="all2"><span class="all">{$lang.checkall}</span></label>
+                            </p>
+                            <p class="position2">
+                                {include file=member.page.bottom.html}
+                            </p>
+                        </th>
+                    </tr>
+                    <!--{/if}-->
+                </table>
+                <iframe name="taobao_order" style="display:none;"></iframe>
+            </div>
+            <div class="wrap_bottom"></div>
+        </div>
+    </div>
+</div>
+<div class="clear"></div>
+</div>
+
+<div class="compare" style="position:absolute; top:10%; left:10%; width:80%; height:80%; background:red; z-index:9999; display:none">
+</div>
+<div class="black_overlay" style="position:absolute; top:0; left:0; width:100%; height:100%; background:black; z-index:9998; -moz-opacity:0.8; opacity:.80; filter:alpha(opacity=80); display:none"></div>
+<iframe id='iframe_post' name="iframe_post" src="about:blank" frameborder="0" width="0" height="0"></iframe>
+{include file=footer.html}

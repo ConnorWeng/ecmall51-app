@@ -1,0 +1,50 @@
+<div id="zwd_recommendshop" class="zwd_recommendshop mt13">
+   <p class="fs14 f66 title relative"><a href="http://www.51zwd.com/category11.html" class="float-right fs12 f66 font-normal mr20 pointer yahei">更多</a><em class="yahei fs14 f44 strong">{$widget_data.model_name}</em></p>
+	<ul class="clearfix">
+		<!-- {foreach from=$widget_data.images item=image name=fe_image} -->
+        <li class="float-left" {if $smarty.foreach.fe_image.iteration mod 2 eq 0}style="margin-left:19px;"{/if}>           
+              <a href="{$image.ad_link_url}" class="block" title="{$image.ad_title_url}" target="_blank">
+              </a>
+              <img src="{$image.ad_image_url}"  alt="{$image.ad_title_url}" width="122" height="66"/>
+              <span>{$image.ad_title_url}<br><label>51优质商家</label></span>
+         </li>
+        <!-- {/foreach} -->	
+    </ul>
+</div>
+<script>
+		$(function(){
+				var aLi = $('#zwd_recommendshop ul li');
+				var aImg =  $('#zwd_recommendshop ul li img');
+				var aSpan = $('#zwd_recommendshop ul li span');
+				aLi.each(function(index){
+					$(this).mouseover(function(){
+						aSpan.eq(index).stop();
+						aImg.eq(index).stop();
+						aImg.eq(index).css({zIndex:1}).animate({
+							top:18,
+							height:0
+						},80,'',function(){
+							$(this).hide();
+							aSpan.eq(index).show().css({zIndex:2}).animate({
+								top:0,
+								height:66
+							},80)
+						})
+					})
+					$(this).mouseout(function(){
+						aSpan.eq(index).stop();
+						aImg.eq(index).stop();
+						aSpan.eq(index).css({zIndex:1}).animate({
+							top:18,
+							height:0
+						},80,'',function(){
+							$(this).hide();
+							aImg.eq(index).show().css({zIndex:2}).animate({
+								top:0,
+								height:66
+							},80)
+						})
+					})
+				})
+			})
+		</script>

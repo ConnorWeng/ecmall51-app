@@ -1,0 +1,194 @@
+{include file=header.html}
+<script src="{lib file=mlselection.js}" charset="utf-8"></script>
+<script src="{lib file=jquery.plugins/jquery.validate.js}" charset="utf-8"></script>
+<style type="text/css">
+.d_inline{display:inline;}
+table th{width:100px;}
+</style>
+<div class="content">
+<script type="text/javascript">
+//<!CDATA[
+var SITE_URL = "{$site_url}";
+var REAL_SITE_URL = "{$real_site_url}";
+$(function(){
+    regionInit("region");
+
+    $("#apply_form").validate({
+        errorPlacement: function(error, element){
+            var error_td = element.parents('td').next('td');
+            error_td.find('.field_notice').hide();
+            error_td.find('.fontColor3').hide();
+            error_td.append(error);
+        },
+        success: function(label){
+            label.addClass('validate_right').text('OK!');
+        },
+        onkeyup: false,
+        rules: {           
+            bh_name: {
+                required: true,
+                remote : {
+                    url  : 'index.php?app=bhapply&act=check_name&ajax=1',
+                    type : 'get',
+                    data : {
+                        bh_name : function(){
+                            return $('#bh_name').val();
+                        },
+                        bh_id : '{$behalf.bh_id}'
+                    }
+                },
+                maxlength: 20
+            },
+            bh_logo: {
+                accept: "jpg|jpeg|png|gif"
+            },
+            bh_tel: {
+                required: true,
+                minlength:6,
+                checkTel:true
+            },
+            bh_address:{
+            	required:true
+            },
+            zipcode:{
+            	required:true
+            },
+            notice: {
+                required : true
+            }
+        },
+        messages: {           
+            bh_name: {
+                required: '{$lang.input_bh_name}',
+                remote: '{$lang.name_exist}',
+                maxlength: '{$lang.note_for_bh_name}'
+            },
+            bh_logo: {
+                accept: '{$lang.select_valid_image}'
+            },
+            bh_tel: {
+                required: '{$lang.input_tel}',
+                minlength: '{$lang.phone_tel_error}',
+                checkTel: '{$lang.phone_tel_error}'
+            },           
+            bh_address:{
+            	required:'{$lang.check_address}'
+            },
+            zipcode:{
+            	required:'{$lang.check_zipcode}'
+            },
+            notice: {
+                required: '{$lang.check_notice}'
+            }
+        }
+    });
+});
+//]]>
+</script>
+<div id="main" class="w-full">
+<div id="page-apply" class="w mt10 mb20">
+   <div class="title border padding5 fs14 strong">
+      {$lang.i_want_add_behalf}
+   </div>
+   <div class="content border border-t-0 padding10 apply2">
+      <form method="post" enctype="multipart/form-data" id="apply_form">
+         <table>
+           <tr>
+              <th>{$lang.bh_name}{$lang.colon}</th>
+              <td class="width7"><input type="text" class="input border" name="bh_name" value="{$behalf.bh_name|escape}"/></td>
+              <td class="padding3"><span class="fontColor3">*</span> <span class="field_notice">{$lang.note_for_bh_name}</span></td>
+           </tr>
+            <tr>
+                 <th>{$lang.upload_logo}{$lang.colon}</th>
+                 <td><input type="file" name="bh_logo" />
+                       {if $behalf.bh_logo}<p class="d_inline"><a href="{$site_url}/{$behalf.bh_logo}" target="_blank">{$lang.view}</a></p>{/if}
+                 </td>
+                 <td><span class="field_notice">{$lang.note_for_image}</span></td>
+              </tr>
+           <tr>
+              <th>{$lang.bh_qq}{$lang.colon}</th>
+              <td><input type="text" class="input border" name="bh_qq" value="{$behalf.bh_qq|escape}" /></td>
+           </tr>
+           <tr>
+              <th>{$lang.bh_ww}{$lang.colon}</th>
+              <td><input type="text" class="input border" name="bh_ww" value="{$behalf.bh_ww|escape}" /></td>
+           </tr>
+           <tr>
+              <th>{$lang.bh_wx}{$lang.colon}</th>
+              <td><input type="text" class="input border" name="bh_wx" value="{$behalf.bh_wx|escape}" /></td>
+           </tr>           
+           <tr>
+              <th>{$lang.bh_tel}{$lang.colon}</th>
+              <td><input type="text" class="input border" name="bh_tel" id="bh_tel" value="{$behalf.bh_tel|escape}"/></td>
+              <td class="padding3"><span class="fontColor3">*</span> <span class="field_notice">{$lang.note_for_bh_tel}</span></td>
+           </tr>           
+           <tr>
+              <th>{$lang.region}{$lang.colon}</th>
+              <td>
+                  <div class="select_add" id="region" style="width:500px;">
+                      <input type="hidden" name="region_id" value="{$behalf.region_id}" class="mls_id" />
+                      <input type="hidden" name="region_name" value="{$behalf.region_name}" class="mls_names" />
+                      {if $behalf.region_name}
+                      <span>{$behalf.region_name|escape}</span>
+                      <input type="button" value="{$lang.edit}" class="edit_region" />
+                      {/if}
+                      <select class="d_inline"{if $behalf.region_name} style="display:none;"{/if}>
+                         <option value="0">{$lang.select_pls}</option>
+                         {html_options options=$regions}
+                      </select>
+                   </div>
+               </td>
+               <td></td>
+            </tr>
+            <tr>
+                <th>{$lang.bh_address}{$lang.colon}</th>
+                <td><input type="text" class="input border" name="bh_address" value="{$behalf.bh_address|escape}"/></td>
+                <td class="padding3"><span class="fontColor3">*</span> <span class="field_notice">{$lang.note_for_bh_address}</span></td>
+            </tr>
+            <tr>
+                <th>{$lang.zipcode}{$lang.colon}</th>
+                <td><input type="text" class="input border" name="zipcode" value="{$behalf.zipcode|escape}"/></td>
+                <td class="padding3"><span class="fontColor3">*</span> <span class="field_notice">{$lang.note_for_bh_zipcode}</span></td>
+             </tr>   
+             <tr>
+               <td colspan="3" height="2"></td>
+             </tr> 
+             <tr>
+                <th>{$lang.bh_market}{$lang.colon}</th>
+                <td style="width:800px;">
+                 {foreach from=$markets item=m}
+                   <span style="width:80px;display:inline-block;"><input type="checkbox" name="bh_markets[]" value="{$m.mk_id}"><label>{$m.mk_name}</label></span>
+                   &nbsp;&nbsp;
+                 {/foreach}
+                </td>
+                <td class="padding3"></td>
+             </tr>         
+             <tr>
+               <td colspan="3" height="5"></td>
+             </tr> 
+             <tr>
+                <th>{$lang.bh_shipping}{$lang.colon}</th>
+                <td style="width:800px;">
+                 {foreach from=$shippings item=ship}
+                   <span style="width:80px;display:inline-block;"><input type="checkbox" name="bh_shipping[]" value="{$ship.dl_id}"><label>{$ship.dl_name}</label></span>
+                   &nbsp;&nbsp;
+                 {/foreach}
+                </td>
+                <td class="padding3"></td>
+             </tr>          
+             <tr>
+               <td colspan="3" height="5"></td>
+             </tr> 
+              <tr>
+                 <th></th>
+                 <td colspan="2" class="warning"><p><input type="checkbox"{if $behalf} checked="checked"{/if} name="notice" value="1" id="warning" /> <label for="warning">{$lang.notice}</label></p></td>
+              </tr>
+              <tr>
+                  <td colspan="3"><input class="btn-apply border0 fs14 strong fff pointer" type="submit" value="{$lang.submit}" /></td>
+              </tr>
+           </table>
+       </form>
+    </div>
+</div>
+</div>
+{include file=footer.html}

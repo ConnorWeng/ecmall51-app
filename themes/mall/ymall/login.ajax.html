@@ -1,0 +1,177 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<base href="{$site_url}/" />
+<meta http-equiv="Content-Type" content="text/html; charset={$charset}" />
+{$page_seo}
+
+<meta name="author" content="www.51zwd.com" />
+<meta name="generator" content="www.51zwd.com" />
+<meta name="copyright" content="www.51zwd.com. All Rights Reserved" />
+<link rel="shortcut icon" href="{$site_url}/favicon.ico"/>
+<link rel="bookmark" href="{$site_url}/favicon.ico"/>
+<link type="text/css" href="{res file=css/global.css}" rel="stylesheet" />
+<script type="text/javascript" src="index.php?act=jslang"></script>
+<script type="text/javascript" src="{lib file=jquery.js}" charset="utf-8"></script>
+<script type="text/javascript" src="{lib file=ecmall.js}" charset="utf-8"></script>
+<script type="text/javascript" src="{res file=js/main.js}" charset="utf-8"></script> 
+<script type="text/javascript" src="{lib file=jquery.plugins/jquery.validate.js}" charset="utf-8"></script> 
+<!--[if lte IE 6]>
+<script type="text/javascript" language="Javascript" src="{res file=js/hoverForIE6.js}"></script>
+<![endif]-->
+
+<script type="text/javascript">
+//<!CDATA[
+var SITE_URL = "{$site_url}";
+var REAL_SITE_URL = "{$real_site_url}";
+var PRICE_FORMAT = '{$price_format}';
+$(function(){
+    $('#login_form').validate({
+        errorPlacement: function(error, element){
+           var error_td = element.parent('dd');
+            error_td.find('label').hide();
+            error_td.append(error);
+        },
+        success       : function(label){
+            label.addClass('validate_right').text('OK!');
+        },
+        onkeyup : false,
+        rules : {
+            user_name : {
+                required : true
+            },
+            password : {
+                required : true
+            },
+            captcha : {
+                required : true,
+                remote   : {
+                    url : 'index.php?app=captcha&act=check_captcha',
+                    type: 'get',
+                    data:{
+                        captcha : function(){
+                            return $('#captcha1').val();
+                        }
+                    }
+                }
+            }
+        },
+        messages : {
+            user_name : {
+                required : '{$lang.user_name_required}'
+            },
+            password  : {
+                required : '{$lang.password_required}'
+            },
+            captcha : {
+                required : '{$lang.captcha_required}',
+                remote   : '{$lang.captcha_error}'
+            }
+        }
+    });
+    
+});
+//]]>
+</script>
+<style>
+body{background:white;font-family:'microsoft yahei';padding:20px 50px 40px 50px;}
+.error{color:red;}
+.validate_right{color:green;}
+.clear{clear:both;height:0;}
+.title-wrapper{}
+.title{font-size:24px;line-height:50px;color:#292929;float:left;}
+.register-now{float:right;color:#707070;line-height:50px;font-size:18px;}
+.register-now a{color:#ff4200;margin-left:5px;}
+dt{color:#666;font-size:14px;font-weight:400;height:20px;float:left;line-height:28px;}
+dd{float:left;margin-left:5px;}
+dl{margin-bottom:13px;}
+.content{margin-top:13px;}
+dd.captcha img{margin-left:5px;}
+dd.captcha a{color:#666;cursor:pointer;text-decoration:none;margin-left:5px;}
+.form .content dd input{border:1px solid #dae2e5;color:#979696;display:block;height:14px;line-height:14px;
+overflow:hidden;padding:7px 0;text-indent:10px;width:240px;float:left;}
+.form .content dd input.captcha_inp{width:100px;}
+.form .content dd label{float:left;line-height:28px;margin-left:3px;}
+.form .content dd.tijiao{margin:0;width:100%;}
+.form .content dd input.login-submit{background:#f44;color:white;cursor:pointer;display:block;font-size:20px;
+height:40px;text-align:center;width:130px;float:left;border:1px solid #f66;background: #f44;border-radius:5px;
+background: -webkit-gradient(linear, left top, left bottom, from(#f66), to(#f44));font-family:microsoft yahei;
+background: -moz-linear-gradient(top,  #f66,  #f44);
+filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#f66', endColorstr='#f44');}
+.form .content dd .find-password{float:left;text-decoration:none;line-height:40px;margin-left:10px;}
+.pd50{padding:30px 0 0 0;}
+.thirdlogin h4{color:#6a6a6a;font-weight:500;margin-bottom:20px;}
+.thirdlogin ul li{display:block;float:left;margin-bottom:10px;}
+.thirdlogin ul li a{color:#666;display:block;height:40px;line-height:40px;text-indent:60px;width:156px;border:1px solid #ddd;}
+.thirdlogin ul li a.tb{background:url("{res file=images/tb_ali.png}") no-repeat left -2px ;}
+.thirdlogin ul li a.ali{background:url("{res file=images/tb_ali.png}") no-repeat left -64px;}
+.thirdlogin ul li.ali{float:right;}
+</style>
+</head>
+<body>
+ <div class="form">
+       <div class="title-wrapper">
+                <div class="title">{$lang.user_login}</div>
+                <div class="register-now">
+                                {$lang.not_member}<a href="{url app=member&act=register&ret_url=$ret_url}" title="{$lang.register}" target="_blank">{$lang.register}</a>
+                </div>
+                <div class="clear"></div>
+       </div>
+            <div class="content">
+                        <form method="post" id="login_form">
+                        <dl class="clearfix"> 
+                        <dt>{$lang.user_name}</dt>                      
+                        <dd>
+                           <input class="input" type="text" name="user_name"  /><label></label>
+                        </dd>
+                        <div class="clear"></div>
+                    </dl>
+                        <dl class="clearfix">
+                        <dt>{$lang.password}</dt>
+                        <dd>
+                             <input class="input" type="password" name="password"/>
+                            <label></label>
+                        </dd>
+                        <div class="clear"></div>
+                    </dl>
+
+                        <!--{if $captcha}-->
+                        <dl class="clearfix">
+                                <dt>{$lang.captcha}</dt>
+                                <dd class="captcha clearfix">
+                                <input type="text" class="input captcha_inp float-left" name="captcha" id="captcha1" />
+                                <img height="28" id="captcha" src="index.php?app=captcha&amp;{$random_number}" class="float-left" />
+                            <a href="javascript:change_captcha($('#captcha'));" class="float-left">{$lang.next_captcha}</a>
+                                <label></label>
+                                </dd>
+                                <div class="clear"></div>
+                        </dl>
+                        <!--{/if}-->
+                        <dl class="clearfix" style="margin-top:30px;">                                
+                                <dd class="tijiao">
+                                <input type="submit" class="login-submit" name="Submit" value="{$lang.login}" title="{$lang.login}" />
+                                <a href="{url app=find_password}" class="find-password" target="_blank">{$lang.forget_password}</a>
+                                </dd>
+                                <div class="clear"></div>
+                        </dl>                                          
+                    </form>
+                </div>
+        </div>
+        <div class="clear"></div>
+        <div class="thirdlogin">
+          <div class="pd50">
+           <h4>{$lang.thirdaccountlogin}</h4>
+           <ul>
+              <li class="taobao">
+               <a href="{url app=member&act=loginWithTaobao&ret_url=$ret_url}" class="tb" target="_blank">{$lang.tb_account_login}</a>
+              </li>
+              <li class="ali">
+                <a href="{url app=member&act=loginWithAlibaba&ret_url=$ret_url}" class="ali" target="_blank">{$lang.ali_account_login}</a>
+              </li>
+              <div class="clear"></div>
+           </ul>
+          </div>
+        </div>
+               
+</body>
+</html>

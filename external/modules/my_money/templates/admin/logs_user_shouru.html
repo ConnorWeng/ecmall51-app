@@ -1,0 +1,100 @@
+{include file="header.html"}
+<script language="javascript">
+$(function(){
+    $('#sotime,#endtime').datepicker({dateFormat: 'yy-mm-dd'});
+});
+</script>
+<div id="rightTop">
+    <p>{$lang.logs_user_chakanshourulaiyuan}</p>
+    <ul class="subnav">
+		<li><a class="btn3" href="index.php?module=my_money&act=tx_index_shenhe">{$lang.index_chakanquanbu}</a></li>
+		<li><a class="btn3" href="index.php?module=my_money&act=tx_wei_shenhe">{$lang.index_weishenhe}</a></li>
+		<li><a class="btn3" href="index.php?module=my_money&act=tx_yi_shenhe">{$lang.index_yishenhe}</a></li>
+    </ul>
+</div>
+
+<div class="mrightTop">
+    <div class="fontl">
+        <form method="get">
+            <div class="left">   
+            <input name="module" type="hidden" id="module" value="my_money" />
+            <input name="act" type="hidden" id="act" value="logs_user_shouru" />
+            {$lang.logs_user_shouru_yonghumingd}
+            <input name="user_name" type="text" id="user_name" value="<?php echo $_GET["user_name"];?>" />
+			{$lang.logs_user_shouru_shoutushijiad}
+            <input name="sotime" type="text" id="sotime" value="<?php echo $_GET["sotime"];?>" size="10" maxlength="10" />
+			{$lang.logs_user_shouru_zhi}
+			<input name="endtime" type="text" id="endtime" value="<?php echo $_GET["endtime"];?>" size="10" maxlength="10" />
+            <input type="submit" class="formbtn" value="{$lang.query}" />
+          </div>
+<!--{if $soso}-->
+<a class="left formbtn1" href="index.php?module=my_money&act=logs_user_shouru&user_name=<?php echo $_GET["user_name"];?>">{$lang.cancel_query}</a>
+<!--{/if}-->
+      </form>
+    </div>
+    <div class="fontr">
+
+    </div>
+</div>
+
+<div class="tdare">
+    <table width="100%" cellspacing="0">
+
+        <tr class="tatr1">
+            <td width="20" class="firstCell">ID</td>
+            <td align="left">{$lang.logs_user_shouru_yonghuming}</td>
+            <td>{$lang.logs_user_shouru_shourujine}</td>
+			<td width="120">{$lang.logs_user_shouru_shourushijian}</td>
+            <td>{$lang.logs_user_shouru_laiyuan}</td>
+			<td>{$lang.logs_user_shouru_leixing}</td>
+            <td>{$lang.logs_user_shouru_dongdanhao}</td>
+			<td class="handler">{$lang.logs_user_shouru_guanlicaozuo}</td>
+        </tr>
+
+        <!--{foreach from=$index item=val key=key}-->
+        <tr class="tatr2">
+            <td width="20" class="firstCell">{$val.id}</td>
+            <td align="left"><b>{$val.user_name}</b></td>
+             <!-- {if ($val.leixing==40)} -->
+              <td><font color="#FF0000">{$val.money}</font></td>
+            <!--{else}-->
+              <td><font color="#FF0000">{$val.money_zs}</font><!--{if $val.caozuo==30}-->(已退回)<!--{/if}--></td>
+            <!-- {/if}-->
+          
+			<td>{$val.add_time|date:Y-m-d H:i:s}</td>
+			<td>
+                         <!--{if $val.buyer_name!=''}-->{$val.buyer_name}<!--{/if}-->
+                           <!--{if $val.buyer_name==''}-->管理员手动充值<!--{/if}-->
+                        
+                        </td>
+		    <td>	 					 
+					 <!--{if $val.leixing==10}-->{$lang.leixing_shouru}<!--{/if}-->
+					 <!--{if $val.leixing==11}-->{$lang.leixing_zhuanru}<!--{/if}-->
+					 <!--{if $val.leixing==20}-->{$lang.leixing_zhichu}<!--{/if}-->
+					 <!--{if $val.leixing==21}-->{$lang.leixing_zhuanchu}<!--{/if}-->
+					 <!--{if $val.leixing==30}-->{$lang.leixing_chongzhi}<!--{/if}-->
+					 <!--{if $val.leixing==40}-->{$lang.leixing_tixian}<!--{/if}-->
+			</td>
+			<td>
+                            <!--{if $val.order_id!=0}-->{$val.order_id}<!--{/if}-->
+                           <!--{if $val.order_id==0}-->{$val.order_sn}<!--{/if}-->
+                        </td>
+            <td class="handler">{$lang.logs_user_shouru_zanwu}</td>
+        </tr>
+        <!--{foreachelse}-->
+        <tr class="no_data">
+            <td colspan="8">{$lang.no_data}</td>
+        </tr>
+        <!--{/foreach}-->
+    </table>
+    <!--{if $index}-->
+<div id="dataFuncs">
+        <div class="pageLinks">
+            {include file=page.bottom.html}
+        </div>
+
+  </div>
+    <div class="clear"></div>
+    <!--{/if}-->
+</div>
+{include file="footer.html"}

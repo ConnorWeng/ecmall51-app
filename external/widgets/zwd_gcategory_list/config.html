@@ -1,0 +1,15 @@
+<script type="text/javascript">
+var _d = DialogManager.get('config_dialog');
+_d.setWidth(350);
+_d.setPosition('center');
+</script>
+<div class="field_item">
+	<label>模块名称</label>
+    <p><input type="text" name="model_name" value="{$options.model_name}" /></p>
+    <label>商品一级分类的数量:(<span>显示在左侧，大分类的数量</span>)</label>
+    <p><input type="text" name="f_amount" value="{$options.f_amount}" />(0 或者为空表示全部)</p>
+    <label>商品二级分类的数量:(<span>使页面排列整齐</span>)</label>
+    <p><input type="text" name="amount" value="{$options.amount}" />(0 或者为空表示全部)</p>
+     <label>商品三级分类的数量:(<span>使页面排列整齐</span>)</label>
+    <p><input type="text" name="t_amount" value="{$options.t_amount}" />(0 或者为空表示全部)</p>
+</div>

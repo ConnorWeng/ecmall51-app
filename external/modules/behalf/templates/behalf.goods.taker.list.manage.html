@@ -1,0 +1,245 @@
+{include file=header.whole.html}
+<script type="text/javascript">
+
+
+
+
+$(function(){
+	
+	
+	
+	var dt = $("#nhd_list_table").DataTable({
+			"ordering":true,
+		    "paging":true,
+		    "info":true,
+		    "searching":true,
+		    "columnDefs":[
+		       {"orderable":false,"targets":0},           
+		       {"orderable":false,"targets":[1]}    
+		     ],
+		     "order":[
+		        [0,null]      
+		     ],
+		     //dom:"<Blftp>",
+		     "dom":"<'container-fluid' <'row' <'col-xs-2' l><'col-xs-7' B><'col-cs-3' f> > <t> <'row' <'col-xs-4' i><'col-xs-8 text-right' p>  >  >",
+		     "buttons":[
+		       {
+		    	   text:'多单统计',
+		    	   className:'btn btn-primary btn-xs',
+		    	   action:function(e,dt,node,config){
+							//tag_printer(dt.data());
+					   
+					   stat_nhd(dt.data());
+		    	   }
+		       }
+		     ],
+			"language":{
+				"url":"{lib file='/DataTables/zn.json'}",
+				/* "buttons":{
+					"copy":"复制表格",
+					"excel":"导出为EXCEL",
+					"print":"打印表格",
+					"colvis":"隐藏/显示列"
+				} */
+			},
+			"pagingType":'full_numbers'
+		});
+		
+	 dt.on('order.dt search.dt',
+			    function() {
+			        dt.column(0, {
+			            search: 'applied',
+			            order: 'applied'
+			        }).nodes().each(function(cell, i) {
+			            cell.innerHTML = i + 1;
+			        });
+			    }).draw(); 
+	 
+	 /* jQuery("#checkall").on('ifChecked ifUnchecked',function(){			 
+		 var checkall = this.checked ? 'check':'uncheck';
+		 jQuery("input[name='nhd_ids[]']").iCheck(checkall);		
+	 }); */
+	 
+	 jQuery("#checkall").on('ifClicked',function(event){
+		 //console.log(event);
+		 var checkall = event.target.checked ? 'uncheck':'check';
+		 jQuery("input[name='nhd_ids[]']").iCheck(checkall);
+	 });
+	 jQuery("input[name='nhd_ids[]']").on('ifUnchecked',function(){
+		jQuery('#checkall').iCheck('uncheck'); 
+	 });
+	 
+	 
+		
+});
+
+function stat_nhd(rows)
+{
+	var nhd_ids = new Array();	
+	$("input[name='nhd_ids[]']").each(function(i){
+		if(this.checked) nhd_ids.push(this.value);
+	});
+	if(nhd_ids.length == 0)
+	{
+		bootbox.alert('请选择任一或多个拿货单');
+		return false;
+	}
+	$.getJSON("index.php?module=behalf&act=stat_nhd&ids=" +  encodeURIComponent(nhd_ids.join()),function(result){
+		if(result.done)
+	    {
+			var data = result.retval;
+			var resultHtml ="<p>共有商品 <b class='text-danger'>"+data.total+"</b> 件。其中：</p>"+
+				"<p>已备货（数量：<b class='text-success'>"+ data.details.ready.count +"</b>，<b class='text-success'>&yen;"+ data.details.ready.amount +"</b>，应优惠：<b class='text-success'>"+data.details.ready.discount+"</b>）</p>"+
+				"<p>&nbsp;&nbsp;&nbsp;缺货（数量：<b class='text-danger'>"+ data.details.lack.count +"</b>，<b class='text-danger'>&yen;"+ data.details.lack.amount +"</b>，应优惠：<b class='text-danger'>"+data.details.lack.discount+"</b>）</p>"+
+				"<p>未入库（数量：<b class='text-info'>"+ data.details.outhouse.count +"</b>，<b class='text-info'>&yen;"+ data.details.outhouse.amount +"</b>，应优惠：<b class='text-info'>"+data.details.outhouse.discount+"</b>）</p>"+
+				"<p>已退货（数量：<b class='text-warning'>"+ data.details.reback.count +"</b>，<b class='text-warning'>&yen;"+ data.details.reback.amount +"</b>，应优惠：<b class='text-warning'>"+data.details.reback.discount+"</b>）</p>";
+			$('#modal-nhd .modal-body').html(resultHtml);
+			$('#modal-nhd').modal('show');
+	    }
+	});
+	//console.log(nhd_ids);
+		
+}
+
+
+
+</script>
+<div class="container-fluid">
+    <div class="lead">
+				<h4 class="blue09c">拿货单列表</h4>
+	</div>
+	<div class="alert alert-warning">
+		关于<span class="text-danger">拿货单详情</span>中已备货、缺货、未入库等3中状态其商品状态说明。已备货（已备货、已发货、已退货），缺货（明天、未出货、已下架），未入库（备货中）<br>
+		<small class="text-muted">另，拿货单来源。当您生成拿货单后，点击“标签打印”时，系统自动保存拿货单，<b>拿货单名称</b> 就您开始打印的时间。其他情况不会自动保存拿货单。</small>
+	</div>
+	  <!--{if $nhd_list}-->
+	  <div class="panel panel-default">
+		<div class="panel-body">	
+			
+		</div>
+		<div class="container-fluid">
+			<table id="nhd_list_table" class="table table-condensed table-striped table-bordered table-hover" width="100%">
+		  	<thead>
+		  		<tr>
+		  		    <th class="text-center" width="">NO</th>
+		  		    <th class="text-center"><input type="checkbox" id="checkall"/></th>
+		  			<th class="text-center ">拿货单名称</th>
+		  			<th class="text-center ">商品数量</th>
+		  			<th class="text-center "><small class="text-muted">不含优惠</small><br>商品金额</th>
+		  			<th class="text-center ">档口优惠</th>
+		  			<th class="text-center">拿货单条件</th>
+		  			<th class="text-center ">拿货单详情</th>
+		  			<th class="text-center ">操作</th>
+		  		</tr>
+		  	</thead>
+		  	<tbody>
+		  	<!--{foreach from=$nhd_list item=nhd name=fe_nhd}-->
+		  		<tr>
+		  		    <td class="text-center "></td>
+		  		    <td class="text-center "><input type="checkbox" name="nhd_ids[]" value="{$nhd.id}"/></td>
+		  			<td class="text-center ">{$nhd.createtime|date:complete}</td>
+		  			<td class="text-center ">{$nhd.goods_count|default:0}</td>
+		  			<td class="text-center ">{$nhd.goods_amount|price}</td>
+		  			<td class="text-center "><!--{if $nhd.store_bargin gt 0}-->{$nhd.store_bargin|price}<!--{/if}--></td>
+		  			<td class="text-left " >
+		  			<small>{$nhd.mk_names|escape}</small><br>
+		  			<small class="text-muted">{$nhd.search_time|escape}</small><br>
+		  			<small class="text-muted">{$nhd.search_delivery|escape}</small>
+		  			
+		  			</td>		  			
+		  			<td class="text-left " width="30%">
+		  				<small class="text-muted">
+		  				已备货（数量：<b class="text-success">{$nhd.goods_details.ready.count|default:0}</b>，
+		  				<b class="text-success">{$nhd.goods_details.ready.amount|default:0|price}</b>，
+		  				应优惠：<b class="text-success">{$nhd.goods_details.ready.discount|default:0|price}</b>）<br>
+		  				缺&nbsp;&nbsp;&nbsp;货（数量：<b class="text-danger">{$nhd.goods_details.lack.count|default:0}</b>，
+		  				<b class="text-danger">{$nhd.goods_details.lack.amount|default:0|price}</b>，
+		  				应优惠：<b class="text-danger">{$nhd.goods_details.lack.discount|default:0|price}</b>）<br>
+		  				未入库（数量：<b class="text-info">{$nhd.goods_details.outhouse.count|default:0}</b>，
+		  				<b class="text-info">{$nhd.goods_details.outhouse.amount|default:0|price}</b>，
+		  				应优惠：<b class="text-info">{$nhd.goods_details.outhouse.discount|default:0|price}</b>）<br>
+		  				已退货（数量：<b class="text-warning">{$nhd.goods_details.reback.count|default:0}</b>，
+		  				<b class="text-warning">{$nhd.goods_details.reback.amount|default:0|price}</b>，
+		  				应优惠：<b class="text-warning">{$nhd.goods_details.reback.discount|default:0|price}</b>）</small>
+		  			
+		  			</td>
+		  			<td class="text-center ">
+		  			<form method="post" action="index.php?module=behalf&act=get_nhd_goods">
+		  				<input type="hidden" name="id" value="{$nhd.id}">
+		  				<input class="btn btn-default btn-sm" type="submit"  value="商品详情">
+		  			</form>
+		  			</td>
+		  		</tr>
+		  	<!--{/foreach}-->
+		  	</tbody>
+		  </table>
+	     </div>
+	  </div>
+	  <!--{else}-->
+	  <div class="alert alert-warning">抱歉！您还没有拿货单数据，加油哦……</div>
+	  <!--{/if}-->
+	  
+	  <!-- <div id="modal-nhd" class="modal fade">
+	  	<div class="modal-dialog">
+	  		<div class="modal-content">
+	  		   <form method="post" id="form-nhd" action="index.php?module=behalf&act=save_nhd">
+	  			<div class="modal-header">
+       	 			<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        			<h4 class="modal-title">拿货单信息</h4>
+      			</div>
+      			<div class="modal-body">
+        			<div class="container-fluid">
+        				
+        					<div class="form-group">
+        						<label class="control-label col-xs-12">拿货单名称</label>
+        						<div class="col-xs-12">
+        							<input type="text" name="nhd_name" class="form-control">
+        					    </div>
+        					</div>
+        					<div class="form-group">
+        						<label class="col-xs-12">拿货员</label>
+        						<div class="col-xs-12">
+	        						<select class="form-control" name="nhd_taker">
+	        							{foreach from=$takers item=tak}
+	        							<option value="{$tak.user_id}">{$tak.user_name} | {$tak.real_name}</option>
+	        							{/foreach}
+	        						</select>
+	        					</div>
+        					</div>
+        					<input type="hidden" name="goods_count" value="{$total_count}">
+        					<input type="hidden" name="goods_amount" value="{$total_amount}">
+        					<input type="hidden" name="store_bargin" value="{$store_bargin}">
+        					<input type="hidden" name="behalf" value="{$bh_id}">
+        					<input type="hidden" name="market_id" value="{$mkids}">
+        					<input type="hidden" name="market_name" value="{$mknames}">
+        					<input type="hidden" name="content" value="{$content}">
+        				
+        			</div>
+      			</div>
+      			<div class="modal-footer">
+      				<button type="submit" class="btn btn-primary" id="savebtn-nhd">保 存</button>
+        			<button type="button" class="btn btn-default" data-dismiss="modal">关 闭</button>
+     			</div>
+     			</form>
+	  		</div>
+	  	</div>
+	  </div> -->
+</div>
+
+<div id="modal-nhd" class="modal fade">
+	  	<div class="modal-dialog">
+	  		<div class="modal-content">	  		   
+	  			<div class="modal-header">
+       	 			<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        			<h4 class="modal-title">统计信息</h4>
+      			</div>
+      			<div class="modal-body">
+        			
+      			</div>
+      			<div class="modal-footer">
+        			<button type="button" class="btn btn-default" data-dismiss="modal">关 闭</button>
+     			</div>     			
+	  		</div>
+	  	</div>
+	  </div>
+{include file=footer.whole.html}

@@ -1,0 +1,63 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+        <style>
+         table
+         {
+             border-collapse: collapse;
+             border: none;
+         }
+         td
+         {
+             border: solid #000 1px;
+         }
+        </style>
+    </head>
+    <body>
+        <div>
+            <h1>自{$two_weeks_ago_date}（2周）以来没有一键上传记录，且自{$eight_weeks_ago_date}（8周）以来没有订单记录的店铺</h1>
+            <h2>总共有{$total_rule1}家店铺需要被关闭</h2>
+            <table>
+                <thead>
+                    <th>店铺名</th>
+                    <th>档口</th>
+                    <th>店主QQ</th>
+                    <th>店主手机</th>
+                </thead>
+                <tbody>
+                    <!--{foreach from=$stores_rule1 item=store}-->
+                    <tr>
+                        <td>{$store.store_name}</td>
+                        <td>{$store.mk_name} {$store.dangkou_address}</td>
+                        <td>{$store.im_qq}</td>
+                        <td>{$store.tel}</td>
+                    </tr>
+                    <!--{/foreach}-->
+                </tbody>
+            </table>
+        </div>
+        <div>
+            <h1>缺货率>20% 或 退货率>10% 或 好评率<90% 的店铺</h1>
+            <h2>总共有{$total_rule2}家店铺需要被关闭</h2>
+            <table>
+                <thead>
+                    <th>店铺名</th>
+                    <th>档口</th>
+                    <th>店主QQ</th>
+                    <th>店主手机</th>
+                </thead>
+                <tbody>
+                    <!--{foreach from=$stores_rule2 item=store}-->
+                    <tr>
+                        <td>{$store.store_name}</td>
+                        <td>{$store.mk_name} {$store.dangkou_address}</td>
+                        <td>{$store.im_qq}</td>
+                        <td>{$store.tel}</td>
+                    </tr>
+                    <!--{/foreach}-->
+                </tbody>
+            </table>
+        </div>
+    </body>
+</html>

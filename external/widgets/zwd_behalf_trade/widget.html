@@ -1,0 +1,35 @@
+<div id="zwd_behalf_trade" class="zwd_behalf_trade  mt10">
+   <p class="fs14 f66 title relative">最新交易</p>
+	<div class="pt5 pb5">
+	    <div class="clearfix" style="height:24px;line-height:24px;background:#eee;border-top:1px solid #ccc;border-bottom:1px solid #ccc;">
+	        <span class="inline-block float-left center" style="width:60px;">下单会员</span>
+	        <span class="inline-block float-left center" style="width:60px;">合作代发</span>
+	        <span class="inline-block float-left center" style="width:60px;">订单金额</span>
+	        <span class="inline-block float-left center" style="width:62px;">出售商家</span>
+	    </div>
+	    <ul style="height:192px;" class="overflowHidden">	      
+	      <!-- {foreach from=$widget_data.behalfs item=behalf name=fe_behalf} -->
+	      <li class="clearfix f66" style="height:32px;line-height:32px;">
+	        <span class="inline-block float-left center" style="width:60px;">{$behalf.buyer_name}</span>
+	        <span class="inline-block float-left fblue center" style="width:60px;">{$behalf.bh_id|truncate:8}</span>
+	        <span class="inline-block float-left center" style="width:60px;color:red;">{$behalf.order_amount}</span>
+	        <span class="inline-block float-left center" style="width:62px;">
+	         <!--{if $behalf.seller_id neq 0}-->
+	         <a href="{url app=store&amp;id=$behalf.seller_id}" target="_blank">{$behalf.seller_name|truncate:8}</a>
+	         <!--{else}-->
+	         <a href="{url app=search&amp;act=store&amp;keyword=$behalf.seller_name}" target="_blank">{$behalf.seller_name|truncate:8}</a>
+	         <!--{/if}-->
+	        
+	        </span>
+	      </li>         
+        <!-- {/foreach} -->		    
+	    </ul>	    
+    </div>   
+</div>
+<script>
+   setInterval(function(){
+	   $('.zwd_behalf_trade ul li:last').hide().insertBefore($('.zwd_behalf_trade ul li:first')).slideDown(1000);	   
+   },3000);  
+   
+  
+</script>

@@ -1,0 +1,111 @@
+<script type="text/javascript">
+var _d = DialogManager.get('config_dialog');
+_d.setWidth(400);
+_d.setPosition('center');
+
+$("select[ectype='model_color_selector']").change(function(){
+	$(this).css('background', this.value);
+    $("input[ectype='model_color']").val(this.value);
+});
+
+$("select[name='img_recom_id']").change(function(){
+    switchRecommend(this.value, 'img_cate_id');
+});
+
+switchRecommend($("select[name='img_recom_id']").val(), 'img_cate_id');
+
+function switchRecommend(recomId, selectName)
+{
+    if (recomId >= 0)
+    {
+        $("select[name='" + selectName + "']").hide();
+    }
+    else
+    {
+        $("select[name='" + selectName + "']").show();
+    }
+}
+
+</script>
+
+<div class="field_item">
+    <label>模块标题</label>
+    <p><input type="text" name="model_name" value="{$options.model_name}"/></p>
+</div>
+<div class="field_item">
+	<label>模块标题图片:(<span>支持 gif|jpg|jpeg|png 格式,尺寸:200px * 46px</span>)</label>
+    <p><input type="file" name="ad6_image_file" /><input type="hidden" name="ad6_image_url" value="{$options.ad6_image_url}" /></p>
+     <!-- {if $options.ad6_image_url} --><p><img src="{$options.ad6_image_url}" height="20" /></p><!-- {/if} -->
+</div>
+
+<div class="field_item">
+    <label>模块颜色风格:</label>
+    <p>
+    	<input type="hidden" ectype="model_color"  name="model_color" value="{$options.model_color}"/>
+        <select ectype="model_color_selector" style="width:100px; background:{$options.model_color}">
+            <!--{foreach from=$styles item=color}-->
+            <option value="{$color}"  style="background:{$color}"></option>
+            <!--{/foreach}-->
+    	</select>
+     </p>
+</div>
+<div class="field_item">
+    <label>分类文字 （多个用半角逗号","隔开）</label>
+    <p><textarea name="cate_txt" style="width:300px;height:55px;">{$options.cate_txt}</textarea></p>
+</div>
+<div class="field_item">
+    <label>链接（多个用半角逗号","隔开）</label>
+    <p><textarea name="cate_url" style="width:300px;height:155px;">{$options.cate_url}</textarea></p>
+</div>
+<div class="field_item">
+	<label>左侧大广告图片:(<span>支持 gif|jpg|jpeg|png 格式,尺寸:200px*290px</span>)</label>
+    <p><input type="file" name="ad1_image_file" /><input type="hidden" name="ad1_image_url" value="{$options.ad1_image_url}" /></p>
+     <!-- {if $options.ad1_image_url} --><p><img src="{$options.ad1_image_url}" height="20" /></p><!-- {/if} -->
+</div>
+<div class="field_item">     
+    <label>链接地址:</label>
+    <p><input type="text" name="ad1_link_url" value="{$options.ad1_link_url}" /></p>
+</div>
+<div class="field_item">
+	<label>左侧小广告图片:(<span>支持 gif|jpg|jpeg|png 格式,尺寸:200px * 96px</span>)</label>
+    <p><input type="file" name="ad2_image_file" /><input type="hidden" name="ad2_image_url" value="{$options.ad2_image_url}" /></p>
+     <!-- {if $options.ad2_image_url} --><p><img src="{$options.ad2_image_url}" height="20" /></p><!-- {/if} -->
+</div>
+<div class="field_item">     
+    <label>链接地址:</label>
+    <p><input type="text" name="ad2_link_url" value="{$options.ad2_link_url}" /></p>
+</div>
+<div class="field_item">
+    <label>商品推荐类型:</label>
+    <p><select name="img_recom_id">
+        <option value="0">请选择...</option>
+        <!-- {foreach from=$recommends key=recom_id item=recom_name} -->
+        <option value="{$recom_id}"{if $options.img_recom_id eq $recom_id} selected="selected"{/if}>{$recom_name|escape}</option>
+        <!-- {/foreach} -->
+    </select>
+    <select name="img_cate_id">
+        <option value="0">请选择分类...</option>
+        <!-- {html_options options=$gcategories selected=$options.img_cate_id} -->
+    </select>
+	</p>
+</div>
+
+<div class="field_item">
+	<label>右侧大广告图片:(<span>支持 gif|jpg|jpeg|png 格式,尺寸:200px * 290px</span>)</label>
+    <p><input type="file" name="ad3_image_file" /><input type="hidden" name="ad3_image_url" value="{$options.ad3_image_url}" /></p>
+     <!-- {if $options.ad3_image_url} --><p><img src="{$options.ad3_image_url}" height="20" /></p><!-- {/if} -->
+</div>
+<div class="field_item">     
+    <label>图片链接地址:</label>
+    <p><input type="text" name="ad3_link_url" value="{$options.ad3_link_url}" /></p>
+</div>
+<div class="field_item">
+	<label>右侧小广告图片:(<span>支持 gif|jpg|jpeg|png 格式,尺寸:200px * 96px</span>)</label>
+    <p><input type="file" name="ad4_image_file" /><input type="hidden" name="ad4_image_url" value="{$options.ad4_image_url}" /></p>
+     <!-- {if $options.ad4_image_url} --><p><img src="{$options.ad4_image_url}" height="20" /></p><!-- {/if} -->
+</div>
+<div class="field_item">     
+    <label>图片链接地址:</label>
+    <p><input type="text" name="ad4_link_url" value="{$options.ad4_link_url}" /></p>
+</div>
+

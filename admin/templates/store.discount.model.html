@@ -1,0 +1,156 @@
+{include file="header.html"}
+<script type="text/javascript" src="index.php?act=jslang"></script>
+<script type="text/javascript">
+//<!CDATA[
+$(function(){
+
+    /* $('#store_form').validate({
+        errorPlacement: function(error, element){
+            $(element).next('.field_notice').hide();
+            $(element).after(error);
+        },
+        success       : function(label){
+            label.addClass('right').text('OK!');
+        },
+        onkeyup    : false,
+        rules : {
+            store_name: {
+                required : true,                
+            },
+            end_time : {
+                dateISO : true
+            }
+        },
+        messages : {
+            store_name: {
+                required: '{$lang.store_name_required}',
+            },
+            end_time : {
+                dateISO : '{$lang.note_for_end_time}'
+            }
+        }
+    }); */
+    
+    
+    $('.updatebtn').click(function(){
+    	var bid = $(this).attr('data_id');
+    	$.post("index.php?app=store&act=update_sd",{
+    		id:$('#pid'+bid).val(),
+    		store_id:$('#sid'+bid).val(),
+    		first_price:$('#fp'+bid).val(),
+    		end_price:$('#ep'+bid).val(),
+    		discount:$('#dp'+bid).val(),
+    		sort_order:$('#or'+bid).val()
+    	},function(data){
+    		if(data == true)
+    		{
+    			alert('更新成功！');
+    			location.reload();
+    		}
+    		else{
+    			alert('更新失败');
+    		}
+    	},'json')
+    });
+    $('.delbtn').click(function(){
+    	var bid = $(this).attr('data_id');
+    	$.post("index.php?app=store&act=del_sd",{
+    		id:$('#pid'+bid).val()
+    	},function(data){
+    		if(data == true)
+    		{
+    			alert('删除成功！');
+    			location.reload();
+    		}
+    		else{
+    			alert('删除失败');
+    		}
+    	},'json')
+    });
+});
+//]]>
+</script>
+<div id="rightTop">
+  <h2 class="paddingT15">{$lang.store_discount_setup}</h2>
+  
+</div>
+<div class="info">
+  
+    <table class="infoTable">    
+      <tr>
+        <th class="paddingT15"> {$lang.store_name}:</th>
+        <td class="paddingT15 wordSpacing5">{$store.store_name|escape}</td>
+      </tr>
+      <tr>
+        <th class="paddingT15"> {$lang.dangkou_address}:</th>
+        <td class="paddingT15 wordSpacing5">{$store.mk_name|escape} {$store.dangkou_address|escape}</td>
+      </tr>
+       <tr>
+        <th class="paddingT15">{$lang.seeprice}:</th>
+        <td class="paddingT15 wordSpacing5">{$store.see_price|escape}</td>
+      </tr>      
+      <tr>
+        <th class="paddingT15">{$lang.tel}:</th>
+        <td class="paddingT15 wordSpacing5">{$store.tel|escape}</td>
+      </tr>
+       <tr>
+        <th class="paddingT15">{$lang.QQ}:</th>
+        <td class="paddingT15 wordSpacing5">{$store.im_qq|escape}</td>
+      </tr>
+       <tr>
+        <th class="paddingT15">{$lang.WW}:</th>
+        <td class="paddingT15 wordSpacing5">{$store.im_ww|escape}</td>
+      </tr>
+     
+       <tr>
+        <th class="paddingT15">{$lang.im_wx}:</th>
+        <td class="paddingT15 wordSpacing5">{$store.im_wx|escape}</td>
+      </tr>
+      <tr>
+      	<th style="background:#F0F7FF;padding:10px 40px;color:red;">{$lang.behalf_charge_discount}</th>
+      	<td style="background:#F0F7FF;">&nbsp;</td>
+      </tr>
+      <!--{if $store_discount}-->
+      	<!--{foreach from=$store_discount item=sd}-->
+      		<tr>
+      			<th class="paddingT15">{$lang.price_interval}:</th>
+      			<td class="paddingT15">
+      				<input type="hidden" name="id" id="pid{$sd.id}" value="{$sd.id}">
+      				<input type="hidden" name="store_id" id="sid{$sd.id}" value="{$sd.store_id}">
+	      			大于等于
+	      			<input type="text" name="first_price" id="fp{$sd.id}" value="{$sd.first_price}" class="infoTableInput" style="width:45px;text-align:center;"/>
+	      			{$lang.yuan}&nbsp;&nbsp;&nbsp;&nbsp;少于
+	      			<input type="text" name="end_price" id="ep{$sd.id}" value="{$sd.end_price}" class="infoTableInput" style="width:45px;text-align:center;"/>
+	      			{$lang.yuan}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{$lang.meijian}{$lang.seeprice}：
+	      			<input type="text" name="discount" id="dp{$sd.id}" value="{$sd.discount}" class="infoTableInput" style="width:45px;text-align:center;"/>
+	      			{$lang.yuan}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+	      			{$lang.order}:<input type="text" name="sort_order" id="or{$sd.id}" value="{$sd.sort_order}" class="infoTableInput" style="width:45px;text-align:center;"/>
+	      		    <input class="formbtn updatebtn" type="button"  data_id="{$sd.id}" value="更新" />
+	      		    <input class="formbtn delbtn" type="button"  data_id="{$sd.id}" value="删除" />
+      			</td>
+      		</tr>
+      	<!--{/foreach}-->
+      <!--{/if}-->
+      
+      <form method="post" enctype="multipart/form-data" id="store_form">
+		<tr style="color:#f60;">
+      			<th class="paddingT15">{$lang.price_interval}:</th>
+      			<td class="paddingT15">
+      				<input type="hidden" name="store_id" value="{$smarty.get.id}">
+	      			大于等于
+	      			<input type="text" name="first_price" value="0" class="infoTableInput" style="width:45px;text-align:center;"/>
+	      			{$lang.yuan}&nbsp;&nbsp;&nbsp;&nbsp;少于
+	      			<input type="text" name="end_price" value="0" class="infoTableInput" style="width:45px;text-align:center;"/>
+	      			{$lang.yuan}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{$lang.meijian}{$lang.seeprice}：
+	      			<input type="text" name="discount" value="0" class="infoTableInput" style="width:45px;text-align:center;"/>
+	      			{$lang.yuan}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+	      		    <input class="formbtn" type="submit" name="Submit" value="新增" />
+      			</td>
+      		</tr>
+      </form>
+      
+      
+    </table>
+  
+</div>
+{include file="footer.html"}

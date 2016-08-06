@@ -1,0 +1,130 @@
+{include file=header.whole.html}
+<script type="text/javascript">
+   
+  $(function(){
+	    
+	   $('#add_markettaker_form').bootstrapValidator({
+			  feedbackIcons: {
+		            valid: 'glyphicon glyphicon-ok',
+		            invalid: 'glyphicon glyphicon-remove',
+		            validating: 'glyphicon glyphicon-refresh'
+		       }, 
+			  fields:{
+				  user_name:{
+					  validators:{
+						  notEmpty:{ message:'会员账号不能为空' }
+					  }
+				  }
+		       
+			  }
+		 });  
+	  
+  });
+  
+  function set_taker(id,m)
+  {
+	  if(m == 1)
+	  {
+		  $.get("index.php?module=behalf&act=edit_goods_taker&id="+ id +"&m=1",function(json){
+			  json = jQuery.parseJSON(json);
+			  bootbox.alert(json.msg,function(r){
+				  location.reload(true);
+			  });
+			  
+		  });
+	  }
+	  if(m == 2)
+	  {
+		  $.get("index.php?module=behalf&act=edit_goods_taker&id="+ id +"&m=2",function(json){
+			  json = jQuery.parseJSON(json);
+			  bootbox.alert(json.msg,function(r){
+				  location.reload(true);
+			  });
+			  
+		  });
+	  }
+	  
+  }
+
+</script>
+<div class="container-fluid">
+    <div style="height:10px;"></div>
+	<div class="panel panel-default">
+		<div class="panel-body">
+			<div class="">
+				<h4 class="blue09c">管理拿货人员</h4>
+			</div>
+			<div class="">
+				<form id="add_markettaker_form" class="form-inline" method="post">
+	   				<div class='form-group'>
+	   				   <div class="">
+		   					<label class="text-right">会员账号</label>
+		   					<input type="text" class="form-control" name="user_name" style="width:256px;">
+	                    </div>
+	                </div>
+	                
+			       <input type="hidden" name="module" value="behalf" />
+			       <input type="hidden" name="act" value="manage_goodstaker" />
+			       <div class="form-group">
+			       	  <div class="">
+			       	     <div class="">
+			       	     	<input type="submit" class="btn btn-info" value="搜 索">
+			       	     </div>
+			       	  </div>
+		            	
+		            </div>
+				</form>
+			</div>
+		  </div>
+	  </div>
+	  <!--{if $show_member}-->
+	  <div class="alert alert-{$info_type}">
+	  		<!--{if $member_info}-->
+	  			<strong>{$member_info.user_name}</strong> 真实姓名：{$member_info.real_name|default:无}，生日：{$member_info.birthday|default:无}，
+	  			Tel：{$member_info.phone_mob|default:无}，QQ：{$member_info.im_qq|default:无}，旺旺：{$member_info.im_aliww|default:无}。
+	  			<a href="javascript:set_taker({$member_info.user_id},1);" class="btn btn-success btn-sm">设为拿货员</a>
+	  		<!--{else}-->
+	  			{$infos}
+	  		<!--{/if}-->
+	  </div>
+	  <!--{/if}-->
+	  <div class="alert alert-warning alert-dismissible" role="alert">
+    	<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+    	<ol>
+    		<li>搜索会员账号（拿货员）！还没有？<a href="index.php?app=member&act=register" target="_blank">注册51账号</a></li>
+    		<li>在搜索结果中，设置为拿货员!</li>
+    	</ol>
+      </div>
+	  <table class="table table-striped table-bordered" width="100%">
+	  	<thead>
+	  		<tr>
+	  			<th class="text-center ">序号</th>
+	  			<th class="text-center ">会员账号</th>
+	  			<th class="text-center ">会员真实姓名</th>
+	  			<th class="text-center ">会员生日</th>
+	  			<th class="text-center ">会员电话</th>
+	  			<th class="text-center ">会员QQ</th>
+	  			<th class="text-center ">会员旺旺</th>
+	  			<th class="text-center ">操作</th>
+	  		</tr>
+	  	</thead>
+	  	<tbody>
+	  	<!--{foreach from=$members item=mem name=fe_mem}-->
+	  		<tr>
+	  			<td class="text-center ">{$smarty.foreach.fe_mem.iteration}</td>
+	  			<td class="text-center ">{$mem.user_name|escape}</td>
+	  			<td class="text-center ">{$mem.real_name|escape}</td>
+	  			<td class="text-center ">{$mem.birthday|escape}</td>
+	  			<td class="text-center ">{$mem.phone_mob|escape}</td>
+	  			<td class="text-center ">{$mem.im_qq|escape}</td>
+	  			<td class="text-center ">{$mem.im_aliww|escape}</td>
+	  			<td class="text-center">
+	  			  <a href="javascript:set_taker({$mem.user_id},2);" class="btn btn-xs">解除</a>
+	  			</td>
+	  		</tr>
+	  	<!--{/foreach}-->
+	  	</tbody>
+	  </table>
+</div>
+
+{include file=footer.whole.html}

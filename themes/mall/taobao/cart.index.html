@@ -1,0 +1,66 @@
+﻿{include file=header.html}
+{include file=header.nav.html}
+<script type="text/javascript" src="{lib file=cart.js}" charset="utf-8"></script>
+<div id="cart">
+   <div id="cart-header">
+	  <div class="gwlc">
+	     <ul>
+		    <li class="curr">1.我的购物车</li>
+			<li>2.填写核对订单信息</li>
+			<li>3.成功提交订单</li>
+		 </ul>
+	  </div>
+	  <div class="clr"></div>
+   </div>
+   <div class="mycart"></div>
+   <div class="cart-banner"><!--广告位--></div>
+   <div id="cart-goodslist">
+      <div class="title"><span class="left"></span>我挑选的商品<span class="right"></span><div class="clr"></div></div>
+	  <div class="content">
+	     <!--{foreach from=$carts item=cart key=store_id}-->
+	     <table width='100%' cellpadding='0' cellspacing='1' bgcolor="#AACDED">
+            <tr>
+            <td width='7%' bgcolor="#EBF4FB" height="30">商品编号</td>
+    <td bgcolor="#EBF4FB" align="left">&nbsp;&nbsp;{$lang.store}：<a href="{url app=store&id=$store_id}">{$cart.store_name|escape}</a>&nbsp;&nbsp;&nbsp;&nbsp;商品名称</td>
+    <td width='10%' bgcolor="#EBF4FB">单价</td>
+    <td width='8%' bgcolor="#EBF4FB">总价</td>
+    <td width='9%' bgcolor="#EBF4FB">商品数量</td>
+    <td width='15%' bgcolor="#EBF4FB">可用操作</td>
+    </tr>
+ <!--{foreach from=$cart.goods item=goods}-->
+<tr id="cart_item_{$goods.rec_id}">
+   <td bgcolor="#ffffff" style='padding:5px 0 5px 0;'>{$goods.goods_id}</td>
+   <td bgcolor="#ffffff" align="left" style="padding:5px;">
+      <div style="float:left;border:1px #ddd solid;margin-right:8px;">
+	     <a href="{url app=goods&id=$goods.goods_id}" target="_blank"><img src="{$goods.goods_image}" alt="{$goods.goods_name|escape}" width="65" height="65" /></a>
+	  </div>
+	  <span><a href="{url app=goods&id=$goods.goods_id}" target="_blank">{$goods.goods_name|escape}</a></span>
+	  <p>{$goods.specification|escape}</p>
+   </td>
+   <td bgcolor="#ffffff"><span>&yen;{$goods.price}</span></td>
+   <td bgcolor="#ffffff"><span id="item{$goods.rec_id}_subtotal">&yen;{$goods.subtotal}</span></td>
+   <td bgcolor="#ffffff"><img style='display:inline; cursor:pointer' src='{res file=images/bag_close.gif}' border='0' onclick="decrease_quantity({$goods.rec_id});" alt="{$lang.decrease}" />
+     <input type='text' maxlength='4' style='width:30px' id="input_item_{$goods.rec_id}" value="{$goods.quantity}" orig="{$goods.quantity}" changed="{$goods.quantity}" onkeyup="change_quantity({$store_id}, {$goods.rec_id}, {$goods.spec_id}, this);" /><img style='display:inline;margin-left:5px; cursor:pointer' src='{res file=images/bag_open.gif}' border='0' onclick="add_quantity({$goods.rec_id});" alt="{$lang.increase}"/>
+   </td>
+   <td bgcolor="#ffffff">
+   <a  href="javascript:;" onclick="move_favorite({$store_id},{$goods.rec_id},{$goods.goods_id});">{$lang.move_favorite}</a>|
+   <a  href="javascript:;" onclick="drop_cart_item({$store_id},{$goods.rec_id});">{$lang.drop}</a></td>
+</tr>
+ <!--{/foreach}-->
+<tr>
+    <td colspan='7' bgcolor="#EBF4FB" height="30" align="right" style="padding:5px; line-height:20px;">
+      商品总金额（不含运费）：<span style='font-size:14px; font-weight:bold' id="cart{$store_id}_amount">&yen;{$cart.amount} </span> 元</td>
+ </tr>
+</table>
+<p class="cart-btn">
+    <a href="{url app=store&id=$store_id}" class="continueBuyBtn"></a>
+    <a href="{url app=order&goods=cart&store_id=$store_id}" class="gotoOrderInfo"></a>
+<div class="clr"></div>
+</p>
+ <!--{/foreach}-->
+ 
+	  </div>
+	  <div class="bottom"><span class="left"></span><span class="right"></span><div class="clr"></div></div>
+   </div>
+</div>
+{include file=footer.html}

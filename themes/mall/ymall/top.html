@@ -1,0 +1,150 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<base href="{$site_url}/" />
+<meta http-equiv="Content-Type" content="text/html; charset={$charset}" />
+{$page_seo}
+
+<meta name="author" content="www.51zwd.com" />
+<meta name="generator" content="www.51zwd.com" />
+<meta name="copyright" content="www.51zwd.com. All Rights Reserved" />
+<link rel="shortcut icon" href="{$site_url}/favicon.ico"/>
+<link rel="bookmark" href="{$site_url}/favicon.ico"/>
+<link type="text/css" href="{res file=css/header.css}" rel="stylesheet" />
+<link type="text/css" href="{res file=css/main.css}" rel="stylesheet"  />
+<link type="text/css" href="{res file=css/footer.css}" rel="stylesheet" />
+
+<script type="text/javascript" src="index.php?act=jslang"></script>
+<script type="text/javascript" src="{lib file=jquery.js}" charset="utf-8"></script>
+<script type="text/javascript" src="{lib file=ecmall.js}" charset="utf-8"></script>
+<script type="text/javascript" src="{lib file=cart.js}" charset="utf-8"></script>
+<script type="text/javascript" src="{lib file=jquery.plugins/jquery.lazyload.js}" charset="utf-8"></script>
+<script type="text/javascript" src="{res file=js/main.js}" charset="utf-8"></script>
+<!--{if $index }-->
+<script type="text/javascript" src="{lib file=jquery.plugins/jquery.SuperSlide.js}" charset="utf-8"></script>
+<!--{/if}-->
+
+<!--[if lte IE 6]>
+<script type="text/javascript" language="Javascript" src="{res file=js/hoverForIE6.js}"></script>
+<![endif]-->
+
+<script type="text/javascript">
+//<!CDATA[
+var SITE_URL = "{$site_url}";
+var REAL_SITE_URL = "{$real_site_url}";
+var PRICE_FORMAT = '{$price_format}';
+$(function(){
+        $('img.lazyload').lazyload();
+});
+//]]>
+</script>
+
+{$_head_tags}
+<!--<editmode></editmode>-->
+</head>
+<body>
+<div id="site-nav" class="w-full">
+   <div class="shoptop w clearfix">
+     <div class="left">
+         <div class="city-nav">
+                   <dl>
+                    <dt>{$currentCitysite}</dt>
+                    <dd class="hidden">
+                       <!--{foreach from=$citysiteList item=city name=city_fee}-->
+                          {$city}
+                       <!--{/foreach}-->
+                    </dd>
+                   </dl>
+              </div>
+         <div class="float-left">
+                         <a class="home-set ml5" href="javascript:SetHome(this,window.location)">{$lang.set_home}</a>
+                         <a class="site-coll ml10" href="javascript:AddFavorite(document.title,'http://www.51zwd.com')">{$lang.collect_oursite}</a>
+              </div>
+
+
+              <div id="login_info_wrapper" class="login_info f66 clearfix">
+                                 <!--{if !$visitor.user_id}-->
+                                         <span class="login-span  v_line float-left">
+                                     <a href="{url app=member&act=login&ret_url=$ret_url}" class="login-flag" target="_blank">{$lang.login}</a>
+                                     <ul class="hidden">
+                                      <div class="login-div-wrapper">
+                                      <li class="login-51"><a href="{url app=member&act=login&ret_url=$ret_url}" target="_blank">{$lang.login_51}</a></li>
+                                      <li class="login-taobao"><a href="{url app=member&act=loginWithTaobao&ret_url=$ret_url}" target="_blank">{$lang.login_taobao}</a></li>
+                                      <li class="login-ali"><a href="{url app=member&act=loginWithAlibaba&ret_url=$ret_url}" target="_blank">{$lang.login_ali}</a></li>
+                                      </div>
+                                     </ul>
+                                    </span>
+
+                                         <a href="{url app=member&act=register&ret_url=$ret_url}" class="ml5 pr5 v_line float-left" target="_blank">{$lang.register}</a>
+                                         <!--{else}-->
+                                         <a href="{url app=member}" class="ml5"><span>{$visitor.user_name|escape}</span></a>
+                                         <a href="{url app=message&act=newpm}">{$lang.user_center}<!--{if $new_message}-->(<span>{$new_message}</span>)<!--{/if}--></a>
+                                         <a href="{url app=member&act=logout}" class="pr5 v_line">{$lang.logout}</a>
+                                <!--{/if}-->
+                   </div>
+                   <div class="float-left">
+                         <a href="{$smarty.const.QQGRP_HREF}" target="_blank">
+                         <!--{if $smarty.const.QQGRP_SHOW }-->
+                           <img border="0" src="http://pub.idqqimg.com/wpa/images/group.png" alt="{$lang.free_kefuqun}" title="{$lang.free_kefuqun}">
+                         <!--{else}-->
+                           {$lang.kefuqun}{$smarty.const.QQGRP_NO}
+                         <!--{/if}-->
+                         </a>
+              </div>
+           </div>
+      <ul class="quick-menu">
+        {if !$index}<li class="home"><a href="{$site_url}">{$lang.back_home}</a></li>{/if}
+         <li class="service v_line">
+            <a href="{url app=apply}">{$lang.apply_register}</a>
+         </li>
+
+                 <li class="service v_line">
+            <a href="{url app=default&amp;act=submit_newgoods}">{$lang.newstyle_submit}</a>
+         </li>
+
+                <li class="item v_line">
+            <div class="menu favorite">
+               <a class="menu-hd" href="javascript:;">{$lang.our_collect}<b></b></a>
+               <div class="menu-bd">
+                  <div class="menu-bd-panel">
+                     <div>
+                       <p><a href="{url app=my_favorite}">{$lang.collect_goods}</a></p>
+                       <p><a href="{url app=my_favorite&type=store}">{$lang.collect_stores}</a></p>
+                       <p><a href="{url app=my_favorite&type=behalf}">{$lang.collect_behalfs}</a></p>
+                    </div>
+                 </div>
+               </div>
+           </div>
+         </li>
+
+                 <li class="service v_line">
+            <a href="{url app=my_favorite}">{$lang.data_bag}</a>
+         </li>
+
+         <li class="item v_line">
+            <div class="menu focusus">
+               <a class="menu-hd" href="javascript:;">{$lang.eyes_onme}<b></b></a>
+               <div class="menu-bd">
+                  <div class="menu-bd-panel">
+                     <div>
+                       <p><a href="http://weibo.com/wangpi">{$lang.51sinaweibo}</a></p>
+                       <p><a href="http://t.qq.com/woyaozuowangdian">{$lang.51tecentweibo}</a></p>
+                                           <p><a href="data/system/ma01.jpg">{$lang.51officeweixin}</a></p>
+                    </div>
+                 </div>
+               </div>
+           </div>
+         </li>
+         <li class="item">
+            <div class="menu sites">
+               <a class="menu-hd" href="javascript:;">{$lang.site_navigation}<b></b></a>
+               <div class="menu-bd padding10">
+                  <!--{foreach from=$navs.header item=nav}-->
+                  <a href="{$nav.link}"{if $nav.open_new} target="_blank"{/if}>{$nav.title|escape}</a>
+                  <!--{/foreach}-->
+               </div>
+            </div>
+        </li>
+     </ul>
+   </div>
+</div>

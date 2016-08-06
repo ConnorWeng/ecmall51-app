@@ -1,0 +1,68 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset={$charset}" />
+    </head>
+    <body>
+        <div id="pie" style="height:500px;border:1px solid #ccc;padding:10px;"></div>
+        <div>
+            <p>今天忘记过滤爬虫访问的链接，每天大约有3只爬虫在爬网站，所以上传次数大于3次为有效。</p>
+        </div>
+        <script src="{lib file=js/echarts.js}"></script>
+        <script type="text/javascript">
+         require.config({
+           paths: {
+             echarts: '{lib file=js}'
+           }
+         });
+         require(
+           [
+             'echarts',
+             'echarts/chart/pie',
+             'echarts/chart/funnel',
+             'echarts/chart/line',
+             'echarts/chart/map'
+           ],
+           function (ec) {
+             var c = ec.init(document.getElementById('pie'));
+             var option = {
+               title : {
+                 text: '2016-04-17 一键上传店铺总体情况概览'
+               },
+               tooltip : {
+                 trigger: 'item',
+                 formatter: "{a} <br/>{b} : {c} ({d}%)"
+               },
+               legend: {
+                 orient: 'vertical',
+                 left: 'left',
+                 data: ['上传宝贝数<=3的店铺数','3<上传宝贝数<=10的店铺数','上传宝贝数>10的店铺数']
+               },
+               color: ['#888888','#CC6600','#00DD77'],
+               series : [
+                 {
+                   name: '店铺数',
+                   type: 'pie',
+                   radius : '55%',
+                   center: ['50%', '60%'],
+                   data:[
+                     {value:4225, name:'上传宝贝数<=3的店铺数'},
+                     {value:1586, name:'3<上传宝贝数<=10的店铺数'},
+                     {value:932, name:'上传宝贝数>10的店铺数'}
+                   ],
+                   itemStyle: {
+                     emphasis: {
+                       shadowBlur: 10,
+                       shadowOffsetX: 0,
+                       shadowColor: 'rgba(0, 0, 0, 0.5)'
+                     }
+                   }
+                 }
+               ]
+             };
+             c.setOption(option);
+           }
+         );
+        </script>
+    </body>
+</html>

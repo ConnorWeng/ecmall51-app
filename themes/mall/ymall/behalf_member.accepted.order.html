@@ -1,0 +1,367 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<base href="{$site_url}/" />
+<!-- Use IE7 mode -->
+<meta http-equiv="X-UA-Compatible" content="IE=EmulateIE7 charset={$charset}" />
+<meta http-equiv="Content-Type" content="text/html; charset={$charset}" />
+{$page_seo}
+<link href="{res file=css/user.css}" rel="stylesheet" type="text/css" />
+<meta name="author" content="ecmall.shopex.cn" />
+<meta name="copyright" content="ShopEx Inc. All Rights Reserved" />
+<style>
+  .content{width:1200px;margin:0 auto;}
+  .center{text-align:center;}
+  .red{color:red;font-size:16px;font-weight:500;margin:0 3px;}
+  .red1{color:#FF6600;}
+  .blue{color:blue}
+  table{text-align:center;}  
+  @media print{
+		.noprint{display:none;}
+		.nextpage{page-break-after:always;}
+  }
+</style>
+<script language="javascript" src="{lib file=lodop/LodopFuncs.js}"></script>
+<object  id="LODOP_OB" classid="clsid:2105C259-1E0C-4534-8141-A753534CB4CA" width=0 height=0> 
+       <embed id="LODOP_EM" type="application/x-print-lodop" width=0 height=0></embed>
+</object>
+<script type="text/javascript">
+//<!CDATA[
+var SITE_URL = "{$site_url}";
+var REAL_SITE_URL = "{$real_site_url}";
+var PRICE_FORMAT = '{$price_format}';
+//var LODOP = getLodop(document.getElementById('LODOP_OB'),document.getElementById('LODOP_EM'));
+var LODOP;
+//]]>
+</script>
+<script type="text/javascript" src="index.php?act=jslang"></script>
+<script type="text/javascript" src="{lib file=jquery.js}" charset="utf-8"></script>
+<script type="text/javascript" src="{lib file=ecmall.js}" charset="utf-8"></script>
+<script type="text/javascript" src="{lib file=member.js}" charset="utf-8"></script>
+<script type="text/javascript">
+  $(function(){
+	  $("#showstatics").click(function(){
+		  $("#tongji").css("display",this.checked?"block":"none");
+	  });
+	  $("#showpic").click(function(){
+		  $(".ware_pic").css("display",this.checked?"table-cell":"none");
+	  });
+	  $("#show_bm").click(function(){
+		  $(".ware_bm").css("display",this.checked?"table-cell":"none");
+	  });
+	  $("#show_market").click(function(){
+		  $(".ware_mk").css("display",this.checked?"table-cell":"none");
+	  });
+	  $("#show_price").click(function(){
+		  $(".ware_price").css("display",this.checked?"table-cell":"none");
+	  });
+	  $("#show_sku").click(function(){
+		  $(".ware_sku").css("display",this.checked?"table-cell":"none");
+	  });
+	  $("#order_sn_and_count").click(function(){
+		  $(".ware_count").css("display",this.checked?"table-cell":"none");
+	  });
+	  $("#show_goodsname").click(function(){
+		  $(".ware_goodsname").css("display",this.checked?"table-cell":"none");
+	  });
+	  $("#tongji input[name='group_market']").on('change',function(e){
+		 var m_class = $(e.target).val();
+		 $("#nhd_list tbody tr:odd").css('background-color','#fafafa');		 
+		 if(m_class == 'all')
+	     {
+			 
+			 $("#nhd_list tbody tr").show();
+	     }
+		 else
+	     {			
+			 $("#nhd_list tbody tr").hide();
+			 $("#nhd_list tbody tr."+m_class).show();
+	     }
+	  });
+	  $("input[type='radio'][name='view']").click(function(){
+		if($(this).val() == 1)
+		{
+			$('#print_btn').attr('href','javascript:createNhd()');
+			 $('#view_nhd').show();
+			 $('#view_tag').hide();
+		}
+		else
+		{
+			$('#print_btn').attr('href','javascript:preview()');
+			 $('#view_nhd').hide();
+			 $('#view_tag').show();
+		}
+	  });
+  });
+  
+  function createOnePage()
+  {
+	  //LODOP=getLodop(document.getElementById('LODOP_OB'),document.getElementById('LODOP_EM'));
+	  LODOP.PRINT_INITA(0,0,326,121,"51zwd_代发_拿货单_标签打印");
+	  LODOP.SET_PRINT_PAGESIZE(1,860,320,"");
+	  createAllPages();
+	  //LODOP.ADD_PRINT_TABLE(0,0,"100%","100%",document.getElementById('view_tag').innerHTML);
+	  //LODOP.SET_PRINT_STYLEA(0,"TableHeightScope",1);	
+	 /*  LODOP.SET_PRINT_STYLEA(0,"FontSize",15);
+	  LODOP.SET_PRINT_STYLEA(0,"ItemType",4);
+	  LODOP.SET_PRINT_STYLEA(0,"Horient",3);
+	  LODOP.SET_PRINT_STYLEA(0,"Vorient",3);  */
+  }
+  
+  function startPrint()
+  {
+	  LODOP = getLodop();
+	  if(!confirm("下面会产生大量的实际打印操作，确定继续吗？")) return;
+	  
+	  LODOP.PRINT_INITA(0,0,326,121,"51zwd_代发_拿货单_标签打印");
+	  LODOP.SET_PRINT_PAGESIZE(1,860,320,"");
+	  
+	  <!--{foreach from=$goods_tag_list item=goods_tag name=fee_goods_tag}-->	
+	  
+	  	{if $smarty.foreach.fee_goods_tag.iteration % 21 eq 0}
+	  		LODOP.SET_PRINT_MODE("TAG_PRINT_TASK","拿货单标打印" + {$smarty.foreach.fee_goods_tag.iteration});
+  			LODOP.PRINT();
+	  	
+	  	
+	  	 	LODOP.PRINT_INITA(0,0,326,121,"51zwd_代发_拿货单_标签打印");
+		 	LODOP.SET_PRINT_PAGESIZE(1,860,320,"");
+	  	{/if}
+	  	
+	  	{if $smarty.foreach.fee_goods_tag.iteration % 2 neq 0}
+		  	LODOP.NewPage();
+		  	LODOP.ADD_PRINT_RECT(8,8,145,112,2,0);
+		  	LODOP.ADD_PRINT_TEXT(13,13,140,20,"{$goods_tag.tag_sku|default:-}");
+		  	LODOP.SET_PRINT_STYLEA(0,'Bold',1);
+		  	LODOP.ADD_PRINT_TEXT(33,13,140,34,"{$goods_tag.specification|default:-}");
+		  	LODOP.ADD_PRINT_BARCODE(68,13,140,44,"128Auto","{$goods_tag.order_sn}");
+		  	LODOP.ADD_PRINT_TEXT(52,90,30,14,"{if $goods_tag.goods_discount gt 0}{$goods_tag.goods_discount}/H{/if}");
+		  	LODOP.ADD_PRINT_RECT(50,114,32,16,2,1);
+		  	LODOP.ADD_PRINT_TEXT(52,116,10,14,"{$goods_tag.order_dlname|default:-}");
+		  	LODOP.ADD_PRINT_TEXT(52,136,10,14,"{if $goods_tag.order_goodsquantity gt 1}D{/if}");
+		 {else} 
+		  	LODOP.ADD_PRINT_RECT(8,165,145,112,2,0);
+		  	LODOP.ADD_PRINT_TEXT(13,170,140,20,"{$goods_tag.tag_sku|default:-}");
+		  	LODOP.SET_PRINT_STYLEA(0,'Bold',1);
+		  	LODOP.ADD_PRINT_TEXT(33,170,140,34,"{$goods_tag.specification|default:-}");
+		  	LODOP.ADD_PRINT_BARCODE(68,170,140,44,"128Auto","{$goods_tag.order_sn}");
+		  	LODOP.ADD_PRINT_TEXT(52,247,30,14,"{if $goods_tag.goods_discount gt 0}{$goods_tag.goods_discount}/H{/if}");
+		  	LODOP.ADD_PRINT_RECT(50,271,32,16,2,1);
+		  	LODOP.ADD_PRINT_TEXT(52,273,10,14,"{$goods_tag.order_dlname|default:-}");
+		  	LODOP.ADD_PRINT_TEXT(52,293,10,14,"{if $goods_tag.order_goodsquantity gt 1}D{/if}");
+	  	{/if}   
+	  <!--{/foreach}-->	
+	  
+	  LODOP.SET_PRINT_MODE("TAG_PRINT_TASK","拿货单标打印" + "end");
+	  LODOP.PRINT();
+  }
+  
+  function preview10Pages()
+  {
+	  LODOP = getLodop();
+	  LODOP.PRINT_INITA(0,0,326,121,"51zwd_代发_拿货单_标签打印");
+	  LODOP.SET_PRINT_PAGESIZE(1,860,320,"");
+	  <!--{foreach from=$goods_tag_list item=goods_tag name=fee_goods_tag}-->	
+	  {if $smarty.foreach.fee_goods_tag.iteration lte 20}
+	  	{if $smarty.foreach.fee_goods_tag.iteration % 2 neq 0}
+		  	LODOP.NewPage();
+		  	LODOP.ADD_PRINT_RECT(8,8,145,112,2,0);
+		  	LODOP.ADD_PRINT_TEXT(13,13,140,20,"{$goods_tag.tag_sku|default:-}");
+		  	LODOP.SET_PRINT_STYLEA(0,'Bold',1);
+		  	LODOP.ADD_PRINT_TEXT(33,13,140,34,"{$goods_tag.specification|default:-}");
+		  	LODOP.ADD_PRINT_BARCODE(68,13,140,44,"128Auto","{$goods_tag.order_sn}");
+		  	LODOP.ADD_PRINT_TEXT(52,90,30,14,"{if $goods_tag.goods_discount gt 0}{$goods_tag.goods_discount}/H{/if}");
+		  	LODOP.ADD_PRINT_RECT(50,114,32,16,2,1);
+		  	LODOP.ADD_PRINT_TEXT(52,116,10,14,"{$goods_tag.order_dlname|default:-}");
+		  	LODOP.ADD_PRINT_TEXT(52,136,10,14,"{if $goods_tag.order_goodsquantity gt 1}D{/if}");
+		 {else} 
+		  	LODOP.ADD_PRINT_RECT(8,165,145,112,2,0);
+		  	LODOP.ADD_PRINT_TEXT(13,170,140,20,"{$goods_tag.tag_sku|default:-}");
+		  	LODOP.SET_PRINT_STYLEA(0,'Bold',1);
+		  	LODOP.ADD_PRINT_TEXT(33,170,140,34,"{$goods_tag.specification|default:-}");
+		  	LODOP.ADD_PRINT_BARCODE(68,170,140,44,"128Auto","{$goods_tag.order_sn}");
+		  	LODOP.ADD_PRINT_TEXT(52,247,30,14,"{if $goods_tag.goods_discount gt 0}{$goods_tag.goods_discount}/H{/if}");
+		  	LODOP.ADD_PRINT_RECT(50,271,32,16,2,1);
+		  	LODOP.ADD_PRINT_TEXT(52,273,10,14,"{$goods_tag.order_dlname|default:-}");
+		  	LODOP.ADD_PRINT_TEXT(52,293,10,14,"{if $goods_tag.order_goodsquantity gt 1}D{/if}");
+		  	
+	  	{/if} 
+	  {/if}
+	  <!--{/foreach}-->	
+	  LODOP.SET_PREVIEW_WINDOW(0,0,0,0,0,"");
+	  LODOP.PREVIEW();
+  }
+  
+  function preview()
+  {	  
+	  createOnePage();
+	  LODOP.PREVIEW();
+	 //LODOP.PRINT_SETUP();
+  }
+  
+  function createNhd()
+  {	  
+	  LODOP.PRINT_INITA(0,0,'100%','100%','51zwd_代发拿货单_打印');
+	  //LODOP.SET_PRINT_PAGESIZE(0,2970,2100,"");
+	  LODOP.ADD_PRINT_TABLE(10,'2%','96%',80,document.getElementById('nhd_header').innerHTML);
+	  LODOP.SET_PRINT_STYLEA(0,"ItemType",1);
+	  LODOP.SET_PRINT_STYLEA(0,"LinkedItem",1);	
+	  var strStyle="<style> table,td,th {border-width: 1px;border-style: solid;border-color:#aaa;border-collapse: collapse}</style>"
+	  LODOP.ADD_PRINT_TABLE(95,'2%','96%',620,strStyle+document.getElementById('nhd_cont').innerHTML);
+	  LODOP.SET_PRINT_STYLEA(0,"Vorient",3);
+	  LODOP.ADD_PRINT_HTM(756,900,300,100,"总页号：<font color='#0000ff' format='ChineseNum'><span tdata='pageNO'>第##页</span>/<span tdata='pageCount'>共##页</span></font>");
+	  LODOP.SET_PRINT_STYLEA(0,"ItemType",1);
+	  LODOP.SET_PRINT_STYLEA(0,"Horient",1);	
+	  LODOP.PREVIEW();
+  }
+
+
+</script>
+<style>
+.goods_list{border-bottom:1px solid #ccc;border-right:1px solid #ccc;}
+.goods_list td{border-top:1px solid #ccc;border-left:1px solid #ccc;padding:5px;min-height:24px;}
+.goods_list th{border-top:1px solid #ccc;border-left:1px solid #ccc;padding:5px;height:24px;}
+.goods_list a{text-decoration:none;color:#333;}
+.goods_list a:hover{text-decoration:underline;color:#f44;}
+body{font-size:14px;}
+.choice_option{width:960px;height:20px;background:#ccc;overflow:hidden;clear:both;margin:0;padding:0;display:block;border-collapse:inherit;float:right;}
+.choice_option div{float:left;display:block;margin:0px;padding:0;margin-right:10px;}
+
+</style>
+
+</head>
+<body>
+<div id="view_nhd" class="content" style="padding-top:10px;">
+<div id="nhd_header">
+ <table width="100%" height="80" border="0" cellspacing="0" cellpadding="0" style="border-collapse: collapse;">
+   <tr>
+	   <td width="10%" rowspan="2">
+	   		<h1 title="{$site_title}" style="text-align:left;"><a href="index.php"><img height="47" src="{$site_logo}" alt="{$site_title}" border="0"/></a></h1>
+	   </td>
+	   <td width="40%"></td>
+	   <td width="50%" height="50"><h2 class="center" style="font-size:22px;">拿货单<span style="font-weight:normal;font-size:14px;">(<!--{if $order_status eq 'accepted'}-->{$lang.order_accepted}<!--{else}-->{$lang.order_shipped}<!--{/if}-->)</span></h2></td>
+   </tr>
+   <tr> 
+	   <td colspan="3" width="90%">
+		    <table align="right" border="0" cellspacing="0" cellpadding="0">
+		     <tr>
+		     	<td width="60" align="left">统计 <input type="checkbox" checked="checked" id="showstatics" style="vertical-align:middle;"/></td>
+		     	<td width="60" align="left">图片 <input type="checkbox" checked="checked" id="showpic" style="vertical-align:middle;"/></td>
+		     	<td width="80" align="left">商品名称<input type="checkbox" checked="checked" id="show_goodsname" style="vertical-align:middle;"/></td>
+		     	<td width="60" align="left">市场<input type="checkbox" checked="checked" id="show_market" style="vertical-align:middle;"/></td>
+		     	<td width="60" align="left">价格<input type="checkbox" checked="checked" id="show_price" style="vertical-align:middle;"/></td>
+		     	<td width="60" align="left">货号<input type="checkbox" checked="checked" id="show_sku" style="vertical-align:middle;"/></td>
+		     	<td width="80" align="left">商家编码<input type="checkbox" checked="checked" id="show_bm" style="vertical-align:middle;"/></td>
+		     	<td width="120" align="left">{$lang.order_sn_and_count} <input type="checkbox" checked="checked" id="order_sn_and_count" style="vertical-align:middle;"/></td>
+		     	<td width="120" align="left">拿货人：</td>
+		     	<td width="120" align="left">电话：</td>
+		     	<td width="150" align="right">日期：&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;年&nbsp;&nbsp;&nbsp;&nbsp;月&nbsp;&nbsp;&nbsp;&nbsp;日</td>
+		     </tr>
+		    </table>		     　　
+	   </td>
+   </tr>
+ </table>
+</div> 
+<div style="clear:both;"></div>
+<div style="margin:10px 0px;padding:10px;border:1px solid #eee;background:#f5f5f5;color:#666666;" id="tongji">
+  <div class="content"><b>统计：</b>本拿货单共计：订单<span class="red">{$order_count|default:0}</span>单，商品<span class="red">{$goods_count}</span>件，商品总金额<span class="red">{$goods_amount_total|price}</span>元。
+     <div style="margin-top:6px;">  
+	     <b>市场：</b>
+	     <input type="radio" name="group_market" value="all" checked> <span class="blue">全部</span>
+	   <!--{foreach from=$market_list item=mar}-->
+	       <input type="radio" name="group_market" value="market{$mar.mk_id}">
+	       <span class="blue">{$mar.mk_name}</span>(<span class="red1">{$mar.goods_count}</span>件 <span class="red1">{$mar.goods_amount|price}</span>)
+	   <!--{/foreach}-->
+   </div>  
+  </div>
+</div>
+<div id="nhd_cont">     
+           <!--{if $goods_list}-->
+           <table width="100%" class="goods_list" cellspacing="0" cellpadding="0" id="nhd_list">
+            <thead>
+              <tr>
+                <th width="40" height="24">{$lang.goods_no}</th>
+                <th class="ware_pic" width="80">{$lang.goods_pic}</th>
+                <th class="ware_count" width="126">{$lang.order_sn_and_count}</th>
+                <th class="ware_goodsname" width="280" style="padding:0 1px;">{$lang.goods_name}</th>
+                <th class="ware_mk" width="150">{$lang.mk_name}</th>
+                <th class="ware_price" width="60">{$lang.price}</th>
+                <th class="ware_sku" width="60">{$lang.sku}</th>
+                <th class="ware_bm" width="150">商家编码</th>
+                <th width="130">{$lang.goods_colorsize}</th>
+                <th width="60">优惠(元/件)</th>
+                <th width="40">{$lang.quantity}</th>
+                <th >{$lang.remark}</th>
+              </tr>
+             </thead>
+             <tbody>
+            <!--{foreach from=$goods_list item=goods name=fee_goods}-->
+               <tr class="{$goods.mk_class}">
+                 <td style="color:#333;text-align:center;">{$smarty.foreach.fee_goods.iteration}</td>
+                 <td class="ware_pic"><img src="{$goods.goods_image}" height="60"/></td>
+                 <td  class="ware_count">
+                 <!--{if $goods.order_sn_and_count}-->
+                   <div style="line-height:24px;">
+                   <!--{foreach from=$goods.order_sn_and_count item=order}-->
+                      <a href="index.php?app=behalf_member&act=index&order_sn={$order.0}" target="_blank">{$order.0}</a>/{$order.1} 
+                      {if $order.3 >=16}
+                      <i style="display:inline-block;background-color:red;width:12px;height:12px;" title="{$lang.take_time_16}"></i>
+                      {/if}
+                      {if $order.3 >=8 and $order.3 < 16}
+                       <i style="display:inline-block;background-color:yellow;width:12px;height:12px;" title="{$lang.take_time_8}"></i>
+                      {/if}
+					  <br>
+                   <!--{/foreach}-->
+                   </div>
+                 <!--{/if}-->
+                 </td>
+                 <td class="ware_goodsname" style="text-align:left;padding:0 1px;">{$goods.goods_name}</td>
+                 <td class="ware_mk" align='center'>{$goods.mk_name}</td>
+                 <td class="ware_price" align='center'>{$goods.price|price}</td>
+                 <td class="ware_sku" align='center'>{$goods.single_sku}</td>
+                 <td class="ware_bm" align='center'>{$goods.sku}</td>
+                 <td align='center'>{$goods.specification}</td>
+                 <td align='center'>{if $goods.goods_discount gt 0}<font color=red>-{$goods.goods_discount}</font>{/if}</td>
+                 <td align='center'>{$goods.quantity}</td>
+                 <td style="text-align:left;padding:0 1px;">
+                  <!--{if $goods.order_sn_and_count}-->
+                   <div style="line-height:24px;">
+                   <!--{foreach from=$goods.order_sn_and_count item=order1}-->
+                      <!--{if $order1.5}-->
+                      <a href="index.php?app=behalf_member&act=view&order_id={$order1.2}" target="_blank" style="background:#e8e8e8;">{$order1.0}</a>：{$order1.5} <br>
+					  <!--{/if}-->					  
+                   <!--{/foreach}-->
+                   </div>
+                 <!--{/if}-->
+                 </td>
+               </tr>
+            <!--{/foreach}-->
+            </tbody>
+           </table>
+            <!--{else}-->
+                <div class="order_form member_no_records">
+                    <span>{$lang.no_records}</span>
+                </div>
+           <!--{/if}-->
+           
+           
+ </div>
+ 
+
+</div>
+
+<div style="clear:both;"></div>
+
+<div class="order_form noprint" style="background:#f9f9f9;height:50px;width:100%;margin-top:20px;">
+  <div class="content">
+  	<a id="print_btn3" class="" style="margin-top:15px;float:right;margin-right:30px;" href="javascript:startPrint();">标签打印</a>
+  	<a id="print_btn2" class="" style="margin-top:15px;float:right;margin-right:30px;" href="javascript:preview10Pages();">标签预览(10页)</a>
+  	<a id="print_btn1" style="margin-top:15px;float:right;margin-right:30px;" href="javascript:window.print();">拿货单打印</a>
+  	<p style="margin-top:15px;float:left;">
+  	  <input type="radio" name="view" value="1" style="vertical-align:text-top;" checked> 拿货单视图  	  
+  	</p>
+  </div>
+</div>
+
+
+</body>
+</html>

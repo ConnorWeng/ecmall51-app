@@ -1,0 +1,57 @@
+﻿<div id="article_recommend">
+	<!--{if !$widget_data.cate_name_1}-->
+    <div style="padding:10px; text-align:center;">请配置</div>
+    <!--{/if}-->
+   <ul class="art_recom tab_menu">
+	   <li class="current"><a href="javascript:;">{$widget_data.cate_name_1}</a></li>
+	   <li><a href="javascript:;">{$widget_data.cate_name_2}</a></li>
+	   <li><a href="javascript:;">{$widget_data.cate_name_3}</a></li>
+	   <li class="last_li"><a href="javascript:;">{$widget_data.cate_name_4}</a></li>
+   </ul>
+   <div class="clr"></div>
+  <div class="tab_box mt5">
+   <div class="arc_recom">
+       <ul class="clearfix">
+      	<!-- {foreach from=$widget_data.articles1 item=arc} -->      
+         	<li class="dot_ccc float-left"><a href="{url app=article&act=view&article_id=$arc.article_id}" title="{$arc.title|escape}">
+            	{$arc.title|escape|truncate:46}
+         	</a></li>      	 
+      <!--{/foreach}-->
+	  </ul>
+   </div>
+
+    <div class="arc_recom hidden">
+      	 <ul class="clearfix">
+      	<!-- {foreach from=$widget_data.articles2 item=arc} -->      
+         	<li class="dot_ccc float-left"><a href="{url app=article&act=view&article_id=$arc.article_id}" title="{$arc.title|escape}">
+            	{$arc.title|escape|truncate:46}
+         	</a></li>      	 
+      <!--{/foreach}-->
+	  </ul>
+   </div>
+
+    <div class="arc_recom hidden">
+      	 <ul class="clearfix">
+      	<!-- {foreach from=$widget_data.articles3 item=arc} -->      
+         	<li class="dot_ccc float-left"><a href="{url app=article&act=view&article_id=$arc.article_id}" title="{$arc.title|escape}">
+            	{$arc.title|escape|truncate:46}
+         	</a></li>      	 
+      <!--{/foreach}-->
+	  </ul>
+   </div>
+
+    <div class="arc_recom hidden">
+      	 <ul class="clearfix">
+      	<!-- {foreach from=$widget_data.articles4 item=arc} -->      
+         	<li class="dot_ccc float-left"><a href="{url app=article&act=view&article_id=$arc.article_id}" title="{$arc.title|escape}">
+            	{$arc.title|escape|truncate:46}
+         	</a></li>      	 
+      <!--{/foreach}-->
+	  </ul>
+   </div>
+ </div>
+  <script> 
+    	$('#article_recommend').Tabs({});
+   </script>
+</div>
+<div class="clr"></div>

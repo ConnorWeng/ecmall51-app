@@ -1,0 +1,79 @@
+{include file=header.whole.html}
+
+<script type="text/javascript">
+$(function(){    
+	
+	 $('#my_form').bootstrapValidator({
+		  feedbackIcons: {
+	            valid: 'glyphicon glyphicon-ok',
+	            invalid: 'glyphicon glyphicon-remove',
+	            validating: 'glyphicon glyphicon-refresh'
+	        }, 
+		  fields:{
+			 /*  "deliveries[]":{
+				  validators:{
+					  notEmpty:{}
+				  }
+			  } */
+			 
+		  }
+	  }).on('success.form.bv', function(e) {
+		   // Prevent form submission
+          e.preventDefault();
+
+          // Get the form instance
+          var $form = $(e.target);
+
+          // Get the BootstrapValidator instance
+          var bv = $form.data('bootstrapValidator');
+
+          // Use Ajax to submit form data
+          $.post($form.attr('action'), $form.serialize(), function(result) {
+              //var json = $.parseJSON(result);
+              bootbox.alert(result.msg);
+              
+          }, 'json');
+         
+          //$form.data('bootstrapValidator').resetForm(true);
+       
+      });
+
+        
+});
+
+</script>
+<div>
+	<h3 class="page-header text-info">HI，{$behalf.bh_name}</h3>
+	<div class="alert alert-warning">
+		亲，请设置您发送<b>快递</b>费用！
+	</div>
+    <form method="post" action="{url module=behalf&amp;act=set_delivery_fee}" class="form" id="my_form">
+    <!--{if $deliveries}-->
+                            <div class="mb10 border padding10" style="line-height:24px;">                              
+                              <table class="table table-striped">
+                               <!--{foreach  from=$deliveries item=d name=d_fee}-->
+                                   <tr> 
+                                    <td width="80"><strong>{$d.dl_name}</strong></td>                                    
+                                    <td class="pb5">
+                                    <input type="hidden" name="dl_ids[]" value="{$d.dl_id}"/>              
+                                    <input type="text" style="height:30px;width:60px;" class="" name="dl1_quantity[]"  value="{$d.first_amount}"/>
+                                    <em class=" ">件内，</em> 
+                                    <input type="text" style="height:30px;width:80px;" class="pl5 f66" name="dl1_fee[]"  value="{$d.first_price}"/>
+                                   	<em> 元，</em><label>每增加</label> 
+                                    <input type="text" style="height:30px;width:60px;" class="pl5 f66" name="dl2_quantity[]"  value="{$d.step_amount}"/>
+                                    <em class=" ">件，</em><label>增加运费</label> 
+                                    <input type="text" style="height:30px;width:80px;" class="pl5 f66" name="dl2_fee[]"  value="{$d.step_price}"/>
+                                    <em class="">元 </em>
+                                    </td>
+                                    
+                                   </tr>
+                               <!--{/foreach}-->   
+                               </table>                               
+                            </div>
+                            <div><input type="submit" class="btn btn-primary" value="{$lang.save_edit}" /></div>
+                            <!--{else}-->
+                                                                                                  您还没有可用的快递,<a href="{url app=behalf_member&act=set_delivery}">去设置</a>!
+                            <!--{/if}-->
+ 	</form>         			
+</div>
+{include file=footer.whole.html}

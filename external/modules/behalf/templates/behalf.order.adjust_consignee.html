@@ -1,0 +1,141 @@
+{include file=header.whole_nolefttop.html}
+<script type="text/javascript" src="{lib file=mlselection.js}"></script>
+<script type="text/javascript">
+	$(function(){
+		
+		$("#form").bootstrapValidator({
+			  feedbackIcons: {
+		            valid: 'glyphicon glyphicon-ok',
+		            invalid: 'glyphicon glyphicon-remove',
+		            validating: 'glyphicon glyphicon-refresh'
+		        }, 
+			  fields:{
+				  consignee:{
+					  validators:{
+						  notEmpty:{}
+					  }
+				  },
+				  address:{
+					  validators:{
+						  notEmpty:{}
+					  }
+				  },
+				  phone_mob:{
+					  validators:{
+						  stringLength:{
+							  min:11,
+							  max:11
+						  }
+					  }
+				  },
+			  }
+		  });
+		//.bootstrapValidator('validate');
+		/* .on('success.form.bv', function(e) {
+			   // Prevent form submission
+	            e.preventDefault();
+
+	            // Get the form instance
+	            var $form = $(e.target);
+
+	            // Get the BootstrapValidator instance
+	            var bv = $form.data('bootstrapValidator');
+
+	            // Use Ajax to submit form data
+	            $.post($form.attr('action'), $form.serialize(), function(result) {
+	            	//$(window.parent).find('#modal-nhd').modal('hide');
+	                //var json = $.parseJSON(result);
+	                console.log(window.parent);
+	            }, 'json');
+	           
+	            //$form.data('bootstrapValidator').resetForm(true);
+	         
+	        }); */
+	    $("#cancelbtn").on('click',function(){
+	    	window.parent.js_success(0);
+	    });
+		
+		regionInit("region");
+	});
+</script>
+
+<div class="container-fluid">
+	<form id="form" class="form-horizontal" action="index.php?module=behalf&act=adjust_consignee" method="post">
+		<div class="form-group">
+			<label class="col-xs-3 text-right control-label">{$lang.consignee}</label>
+			<div class="col-xs-9">
+				<input type="text" value="{$consignee.consignee|escape}" name="consignee" class="form-control"/>
+			</div>
+		</div>
+		<div class="form-group">
+			<label class="col-xs-3 text-right control-label">{$lang.region}</label>
+			<div class="col-xs-9">
+				 <div id="region">
+                                    <input type="hidden" name="region_id" value="{$consignee.region_id}" class="mls_id" />
+                                    <input type="hidden" name="region_name" value="{$consignee.region_name|escape}" class="mls_names" />
+                                    <!-- {if $consignee.region_id} -->
+                                    <span>{$consignee.region_name|escape}</span>
+                                    <input type="button" value="{$lang.edit}" class="edit_region" />
+                                    <select style="display:none">
+                                      <option>{$lang.select_pls}</option>
+                                      {html_options options=$regions}
+                                    </select>
+                                    <!-- {else} -->
+                                    <select class="select">
+                                      <option>{$lang.select_pls}</option>
+                                      {html_options options=$regions}
+                                    </select>
+                                    <!-- {/if} -->
+       			</div>
+			</div>
+		</div>
+		<div class="form-group">
+			<label class="col-xs-3 text-right control-label">{$lang.address}</label>
+			<div class="col-xs-9">
+				<input type="text" value="{$consignee.address|escape}" name="address" class="form-control"/>
+			</div>
+	     </div>
+		<div class="form-group">
+			<label class="col-xs-3 text-right control-label">{$lang.phone_mob}</label>
+			<div class="col-xs-9">
+				<input type="text" value="{$consignee.phone_mob|escape}" name="phone_mob" class="form-control"/>
+			</div>
+	     </div>
+		<div class="form-group">
+			<label class="col-xs-3 text-right control-label">{$lang.logistics_company}</label>
+			<div class="col-xs-9">
+				<select name="dl_id" class="form-control">
+		           <option value="0">{$lang.please_select}</option>
+		           <!--{foreach from=$deliverys item=delivery}-->  
+		              <option value="{$delivery.dl_id}"  {if $delivery.dl_id eq $consignee.dl_id}selected{/if}>{$delivery.dl_name}</option>
+		           <!--{/foreach}-->                 
+		        </select>
+			</div>
+	     </div>
+		 <input type="hidden" name="order_id" value="{$consignee.order_id}">
+		 <div class="form-group">
+			<label class="col-xs-3 text-right control-label"></label>
+			<div class="col-xs-9">
+				<button class="btn btn-primary" id="savebtn" type="submit">保 存</button>
+				<button class="btn btn-success" id="cancelbtn">取 消</button>
+			</div>
+	     </div>
+	</form>
+
+
+
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+{include file=footer.whole.html}

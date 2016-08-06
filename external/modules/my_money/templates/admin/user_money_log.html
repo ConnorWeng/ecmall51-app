@@ -1,0 +1,100 @@
+{include file="header.html"}
+<script language="javascript">
+$(function(){
+    $('#sotime,#endtime').datepicker({dateFormat: 'yy-mm-dd'});
+});
+</script>
+<div id="rightTop">
+    <p>{$lang.index_yonghuzijinguanli}</p>
+    <ul class="subnav">
+		<li><a class="btn3" href="index.php?module=my_money&act=user_money_list">{$lang.index_zijinliebiao}</a></li>
+		<li><a class="btn3" href="index.php?module=my_money&act=user_money_add">{$lang.index_zengjiayonghuzijin}</a></li>
+		<li><span>资金水流</span></li>
+                 <li><a class="btn3" href="index.php?module=my_money&act=user_money_statistics">资金统计</a></li>
+                <li><a class="btn3" href="index.php?module=my_money&act=user_money_alicheck">阿里充值稽核</a></li>
+		<li><a class="btn3" href="index.php?module=my_money&act=index">{$lang.index_fanhuidaohang}</a></li>
+    </ul>
+</div>
+
+<div class="mrightTop">
+    <div class="fontl">
+       <form method="get">
+            <div class="left">
+              <input name="module" type="hidden" id="module" value="my_money" />
+              <input name="act" type="hidden" id="act" value="user_money_log" />
+               {$lang.logs_user_shouru_yonghumingd}
+              <input name="soname" type="text" id="soname" value="<?php echo $_GET["soname"];?>" />
+                     操作员
+              <input name="admin_name" type="text" id="admin_name" value="<?php echo $_GET["admin_name"];?>" />
+			  添加时间:
+              <input name="sotime" type="text" id="sotime" value="<?php echo $_GET["sotime"];?>" size="10" maxlength="10" />
+              &nbsp;{$lang.so_zhi}&nbsp;<input name="endtime" type="text" id="endtime" value="<?php echo $_GET["endtime"];?>" size="10" maxlength="10" />
+                <input type="submit" class="formbtn" value="{$lang.so_soso}" />
+               <span>资金统计: {$statis2.money}</span>
+              <span>冻结资金统计: {$statis2.money_dj}</span>
+               <span><font color="#FF0000">全部资金统计: {$statis}</span>
+                  <span><font color="#FF0000">稽核: {$judge}</span>
+            </div>
+      </form>
+    </div>
+    <div class="fontr">
+
+    </div>
+</div>
+
+<div class="tdare">
+    <table width="100%" cellspacing="0">
+
+        <tr class="tatr1">
+            <td width="20" class="firstCell"><input id="checkall_1" type="checkbox" class="checkall"/></td>
+            <td align="left">对象会员</td>
+            <td>操作日志</td>
+            <td>操作金额</td>
+             <td>余额</td>
+            <td width="120">单号</td>
+			<td width="120">操作时间</td>
+			<td>操作人</td>
+            <td class="handler">{$lang.tx_guanlicaozuo}</td>
+        </tr>
+
+        <!--{foreach from=$index item=val key=key}-->
+        <tr class="tatr2">
+            <td width="20" class="firstCell">
+            <input type="checkbox" class="checkitem" value="{$key}" />
+            </td>
+            <td align="left"><b>{$val.user_name}</b></td>
+            <td>{$val.log_text}</td>
+
+            <td><font color="#FF0000">{$val.money_zs}</font><!--{if $val.caozuo==30}-->(已退回)<!--{/if}--></td>
+            <!--{if $val.moneyleft==0} -->
+            <td>
+                ---
+            </td>
+            <!--{else} -->
+                <td>
+                {$val.moneyleft}元
+                </td>
+                <!-- {/if}-->
+            <td>{$val.order_sn}</td>
+			<td>{$val.admin_time|date:y-m-d H:i:s}</td>
+			<td class="table_center">{$val.admin_name}</td>
+            <td class="handler">
+            <a href="#">删除</a></td>
+        </tr>
+        <!--{foreachelse}-->
+        <tr class="no_data">
+            <td colspan="8">{$lang.no_data}</td>
+        </tr>
+        <!--{/foreach}-->
+    </table>
+    <!--{if $index}-->
+<div id="dataFuncs">
+    <div id="batchAction" class="left paddingT15"><input type="checkbox" class="checkall" />
+      <input class="formbtn batchButton" type="button" value="{$lang.drop}" name="id" uri="#" presubmit="confirm('{$lang.drop_confirm}');" />
+    </div>
+    <div class="pageLinks">{include file=page.bottom.html}</div>
+    <div class="clear"></div>
+  </div>
+  <!--{/if}-->
+</div>
+{include file="footer.html"}

@@ -1,0 +1,524 @@
+﻿<script type="text/javascript" src="{lib file=mlselection.js}" charset="utf-8"></script>
+<script type="text/javascript" src="{lib file=jquery.plugins/jquery.validate.js}" charset="utf-8"></script>
+<script type="text/javascript" src="{lib file=dialog/dialog.js}" id="dialog_js" charset="utf-8"></script>
+<script type="text/javascript" src="{lib file=jquery.ui/jquery.ui.js}" id="dialog_js" charset="utf-8"></script>
+<script type="text/javascript">              
+                var addresses = {$addresses};
+                var goods_amount = {$goods_amount};
+                var store_quantity = {$store_quantity};
+                var merge_goods_quantity = {$merge_goods_quantity};
+                var behalf_amount = {$merge_behalf_amount};
+                var behalf_delivery_amount = 0;
+                var coupon_amount = 0;
+                $(function(){
+                    regionInit("region");    
+                    
+                    $('#order_form').validate({
+                        invalidHandler:function(e, validator){
+                         var err_count = validator.numberOfInvalids();
+                         var msg_tpl = '{$lang.order_have_error}';
+                         var d = DialogManager.create('show_error');
+                         d.setWidth(400);
+                         d.setTitle(lang.error);
+                         d.setContents('message', {type:'warning', text:$.format(msg_tpl, err_count)});
+                         d.show('center');
+                        },
+                        errorPlacement: function(error, element){
+                            var _message_box = $(element).parent().find('.field_message');
+                            _message_box.find('.field_notice').hide();
+                            _message_box.append(error);
+                        },
+                        success       : function(label){
+                            label.addClass('validate_right').text('OK!');
+                        },
+                        rules : {
+                            consignee : {
+                                required : true
+                            },
+                            region_id : {
+                                required : true,
+                                min   : 1
+                            },
+                            address   : {
+                                required : true
+                            },
+                            phone_tel : {
+                                required : check_phone,
+                                minlength:6,
+                                checkTel : true
+                            },
+                            phone_mob : {
+                                required : check_phone,
+                                minlength:6,
+                                digits : true
+                            }
+                        },
+                        messages : {
+                            consignee : {
+                                required : '{$lang.consignee_required}'
+                            },
+                            region_id : {
+                                required : '{$lang.region_required}',
+                                min  : '{$lang.region_required}'
+                            },
+                            address   : {
+                                required : '{$lang.address_required}'
+                            },
+                            phone_tel : {
+                                required : '{$lang.phone_required}',
+                                minlength: '{$lang.phone_tel_error}',
+                                checkTel : '{$lang.phone_tel_error}'
+                            },
+                            phone_mob : {
+                                required : '{$lang.phone_required}',
+                                minlength: '{$lang.phone_mob_error}',
+                                digits : '{$lang.phone_mob_error}'
+                            }
+                        }
+                    });                    
+                   
+					// show goods_price_amount  tiq						
+					
+					behalf_delivery_amount = parseInt($("input[type='radio'][name='delivery']:checked").attr('fee'));
+                    $('.delivery_price_amount').html(price_format(behalf_delivery_amount)); 
+                   
+                    
+                    $("input[type='radio'][name='delivery']").live('click',function(){
+                    	//把代发的快递费用加入总费用 
+                    	behalf_delivery_amount =  parseInt($(this).attr('fee'));
+                        $('.delivery_price_amount').html(price_format(behalf_delivery_amount));
+                        set_order_amount();
+                    });
+                    
+                    $($("input[type='radio'][name='delivery']")[0]).click();
+                   
+                    //异步获取快递方式
+                     $("input[type='radio'][name='behalf']").click(function(){
+                    	 $.post('index.php?app=order&act=get_deliverys_by_behalf&ajax=1',{id:$(this).val(),quantity:merge_goods_quantity},function(data){
+                    		 if(data != 'false')
+                    		{
+                    			data = eval(data);
+                    			var str_temp = "";
+                    			for(i=0;i<data.length;i++)
+                    			{
+                    				if(i == 0)
+                        			{
+                        			  str_temp = str_temp + "<input type='radio' name='delivery' fee='"+data[i]['dl_fee']+"' value='"+ data[i]['dl_id'] + "' checked='checked'/>"+ data[i]['dl_name'] +"(&yen;"+data[i]['dl_fee']+ ")&nbsp;&nbsp;";
+                        			}
+                        			else
+                        			{
+                        				str_temp = str_temp + "<input type='radio' name='delivery' fee='"+data[i]['dl_fee']+"' value='"+ data[i]['dl_id'] + "'/>"+ data[i]['dl_name'] +"(&yen;"+data[i]['dl_fee']+ ")&nbsp;&nbsp;";
+                        			}
+                    			}
+                    			//$("#delivery_area").html();                    			
+                    			$("#delivery_area").html(str_temp); 
+                    			behalf_delivery_amount = parseInt($("input[type='radio'][name='delivery'][checked='checked']").attr('fee'));
+                    		    set_order_amount();
+                                $('.delivery_price_amount').html(price_format(behalf_delivery_amount));
+                    		}else
+                    		{
+                    			$("#delivery_area").html(); 
+                    		}
+                    	 });
+                    	 /*show detail behalf_info*/
+                    	 $("#behalf_detail_info div").hide();
+                    	 $(".behalf_info_"+$(this).val()).show();
+                     });
+                    
+                      $("select[name='coupon_sn']").change(function(){
+                     	if($(this).val() == null || $(this).val() == "")
+                     	{
+                     		$('#coupon_price_amount').html("0.00");
+                     		coupon_amount = 0;
+                     	}                    		
+                     	else
+                     	{
+                     		$('#coupon_price_amount').html($("select[name='coupon_sn'] option:selected").attr('coupon_value'));
+                     		coupon_amount = parseInt($("select[name='coupon_sn'] option:selected").attr('coupon_value'));
+                     	}
+                     	set_order_amount();
+                     });       
+                      
+                      $('#change_consignee').on('click',function(){
+                        	$('#newaddress').hide('slow');
+                        	$('#oldaddress-one').hide('slow');
+                        	$('#oldaddress').show('slow');
+                        });
+                        $('#confirm_consignee').on('click',function(){
+                        	$('#newaddress').show('slow');
+                        	$('#oldaddress-one').show('slow');
+                        	$('#oldaddress').hide('slow');
+                        });
+                        $('#temp_consignee').on('click',function(){
+                      	  $('#cancel_temp_consignee').attr('data_address', $("input[name='address_options']:checked").val());
+                      	  $("input[name='address_options']:checked").val(0);
+                      	  set_address();
+                      	  $('#newaddress').hide('slow');
+                      	  $('#oldaddress-one').hide('slow');
+                      	  $('#canel_temp_address').show('slow');
+                        });
+                      $('#cancel_temp_consignee').on('click',function(){
+                      	$("input[name='address_options']:checked").val($(this).attr('data_address'));
+                      	set_address();
+                      	$('#canel_temp_address').hide('slow');
+                      	$('#oldaddress-one').show('slow');
+                      	$('#newaddress').show('slow');
+                      });
+                      
+                      $('textarea[name=taobao_address]').change(function() {
+                          var addressParts = $(this).val().split('，');
+                          if (addressParts.length === 5 || addressParts.length === 4) {
+                              var consignee, phone_mob, phone_tel, zipcode, address, state, city, district;
+                              consignee = addressParts[0].trim();
+                              phone_mob = addressParts[1].trim();
+                              if (addressParts.length === 5) {
+                                  phone_tel = addressParts[2].trim();
+                                  detail = addressParts[3].trim();
+                                  zipcode = addressParts[4].trim();
+                              } else {
+                                  phone_tel = '';
+                                  detail = addressParts[2].trim();
+                                  zipcode = addressParts[3].trim();
+                              }
+                              $('input[name=consignee]').val(consignee);
+                              $('input[name=phone_mob]').val(phone_mob);
+                              $('input[name=phone_tel]').val(phone_tel);
+                              $('input[name=zipcode]').val(zipcode);
+
+                              var detailParts = detail.split(' ');
+                              var start = 0;
+                              if (addressParts.length === 5) {
+                                  start = 1;
+                              }
+                              state = detailParts[start].trim();
+                              city = detailParts[start + 1].trim();
+                              if (detailParts.length > 3) {
+                                  district = detailParts[start + 2].trim();
+                                  address = detailParts.slice(start + 3).join(' ');
+                              } else {
+                                  address = detailParts.slice(start + 2).join(' ');
+                              }
+
+                              $('input[name=address]').val(address);
+
+                              var addressArray = ['中国', state, city];
+                              if (district) {
+                                  addressArray.push(district);
+                              }
+                              var index = 0;
+                              var next = function() {
+                                  var text = addressArray[index];
+                                  var $nextSelect = $('div#region select:eq(' + index + ') option:contains("' + text + '")');
+                                  if ($nextSelect.length === 0) {
+                                      $nextSelect = $('div#region select:eq(' + index + ') option:contains("' + text.substr(0, text.length-1) + '")');
+                                  }
+                                  if ($nextSelect.length > 0) {
+                                      $nextSelect.attr('selected', true);
+                                      $('div#region select:eq(' + index + ')').change();
+                                      index += 1;
+                                  }
+                                  if (index < addressArray.length) {
+                                      setTimeout(next, 500);
+                                  }
+                              }
+                              next();
+                          }
+                      });
+                    
+                });
+                
+                
+               
+                function set_order_amount(){
+                	 var _amount  = goods_amount + behalf_amount + parseInt(behalf_delivery_amount) - coupon_amount;
+                     $('#order_amount').html(price_format(_amount));
+                }
+               
+                
+                function check_phone(){
+                    return ($('#phone_tel').val() == '' && $('#phone_mob').val() == '');
+                }
+                function hide_error(){
+                    $('#region').find('.error').hide();
+                }
+      </script>
+       <script type="text/javascript">
+                //<![CDATA[
+                $(function(){
+                	
+                	$('*[ectype="dialog"]').click(function(){
+                        var id = $(this).attr('dialog_id');
+                        var title = $(this).attr('dialog_title') ? $(this).attr('dialog_title') : '';
+                        var url = $(this).attr('uri');
+                        var width = $(this).attr('dialog_width');
+                		var style = $(this).attr('dialog_class');
+                		var opacity = $(this).attr('dialog_opacity');
+                        ajax_form(id, title, url, width, style, opacity);
+                        return false;
+                    });
+                   // $("input[name='address_options']").click(set_address);
+                    $('.address_item').click(function(){
+                        $(this).find("input[name='address_options']").attr('checked', true);
+                        $('.address_item').removeClass('selected_address');
+                        $(this).addClass('selected_address');
+                        set_address();
+                        // psmb 加载该收货地址对应的运费
+    					var addr_id = $("input[name='address_options']:checked").val();
+    					fill_logist_fee_by_address(addr_id);
+                    });
+                    //init
+                    set_address();
+                 	
+                });
+                function js_success(dialog_id)
+                {
+                    DialogManager.close(dialog_id);
+                    var url = window.location.href;
+                    url =  url.indexOf('#') > 0 ? url.replace(/#/g, '') : url;
+                    window.location.replace(url);
+                }
+                function set_address(){
+                    var addr_id = $("input[name='address_options']:checked").val();
+                    if(addr_id == 0)
+                    {
+                        $('#consignee').val("");
+                        $('#region_name').val("");
+                        $('#region_id').val("");
+                        $('#region select').show();
+                        $("#edit_region_button").hide();
+                        $('#region_name_span').hide();
+
+                        $('#address').val("");
+                        $('#zipcode').val("");
+                        $('#phone_tel').val("");
+                        $('#phone_mob').val("");
+
+                        $('#address_form').show();
+                    }
+                    else
+                    {
+                        $('#address_form').hide();
+                        fill_address_form(addr_id);
+                        fill_address_panel(addr_id);
+                    }
+                }
+                function fill_address_form(addr_id){
+                    var addr_data = addresses[addr_id];
+                    for(k in addr_data){
+                        switch(k){
+                            case 'consignee':
+                            case 'address':
+                            case 'zipcode':
+                            case 'email':
+                            case 'phone_tel':
+                            case 'phone_mob':
+                            case 'region_id':
+                                $("input[name='" + k + "']").val(addr_data[k]);
+                            break;
+                            case 'region_name':
+                                $("input[name='" + k + "']").val(addr_data[k]);
+                                $('#region select').hide();
+                                $('#region_name_span').text(addr_data[k]).show();
+                                $("#edit_region_button").show();
+                            break;
+                        }
+                    }
+                }
+                
+                function fill_address_panel(addr_id){
+                    var addr_data = addresses[addr_id];console.log(addr_data);
+                    for(kk in addr_data){
+                        switch(kk){
+                            case 'consignee':
+                            	$('#address_consignee_choice').text(addr_data[kk]);
+                            	break;
+                            case 'region_name':
+                            	$('#address_region_name_choice').text(addr_data[kk]);
+                            	break;
+                            case 'address':
+                            	$('#address_address_choice').text(addr_data[kk]);
+                            	break;
+                            case 'zipcode':
+                            	$('#address_zipcode_choice').text(addr_data[kk]);
+                            	break;
+                            case 'phone_tel':
+                            	$('#address_phone_tel_choice').text(addr_data[kk]);
+                            	break;
+                            case 'phone_mob':                            
+                            	$('#address_phone_mob_choice').text(addr_data[kk]);
+                            	break;
+                        }
+                    }
+                }
+                
+                //]]>
+              </script>
+           
+<div id="select-address" class="w mt20">
+   <div class="title w mb10">
+      <b class="fs14">{$lang.consignee_address}</b>
+	  <a href="{url app=my_address}" target="_blank">[{$lang.manage_address}]</a>
+	  <span style="color:#f40;">{$lang.taobao_order_remind}</span>
+	  <a href="{url app=taobao_order}" target="_blank" style="background:#12a000;color:white;padding:3px 8px;border:1px solid #008000;border-radius:3px;">{$lang.taobao_onekey}</a>
+   </div>
+   <!--{if $my_address}-->
+   <div id="oldaddress" class="oldaddress w hidden">
+      <!--{foreach from=$my_address item=address name=address_select}-->
+      <dl class="f66 clearfix address_item{if $smarty.foreach.address_select.iteration == 1} selected_address{/if}">
+         <dt class="float-left"><input id="address_{$address.addr_id}" type="radio"{if $smarty.foreach.address_select.iteration == 1} checked="true"{/if} name="address_options" value="{$address.addr_id}" /></dt>
+		 <dd class="float-left">
+         	{$address.consignee|escape}
+         	{$address.region_name|escape}{$address.address|escape}
+         	<!--{if $address.phone_mob}-->{$address.phone_mob}<!--{else}-->{$address.phone_tel}<!--{/if}-->
+         </dd>
+      </dl>
+      <!--{/foreach}-->
+      <div class="mt10 pb10" style="border-bottom:1px solid #ddd;">
+      	<b class="dblu font-normal mr5" style="cursor:pointer;" id="confirm_consignee">[确认收货信息]</b>
+      </div>
+   </div>
+   <div id="oldaddress-one" class="oldaddress-one w">
+   		<!--{foreach from=$my_address item=address name=address_select}-->
+   		<!--{if $smarty.foreach.address_select.last}-->
+      <dl class="clearfix">         
+		 <dd class="fs14 f66" style="line-height:24px;">
+         	收 货 人 ：<span id="address_consignee_choice">{$address.consignee|escape}</span><br>
+         	收货地址：<span id="address_region_name_choice">{$address.region_name|escape}</span><span id="address_address_choice">{$address.address|escape}</span><br>
+         	邮政编码：<span id="address_zipcode_choice">{$address.zipcode|default:-}</span><br>
+         	联系方式：<span id="address_phone_mob_choice">{$address.phone_mob}</span><span class="ml10" id="address_phone_tel_choice">{$address.phone_tel}</span>
+         </dd>
+      </dl>
+       <!--{/if}-->
+      <!--{/foreach}-->
+   </div>
+   <!--{/if}-->
+   <div id="newaddress" class="w title f66" bak="f66 w newaddress address_item">  
+    <!--{if $my_address}-->
+    <b class="dblu font-normal mr5" style="cursor:pointer;" id="change_consignee">[更改]</b>    
+     <!--{/if}-->
+    <b class="dblu font-normal mr5" style="cursor:pointer;" id="temp_consignee">[使用临时地址]</b>
+   </div>
+   <div id="canel_temp_address" class="hidden pb10" style="border-bottom:1px solid #ddd;">
+   		<b class="dblu font-normal mr5" data_address="" style="cursor:pointer;" id="cancel_temp_consignee">[取消临时地址]</b>
+   </div>
+    <div id="address_form" class="newaddressform w hidden">
+      <ul class="fill_in_content mt10" >
+         <li style="height:50px;line-height:18px;">
+            {$lang.taobao_address}{$lang.colon}<textarea placeholder="{$lang.taobao_address_example}" name="taobao_address" style="width:566px;height:36px;border:1px solid #829fbb;font-size:12px;padding:3px;vertical-align:middle;"></textarea>
+            <span class="field_message explain"><span class="field_notice">{$lang.taobao_address_desc}</span></span>
+         </li>
+         <li>
+            {$lang.consignee}{$lang.colon}<input type="text" name="consignee" id="consignee"  />
+            <span class="field_message explain"><span class="field_notice">{$lang.consignee_desc}</span></span>
+         </li>
+         <li class="clearfix">
+		     <div class="float-left">{$lang.region}{$lang.colon}</div>
+             <div id="region" class="float-left">
+                <span style="display:none;" id="region_name_span"></span>
+                <input id="edit_region_button" type="button" class="edit_region" value="{$lang.edit}" style="display:none;" />
+                <select onchange="hide_error();">
+                   <option value="0">{$lang.select_pls}</option>
+                   {html_options options=$regions}
+                </select>
+                <input type="hidden" class="mls_id" name="region_id" id="region_id"/>
+			    <input type="hidden" name="region_name" class="mls_names" id="region_name"/>
+                <span class="field_message explain"><span class="field_notice">{$lang.region_desc}</span></span>
+             </div>
+          </li>
+          <li>
+             {$lang.address}{$lang.colon}<input type="text" name="address" id="address" />
+             <span class="field_message explain"><span class="field_notice">{$lang.address_desc}</span></span>
+          </li>
+          <li>
+             {$lang.zipcode}{$lang.colon}<input type="text" name="zipcode" id="zipcode" />
+             <span class="field_message explain"><span class="field_notice">{$lang.zipcode_desc}</span></span>
+          </li>
+          <li>
+             {$lang.phone_tel}{$lang.colon}<input type="text" name="phone_tel" id="phone_tel"/>
+             <span class="field_message explain"><span class="field_notice">{$lang.phone_tel_desc}</span></span>
+          </li>
+          <li>
+             {$lang.phone_mob}{$lang.colon}<input type="text" id="phone_mob" name="phone_mob" /> 
+             <span class="field_message explain"><span class="field_notice">{$lang.phone_mob_desc}</span></span>
+          </li>
+          <li><input  style="border:0;" type="checkbox" value="1" id="save_address" name="save_address"><span class="explain f66">{$lang.save_address}({$lang.save_address_desc})</span></li>
+       </ul>
+   </div>  
+</div>
+<div id="select-shipping" class="mt10">
+   <div class="title mb10">
+      <strong class="fs14 strong">{$lang.select_shipping}</strong>&nbsp;&nbsp;&nbsp;&nbsp;
+      <a class="selected" href="{url app=order&amp;goods=cart&amp;store_id=$smarty.get.store_id}">{$lang.behalf_shipping}</a>
+      <input type="hidden" name="shipping_choice" value="{if $smarty.get.shipping_choice eq '1'}1{else}2{/if}"/>
+   </div>
+   
+    <div class="content f66" id="shipping_choice1">  
+     <!--{if $behalfs}-->
+      <dl>
+        <dd>
+           <em style="vertical-align:middle;">{$lang.choice_behalf}{$lang.colon}</em>
+          
+              <!--{foreach from=$behalfs item=behalf name=behalf_fee}-->
+                  <input type="radio" name="behalf" value="{$behalf.bh_id}" {if $smarty.foreach.behalf_fee.first} checked="checked" {/if} /><label style="vertical-align:middle;">{$behalf.bh_name}</label>&nbsp;&nbsp;
+              <!--{/foreach}-->            
+        </dd>
+        
+        <dd class="mt10">
+             <em style="vertical-align:middle;">{$lang.choice_delivery}{$lang.colon}</em>
+             <span id="delivery_area">
+               <!--{foreach from=$deliverys item=delivery name=delivery_fee}-->
+                <input type="radio" name="delivery" value="{$delivery.dl_id}" fee="{$delivery.dl_fee}" {if $smarty.foreach.delivery_fee.first} checked="checked" {/if} /><label style="vertical-align:middle;">{$delivery.dl_name}(&yen;{$delivery.dl_fee})</label>&nbsp;&nbsp;
+               <!--{/foreach}--> 
+             </span>
+         </dd> 
+            
+      </dl>   
+      
+       <dl  class="behalf_info mt10">
+         <dd class="title pl10 yahei fs14">{$lang.behalf_info}</dd>
+         <dd id="behalf_detail_info" class="padding10 detail_info">
+            <!--{foreach from=$behalfs item=behalf_info name=behalf_fee}-->
+           <div class="behalf_info_{$behalf_info.bh_id} {if !$smarty.foreach.behalf_fee.first}hidden{/if}">
+           		{$lang.contact}{$lang.colon}&nbsp;&nbsp;{$behalf_info.bh_name|escape},&nbsp;&nbsp;{$behalf_info.bh_tel|escape}
+                <!--{if $behalf_info.bh_ww}-->
+                   &nbsp;&nbsp;<a title="与{$behalf_info.bh_name}店主交谈" href="http://amos.im.alisoft.com/msg.aw?v=2&uid={$behalf_info.bh_ww|escape:url}&site=cntaobao&s=2&charset={$charset}" target="_blank"><img border="0" src="http://amos.im.alisoft.com/online.aw?v=2&uid={$behalf_info.bh_ww|escape:url}&site=cntaobao&s=2&charset={$charset}" alt="与{$behalf_info.bh_name}店主交谈" align="absmiddle"/></a>
+                <!--{/if}-->
+                <!--{if $behalf_info.bh_qq}-->
+                   	&nbsp;&nbsp;{imqq uin=$behalf_info.bh_qq&site=$behalf_info.bh_name|escape:url} 
+                <!--{/if}-->
+                <br>
+                {$lang.reback_address}{$lang.colon}&nbsp;&nbsp;{$behalf_info.owner_name|escape|default:姓名未填},&nbsp;&nbsp;{$behalf_info.bh_tel|escape}&nbsp;&nbsp;{$behalf_info.region_name|escape}&nbsp;&nbsp;{$behalf_info.bh_address|escape}&nbsp;&nbsp;{$lang.zipcode}:{$behalf_info.zipcode|escape}
+				<br>
+                <!--{if $behalf_info.bh_notice}-->
+                <p class="f40"><font color=red>{$lang.emerge_notice}{$lang.colon}</font> {$behalf_info.bh_notice|escape}</p>
+                <!--{/if}-->            
+            </div>
+            <!--{/foreach}--> 
+         </dd>        
+      </dl>
+      
+      <dl class="mt10">
+         <dd> 
+           <p style="line-height:20px;">
+             {$lang.behalf_fee_info}{$lang.colon} 
+             <span id="behalf-fee-info">{$lang.no_behalf_fee_data1}</span>
+           </p>
+           <!-- <p class="mt5">
+             {$lang.delivery_fee_info}{$lang.colon} 
+             <span id="delivery-fee-info">{$lang.delivery_fee_data}</span>
+           </p> -->
+          </dd>   
+      </dl>    
+   <!--{/if}-->
+   
+   <!--{if !$behalfs and !$shipping_methods}-->
+      {$not_exist_behalf_tips}
+   <!--{/if}-->
+   </div>
+</div>
+
+             
+
+
+
+

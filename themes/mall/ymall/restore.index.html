@@ -1,0 +1,45 @@
+{include file=header.html}
+
+<script src="{lib file=jquery.plugins/jquery.validate.js}" charset="utf-8"></script>
+<script>
+$(function () {
+  $('#apply_form').validate({
+    errorPlacement: function(error, element) {
+      $('.error').empty();
+      $('.error').append(error);
+    },
+    onkeyup: false,
+    rules: {
+      reason: {
+        required: true
+      }
+    },
+    messages: {
+      reason: {
+        required: '{$lang.not_empty}'
+      }
+    }
+  });
+
+  $('#submit').click(function () {
+    $('#apply_form').submit();
+  });
+});
+</script>
+
+<div id="main" class="w-full">
+    <div id="page-apply" class="w mt10 mb20">
+        <div class="title padding5 strong fs14">
+            {$lang.i_want_restore_store}
+        </div>
+        <div class="content border padding10 border-t-0 linehei20">
+            <form action="{url app=restore}" method="post" id="apply_form" name="apply_form" enctype="multipart/form-data">
+                <p>{$lang.please_desc_reason}: </p>
+                <textarea rows="10" cols="80" name="reason"></textarea>
+                <p class="error" style="color:red"></p>
+                <a href="javascript:void 0" id="submit" class="btn-apply fs14 strong fff center">{$lang.apply_restore}</a>
+            </form>
+        </div>
+    </div>
+</div>
+{include file=footer.html}

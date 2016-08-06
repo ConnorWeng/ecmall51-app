@@ -1,0 +1,48 @@
+﻿                <script type="text/javascript">
+                $(function(){
+                   $('#check_coupon').click(function(){
+                       var coupon_sn = $('#coupon_sn').val();
+                       if(coupon_sn == '')
+                       {
+                           return;
+                       }
+                       $.getJSON("index.php?app=order&act=check_coupon", {coupon_sn: coupon_sn, store_id: '{$smarty.get.store_id}'}, function(data){
+                           if(data['retval'])
+                           {
+                               $('.unusable').hide();
+                               var msg = '{$lang.usable}';
+                               var str = price_format(data['retval']['price']);
+                               $('.usable').show().html(msg + str).css("display","block");
+                           }
+                           else
+                           {
+                               $('.usable').hide();
+                               $('.unusable').show().css("display","block");
+                               $('#coupon_sn').val('');
+                           }
+                       });
+                   });
+               });
+                </script>
+               <div class="make_sure">
+                    <p>{$lang.order_amount}：
+					<strong  id="order_amount">{$goods_info.amount|price}</strong>
+					</p>
+					<!-- 先屏蔽掉优惠券
+					{if $goods_info.allow_coupon}
+					<input type="button" class="btn-allow-coupon" onclick="$(this).parent('p').next().toggle();$('#coupon_sn').val('');" />{/if}
+					</p>
+                    {if $goods_info.allow_coupon}
+                    <p style="display:none;">{$lang.coupon_sn}：
+                    <input type="text" name="coupon_sn" id="coupon_sn" class="text" />  
+                    <input type="button" value="{$lang.check}" class="check" id="check_coupon" />
+					<br />
+                    <span class="usable">{$lang.usable}</span><br />
+					<span class="unusable">{$lang.unusable}</span>
+                    </p>
+                    {/if}-->
+                    <p>
+                        <a href="javascript:void($('#order_form').submit());" class="btn-step-three"></a>
+                    </p>
+                </div>
+               <div class="clr"></div>

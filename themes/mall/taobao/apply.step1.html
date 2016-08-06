@@ -1,0 +1,61 @@
+﻿{include file=header.html}
+{include file=header.nav.html}
+<link href="{res file=css/ecmall.css}" rel="stylesheet" type="text/css" />
+<script src="{res file=js/jquery.js}"></script>
+<script src="{res file=js/nav.js}"></script>
+<script src="{res file=js/select.js}"></script>
+<div id="openstore">
+<div id="cart-header">
+	  <div class="gwlc">
+	     <ul>
+		    <li class="curr">1.选择店铺类型</li>
+			<li>2.填写店主和店铺信息</li>
+			<li>3.完成</li>
+		 </ul>
+	  </div>
+	  <div class="clr"></div>
+   </div>
+   <div id="cart-goodslist">
+      <div class="title"><span class="left"></span>{$lang.i_want_open_store}<span class="right"></span><div class="clr"></div></div>
+	  <div class="content">
+	     
+	     <table width="900" cellpadding="0" cellspacing="0" border="0" align="center">
+                        <!--{foreach from=$sgrades item=sgrade name=fe_sgrade}-->
+                            <tr bgcolor="#FBF7EE">
+                                <th width="100" style="border-top:1px #E7CA96 solid">{$sgrade.grade_name}</th>
+                                <td align="left" width="150" style="border-top:1px #E7CA96 solid;">
+                                    <p>{$lang.goods_limit}：<span class="fontColor1">{$sgrade.goods_limit}</span></p>
+                                    <p>{$lang.space_limit}：<span class="fontColor1">{$sgrade.space_limit}</span></p>
+                                    <p>{$lang.skin_limit}：<span class="fontColor1">{$sgrade.skin_limit}</span></p>
+                                    <p>{$lang.charge}：<span style="color:#F97429;">{$sgrade.charge}</span></p>
+                                    <p>{$lang.need_confirm}：<span class="fontColor1"><!--{if $sgrade.need_confirm}-->{$lang.yes}<!--{else}-->{$lang.no}<!--{/if}--></span></p>
+                                </td>
+                                <td style="border-top:1px #E7CA96 solid; line-height:20px;">
+                                    <table>
+                                        <tr>
+                                            <td align="left" width="100">{$lang.add_use}：</td>
+                                            <td align="left">
+                                            <!--{foreach from=$sgrade.functions item=functions key=k name=v}-->
+                                                <!--{if $domain && $k eq 'subdomain'}-->
+                                                    <span class="fontColor1">{$lang.domain}</span>
+                                                <!--{else}-->
+                                                    <span class="fontColor1">{$lang.$k}</span>
+                                                <!--{/if}-->
+                                                <!--{if !$smarty.foreach.v.last}-->
+                                                    <br />
+                                                <!--{/if}-->
+                                            <!--{/foreach}-->
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </td>
+                                <td align="left" width="130" style="border-top:1px #E7CA96 solid;line-height:20px;">{$sgrade.description}</td>
+                                <td width="220" align="center" style="border-top:1px #E7CA96 solid"><a href="{url app=apply&step=2&id=$sgrade.grade_id}" class="btn-openstore">{$lang.soon_open}</a></td>
+                            </tr>
+                        <!--{/foreach}-->
+                        </table>
+	  </div>
+	  <div class="bottom"><span class="left"></span><span class="right"></span><div class="clr"></div></div>
+   </div>
+</div>
+{include file=footer.html}

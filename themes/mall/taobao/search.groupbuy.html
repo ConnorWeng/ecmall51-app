@@ -1,0 +1,62 @@
+﻿{include file=header.html}
+{include file="header.nav.html"}
+<script type="text/javascript" src="{lib file=search_groupbuy.js}" charset="utf-8"></script>
+
+<div id="groupbuylist">
+   {include file=curlocal.html}
+   <div class="title">
+   <form method="get" action="index.php">
+      <input type="hidden" name="app" value="search" />
+      <input type="hidden" name="act" value="groupbuy" />
+      {$lang.group_name}
+      <input class="table_text" name="keyword" type="text" value="{$smarty.get.keyword|escape}" />
+      {$lang.state}
+      <select class="display_select" ectype="state">
+         {html_options options=$state selected=$smarty.get.state}
+      </select>
+	  {$lang.order_by}
+	  <select ectype="order_by">
+	    <option value="">{$lang.order_by}</option>
+		<option value="views desc">{$lang.views}</option>
+		<option value="end_time asc">{$lang.lefttime}</option>
+	  </select>
+      <input class="btn-search-groupbuy" type="submit" name="Submit" value="{$lang.search}" />
+    </form>
+    <div class="pageinfo">{include file=page.top.html}</div>
+    <div class="clr"></div>             
+    </div>
+    <div style="margin-top:20px;">
+            <table width="100%" cellpadding='0' cellspacing='1' bgcolor="#E5E5E5">
+                <tr>
+                    <th colspan="2"bgcolor="#EBF4FB" height="30">{$lang.group_name}</th>
+                    <th bgcolor="#EBF4FB">{$lang.group_price}</th>
+                    <th bgcolor="#EBF4FB">{$lang.group_qty} / {$lang.group_min_qty}</th>
+                    <th bgcolor="#EBF4FB">{$lang.store}</th>
+                    <!-- {if $smarty.get.state eq 'on'} --><th  bgcolor="#EBF4FB">{$lang.lefttime}</th><!-- {/if} -->
+                </tr>
+                <!-- {foreach from=$groupbuy_list item=group} -->
+                <tr>
+                    <td class="group_pic" bgcolor="#ffffff" width="70" align="center"><a target="_blank" href="{url app=groupbuy&id=$group.group_id}"><img src="{$group.default_image}" alt="{$group.group_name|escape}" width="70" height="70" align="absmiddle" style="margin:5px;" /></a></td>
+                    <td class="apellation" bgcolor="#ffffff" width="300"><a target="_blank" href="{url app=groupbuy&id=$group.group_id}">{$group.group_name|escape}</a></td>
+                    <td class="price" bgcolor="#ffffff" style="font-family:Arial">{$group.group_price|price}</td>
+                    <td class="member" bgcolor="#ffffff">{$group.quantity} / {$group.min_quantity}</td>
+                    <td class="usershop" bgcolor="#ffffff"><a target="_blank" href="{url app=store&id=$group.store_id}">{$group.store_name|escape}</a><br /><a target="_blank" class="email" target="_blank" href="{$site_url}/index.php?app=message&amp;act=send&amp;to_id={$group.store_id}"><br /><br /><img src="{res file=images/web_mail.gif}" alt="{$lang.send_pm}" /></a></td>
+                    <!-- {if $smarty.get.state eq 'on'} -->
+                    <td class="time" bgcolor="#ffffff">{$group.lefttime}</td>
+                    <!-- {/if} -->
+                </tr>
+                <!-- {foreachelse} -->
+                <tr>
+                    <td colspan="6" bgcolor="#ffffff">
+                    <div style="line-height:30px;">{$lang.no_groupbuy}</div>
+                    </td>
+                </tr>
+                <!-- {/foreach} -->
+            </table>
+    </div>
+    <div class="pageinfo">
+         {include file=page.bottom.html}
+         <div class="clr"></div>
+    </div>
+</div>
+{include file=footer.html}

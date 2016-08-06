@@ -1,0 +1,151 @@
+{include file="header.html"}
+<script language="javascript">
+    $(function(){
+        $('#sotime,#endtime').datepicker({dateFormat: 'yy-mm-dd'});
+    });
+</script>
+<div id="rightTop">
+    <p>稽核系统</p>
+    <ul class="subnav">
+
+        <li><a class="btn3" href="index.php?module=my_check&act=check_resolve_list">资金水流</a></li>
+        <li><span>代发稽核</span></li>
+        <li><a class="btn3" href="index.php?module=my_check&act=check_sphinx">sphinx信息</a></li>
+        <li><a class="btn3" href="index.php?module=my_check&act=batch_transfer">批量转账</a></li>
+        <li><a class="btn3" href="index.php?module=my_check&act=check_batch_list">批量记录</a></li>
+        <!--			<li><a class="btn3" href="index.php?module=my_check&act=check_resolve_list">wkq</a></li>
+<li><a class="btn3" href="index.php?module=my_check&act=user_money_statistics">资金统计</a></li>
+          <li><a class="btn3" href="index.php?module=my_check&act=user_money_alicheck">阿里充值稽核</a></li>
+          <li><a class="btn3" href="index.php?module=my_check&act=index">{$lang.index_fanhuidaohang}</a></li>-->
+    </ul>
+</div>
+<!-- behalfs start  -->
+<div style="padding:10px 20px;">
+	<form method="post" id="behalf_form" action="index.php?module=my_check&act=check_behalf_list">
+		<select name="behalf" id="behalf_sel" style="width:120px;height:24px;line-height:24px;">
+			<!--{foreach from=$behalfs item=behalf}-->
+			<option value="{$behalf.bh_id}" {if $behalf.bh_id eq $bh_id}selected{/if} >{$behalf.bh_name|escape}</option>
+			<!--{/foreach}-->
+		</select>
+		<input type="submit" value="提 交">
+	</form>
+</div>
+<!-- behalfs end -->
+<div    >
+    <span>User {$bh_id }-- {$user_name}  active M is { $money}, dj M is { $money_dj}, total is{$total}</span><br>
+    <span> the Money as a common: {$money_common}</span><br>
+    <span> We show the spec if you are behalf :</span><br>
+    <span>the Money in order djed is      {$money_odj}</span><br>
+    <span> the Money in log djed is       {$log_money_dj}</span><br>
+    <span> the Money in order finished is { $money_finished}</span><br>
+    <span> the Money in log finished is   {$log_money_finished}</span><br>
+    <span>the Money in log finished_123 is{ $money_finished_123}</span><br>
+    <span> the Money the user in-out is   { $money_ct}</span><br>
+    <span> the Money the user tx is       {$money_tx}</span><br>
+    <span>the Money the user tran-in-out is     { $money_io}</span><br>
+    <span> so , the Money total should be :{$system}</span><br>
+    <span> jied + finished + finished123 + in-out  + tran-in-out + money_tx  ';</span><br>
+    <span> $money_odj + $money_finished+$money_finished_123 +$money_ct+$money_io+ $money_tx = {$money_all_add}</span><br>
+    <span> {$system}</span><br>
+    <!-- {if $realMoney } -->
+    <span> {$realMoney}</span><br>
+    <!-- {/if}-->
+    <span style="color:redx;">应该冻结金额: {$shoud.shouddj}</span>
+                                    &nbsp;|&nbsp;
+                                    <span style="color:red;">实际冻结金额: {$shoud.sjdj}</span>
+                                     &nbsp;|&nbsp;
+                                    <span style="color:red;">已额外解冻金额:{$shoud.exdj}</span>
+                                    &nbsp;|&nbsp;
+                                    <span style="color:red;">不可额外授权~20%冻结金额: {$shoud.twdj}</span>
+                                     &nbsp;|&nbsp;
+                                    <span style="color:red;">还可以额外提现金额: {$cantx}</span>
+    <ul class="subnav">
+        <li><a class="btn3" href="index.php?module=my_check&act=check_behalf_list&behalf={$bh_id}">刷新</a></li>
+        <li><a class="btn3" href="index.php?module=my_check&act=check_behalf_list&adjust=adjust&behalf={$bh_id}">修正金额</a></li>
+        <li><a class="btn3" href="index.php?module=my_check&act=check_behalf_list&type=log&behalf={$bh_id}">冗余详细</a></li>
+        <li><a class="btn3" href="index.php?module=my_check&act=check_behalf_list&del=yes&behalf={$bh_id}">删除多余的日志</a></li>
+        <li><a class="btn3" href="index.php?module=my_check&act=check_behalf_list&type=delpaylog&behalf={$bh_id}">删除paylog</a></li>
+         <li><a class="btn3" href="index.php?module=my_check&act=check_behalf_list&type=behalfeight&behalf={$bh_id}">代发80%</a></li>
+         <li><a class="btn3" href="index.php?module=my_check&act=check_behalf_list&type=addLostLog&behalf={$bh_id}">加丢失日志</a></li>
+         <li><a class="btn3" href="index.php?module=my_check&act=check_behalf_list&type=lostorder&behalf={$bh_id}">缺失订单</a></li>
+    </ul>
+</div>
+
+<div class="tdare">
+    <table width="100%" cellspacing="0">
+        <?php if($_GET["type"] == "log" || $_GET["type"] == "lostorder"){ ?>
+        <tr class="tatr1">
+            <td width="20" class="firstCell"><input id="checkall_1" type="checkbox" class="checkall"/></td>
+            <td align="left">用户id</td>
+            <td align="left">用户名</td>
+            <td align="left">order_id</td>
+            <td align="left">order_sn</td>
+            <td align="left">money</td>
+            <td align="left">caozuo</td>
+             <td align="left">leixing</td>
+            <td class="handler">{$lang.list_guanlicaozuo}</td>
+        </tr>
+        <!--{foreach from=$index item=val key=key}-->
+        <tr class="tatr2">
+            <td width="20" class="firstCell"><input type="checkbox" class="checkitem" value="{$key}" /></td>
+            <td align="left"><b>{$val.user_id}</b></td>
+            <td align="left"><b>{$val.user_name}</b></td>
+            <td align="left"><b>{$val.order_id}</b></td>
+            <td align="left"><b>{$val.order_sn}</b></td>
+            <td align="left"><b>{$val.money}</b></td>
+            <td align="left"><b>{$val.caozuo}</b></td>
+            <td align="left"><b>{$val.leixing}</b></td>
+            <!-- {if ($val.order_id>0)} -->
+            <td class="handler">
+                <a href="#"><font color="#808080">稽核此记录</font></a></td>
+            <!--{else}-->
+            <td class="handler"> <a href="#">稽核此记录</a></td>
+            <!-- {/if}-->
+
+        </tr>
+        <!--{foreachelse}-->
+        <tr class="no_data">
+            <td colspan="8">{$lang.no_data}</td>
+        </tr>
+        <!--{/foreach}-->
+        <?php }else{?>
+        <tr class="tatr1">
+            <td width="20" class="firstCell"><input id="checkall_1" type="checkbox" class="checkall"/></td>
+            <td align="left">订单号</td>
+            <td align="left">重复数</td>
+            <td class="handler">{$lang.list_guanlicaozuo}</td>
+        </tr>
+        <!--{foreach from=$index item=val key=key}-->
+        <tr class="tatr2">
+            <td width="20" class="firstCell"><input type="checkbox" class="checkitem" value="{$key}" /></td>
+            <td align="left"><b>{$val.order_id}</b></td>
+            <td align="left"><b>{$val.cc}</b></td>
+            <!-- {if ($val.order_id>0)} -->
+            <td class="handler">
+                <a href="#"><font color="#808080">稽核此记录</font></a></td>
+            <!--{else}-->
+            <td class="handler"> <a href="#">稽核此记录</a></td>
+            <!-- {/if}-->
+
+        </tr>
+        <!--{foreachelse}-->
+        <tr class="no_data">
+            <td colspan="8">{$lang.no_data}</td>
+        </tr>
+        <!--{/foreach}-->
+        <?php }?>
+
+    </table>
+    <!--{if $index}-->
+    <div id="dataFuncs">
+
+        <div id="batchAction" class="left paddingT15"><input type="checkbox" class="checkall" />
+            <input class="formbtn batchButton" type="button" value="{$lang.drop}" name="id" uri="index.php?module=my_check&act=check_behalf_list"  />
+        </div>
+
+        <div class="pageLinks">{include file=page.bottom.html}</div>
+        <div class="clear"></div>
+    </div>
+    <!--{/if}-->
+</div>
+{include file="footer.html"}

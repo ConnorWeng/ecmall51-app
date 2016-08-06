@@ -1,0 +1,78 @@
+<script type="text/javascript">
+$(function(){
+    $('#cancel_button').click(function(){
+        DialogManager.close('seller_order_shipped');
+    });
+    $('#seller_order_shipped').validate({
+    errorLabelContainer: $('#warning'),
+    invalidHandler: function(form, validator) {
+           $('#warning').show();
+    },
+     rules : {
+            invoice_no : {
+                required   : true
+            },
+            delivery_name :{
+            	required :true
+            }    
+        },
+        messages : {
+            invoice_no  : {
+                required   : '{$lang.invoice_no_empty}'
+            },
+            delivery_name:{
+            	required :'{$lang.delivery_name_empty}'
+            }
+        }
+    });
+    
+    /* $("select[name='delivery_name']").change(function(){
+    	if($(this).val() == 'other')
+    	{
+    		$("input[name='logistics']").val("");
+    		$("#logistics-wrapper").show();
+    	}
+    	else
+    	{
+    		$("input[name='logistics']").val($(this).val());
+    		$("#logistics-wrapper").hide();
+    	}
+    }); */
+});
+</script>
+<ul class="tab">
+    <li class="active">{$lang.shipped_order}</li>
+</ul>
+<div class="content1">
+    <div id="warning"></div>
+    <form method="post" action="index.php?app=seller_order&amp;act=shipped&amp;order_id={$order.order_id}" target="seller_order" id="seller_order_shipped">
+    <h1>{$lang.input_invoice_no}</h1>   
+    <p>{$lang.order_sn}&nbsp;&nbsp;&nbsp;&nbsp;:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span>{$order.order_sn}</span></p>   
+    <dl>
+        <dt>{$lang.invoice_no}:</dt>
+        <dd style="width:254px;">  <input type="text" class="text" name="invoice_no" id="invoice_no_input" style="width:195px;" value="{$order.invoice_no}" class="search250" /></dd>
+    </dl>
+    <dl>
+      <dt>{$lang.logistics_company}:</dt>
+      <dd style="width:254px;">
+	      <select name="delivery_name" style="min-width:120px;height:24px;">
+	         <option value="0">{$lang.please_select}</option>
+	         <!--{foreach from=$deliveries item=dl}-->
+	          <option {if $order.logistics == $dl.dl_name}selected{/if} value="{$dl.dl_id}">{$dl.dl_name}</option>	         
+	         <!--{/foreach}-->	         
+	      </select>
+      </dd>
+    </dl>
+   <!--  <dl id="logistics-wrapper" class="hidden">
+     <dt></dt>
+     <dd style="width:254px;"><input type="text" class="text" name="logistics" id="logistics" style="width:195px;" value="{$order.logistics}" class="search250" /></dd>
+    </dl> -->
+    <!-- <dl>
+        <dt>{$lang.operate_reason}:</dt>
+        <dd><textarea id="remark_input" class="text" style="width:200px;" name="remark"></textarea></dd>
+    </dl> -->
+    <div class="btn">
+        <input type="submit" id="confirm_button" class="btn1" value="{$lang.confirm}" />
+        <input type="button" id="cancel_button" class="btn2" value="{$lang.cancel}" />
+    </div></form>
+</div>

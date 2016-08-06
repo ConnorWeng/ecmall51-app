@@ -1,0 +1,9 @@
+<ul class="list-inline">
+	<li><label class="label {if $goods.goods_status eq BEHALF_GOODS_PREPARED }label-info{else}label-default{/if}">备货中</label></li>
+	<li><label class="label {if $goods.goods_status eq BEHALF_GOODS_READY }label-primary{else}label-default{/if}">已备货</label></li>
+	<li><label class="label {if $goods.goods_status eq BEHALF_GOODS_TOMORROW }label-warning{else}label-default{/if}">明天</label></li>
+	<li><label class="label {if $goods.goods_status eq BEHALF_GOODS_UNFORMED }label-danger{else}label-default{/if}">未出货</label></li>
+	<li><label class="label {if $goods.goods_status eq BEHALF_GOODS_UNSALE }label-danger{else}label-default{/if}">已下架</label></li>
+	<li><label class="label {if $goods.goods_status eq BEHALF_GOODS_SEND }label-success{else}label-default{/if}">已发货</label></li>
+	<li><label class="label {if $goods.goods_status eq BEHALF_GOODS_REBACK }label-danger{else}label-default{/if}">已退货</label></li>
+</ul>

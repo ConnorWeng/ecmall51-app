@@ -1,0 +1,40 @@
+<div class="home_floor clearfix mb10 {$widget_data.class_name}">
+    <div class="floor_title clearfix">
+        <ul>
+              <!--{foreach from=$widget_data.cate item=cate name=fe_cate}-->
+
+        <li ><a class="f66"  href="{$cate.url}" target="_blank" title="{$cate.txt}"><span>{$cate.txt}</span></a></li>
+        <!-- {if !$smarty.foreach.fe_cate.last} -->
+        <li class="f66">|</li>
+        <!-- {/if} -->
+               <!--{/foreach}-->
+          </ul>
+     <!--{if $widget_data.ad6_image_url}-->
+       <img width="200" height="46" src="{$widget_data.ad6_image_url}" />
+     <!--{else}-->
+         <h2 class="fs22 f66">{$widget_data.model_name}</h2>
+     <!--{/if}-->
+  </div>
+    <div class="floor_con clearfix">
+        <div class="float-left floor_left">
+          <a class="block" href="{$widget_data.ad1_link_url}" target="_blank"><img width="200" height="341" src="{$widget_data.ad1_image_url}" /></a>
+      <a class="block mt10" href="{$widget_data.ad2_link_url}" target="_blank"><img width="200" height="180" src="{$widget_data.ad2_image_url}" /></a>
+        </div>
+        <div class="float-left floor_content clearfix">
+            <ul class="goods clearfix">
+              <!--{foreach from=$widget_data.goods_list item=goods name=fe_goods}-->
+                <li {if $smarty.foreach.fe_goods.iteration % 4 eq 0} style="border-right:none;padding-left:17px"{/if}>
+                    <a href="{url app=goods&id=$goods.goods_id}" target="_blank"><img width="160" height="160" src="{$goods.default_image}" /></a>
+                    <a href="{url app=goods&id=$goods.goods_id}" target="_blank" class="name">{$goods.goods_name|escape|truncate:50}</a>
+          <a class="store-name" href="{url app=store&id=$goods.store_id}">{$goods.store_name|escape}</a>
+                    <p><em class="float-right"><a class="icon-tb" href="{url app=item_upload&dest=Taobao&goods_id=$goods.goods_id}" title="上传淘宝">淘宝</a><a class="icon-al" href="{url app=item_upload&dest=Alibaba&goods_id=$goods.goods_id}" title="上传阿里">阿里</a><a class="icon-pp" href="{url app=item_upload&dest=Paipai&goods_id=$goods.goods_id}" title="上传拍拍">拍拍</a></em><strong>{$goods.price|price}</strong></p>
+                </li>
+                <!--{/foreach}-->
+            </ul>
+        </div>
+        <div class="float-right floor_right">
+            <a class="block" href="{$widget_data.ad3_link_url}" target="_blank"><img width="200" height="341" src="{$widget_data.ad3_image_url}" /></a>
+            <a class="block mt10" href="{$widget_data.ad4_link_url}" target="_blank"><img width="200" height="180" src="{$widget_data.ad4_image_url}" /></a>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,396 @@
+{include file=header.whole.html}
+<script type="text/javascript">
+function show_order_modal(uri,title)
+{
+	jQuery("#modal-iframe").attr('src',uri);
+	jQuery('#modal-order').modal('show').on('shown.bs.modal',function(e){
+		//var btn = $(e.relatedTarget);
+		var modal = $(this);
+		modal.find(".modal-header .modal-title").html(title);
+		
+	});
+}
+
+
+function change_size()
+{
+	
+	//.find('.embed-responsive').removeClass('embed-responsive-16by9');
+	//.addClass('embed-responsive-4by3');
+	show_order_modal('index.php?module=behalf&amp;act=apply_fee_look&amp;order_id={$order.order_id}','查看申请补差');
+	//jQuery("#modal-order").find('.modal-body').html('sdf');
+}
+
+function js_success(str)
+{
+	jQuery('#modal-order').modal('hide')
+	.find("#modal-iframe").attr('src','...');
+	if(str != 0)
+	{
+		bootbox.alert('操作成功！');
+		//location.reload(true);
+	}
+}
+
+function js_fail(str)
+{
+	jQuery('#modal-order').modal('hide')
+	.find("#modal-iframe").attr('src','...');
+	bootbox.alert(str);
+}
+
+  $(function(){
+	  $('[data-toggle="tooltip"]').tooltip();
+	  $('[data-toggle="popover"]').popover();
+  });
+  
+ 
+
+</script>
+<div class="container-fluid">
+	<div style="height:10px;"></div>
+	<div class="">
+	 	<ul class="nav nav-tabs">
+	            <!--{foreach from=$_member_submenu item=_s_m name=member_submenu}-->
+	            <!--{if $_curmenu eq $_s_m.name}-->
+	            <li role="presentation" class="active"><a href="javascript:;">{$_s_m.text}</a></li>
+	            <!--{else}-->
+	                <li role="presentation"><a href="{$_s_m.url}">{$_s_m.text}</a></li>
+	            <!--{/if}-->
+	            <!--{/foreach}-->
+	     </ul>
+     </div>
+    <!--搜索面板-->
+    <div class="order-list" style="margin-top:10px;">
+	    <div class="panel panel-default" style="margin-bottom:0px;">
+	    	<div class="panel-body">
+	    		<form class="form-inline">
+	    			<div class="form-group">
+	    				<label for="inp_order_sn">{$lang.order_sn1}</label>
+	    				<input type="text" id="inp_order_sn" class="form-control input-sm" name="order_sn" value="{$query.order_sn}">
+	    			</div>
+	    			<div class="form-group">
+		    			<label class="text-success">商品编码</label>
+		    			<input type="text" name="goods_no" class="form-control input-sm">
+		    		</div>
+	    			<div class="form-group">
+	    				<label for="add_time_from">{$lang.pay_time}</label>
+	    				<div class='input-group date' id='add_time_from_wrapper'>
+		                    <input type="text" class="form-control input-sm" name="add_time_from"  value="{$query.add_time_from}">
+		                    <span class="input-group-addon">
+		                        <span class="glyphicon glyphicon-time"></span>
+		                    </span>
+		                </div>
+	    				-
+	    				<div class='input-group date' id='add_time_to_wrapper'>
+		                    <input type="text" class="form-control input-sm" name="add_time_to" value="{$query.add_time_to}">
+		                    <span class="input-group-addon">
+		                        <span class="glyphicon glyphicon-time"></span>
+		                    </span>
+		                </div>
+	    			</div>
+	    			<div class="form-group">
+	    				<label for="inp_buyer_name">{$lang.buyer_name}</label>
+	    				<input type="text" id="inp_buyer_name" class="form-control input-sm" name="buyer_name" value="{$query.buyer_name}">
+	    			</div>
+	    			<div class="form-group">
+	    				<label for="inp_goods_seller_bm">{$lang.goods_seller_bm}</label>
+	    				<input type="text" id="inp_goods_seller_bm" class="form-control input-sm" name="goods_seller_bm" value="{$query_goods_seller_bm}">
+	    			</div>
+	    			<div class="form-group">
+	    				<label for="inp_goods_name">{$lang.goods_name}</label>
+	    				<input type="text" id="inp_goods_name" class="form-control input-sm" name="goods_name" value="{$query_goods_name|escape}">
+	    			</div>
+	    			<div class="form-group">
+	    				<label for="inp_invoice_no">{$lang.invoice}</label>
+	    				<input type="text" id="inp_invoice_no" class="form-control input-sm" name="invoice_no" value="{$query.invoice_no|escape}">
+	    			</div>
+	    			<div class="form-group">
+	    				<div class="input-group input-group-sm">
+		    				<label for="inp_exp_delivery" class="input-group-addon">{$lang.delivery_name}</label>
+		    				<select id="inp_exp_delivery" name="exp_delivery" class="form-control selectpicker">
+	                             	   <option value="0">{$lang.all_deliveries}</option>
+	                             	   <!--{foreach from=$related_delivery item=deli}-->
+	                             	   <option value="{$deli.dl_id}" {if $query_dl eq $deli.dl_id}selected{/if}>{$deli.dl_name|escape}</option>
+	                             	   <!--{/foreach}-->
+	               			</select>
+               			</div>
+	    			</div>
+	    			<!--{if $smarty.get.type eq 'accepted222' or $smarty.get.type eq 'shipped222'}-->
+	    			<div class="form-group">
+	    				<label for="inp_oos">{$lang.oos_query}</label>
+	    				<select name="oos" id="inp_oos" class="form-control input-sm">
+		                	<option value="0">{$lang.oos_select}</option>
+		                	<option value="1" {if $query_oos}selected{/if}>{$lang.yes}</option>
+		                </select>
+	    			</div>
+	    			<!--{/if}-->
+	    			<div class="form-group">
+		    		   <label>订单商品</label> 
+		    		   <input type="checkbox" name="goods_status[]" value="tomorrow" {if in_array('tomorrow',$goods_status_arr)}checked{/if}/> <small>明天有</small>
+		    		   <input type="checkbox" name="goods_status[]" value="unformed" {if in_array('unformed',$goods_status_arr)}checked{/if}/> <small>未出货</small>
+		    		   <input type="checkbox" name="goods_status[]" value="outdated" {if in_array('outdated',$goods_status_arr)}checked{/if}/> <small>已下架</small>
+		    		</div>
+	    			<input type="hidden" name="module" value="behalf" />
+	                <input type="hidden" name="act" value="order_list" />
+	                <input type="hidden" name="type" value="{$type}" />
+	                <input type="hidden" name="order" value=""/>
+	                <div class="form-group">
+	                	<button type="submit" class="btn btn-primary btn-sm" id="query_order"><span class="glyphicon glyphicon-search"></span> {$lang.search}</button>
+	                </div>
+	                <!--{if $query.buyer_name or $query.add_time_from or $query.add_time_to or $query.order_sn or $query_goods_name or $query_goods_seller_bm or $query_oos or $query.invoice_no or $query_dl}-->
+                    	<div class="form-group">
+                    		<a class="btn btn-info btn-sm" href="{url module=behalf&act=order_list&type=$query.type}">{$lang.cancel_query}</a>
+                    	</div>
+                <!--{/if}-->
+	    		</form>
+	    	</div>
+	    </div>
+    </div>
+    <!-- 订单列表 -->
+    <div style="height:10px;"></div>
+    <!--{if $orders}-->
+    <div class="panel panel-success">
+    	<div class="panel-body">
+    			<div class="row text-success">
+    				<div class="col-xs-7 text-center "><b>{$lang.goods_info}</b></div>
+    				<div class="col-xs-1 text-center "><b>{$lang.seller_after}</b></div>
+    				<div class="col-xs-1 text-center "><b>{$lang.buyer_name}</b></div>
+    				<div class="col-xs-2 text-center "><b>{$lang.order_amount}</b></div>
+    				<div class="col-xs-1 text-center "><b>{$lang.order_status}</b></div>
+    			</div>
+			    <!--{foreach from=$orders item=order}-->
+			    <div class="row bg-f3 pt10 pb10">
+			    	<div class="col-xs-10">
+			    		<input type="checkbox" value="{$order.order_id}" class="checkitem" <!--{if $order.status eq ORDER_FINISHED || $order.status eq ORDER_CANCELED}--> disabled="disabled" <!--{/if}-->/>
+			    	
+			    		<span class="ml5">{$lang.order_sn}:<a href="index.php?module=behalf&act=show_order_detail&order_id={$order.order_id}&hisuri={$smarty.server.SERVER_NAME|escape:url]}{$smarty.server.REQUEST_URI|escape:url}">{$order.order_sn|escape}</a></span>
+			    	
+			    		<span class="ml5">
+			    		 <!--{if $order.finished_time}-->
+                              {$lang.finished_time}: {$order.finished_time|date:complete}
+                            <!--{elseif $order.pay_time}-->
+                              {$lang.pay_time}: {$order.pay_time|date:complete}
+                            <!--{else}-->
+                              {$lang.add_time}: {$order.add_time|date:complete}
+                            <!--{/if}-->
+			    		</span>
+			    		<!--{if !$order.compensation_behalf_lack and in_array($order.status,array($smarty.const.ORDER_ACCEPTED,$smarty.const.ORDER_SHIPPED,$smarty.const.ORDER_FINISHED)) and $order.show_lack_goods_btn}-->
+			    		<span class="ml5">
+			    			  <input type="button" value="{$lang.lack_goods_refund}" class="btn btn-warning btn-xs" onClick="javascript:show_order_modal('index.php?module=behalf&amp;act=refund_lackgoods&amp;order_id={$order.order_id}','缺货退款');" />                     
+			    		</span>
+			    		<!--{/if}-->
+			    		<!--{if !$order.compensation_behalf_deli and in_array($order.status,array($smarty.const.ORDER_SHIPPED,$smarty.const.ORDER_FINISHED))}-->
+			    		<span class="ml5">
+			    			  <input type="button" value="{$lang.compensation}" class="btn btn-info btn-xs" onClick="javascript:show_order_modal('index.php?module=behalf&amp;act=compensate_fee&amp;order_id={$order.order_id}','赔付运费');" />                     
+			    		</span>
+			    		<!--{/if}-->
+			    		
+			    	</div>
+			    	<div class="col-xs-2 text-right">
+			    	
+			    		<!-- 给买家留言 -->
+			    		<button  class="btn {if $order.seller_message}btn-default{else}btn-default{/if} btn-xs text-info" onClick="javascript:show_order_modal('index.php?module=behalf&amp;act=sell_message&amp;order_id={$order.order_id}','给买家留言');">{if $order.seller_message}<span class="text-danger"><span class="glyphicon glyphicon-flag"></span> 已回留言</span>{else}回复买家{/if}</button>
+			    		<button  class="btn {if $order.ordernote}btn-default{else}btn-default{/if} btn-xs text-info" onClick="javascript:show_order_modal('index.php?module=behalf&amp;act=show_ordernote&amp;order_id={$order.order_id}','订单备注');">{if $order.ordernote}<span class="text-danger"><span class="glyphicon glyphicon-info-sign"></span> 已备注</span>{else}代发备注{/if}</button>
+			    		 
+			    		
+			    	</div>
+			    </div>
+			    <div class="row">
+			    	<div class="col-xs-7">
+			    		<table class="table table-hover">
+			    			<tbody>
+			    			<!--{if $order.gwh}-->
+				    	 	<!--{foreach from=$order.gwh item=goods name=fee_goods}-->
+				    	 	<tr>
+					    	 	<td width="105">
+					    	 		<a href="{url app=goods&id=$goods.goods_id}" target="_blank"><img src="{$goods.goods_image}" width="100"></a>
+					    	 	</td>
+					    	 	<td class="text-left">
+					    	 		<p><a href="{url app=goods&id=$goods.goods_id}" target="_blank">{$goods.goods_name|escape}</a></p>
+					    	 		<p style="margin-bottom:3px;">
+					    	 		
+					    	 		<span class="text-muted">{$lang.goods_no}:</span>{$goods.goods_no}
+					    	 		<!--{if $goods.store_bargin gt 0}-->
+                              			<span class="text-danger"><b>{$lang.hui}</b> <span class="label label-danger">{$goods.store_bargin|price}</span></span>
+                              		<!--{/if}-->
+					    	 		
+					    	 		</p>
+					    	 		<p style="margin-bottom:3px;"><span class="text-muted">{$lang.goods_seller_bm}:</span>{$goods.goods_attr_value|escape}</p>
+					    	 		<p style="margin-bottom:3px;">{$goods.goods_specification|escape}</p>
+					    	 		
+					    	 		<p style="margin-bottom:3px;" class="text-muted">
+					    	 		<span class="color9">Tel:</span> {$goods.store_tel|escape}&nbsp;&nbsp;
+                              	<!--{if $goods.store_qq}-->
+			                     <span style="display:inline-block;">
+			                     {imqq uin=$goods.store_qq&site=$goods.store_name|escape:url}  
+			                     {$goods.store_qq|escape}</span>
+			                    <!--{/if}-->
+			                    <!--{if $goods.store_ww}-->
+			                    <span style="display:inline-block;">
+                                {imww touid=$goods.store_ww|escape:url&charset=$charset}
+			                    {$goods.store_ww|escape}</span>
+			                    <!--{/if}-->
+                              	</p>
+					    	 		
+					    	 	</td>
+					    	 	<td>
+					    	 		<p>{$goods.goods_price|price}</p>
+					    	 		
+					    	 		<p>{include file=behalf.goods.status.single.html}</p>
+					    	 		
+					    	 	</td>
+				    	 	</tr>
+				    	 	<!--{/foreach}-->
+				    	 	<!--{else}-->
+				    	 	<tr>
+				    	 		<td>
+				    	 			<div class="alert alert-default"><a class="btn btn-warning btn-xs" href="{url app=behalf_member&amp;act=view&amp;order_id=$order.order_id}" target="_blank"><span class="glyphicon glyphicon-info-sign"></span> 商品详情</a></div>
+				    	 		</td>
+				    	 	</tr>
+				    	 	<!--{/if}-->
+			    	 	</tbody>
+			    	</table>
+			    	</div>
+			    	<div class="col-xs-1 pt10 text-center">
+			    		<p class="">
+						<!--{if $order.refunds}-->
+		                       <!--{if $order.status eq ORDER_ACCEPTED or $order.status eq ORDER_SHIPPED or $order.status eq ORDER_FINISHED}-->
+		                             <button  class="btn btn-danger btn-xs" onClick="javascript:show_order_modal('index.php?module=behalf&amp;act=applied_refund&amp;order_id={$order.order_id}','处理退款');">退款申请 <span class="badge">1</span></button>
+		                       <!--{/if}-->
+		                <!--{/if}-->
+					</p>
+					<p class="">
+						<!--{if $order.apply_fee}-->
+		                       <!--{if $order.status eq ORDER_ACCEPTED or $order.status eq ORDER_SHIPPED or $order.status eq ORDER_FINISHED}-->
+		                             <button id="applied_refund_btn"  class="btn btn-primary btn-xs" onClick="javascript:show_order_modal('index.php?module=behalf&amp;act=apply_fee_look&amp;order_id={$order.order_id}','查看申请补差')">补差申请 <span class="badge">1</span></button>
+		                       <!--{/if}-->
+		                <!--{/if}-->
+					</p>
+					<!--{if $order.compensation_behalf_lack}-->
+			    		<p class=""><small class="label label-success"><b class="">退缺货</b></small> <small class="text-success"> <b class="">{$order.compensation_behalf_lack.pay_amount|price}</b></small></p>
+			    	<!--{/if}-->
+			    	<!--{if $order.compensation_behalf_deli }-->
+			    		<p class=""><small class="label label-success"><b class="">赔运费</b></small> <small class="text-success"> <b class="">{$order.compensation_behalf_deli.pay_amount|price}</b></small></p>
+			    	<!--{/if}-->
+					
+					
+					
+					
+					
+			    	</div>
+			    	<div class="col-xs-1 pt10 text-center">
+			    		<p><small>{$order.buyer_name|escape}</small></p>
+			    		<p>
+                              	<!--{if $order.buyer_qq}-->
+			                     <span style="display:inline-block;">
+			                     {imqq uin=$order.buyer_qq&site=$order.buyer_name|escape:url}  
+			                     </span>
+			                    <!--{/if}-->
+			                    <!--{if $order.buyer_ww}-->
+			                    <span style="display:inline-block;">
+                                {imww touid=$order.buyer_ww|escape:url&charset=$charset}
+			                    </span>
+			                    <!--{/if}-->
+                         </p>
+			    		<p>
+					    	 		<small data-toggle="tooltip" data-placement="left" title="{$order.buyer_tel|escape}"><span class="glyphicon glyphicon-earphone"></span></small>
+					    </p>
+			    		<!--{if $order.postscript}-->
+			    		<p>	
+			    			<button class="btn btn-link" data-toggle="popover" data-placement="bottom" data-trigger="hover" title="" data-content="{$order.postscript}"><span class="new_msg" style="color:yellow;"></span></button>
+			    		</p>
+			    		<!--{/if}-->
+			    	</div>
+			    	<div class="col-xs-2 text-center pt10">
+			    		<p>{$order.order_amount|price}</p>
+			    		<!-- <div style="width:60px;margin:0px auto;border:1px solid #337AB7;border-radius:5px;">
+			    			<p style="margin:0;" class="bg-primary"><small>含快递</small></p>
+			    			<p style="margin:0;"><small>{$order.shipping_fee|price}</small></p>
+			    		</div> -->
+			    		<p><span class="text-muted"><small>含快递</small><br>
+			    		<label class="badge">{$order.shipping_fee|price}</label></span></p>
+			    		<!--{if $order.unsend_amount and $order.status neq ORDER_ACCEPTED and $order.status neq ORDER_PENDING}-->
+			    		<p>
+			    		<button data-toggle="tooltip" data-placement="left" title="{$order.unsend_amount|price}" class="btn btn-xs"><span class="badge" style="background-color:#ff4400;">未发货</span></button>
+			    		<!-- <small class="text-info">未发货</small><br>
+			    		<small class="text-danger">{$order.unsend_amount|price}</small> -->
+			    		</p>
+			    		<!--{/if}-->
+			    	</div>
+			    	<div class="col-xs-1 pt10 text-center">
+			    		<p class="{if $order.status eq ORDER_CANCELED}text-danger{elseif $order.status eq ORDER_SHIPPED}text-success{elseif $order.status eq ORDER_FINISHED}text-info{else}{/if}">
+					    		{$order.status|modifier:order_status}</p>
+					    
+					    {if $order.delivery_bm and $order.invoice_no}
+					    <p><small><a class="btn btn-link btn-xs" data-toggle="tooltip" data-placement="left" title="{$lang.see_logistics_info}" href="http://www.kuaidi100.com/chaxun?com={$order.delivery_bm|escape}&nu={$order.invoice_no|escape}" target="_blank" >{$order.dl_name|escape}</a></small></p>
+					    {else}
+					    <p class="text-muted"><small>{$order.dl_name|escape}</small></p>
+					    {/if}
+			    	</div>
+			    </div>
+			    <div class="row">
+			    	<div class="col-xs-12 text-right pb10">
+			    		<!--{if $order.status eq ORDER_PENDING or $order.status eq ORDER_SHIPPED or $order.status eq ORDER_ACCEPTED}--> 
+                        <input type="button" value="调整收货地址" class="btn btn-info btn-xs" onClick="javascript:show_order_modal('index.php?module=behalf&amp;act=adjust_consignee&amp;order_id={$order.order_id}','调整收货地址');"   />
+                        <!--{/if} -->
+                        <!--{if $order.status eq ORDER_ACCEPTED}-->
+                        <input type="button" value="开始发货" class="btn btn-primary btn-xs" onClick="javascript:show_order_modal('index.php?module=behalf&amp;act=shipped&amp;order_id={$order.order_id}','发货信息');"  />
+                        <!--{/if} -->
+                        <!--{if $order.status eq ORDER_PENDING or $order.status eq ORDER_SUBMITTED}-->
+                        <input type="button" value="{$lang.adjust_fee}" class="btn btn-primary btn-xs" onClick="javascript:show_order_modal('index.php?module=behalf&amp;act=adjust_fee&amp;order_id={$order.order_id}','调整费用');"   />
+                        <!--{/if} -->
+                        
+                       <!--{if !$order.apply_fee}-->
+	                       <!--{if $order.status eq ORDER_ACCEPTED or $order.status eq ORDER_SHIPPED or $order.status eq ORDER_FINISHED}-->
+    	                    <input type="button" value="{$lang.apply_fee}" class="btn btn-success btn-xs" onClick="javascript:show_order_modal('index.php?module=behalf&amp;act=apply_fee&amp;order_id={$order.order_id}','申请补差');" />
+	                       <!--{/if}-->
+                       <!--{/if}-->
+                        <!--//已发货-->  
+                        <!--{if $order.status eq ORDER_SHIPPED}--> 
+                        <input type="button" value="{$lang.edit_invoice_no}" class="btn btn-success btn-xs" onClick="javascript:show_order_modal('index.php?module=behalf&amp;act=shipped&amp;order_id={$order.order_id}','修改快递单号');" />                     
+                        <!--{/if}--> 
+                          
+                        <!--{if !$order.refunds and !$order.apply_fee}-->   
+                        	<!--{if $order.status neq ORDER_CANCELED and $order.status neq ORDER_FINISHED}-->                
+                       			 <input type="button" value="{$lang.cancel_order}" class="btn btn-danger btn-xs" onClick="javascript:show_order_modal('index.php?module=behalf&amp;act=cancel_order&order_id={$order.order_id}','取消订单');" />
+                        	<!--{/if}-->
+                        <!--{/if}-->
+                        <a href="index.php?module=behalf&act=show_order_detail&order_id={$order.order_id}&hisuri={$smarty.server.SERVER_NAME|escape:url]}{$smarty.server.REQUEST_URI|escape:url}" class="btn btn-warning btn-xs">{$lang.view_order}</a>
+			    	</div>
+			    </div>
+				<!--{/foreach}-->
+			</div>
+	    </div>
+    <!--{/if}-->
+
+
+
+<div id="modal-order" class="modal fade">
+	  	<div class="modal-dialog">
+	  		<div class="modal-content">	  		   
+	  			<div class="modal-header">
+       	 			<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        			<h4 class="modal-title">信息列表</h4>
+      			</div>
+      			<div class="modal-body">
+        			<div class="embed-responsive embed-responsive-16by9">
+					  <iframe class="embed-responsive-item" id="modal-iframe" src="" width="100%" height="100%"></iframe>
+					</div>
+      			</div>
+      			
+     			</form>
+	  		</div>
+	  	</div>
+	  </div>
+	  
+    {include file=page.bottom.html}
+
+</div>
+<script type="text/javascript">
+	$(function(){		
+		$('#add_time_from_wrapper').datetimepicker({format:'YYYY-MM-DD HH:mm:ss'});
+		$('#add_time_to_wrapper').datetimepicker({format:'YYYY-MM-DD HH:mm:ss'});
+	});
+</script>
+{include file=footer.whole.html}

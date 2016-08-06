@@ -1,0 +1,34 @@
+<div class="clearfix" style="height:10px;"></div>
+<div id="fqmp_widgets" class="fqmp relative">
+    <!--{if !$widget_data.ads}-->
+    <div class="padding10 center">请配置</div>
+    <!--{else}-->	
+    <a class="fNext absolute" style="top:20px;left:0px;z-index:6;display:none;"></a>
+    <a class="fPrev absolute" style="top:20px;right:0px;z-index:6;display:none;"></a>
+    <div class="content" style="z-index:5;">
+    	<ul class="clearfix">
+        	<!--{foreach from=$widget_data.ads item=ad name=fe_ad}-->
+    		<li><a class="href-img-transparents {if !$smarty.foreach.fe_ad.first}right-image{/if}" href="{$ad.ad_link_url}"  target="_blank" title="{$ad.image_title}"><img alt="{$ad.image_title}" class="lazyload" src="data/system/empty.gif" data-ks-lazyload="{$ad.ad_image_url}"/></a></li>
+    		<!--{/foreach}-->
+        </ul>
+    </div>
+    <!--{/if}-->
+</div>
+<script>
+$('#fqmp_widgets').slide({
+	    mainCell:'.content ul',
+		effect:'leftLoop',
+		autoPlay:true,
+		interTime:3000,
+		delayTime:300,
+		vis:3,
+		prevCell:'.fPrev',
+		nextCell:'.fNext',
+	}).hover(function(){
+ 		$(this).find('.fPrev').show();
+ 		$(this).find('.fNext').show();
+ 	},function(){
+ 		$(this).find('.fPrev').hide();
+ 		$(this).find('.fNext').hide();
+ 	}); 
+</script>

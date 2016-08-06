@@ -1,0 +1,655 @@
+{include file=member.header.html}
+<style>
+    /*付款提示框CSS如下*/
+    .fukuan-tishi
+    {
+        border: 1px solid #888;
+        left: 40%;
+        margin: -100px 0 0 -100px;
+        position: fixed !important;
+        top: 50%;
+        width: 520px;
+        z-index: 999;
+        background-color: #fef3ed;
+    }
+    .fukuan-tishi .p1
+    {
+        text-align: center;
+        color: #FFF;
+        line-height: 35px;
+        font-size: 16px;
+        letter-spacing: 2px;
+        font-weight: bold;
+        margin-bottom: 20px;
+        background-color: #d30c0f;
+    }
+    .fukuan-tishi .p2
+    {
+        color: #F00;
+        text-align: center;
+    }
+    .fukuan-tishi .p2, .fukuan-tishi .p3, .fukuan-tishi .p4, .fukuan-tishi .p5
+    {
+        margin-left: 50px;
+        font-size: 14px;
+        margin-right: 50px;
+        line-height: 24px;
+    }
+    .fukuan-tishi .p3
+    {
+        font-weight: bold;
+        color: #f33;
+        margin-top: 20px;
+    }
+    .fukuan-tishi .p5
+    {
+        margin-top: 20px;
+        margin-bottom: 20px;
+        text-align: center;
+    }
+    .fukuan-tishi .p5 .a1
+    {
+        background-color: #ff6264;
+        border-radius: 5px;
+        border-style: none;
+        color: #f5f5f5;
+        cursor: pointer;
+        display: inline-block;
+        font-size: 14px;
+        padding: 5px 20px;
+    }
+    .fukuan-tishi .p5 .a1:hover
+    {
+        color: #fff000;
+        background-color: #ff6200;
+    }
+    .fukuan-tishi .p5 .a2
+    {
+        color: #f60;
+        border-bottom-width: 1px;
+        border-bottom-style: solid;
+        border-bottom-color: #f60;
+        margin-left: 10px;
+    }
+    .fukuan-tishi .p5 .a2:hover
+    {
+        color: #ff0000;
+        border-bottom-width: 1px;
+        border-bottom-style: solid;
+        border-bottom-color: #ff0000;
+    }
+    #fullbg {
+        background-color: Gray;
+        left: 0px;
+        opacity: 0.6;
+        position: absolute;
+        top: 0px;
+        z-index: 990;
+        filter: alpha(opacity=60);
+        -moz-opacity: 0.6;
+        -khtml-opacity: 0.6;
+    }
+</style>
+
+
+<script language="javascript">
+    function toSubmit() {
+    	
+         var title = jQuery("#title").val();
+        var totalfee = jQuery("#payAmount").val();
+        jQuery("#fullbg").css({
+            height: jQuery("body").height(),
+            width: jQuery("body").width(),
+            display: "block"
+        });
+        jQuery.ajax({ 																 //一个Ajax过程 
+            type : "get", 															//以get方式与后台沟通 
+            url : 'index.php?app=my_money&act=keepPossible'+"&title=" + title + "&totalfee=" + totalfee,		 															//与此php页面沟通 
+            dataType : 'json',													//从php返回的值以 JSON方式 解释 
+            success : function(json) {	
+                if(json.done == true){						
+                    //alert("操作success");				
+                }
+                else{												
+                    alert("操作失败");									
+                }
+            }
+        });
+        jQuery("#dialog").show();
+    }
+
+    function toQuery(url) {
+        var title = jQuery("#title").val();
+        var totalfee = jQuery("#payAmount").val();
+        window.location.href = url + "&title=" + title + "&totalfee=" + totalfee;
+    }
+
+    function closeMe() {
+        jQuery("#fullbg").css({
+            height: 0,
+            width: 0,
+            display: "none"
+        });
+          jQuery.ajax({ 																 //一个Ajax过程 
+            type : "get", 															//以get方式与后台沟通 
+            url : 'index.php?app=my_money&act=getNewSerial',		 															//与此php页面沟通 
+            dataType : 'json',													//从php返回的值以 JSON方式 解释 
+            success : function(json) {	
+                if(json.done == true){						
+
+                   $("#title").val( json.retval);
+                }
+                else{												
+                    alert("操作失败");									
+                }
+            }
+        });
+        jQuery("#dialog").hide();
+        return false;
+    }
+</script>
+<script language = "JavaScript">
+	  function goToTradeForm(obj){
+	    var _targetTop = $('#'+obj).offset().top;//获取位置
+	    jQuery("html,body").animate({scrollTop:_targetTop},30);//跳转
+	  }
+
+    function chongzhi()
+    {
+        if (document.chongzhi_form.cz_money.value=="")
+        {
+            alert("{$lang.tianxieyaochongzhidejine}");
+            document.chongzhi_form.cz_money.focus();
+            return false;
+        }
+
+        return true;  
+    }
+
+
+    function card()
+    {
+        if (document.card_form.user_name1.value =="")
+        {
+            alert("充值帐户不能为空!");
+            document.card_form.user_name1.focus();
+            return false;
+        }
+        if (document.card_form.user_name2.value =="")
+        {
+            alert("确认帐户不能为空!");
+            document.card_form.user_name2.focus();
+            return false;
+        }
+        if (document.card_form.user_name1.value != document.card_form.user_name2.value)
+        {
+            alert("两次输入充值帐户不同!");
+            document.card_form.user_name2.focus();
+            return false;
+        }
+        if (document.card_form.card_sn.value =="")
+        {
+            alert("充值卡卡号不能为空!");
+            document.card_form.card_sn.focus();
+            return false;
+        }
+        if (document.card_form.card_pass.value =="")
+        {
+            alert("充值卡密码不能为空!");
+            document.card_form.card_pass.focus();
+            return false;
+        }
+        return true;  
+    }
+
+    $(function(){
+        $('#bank_pay ul.tab li').hover(function(){
+            $(this).removeClass('normal').addClass('active');
+            $(this).siblings().removeClass('active').addClass('normal');
+            $("#bank_pay .wrap dd").addClass('hidden');
+            $("#bank_pay .wrap").find('.' + $(this).attr('id')).removeClass('hidden');
+        },function(){
+		
+        });
+
+    	$("#directpayform").validate({
+            errorPlacement: function(error, element){
+                var error_td = element.siblings('label');
+                error_td.append(error);
+            },
+            success: function(label){
+                label.hide();
+            },
+            submitHandler:function(form)
+            {
+            	toSubmit();
+            	form.submit();
+            },
+            onkeyup: false,
+            rules: {               
+            	payAmount: {
+                   required: true,                
+                    number: true,
+                    min:1
+                }
+            },
+            messages: {               
+            	payAmount: {
+                    required: '{$lang.input_payAmount}',
+                    number: '{$lang.num_for_payAmount}',
+                    min: '{$lang.min_for_payAmount}'
+                }      
+            }
+        });
+    	
+    	$("#alipayBank").validate({
+            errorPlacement: function(error, element){
+                var error_td = element.siblings('label');
+                error_td.append(error);
+            },
+            success: function(label){
+                label.hide();
+            },
+            submitHandler:function(form)
+            {
+            	chongzhi();
+            	form.submit();
+            },
+            onkeyup: false,
+            rules: {               
+            	WIDtotal_fee: {
+                   required: true,                
+                    number: true,
+                    min:1
+                }
+            },
+            messages: {               
+            	WIDtotal_fee: {
+                    required: '{$lang.input_payAmount}',
+                    number: '{$lang.num_for_payAmount}',
+                    min: '{$lang.min_for_payAmount}'
+                }      
+            }
+        });
+    	
+    	$('#alipay_qr_img').hover(function(){
+    		$(this).attr('width','320px');
+    	},function(){
+    		$(this).attr('width','120px');
+    	});
+    	
+    	
+    });
+    
+    function checkTradeForm()
+    {
+    	var tradenoValue = document.getElementById('tradeno').value;
+    	tradenoValue = jQuery.trim(tradenoValue);
+    	var totalfeeValue = document.getElementById('totalfee').value;
+    	totalfeeValue = jQuery.trim(totalfeeValue);
+    	if(!/^[1-9]\d+$/.test(tradenoValue)) { alert('支付宝交易号只能是数字，且不能以0开头'); return false; }
+    	if(!/^(([0-9]+\.[0-9]*[1-9][0-9]*)|([0-9]*[1-9][0-9]*\.[0-9]+)|([0-9]*[1-9][0-9]*))$/.test(totalfeeValue)){alert('请输入正确的金额');return false;}
+    }
+</script>
+
+<div class="content">
+    {include file=member.menu.html}
+    <div id="right">
+        <ul class="tab">
+            <li class="active">{$lang.zaixianchongzhi}</li>
+            <li class="normal"><a href="index.php?app=my_money&act=paylog">{$lang.chongzhijilu}</a></li>
+            <li class="normal"><a href="index.php?app=my_money&act=txlist">{$lang.tixianshenqing}</a></li>
+
+        </ul>
+
+        <div class="wrap margin1">
+            <div class="public table">
+                <div class="information_index" style="overflow:hidden; margin: 0px 0 -15px;">
+                    <div class="info">
+                        <h3 class="margin2">
+                            <span>{$lang.hello}！{$visitor.user_name}，欢迎来到资金管理中心</span>
+                            <!-- <a href="index.php?app=my_money&act=index" target="_blank">{$lang.shenmeshishangfutong}</a>-->
+                        </h3>
+                        <table class="width6">
+                            <tr>
+                                <td><span style="font-size:14px">
+                                        <!--{foreach from=$my_money item=val key=key}-->
+                                        {$lang.zhanghuzongjinere}<span style="font-size:16px;font-weight:bold; color:#FE5400;">{$val.money}</span>
+                                        &nbsp;{$lang.yuan}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{$lang.dongjiejine}<span style="color:blue;">{$val.money_dj}</span>&nbsp;{$lang.yuan}
+<!--                                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{$lang.jifen}<span style="color:blue;">{$val.jifen}</span>-->
+                                        
+                                    </span>
+                                    <!--{/foreach}-->
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>{$lang.shangcidengluip}: {$visitor.last_ip}<br>
+                                    {$lang.shangcidenglushijian}:{$visitor.last_login|date:complete}<br> 
+
+                                    &nbsp;<A 
+                                        href="index.php?app=my_money&act=paylist">{$lang.lijichongzhi}</A>&nbsp;|&nbsp;<A 
+                                        class=G href="index.php?app=my_money&act=txlist"><span style="color:green;">{$lang.tixian}</span></A>  
+                                </td> 
+
+                            </tr>
+                        </table>
+                    </div>
+
+
+                </div>
+            </div>
+        </div>
+
+        <!--开始
+                   <div class="wrap margin1">
+                    <div class="public table">
+                    <h3 class="title" style="margin: -10px 0 20px; color:#3E3E3E">{$lang.zaixianchongzhi}</h3>
+                          <div style="color:#646665;float:left;font-size:12px;font-weight:normal;line-height:30px;">
+        <form name="chongzhi_form" onSubmit="return chongzhi();" action="index.php?app=my_money&act=czfs" method="post" target="_blank">
+                                          {$lang.chongzhijine}
+                          <input name="cz_money" type="text" value="100" style="width:100px;height:24px;" />&nbsp;{$lang.yuan}
+                            {$lang.chongzhifangshi}：
+                            <select name="czfs" style="width:120px;height:24px;">
+                            <option value="tenpay">{$lang.caifutongchongzhi}</option>
+                            <option value="alipay">{$lang.zhifubaochongzhi}</option>
+                            <option value="chinabank">{$lang.wangyinchongzhi}</option>                    
+                                                </select>
+                          <BR>注：目前支持支付宝、财付通、各大银行网银、银联充值。您也可以<a href="index.php?app=article&act=view&article_id=31" target="_blank">[线下汇款]</a>。<BR><input type="submit" class="money_btn" value="{$lang.lijichongzhi}" />
+                          </form>
+                     </div>
+                                </div>
+                   </div>	
+        -->
+        <!--结束-->	
+        <!-- 网银支付 start -->
+        <div id="bank_pay" class="mb10">
+            <ul class="tab">
+                <li class="active" id="tab2" style="padding:0 20px;">支付宝充值</li>  
+                <li class="normal" id="tab1" style="padding:0 20px;">银行充值</li>
+            </ul>
+            <div class="wrap" style="padding:20px 0;">
+                <dd class="tab1 hidden">
+                    <form name="alipayBank" id="alipayBank"  action="index.php?app=my_money&act=doalipayBank_51" method="post" target="_blank">
+                        <table>
+                            <tr>
+                                <td width="60" align="right"> 总 费 用: </td>
+                                <td><input style="width:200px;height:24px;" name="WIDtotal_fee" class="input_text distance_right" /><label></label> <br>请优先使用支付宝充值！对于通过网银充值的金额若直接提现，每笔提现收取1.2%（最低2元）的手续费!
+                                </td>
+                                
+                            </tr>
+                            <tr>           
+                                <td colspan="2">
+                                    <table>
+                                        <tr>
+                                            <td height="36" valign="middle" colspan="3">&nbsp;&nbsp;&nbsp;&nbsp;<font color="#549833">混合渠道:</font></td>
+                                        </tr>
+                                        <tr>
+                                            <td><img src="{$siteurl}includes/bank_logos/ICBCB2C.jpg"></td>
+                                            <td><img src="{$siteurl}includes/bank_logos/CMB.jpg"></td>
+                                            <td><img src="{$siteurl}includes/bank_logos/BOCB2C.jpg"></td>
+                                        </tr>
+                                        <tr>
+                                            <td align="center"><input type="radio" checked="checked" name="WIDdefaultbank" value="ICBCB2C" class="banklogo"/></td>
+                                            <td align="center"><input type="radio" name="WIDdefaultbank" value="CMB" class="banklogo" /></td>
+                                            <td align="center"><input type="radio" name="WIDdefaultbank" value="BOCB2C" class="banklogo" /> </td>
+                                        </tr>
+                                        <tr>
+                                            <td><img src="{$siteurl}includes/bank_logos/CCB.jpg"></td>
+                                            <td><img src="{$siteurl}includes/bank_logos/ABC.jpg"></td>
+                                            <td><img	src="{$siteurl}includes/bank_logos/SPDB.jpg"></td>
+                                        </tr>
+                                        <tr>
+                                            <td align="center"><input type="radio" name="WIDdefaultbank" value="CCB" class="banklogo" /></td>
+                                            <td align="center"><input type="radio" name="WIDdefaultbank" value="ABC" class="banklogo" /></td>
+                                            <td align="center"><input type="radio" name="WIDdefaultbank" value="SPDB" class="banklogo" /></td>
+                                        </tr>
+                                        <tr>
+                                            <td><img src="{$siteurl}includes/bank_logos/CIB.jpg"></td>
+                                            <td><img src="{$siteurl}includes/bank_logos/GDB.jpg"></td>
+                                            <td><img src="{$siteurl}includes/bank_logos/CMBC.jpg"></td>
+                                        </tr>
+                                        <tr>
+                                            <td align="center"><input type="radio" name="WIDdefaultbank" value="CIB" class="banklogo" /></td>
+                                            <td align="center"><input type="radio" name="WIDdefaultbank" value="GDB" class="banklogo" /></td>
+                                            <td align="center"><input type="radio" name="WIDdefaultbank" value="CMBC" class="banklogo" /></td>
+                                        </tr>
+                                        <tr>
+                                            <td><img src="{$siteurl}includes/bank_logos/CITIC.jpg"></td>
+                                            <td><img src="{$siteurl}includes/bank_logos/HZCBB2C.jpg"></td>
+                                            <td><img src="{$siteurl}includes/bank_logos/CEBBANK.jpg"></td>
+                                        </tr>
+                                        <tr>
+                                            <td align="center"><input type="radio" name="WIDdefaultbank" value="CITIC" class="banklogo" /></td>
+                                            <td align="center"><input type="radio" name="WIDdefaultbank" value="HZCBB2C" class="banklogo" /></td>
+                                            <td align="center"><input type="radio" name="WIDdefaultbank" value="CEBBANK" class="banklogo" /></td>
+                                        </tr>
+                                        <tr>
+                                            <td><img src="{$siteurl}includes/bank_logos/SHBANK.jpg"></td>
+                                            <td><img src="{$siteurl}includes/bank_logos/NBBANK.jpg"></td>
+                                            <td><img src="{$siteurl}includes/bank_logos/SPABANK.jpg"></td>
+                                        </tr>
+                                        <tr>
+                                            <td align="center"><input type="radio" name="WIDdefaultbank" value="SHBANK" class="banklogo" /></td>
+                                            <td align="center"><input type="radio" name="WIDdefaultbank" value="NBBANK" class="banklogo" /></td>
+                                            <td align="center"><input type="radio" name="WIDdefaultbank" value="SPABANK" class="banklogo" /></td>
+                                        </tr>
+                                        <tr>
+                                            <td><img src="{$siteurl}includes/bank_logos/BJRCB.jpg"></td>
+                                            <td><img src="{$siteurl}includes/bank_logos/FDB.jpg"></td>
+                                            <td><img src="{$siteurl}includes/bank_logos/POSTGC.jpg"></td>
+                                        </tr>
+                                        <tr>
+                                            <td align="center"><input type="radio" name="WIDdefaultbank" value="BJRCB" class="banklogo" /></td>
+                                            <td align="center"><input type="radio" name="WIDdefaultbank" value="FDB" class="banklogo" /></td>
+                                            <td align="center"><input type="radio" name="WIDdefaultbank" value="POSTGC" class="banklogo" /></td>
+                                        </tr>
+                                        <tr>
+                                            <td height="36" valign="middle" colspan="3">&nbsp;&nbsp;&nbsp;&nbsp;<font color="#549833">纯借记卡渠道:</font></td>
+                                        </tr>
+                                        <tr>
+                                            <td><img src="{$siteurl}includes/bank_logos/CMB-DEBIT.jpg"></td>
+                                            <td><img src="{$siteurl}includes/bank_logos/CCB-DEBIT.jpg"></td>
+                                            <td><img src="{$siteurl}includes/bank_logos/ICBC-DEBIT.jpg"></td>
+                                        </tr>
+                                        <tr>
+                                            <td align="center"><input type="radio" name="WIDdefaultbank" value="CMB-DEBIT" class="banklogo" /></td>
+                                            <td align="center"><input type="radio" name="WIDdefaultbank" value="CCB-DEBIT" class="banklogo" /></td>
+                                            <td align="center"><input type="radio" name="WIDdefaultbank" value="ICBC-DEBIT" class="banklogo" /></td>
+                                        </tr>
+                                        <tr>
+                                            <td><img src="{$siteurl}includes/bank_logos/COMM-DEBIT.jpg"></td>
+                                            <td><img src="{$siteurl}includes/bank_logos/GDB-DEBIT.jpg"></td>
+                                            <td><img src="{$siteurl}includes/bank_logos/BOC-DEBIT.jpg"></td>
+                                        </tr>
+                                        <tr>
+                                            <td align="center"><input type="radio" name="WIDdefaultbank" value="COMM-DEBIT" class="banklogo" /></td>
+                                            <td align="center"><input type="radio" name="WIDdefaultbank" value="GDB-DEBIT" class="banklogo" /></td>
+                                            <td align="center"><input type="radio" name="WIDdefaultbank" value="BOC-DEBIT" class="banklogo" /></td>
+                                        </tr>
+                                        <tr>
+                                            <td><img src="{$siteurl}includes/bank_logos/CEB-DEBIT.jpg"></td>
+                                            <td><img src="{$siteurl}includes/bank_logos/SPDB-DEBIT.jpg"></td>
+                                            <td><img src="{$siteurl}includes/bank_logos/PSBC-DEBIT.jpg"></td>
+                                        </tr>
+                                        <tr>
+                                            <td align="center"><input type="radio" name="WIDdefaultbank" value="CEB-DEBIT" class="banklogo" /></td>
+                                            <td align="center"><input type="radio" name="WIDdefaultbank" value="SPDB-DEBIT" class="banklogo" /></td>
+                                            <td align="center"><input type="radio" name="WIDdefaultbank" value="PSBC-DEBIT" class="banklogo" /></td>
+                                        </tr>
+                                        <tr>
+                                            <td><img src="{$siteurl}includes/bank_logos/BJBANK.jpg"></td>
+                                            <td><img src="{$siteurl}includes/bank_logos/SHRCB.jpg"></td>
+                                            <td><img src="{$siteurl}includes/bank_logos/WZCBB2C-DEBIT.jpg"></td>
+                                        </tr>
+                                        <tr>
+                                            <td align="center"><input type="radio" name="WIDdefaultbank" value="BJBANK" class="banklogo" /></td>
+                                            <td align="center"><input type="radio" name="WIDdefaultbank" value="SHRCB" class="banklogo" /></td>
+                                            <td align="center"><input type="radio" name="WIDdefaultbank" value="WZCBB2C-DEBIT" class="banklogo" /></td>
+                                        </tr>
+                                        <tr>
+                                            <td><img src="{$siteurl}includes/bank_logos/COMM.jpg"></td>
+                                            <td></td>
+                                            <td></td>
+                                        </tr>
+                                        <tr>
+                                            <td align="center"><input type="radio" name="WIDdefaultbank" value="COMM" class="banklogo" /></td>
+                                            <td align="center"></td>
+                                            <td align="center"></td>
+                                        </tr>			             
+                                    </table>
+
+                                </td>
+                            </tr>
+                            <tr height="10"><td></td><td></td></tr>
+                            <tr>  
+                                <td width="60"></td>         
+                                <td><button type="submit" class="money_btn">确 认</button></td>		           
+                            </tr>
+                        </table>
+                    </form>
+                    <!--dxw-->
+                </dd>
+                <dd class="tab2">
+                    <form id="directpayform" target="_blank"
+                          action="https://shenghuo.alipay.com/send/payment/fill.htm"
+                          method="post" name="alipay_p">
+                        <table class="form_table" width="100%">
+                            <!-- <caption class="hair">
+                                    <span>支付宝支付：</span>
+                            </caption> -->
+                            <tr>
+                                <td></td>
+                                <td width="80"><img src="{$siteurl}data/system/alipay_logo.gif"></td>
+                                <td>
+                                	<div style="font-size:16px;padding-left:13px;font-weight:bold;">亲，下面两步务必执行！</div>
+                                	<!--  <div style="border:1px solid #eeeeee;width:760px;padding:5px;background-color:#fafafa;margin-left:7px;">如果您一天内的充值，没有自动到账，请填写支付宝支付信息：<span style="color:#999;">提交后，系统会在10分钟内帮您入账 </span></div> -->
+                                </td>
+                                <td rowspan="6" style="position:relative;width:160px;">
+                                	<img id="alipay_qr_img" src="{$siteurl}static/imgs/alipay_qr.jpg" width="120" style="position:absolute;top:0;right:40px;">
+                                </td>
+                            </tr>
+                            <tr><td colspan="3" height="10"></td></tr>
+                            <tr>
+                                <td></td>                                
+                                <td colspan="2"><font style="font-size: 15px;line-height:20px;padding-left:13px;">                          
+                                                                                                                        <strong> 第一步</strong>： 转账给&nbsp;<font
+                                        color="red">{$aliaccount}</font>&nbsp;或&nbsp;<font
+                                        color="red">18939928742</font>&nbsp;<font>上海轩颐网络科技有限公司</font>
+                                    </font>
+                                    </td>
+                            </tr>
+                            <tr>
+                            <input id="optEmail" type="hidden" name="optEmail" value="{$aliaccount}">
+                            <input id="title" type="hidden" name="title" value="{$merchantSn}">                            
+                            <td></td>
+                            <td align="left" colspan="2" style="border: none;padding-top:5px;padding-left:13px;"><font style="font-size:15px;">转账金额 (元)</font>
+                                <input type="text" name="payAmount" id="payAmount" style="width:120px;height:24px;" class="input_text distance_both">
+                                <input type="submit" class="submit" value="去支付宝转账"><label></label>
+                                <span class="ml10">
+                               		<a onclick="javascript:goToTradeForm('check_trade_form')" style="color:#0082C4;cursor:pointer;" >转账没到账？</a>&nbsp;&nbsp;
+                               		<a href="http://www.51zwd.com/article/41.html" target="_blank" style="color:#549833;">转账失败？</a>
+                               		<a href="http://www.51zwd.com/article/63.html" target="_blank" style="color:#549833;">转账帮助</a>
+                               		<a style="display:inline-block;vertical-align:middle;" target="_blank" href="http://wpa.qq.com/msgrd?v=3&amp;uin=455198472&amp;site=&amp;menu=yes">
+		                    			<img alt="QQ" src="http://wpa.qq.com/pa?p=1:455198472:9">
+		                    		</a>
+                                </span>                             
+                            </td>
+                             
+                            </tr>
+                            <tr>
+                             <td colspan="5" height="30"></td>
+                            </tr>
+                            <tr>                                
+                                <td align="left" colspan="3" style="border: none">                               
+                            </td>
+                            </tr>
+                        </table>
+                    </form>
+                   
+                   <form action="index.php?app=my_money&act=searchtrade" method="post"　id="checktradeform_modify" onSubmit="javascirpt:return checkTradeForm();">
+                        <table class="form_table" width="100%">
+                            <tr>
+                              <td colspan="4" style="font-size:16px;color:#333333;padding-left:13px;padding-bottom:6px;"><storng style="font-weight:bold;">第二步</storng>：提交转账成功的交易号 与 金额                              </td>
+                            </tr>
+                            
+                            <tr><td colspan="4" height="10"></td></tr>
+                            <tr>
+                                <td width="100" style="font-size:14px;padding-left:10px;">支付宝交易号</td>
+                                <td align="left" colspan="3"><input type="text" name="tradeno" id="tradeno" style="width:320px;height:24px;" class="input_text">
+                                <span class="ml10" style="color:#999;font-size:14px;">例，交易号：20150620000010004800********</span>
+                                <label></label>
+                                </td>
+                            </tr>
+                             <tr><td colspan="4" height="5"></td></tr>
+                            <tr>
+                                <td width="100" style="font-size:14px;padding-left:10px;">转账金额(元)</td>
+                                <td align="left" colspan="3">
+                                    <input type="text" name="totalfee" id="totalfee" style="width:200px;height:24px;" class="input_text">&nbsp;&nbsp;
+                                    <a href="http://www.51zwd.com/article/63.html" target="_blank" style="color:#549833;cursor:pointer;">如何查看转账交易号？</a><label></label>
+                                </td>
+                            </tr>
+                             <tr><td colspan="4" height="5"></td></tr>
+                             <tr>
+                             <td></td>
+                             <td colspan="3" height="10">
+                                <input type="submit" class="submit" value="提 交">
+                             </td>
+                             </tr>
+                        </table>
+                    </form>      
+                    
+                    
+                </dd>
+            </div>
+        </div>
+        <!-- 网银支付 end -->
+
+
+        <!--开始
+                   <div class="wrap">
+                    <div class="public table">
+                    <h3 class="title" style="margin: -10px 0 20px; color:#3E3E3E">充值卡充值</h3>
+                          <div style="color:#646665;float:left;font-size:12px;font-weight:normal;line-height:30px;">
+        <form name="card_form" onSubmit="return card();" action="index.php?app=my_money&act=card_cz" method="post" target="_blank">
+                                          充值帐户：<input name="user_name1" type="text" id="user_name1" value="{$visitor.user_name}" style="width:120px;height:24px;" />
+                                          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                          商付卡卡号：<input name="card_sn" type="text" id="card_sn" style="width:200px;height:24px;" />
+                                          <br>
+                                          确认帐户：<input name="user_name2" type="text" id="user_name2" style="width:120px;height:24px;" />
+                          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                          商付卡密码：<input name="card_pass" type="text" id="card_pass" style="width:200px;height:24px;" />
+                                          <br>注：如果您通过线下汇款或活动赚金，请联系管理员索取。(QQ:<a target="_blank" href="http://wpa.qq.com/msgrd?v=3&uin=401926890&site=qq&menu=yes"><img border="0" src="http://wpa.qq.com/pa?p=2:401926890:41 &r=0.4908261565915385" alt="为您服务" title="为您服务"></a> 热线:13646453815)<br>
+                          <input type="submit" class="money_btn" value="{$lang.lijichongzhi}" />
+                          </form>
+                     </div>
+                                </div>
+                   </div>	
+        -->
+        <!--结束-->		
+
+        <div class="clear"></div>
+        <div class="adorn_right1"></div>
+        <div class="adorn_right2"></div>
+        <div class="adorn_right3"></div>
+        <div class="adorn_right4"></div>
+    </div>
+    <div class="clear"></div>
+</div>
+<div class="fukuan-tishi" id="dialog" style="height: 245px; width: 540px; display: none; background-color: rgb(254, 243, 237);">
+    <p class="p1">
+        转账充值提示</p>
+    <p class="p2">
+        请您在新打开的支付宝转账页面完成转账。</p>
+    <p class="p3">
+        重要提示：</p>
+    <p class="p4">
+        请勿修改支付宝转账页面的任何内容，且必须在10分钟之内完成支付！否则会造成充值失败！！！</p>
+    <p class="p5">
+        <a  onclick="toQuery('{$site_url}/index.php?app=my_money&act=searchtrade');" class="a1">转账完成，查看余额</a><a href="#" onclick="return closeMe();" class="a2">遇到问题，放弃操作</a></p>
+</div>
+<div id="fullbg" style="height: 1443px; width: 1263px; display: none;">
+</div>
+<!--<div class="clear"></div>
+<iframe id='iframe_post' name="iframe_post" frameborder="0" width="0" height="0">
+</iframe>-->
+{include file=footer.html}

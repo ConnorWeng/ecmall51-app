@@ -1,0 +1,229 @@
+{include file=header.whole.html}
+<script type="text/javascript">
+   
+  $(function(){
+	  
+	  $('#query_time_wrapper').datetimepicker({format:'YYYY-MM-DD HH:mm:ss'});
+	  $('#query_endtime_wrapper').datetimepicker({format:'YYYY-MM-DD HH:mm:ss'});
+	  $('#query_time_wrapper').on('dp.change',function(e){
+		  $('#query_endtime_wrapper').data("DateTimePicker").minDate(e.date);
+	  });
+	  $('#query_endtime_wrapper').on('dp.change',function(e){
+		  $('#query_time_wrapper').data("DateTimePicker").maxDate(e.date);
+	  }); 
+	  $('#query_time_form').bootstrapValidator({
+		  feedbackIcons: {
+	            valid: 'glyphicon glyphicon-ok',
+	            invalid: 'glyphicon glyphicon-remove',
+	            validating: 'glyphicon glyphicon-refresh'
+	        }, 
+		  fields:{
+			  query_time:{
+				  feedbackIcons:'false',
+				  validators:{
+					  notEmpty:{},
+					  date:{
+						message:'请输入有效日期,格式形如：2015-01-01 23:59:59',
+					  	format:"YYYY-MM-DD HH:mm:ss"
+					  }
+				  }
+			  },
+			  query_endtime:{
+				  validators:{
+					  notEmpty:{},
+					  date:{
+						message:'请输入有效日期,格式形如：2015-01-01 23:59:59',
+					  	format:"YYYY-MM-DD HH:mm:ss"
+					  },
+					  /* remote:{
+						url:"index.php?module=behalf&act=check_querytime",
+						data:{'query_time':$('#query_time_wrapper').data("DateTimePicker").date}
+					  },  */
+					  different:{
+						  field:'query_time',
+						  message:'结束时间应该大于开始时间'
+					  } 
+				  }
+			  },
+			  'market[]':{
+				  validators:{
+					  notEmpty:{ message:'至少选择一个市场' }
+				  }
+			  }
+		  }
+	  });
+	  
+	  $("#stat_btn").popover();
+	  
+	  <!--{if $goods_list }-->
+	  
+	  var dt = $("#goods_list_table").DataTable({
+			"ordering":true,
+		    "paging":true,
+		    "info":true,
+		    "searching":true,
+		    "columnDefs":[
+		       {"orderable":false,"targets":0},           
+		       {"orderable":false,"targets":[1]}           
+		     ],
+		     "order":[
+		        [0,null]      
+		     ],
+		    
+			"language":{
+				"url":"{lib file='/DataTables/zn.json'}",
+			},
+			"pagingType":'full_numbers'
+		});
+	  //add table no
+	   dt.on('order.dt search.dt',
+			    function() {
+			        dt.column(0, {
+			            search: 'applied',
+			            order: 'applied'
+			        }).nodes().each(function(cell, i) {
+			            cell.innerHTML = i + 1;
+			        });
+			    }).draw(); 
+	  
+	  <!--{/if}-->
+	
+	  
+		  jQuery("#checkall").on('ifChecked ifUnchecked',function(){			 
+				 var checkall = this.checked ? 'check':'uncheck';
+				 jQuery("input[name='market[]']").iCheck(checkall);
+				
+			 });
+  });
+
+</script>
+<div class="container-fluid">
+    <div style="height:10px;"></div>
+	<div class="panel panel-default">
+		<div class="panel-body">
+			
+			<div class="">
+				<form id="query_time_form" class="form-vertical" method="post">
+					<div class="form-group">
+					  <div class="row">
+					  	<label class="col-xs-1 text-right">入库时间</label>
+					  	<div class="col-xs-4">
+			   				<div class='input-group date' id='query_time_wrapper'>
+			   				    <span class="input-group-addon">从</span>
+			                    <input type="text" class="form-control" name="query_time" value="{$start_time}">
+			                    <span class="input-group-addon">
+			                        <span class="glyphicon glyphicon-time"></span>
+			                    </span>
+			                </div>
+			            </div>
+			            
+			            <div class="col-xs-4">
+			   				<div class='input-group date' id='query_endtime_wrapper'>
+			   					<span class="input-group-addon">至</span>
+			                    <input type="text" class="form-control" name="query_endtime" value="{$end_time}">
+			                    <span class="input-group-addon">
+			                        <span class="glyphicon glyphicon-time"></span>
+			                    </span>
+			                </div>
+			            </div>
+		              </div>
+			       </div>
+			      
+			       <div class="form-group">
+	                  <div class="row">
+		                   <div class="checkbox">
+		                     <strong class="col-xs-1 text-right">拿货市场</strong> 
+		                	<div class="col-xs-11">
+		                	<!--{foreach from=$markets item=market}-->
+		                	    <label><input type="checkbox" name="market[]" value="{$market.mk_id}" {if in_array($market.mk_id,$market_choice)}checked{/if}> {$market.mk_name|escape}</label>
+		                	<!--{/foreach}-->
+		                	<!--{if $markets}-->
+		                	<label>
+		                		<input type="checkbox" id="checkall"/><strong>全选</strong>
+		                	</label>
+		                	<!--{else}-->
+		                		<b text="text-danger">没有拿货市场，您不能使用搜索功能！</b>
+		                	<!--{/if}-->
+		                	</div>
+		                </div>
+		               </div>
+		            </div>
+			       <input type="hidden" name="module" value="behalf" />
+			       <input type="hidden" name="act" value="stat_enter_warehouse" />
+			       <div class="form-group">
+			       		<div class="row">
+				       		<div class="col-xs-1"></div>
+					      	<div class="col-xs-4">
+				            	<input type="submit" class="btn btn-primary" id="query_submit" value="开始统计" />
+				           		 
+				            </div>
+			            </div>
+		            </div>
+				</form>
+			</div>
+		    
+		  </div>
+	  </div>
+	  
+	  <!--{if $goods_list}-->
+	  <div class="panel panel-default">
+		<div class="panel-body">	
+			<div class="row">
+				<div class="col-xs-10">
+					<label>统计：</label>亲，您&nbsp;<span class="text-info">{$start_time}</span>&nbsp;
+					已备货商品<b class="text-danger"> {$goods_count|default:0} </b>件，商品总金额<b class="text-danger"> {$goods_amount|price} </b>，
+					档口应该优惠 <b class="text-danger"> {$store_bargin|price} </b>，合计<b class="text-danger"> {$last_amount|price} </b>；涉及订单<b class="text-primary"> {$order_count|default:0} </b>单。
+					
+					
+				</div>
+				
+			</div>	
+			
+		</div>
+		
+			<table id="goods_list_table" class="table table-condensed table-striped table-bordered table-hover" width="100%">
+		  	<thead>
+		  		<tr>
+		  		    <th class="text-center" width="30">NO</th>
+		  			<th class="text-center ">商品编码</th>
+		  			<th class="text-center ">商品名称</th>
+		  			<th class="text-center ">商家编码</th>
+		  			<th class="text-center ">颜色尺寸</th>
+		  			<th class="text-center ">商品价格</th>
+		  			<th class="text-center ">订单编码</th>
+		  			<th class="text-center ">入库会员</th>
+		  			<th class="text-center ">入库时间</th>
+		  			<th class="text-center ">商品状态</th>
+		  		</tr>
+		  	</thead>
+		  	<tbody>
+		  	<!--{foreach from=$goods_list item=goods}-->
+		  		<tr>
+		  		    <td class="text-center" width="30"></td>
+		  			<td class="text-center ">{$goods.goods_no|escape}</td>
+		  			<td class=" ">{$goods.goods_name|escape}</td>
+		  			<td class=" ">{$goods.goods_attr_value|escape}</td>
+		  			<td class=" ">{$goods.goods_specification|escape}</td>
+		  			<td class="text-center ">{$goods.goods_price|price}</td>
+		  			<td class="text-center ">{$goods.order_sn|escape}</td>
+		  			<td class="text-center ">{$goods.taker_name|escape}</td>
+		  			<td class="text-center ">{$goods.taker_time|date:complete}</td>
+		  			<td class=" ">
+		  			 {include file=behalf.goods.status.html}
+		  			</td>
+		  		</tr>
+		  	<!--{/foreach}-->
+		  	</tbody>
+		  </table>
+	   
+	  </div>
+	  <!--{else}-->
+				<div class="alert alert-warning">
+					<label>统计：</label>亲，您&nbsp;<span class="text-info">{$start_time}</span>&nbsp;
+					已备货商品<b class="text-danger"> {$goods_count|default:0} </b>件，商品总金额<b class="text-danger"> {$goods_amount|price} </b>，
+					档口应该优惠 <b class="text-danger"> {$store_bargin|price} </b>，合计<b class="text-danger"> {$last_amount|price} </b>；涉及订单<b class="text-primary"> {$order_count|default:0} </b>单。
+				</div>
+	  <!--{/if}-->
+	  
+</div>
+{include file=footer.whole.html}

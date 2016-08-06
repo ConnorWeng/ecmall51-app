@@ -1,0 +1,10 @@
+@charset "utf-8";
+/* CSS Document */
+
+#footer{width:1000px; margin:auto;margin-top:10px; border-top:2px #F27B04 solid;}
+#footer a {color: #3566CF; text-decoration:none;}
+#footer a:hover{color:#FF6600; text-decoration:underline;}
+#footer .foot-nav {    height: 20px;    margin: 15px auto 0 auto;}
+#footer .foot-nav a { margin: 0 7px;}
+#footer .foot-group{margin: 5px auto 10px auto;}
+#footer .copyright {margin: 5px auto 10px auto; font-family:Arial;}

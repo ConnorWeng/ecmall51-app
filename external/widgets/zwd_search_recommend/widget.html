@@ -1,0 +1,77 @@
+<!-- {if $widget_data.goods_list} -->
+<ul id="right_searchgoods_recommend_{$widget_data.model_id}" class="pt10 clearfix" style="overflow:visible;">
+        <!--{foreach from=$widget_data.goods_list item=goods name=fe_goods}-->
+             			<dl class="item masonry-brick relative clearfix dl-{$goods.goods_id}" style="float:none;margin-left:3px;">
+             				    <!--{if $goods.zwd51_recommended}--><span class="rec"></span><!--{/if}-->
+               					<dt class="padding5">
+	               					<a href="{url app=goods&id=$goods.goods_id}" class="relative" target="_blank" title="{$goods.goods_name|escape|truncate:120}">
+	               						<!--{if $goods.realpic and $goods.serv_realpic}-->
+										   <i class="shipa" title="{$lang.service_detail}"></i>
+										   <!--{/if}-->
+										   <!--{if $goods.serv_refund }-->
+										   <i class="tuixian" title="{$lang.service_send}"></i>
+										   <!--{/if}-->
+	               						<img alt="{$goods.goods_name|escape|truncate:120}" {if $smarty.foreach.fe_goods.iteration lt 3}src="{$goods.default_image}"{else}src="data/system/empty.gif" data-ks-lazyload="{$goods.default_image}"{/if} class="lazyload"/>
+	               					</a>
+               					</dt>
+                				<dd class="desc"><a href="{url app=goods&id=$goods.goods_id}" target="_blank" title="{$goods.goods_name|escape}">{$goods.goods_name|escape|truncate:60}</a></dd>
+                				<dd class="price twofloat clearfix"><em><s>&yen;</s>{$goods.price}</em>
+								<span>
+								   <!--{if $goods.serv_realpic }-->
+								   <i class="icon_detail" title="实拍"><a href=""  class="block"></a></i><!--{/if}-->
+								   <!--{if $goods.serv_sendgoods }-->
+								   <i class="icon_send" title="代发"><a href="" title="" class="block"></a></i><!--{/if}-->
+								   <!--{if $goods.serv_refund }-->
+								   <i class="icon_cash" title="退现"><a href="" title="" class="block"></a></i><!--{/if}-->
+								   <!--{if $goods.serv_exchgoods }-->
+								   <i class="icon_change" title="换款"><a href="" title="" class="block"></a></i><!--{/if}--></span>
+								</dd>
+                            	<dd class="delivery twofloat clearfix hidden"><em></em><span></span></dd>
+                            	<dd class="storeinfo twofloat clearfix">
+                					<em>
+                					   <a href="{url app=store&id=$goods.store_id}" target="_blank">{$goods.mk_name|escape}&nbsp;{$goods.dangkou_address|escape}</a>
+                					</em>
+                                	<span class="">
+                                	    <a href="{url app=store&id=$goods.store_id}" target="_blank">{$goods.store_name}</a>
+                                		
+                                	</span>
+                				</dd>
+                				<dd class="three-uploads twofloat clearfix">
+                				   <!--{if !$goods.collect_goods}-->
+                				   <em id="collect_wgoods_em_{$goods.goods_id}"><a href="javascript:collect_goods({$goods.goods_id});" class="inline-block pointer clearfix" style="border:1px solid #ccc;border-radius:3px;padding:1px 5px;height:16px;line-height:16px;" title="收藏商品"><i class="star5 float-left"></i><strong class="ml5 font-normal inline-block float-left" style="height:16px;">收藏</strong></a></em>
+                				   <!--{else}-->
+                				    <em id="collect_wgoods_em_{$goods.goods_id}"><a href="javascript:alert('已收藏');" class="inline-block pointer clearfix" style="border:1px solid green;border-radius:3px;padding:1px 5px;height:16px;line-height:16px;" title="商品已收藏"><strong class="font-normal inline-block float-left" style="height:16px;"><font color=green>已收藏</font></strong></a></em> 
+                				   <!--{/if}-->
+                				   <span>
+                				      <a class="icon-tb mr2" href="{url app=item_upload&dest=Taobao&goods_id=$goods.goods_id}" target="_blank" title="上传淘宝">淘宝</a>
+                				      <a class="icon-al mr2" href="{url app=item_upload&dest=Alibaba&goods_id=$goods.goods_id}" target="_blank" title="上传阿里">阿里</a>
+                				      <a class="icon-pp" href="{url app=item_upload&dest=Paipai&goods_id=$goods.goods_id}" target="_blank" title="上传拍拍">拍拍</a>
+                				   </span>
+                				</dd>
+             				</dl> 
+             			<!--{/foreach}-->
+ </ul>
+ <!--{if $widget_data.sticky}--> 
+<script type="text/javascript">
+  $(function(){
+	 //$("#right_searchgoods_recommend_{$widget_data.model_id}").sticky({bottomSpacing:465}); 
+	 var right_recom_goods = $("#right_searchgoods_recommend_{$widget_data.model_id}").children();
+	 var rrg_count=0;
+	 $(window).scroll(function(){
+		    if(rrg_count >= right_recom_goods.length)
+			{
+				 rrg_count=0;
+			}
+			if( ($("#right_searchgoods_recommend_{$widget_data.model_id}").outerHeight()+360) < $("#page-search-goods .col-main").outerHeight() )
+			{
+				right_recom_goods.eq(rrg_count).clone(true).appendTo($("#right_searchgoods_recommend_{$widget_data.model_id}"));				
+				rrg_count++;
+				$("img.lazyload").lazyload();
+			}
+	 });	
+  });
+</script>
+<!--{/if}-->
+<!-- {else} -->
+<div style="padding:10px; text-align:center;">请配置</div>
+<!-- {/if} -->

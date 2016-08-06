@@ -1,0 +1,17 @@
+<script type="text/javascript">
+$(function(){    
+    $('#cancel_button').click(function(){
+        DialogManager.close('buyer_order_seller_message');
+    });
+});
+</script>
+<style type="text/css">
+.ajax_form_block { border-bottom:#dadada 1px dotted; padding-bottom:15px; padding-top:15px; }
+</style>
+<ul class="tab">
+    <li class="active">{$lang.seller_message}</li>
+</ul>
+<div class="eject_con">    
+    <div class="content_line">
+    &nbsp;&nbsp;<!--{if $order.seller_message }--><p>{$order.seller_message|escape}</p><!--{/if}--></div> 
+</div>

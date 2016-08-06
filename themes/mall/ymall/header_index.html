@@ -1,0 +1,131 @@
+{include file=top.html}
+<div id="header-adv" class="w-full pt10 pb10 bg_f5">
+   <div class="top_site_header_advs" area="top_site_header_advs" widget_type="area">
+        <!--{widgets page=index area=top_site_header_advs}-->
+   </div>
+</div>
+<div id="header" class="w-full">	
+    <div class="w-full bg_f5 pt5">
+		<div class="shop-t w clearfix pb10 mb10">
+	      <div class="logo mt10 relative">
+	         <a href="{$site_url}" title="{$site_title}"><img alt="{$site_title}" src="{res file=images/logo_index.gif}" /></a>		 
+	      </div>
+	      <div class="top-search">
+	         <div class="top-search-box clearfix">
+	         	<div class="form-fields float-left">
+	           		<form method="GET" action="{url app=search}">
+	               		<input type="hidden" name="app" value="search" />
+	               		<input type="hidden" name="act" value="{if $smarty.get.act eq 'store'}store{else}index{/if}" id="form-search-act"/>
+						<ul class="search-type">
+						  <li class="first-li" act="{if $smarty.get.act eq 'store'}store{else}index{/if}">{if $smarty.get.act eq 'store'}{$lang.store}{else}{$lang.goods}{/if}</li>
+						  <li act="{if $smarty.get.act eq 'store'}index{else}store{/if}">{if $smarty.get.act eq 'store'}{$lang.goods}{else}{$lang.store}{/if}</li>
+						</ul>
+						<p class="search-span"><p>
+						<input type="text"   name="keyword" value="{$smarty.get.keyword}" class="keyword {if !$smarty.get.keyword}kw_bj {if $smarty.get.act eq 'store'}store{elseif $smarty.get.act eq 'groupbuy'}groupbuy{else}index{/if}_bj {/if}" />
+	               		<input type="submit" value="{$lang.search}" class="submit yahei strong" hidefocus="true" />
+	            	</form>				
+	         	</div>
+				<div class="float-left adv-search">
+					<a href="{url app=search}" class="f66">高级<br/>搜索</a>
+				</div>
+				<!-- cart start -->
+	         	<div class="float-right mini-cart-wrapper">
+	            	<div class="mini-cart cart-info relative inline-block clearfix">
+	            	        <h3 class="float-left fs14 fff bold relative"><a class="ac yahei" href="{url app=cart}" target="_blank">我的购物车<span><strong>{$cart_goods_kinds}</strong>件</span></a></h3>
+		                	<div class="mini-cart-content">
+		                		<dl class="mini-cart-bd">
+		                     		<!--{if $cart_goods_kinds}-->
+		                     		<!--{foreach from=$carts_top item=cart}-->
+		                     		<dd class="mini-cart-each clearfix" id="cart_goods{$cart.rec_id}">
+		                        		<div class="mini-cart-img">
+		                           			<a href="{url app=goods&id=$cart.goods_id}" target="_top">
+		                              			<img alt="{$cart.goods_name}" src="{$cart.goods_image}" width="40" height="40">
+		                           			</a>
+		                        		</div>
+		                        		<div class="mini-cart-title">
+		                           			<a title="{$cart.goods_name}" href="{url app=goods&id=$cart.goods_id}" target="_top">{$cart.goods_name}</a>
+		                        		</div>
+		                        		<div class="price-admin">
+		                           			<div class="mini-cart-count"><strong class="mini-cart-price">{$cart.price|price}</strong></div>
+		                           			<div class="mini-cart-del"><a href="javascript:;" onclick="drop_cart_item({$cart.store_id}, {$cart.rec_id});">删除</a></div>
+		                        		</div>
+		                     		</dd>		                     		
+		                     		<!--{/foreach}-->
+		                     		<div>
+			                  		  <a href="{url app=cart}" class="btn-cart-look" target="_blank">查看购物车</a>
+			                  		</div>   
+		                     		<!--{else}-->
+		                     		<dt class="float-left mini-cart-empty">您购物车里还没有任何宝贝</dt>
+		                     		<!--{/if}-->  
+		                     		                      
+		                  		</dl>
+		                  </div>                  
+		            </div>
+	        	</div>
+	        	<!-- cart end -->
+	         </div>
+	         <div class="top-search-keywords">
+	            <a href="javascript:;" style="color:#666;" title="{$lang.hot_search}">{$lang.hot_search}{$lang.colon}</a>
+	         	<!--{foreach from=$hot_keywords item=keyword}-->
+	    		<a href="{$keyword.1|default:#}" title="{$keyword.0}" target="_blank">{$keyword.0}</a>
+	    		<!--{/foreach}-->
+	         </div>
+	      </div>
+	   </div>
+    </div>
+    <div class="w-full mall-nav">
+    	<ul class="w clearfix">
+            <li class="allcategory bg_f44 float-left">
+            	<a class="backhome" href="{$site_url}"></a>
+            	<a class="allsort" href="{url app=category}" style="background:none;" target="_blank">{$currentCitysiteName}</a>
+                <!--{if !$index}-->
+                <div class="allcategory-list hidden">
+					<div class="content clearfix">
+						<!--{foreach from=$header_gcategories.gcategories item=category name=fe_category}-->
+						<div class="item">
+							<div class="pborder">
+								<p><a href="{url app=search&cate_id=$category.id}" target="_blank">{$category.value|escape}</a></p>
+								<div class="line"></div>
+							</div>
+							<div class="pop" {if $category.top} style="top:{$category.top}"{/if}>
+								<div class="catlist float-left">
+									<!--{foreach from=$category.children item=child name=fe_child}--> 
+									<dl class="clearfix" {if $smarty.foreach.fe_child.last} style="border-bottom:0"{/if}>
+										<dt class="float-left"><a href="{url app=search&cate_id=$child.id}"><strong>{$child.value|escape}</strong></a></dt>
+										<dd class="float-left">
+											<!--{foreach from=$child.children item=child2 name=fe_child2}-->
+											<a href="{url app=search&cate_id=$child2.id}">{$child2.value|escape}</a>
+											<!--{/foreach}-->
+										</dd>
+									</dl> 
+									<!--{/foreach}-->
+								</div>
+								<div class="catbrand float-left">
+									<a class="btn-channel" href="{url app=search&cate_id=$category.id}">{$category.value|escape|truncate:16}<ins></ins></a>
+									<h2>热门品牌</h2>
+									<ul class="clearfix">
+										<!-- {foreach from=$header_gcategories.brands item=brand name=fe_brand} -->
+										<!--{if $category.value == $brand.tag}-->
+										<li class="float-left"><a href="{url app=search&brand=$brand.brand_name|escape:url}" title="{$brand.brand_name}">{$brand.brand_name|escape}</a></li>                                  		
+										<!--{/if}-->
+										<!-- {/foreach} -->
+									</ul>
+								</div>           
+							</div>
+						</div>
+						<!--{/foreach}-->
+					</div>
+				</div>
+                <!--{/if}-->
+            </li>
+            <div class="line_f44 ml10 float-left relative">
+	            <li class="each float-left inline-block home-menu"><a class="{if $index}current{/if}" href="{$site_url}">{$lang.home}</a></li>
+	            <!--{foreach from=$navs.middle item=nav}-->
+	            <li class="each float-left inline-block" {if $nav.margin}style="margin:{$nav.margin}"{/if}><a class="{if !$index and $nav.link eq $current_url}current{/if}" href="{$nav.link}"{if $nav.open_new} target="_blank"{/if}  {if $nav.fontcolor}style="color:#{$nav.fontcolor}"{/if}>{$nav.title|escape}{if $nav.hot==1}<span class="absolute block"></span>{elseif $nav.cust_icon}<i class="absolute block" style="background:url({res file=images}/{$nav.cust_icon}) no-repeat; top:-12px;left:30px;width:59px;height:21px;"></i>{/if}</a></li>
+	            <!--{/foreach}-->
+	            <li class="absolute each inline-block f44 strong fs14 yahei" style="position:absolute;right:0;line-height:33px;">客服QQ：800 029 051<!--{if $smarty.const.KEFU_TEL1 }-->{$lang.kefu_tel}{$smarty.const.KEFU_TEL}<!--{/if}--></li>
+	            <div class="clearboth"></div>
+            </div> 
+    	</ul>
+    </div>
+</div>

@@ -1,0 +1,94 @@
+{include file="header.html"}
+<script language="javascript">
+    $(function(){
+        $('#sotime,#endtime').datepicker({dateFormat: 'yy-mm-dd'});
+    });
+</script>
+<div id="rightTop">
+    <p>SPHINX 信息</p>
+    <ul class="subnav">
+
+        <li><a class="btn3" href="index.php?module=my_check&act=check_resolve_list">资金水流</a></li>
+        <li><a class="btn3" href="index.php?module=my_check&act=check_behalf_list">代发稽核</a></li>
+        <li><span>sphinx信息</span></li>
+        <li><a class="btn3" href="index.php?module=my_check&act=batch_transfer">批量转账</a></li>
+        <li><a class="btn3" href="index.php?module=my_check&act=check_batch_list">批量记录</a></li>
+        <!--	<li><a class="btn3" href="index.php?module=my_check&act=user_money_statistics">资金统计</a></li>
+                 <li><a class="btn3" href="index.php?module=my_check&act=user_money_alicheck">阿里充值稽核</a></li>
+                 <li><a class="btn3" href="index.php?module=my_check&act=index">{$lang.index_fanhuidaohang}</a></li>-->
+    </ul>
+</div>
+<div class="mrightTop">
+    <div class="fontl">
+        <form method="get">
+            <div class="left">
+                <input name="module" type="hidden" id="module" value="my_check" />
+                <input name="act" type="hidden" id="act" value="check_resolve_list" />    
+                交易号
+                <input name="soname" type="text" id="soname" value="<?php echo $_GET["soname"];?>" />
+                       {$lang.so_jined}
+                       <input name="somoney" type="text" id="somoney" value="<?php echo $_GET["somoney"];?>" size="10" maxlength="10" />
+                       {$lang.so_zhi}<input name="endmoney" type="text" id="endmoney" value="<?php echo $_GET["endmoney"];?>" size="10" maxlength="10" />
+                       <select name="type" id ="type" value="<?php echo $_GET["type"];?>"> 
+                       <option value="3" <?php if($_GET["type"] == "3")echo "selected=\"selected\"";?>>全部</option> 
+                    <option value="1" <?php if($_GET["type"] == "1")echo "selected=\"selected\"";?>>已充值</option> 
+                    <option value="0" <?php if($_GET["type"] == "0")echo "selected=\"selected\"";?>>未充值</option> 
+                </select>
+                <input type="submit" class="formbtn" value="{$lang.so_soso}" />
+                <span>未充值资金统计: {$notdo}</span>
+            </div>
+        </form>
+    </div>
+    <div class="fontr">
+
+    </div>
+</div>
+
+<div class="tdare">
+    <table width="100%" cellspacing="0">
+
+        <tr class="tatr1">
+            <td width="20" class="firstCell"><input id="checkall_1" type="checkbox" class="checkall"/></td>
+            <td align="left">服务器</td>
+             <td align="left">是否当前</td>
+            <td align="left">更新时间</td>
+            <td align="left">更新结果</td>
+            <td align="left">更新信息</td>
+            <td class="handler">{$lang.list_guanlicaozuo}</td>
+        </tr>
+
+        <!--{foreach from=$index item=val key=key}-->
+        <tr class="tatr2">
+            <td width="20" class="firstCell"><input type="checkbox" class="checkitem" value="{$key}" /></td>
+            <td align="left"><b>{$val.server}</b></td>
+            <td align="left"><b>{$val.ismain}</b></td>
+            <td><font color="#FF0000">{$val.updatetime}</font></td>
+            <td><font color="#FF0000">{$val.updateresult}</font></td>
+            <td width="600" ><font color="#FF0000">{$val.updateinfo}</font></td>
+            <!-- {if ($val.ismain=='yes')} -->
+            <td class="handler">
+                <a href="#"><font color="#808080">稽核此记录</font></a></td>
+            <!--{else}-->
+            <td class="handler"> <a href="#">稽核此记录</a></td>
+            <!-- {/if}-->
+
+        </tr>
+        <!--{foreachelse}-->
+        <tr class="no_data">
+            <td colspan="8">{$lang.no_data}</td>
+        </tr>
+        <!--{/foreach}-->
+    </table>
+    <!--{if $index}-->
+    <div id="dataFuncs">
+
+        <div id="batchAction" class="left paddingT15"><input type="checkbox" class="checkall" />
+            <input class="formbtn batchButton" type="button" value="{$lang.drop}" name="id" uri="#" presubmit="confirm('{$lang.drop_confirm}');" />
+        </div>
+
+        <div class="pageLinks">{include file=page.bottom.html}</div>
+        <div class="clear"></div>
+    </div>
+    <!--{/if}-->
+</div>
+{include file="footer.html"}

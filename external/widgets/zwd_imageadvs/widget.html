@@ -1,0 +1,29 @@
+<div class="zwd_imagesadvs">
+   <div class="f66 title relative pl10">
+         <ul class="float-right">
+		     <!--{foreach from=$widget_data.cate item=cate name=fe_cate}-->
+        		<li class="float-left">
+                    <a class="f66 fs14 yahei" href="{$cate.url}" target="_blank" title="{$cate.txt}"><span>{$cate.txt}</span></a>
+               </li>			   
+               <!--{/foreach}-->
+	     </ul>
+	     <b class="inline-block bg_index_icon mr10 strong center absolute" style="width:28px;height:40px;color:white;line-height:38px;font-size:18px;top:0px;left:0;">T</b>
+		 <strong class="yahei">{$widget_data.model_name}</strong>
+	</div>
+	<ul class="content clearfix">
+		<!-- {foreach from=$widget_data.images item=image name=fe_image} -->
+        <li class="float-left" {if $smarty.foreach.fe_image.iteration % 2 eq 0} style="margin-right:0px;"{/if}><a class="block href-img-transparents" href="{$image.ad_link_url}" target="_blank"><img width="597" height="118" class="lazyload" src="data/system/empty.gif" data-ks-lazyload="{$image.ad_image_url}" /></a></li>
+        <!-- {/foreach} -->	
+    </ul>
+</div>
+<script>
+  $(".zwd_imagesadvs ul.content").randomize();
+  $.each($(".zwd_imagesadvs ul.content li"),function(index,value){
+	  if(index%2 == 0){ 
+		  $(this).css('margin-right','5px'); 
+	   }
+	  else{ 
+		  $(this).css('margin-right','0px'); 
+	  }
+  });
+</script>

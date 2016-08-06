@@ -1,0 +1,326 @@
+{include file="header.html"}
+<script language="javascript">
+$(function(){
+    $('#dq_time').datepicker({dateFormat: 'yy-mm-dd'});
+});
+
+
+$(document).ready(function(){
+
+	$('#time_edit').click(function(){
+		var $time_edit = $("#time_edit").attr("checked");
+		var $time_from1 = $('#time_from1');
+		var $time_from2 = $('#time_from2');
+		if($time_edit == true){
+			$time_from1.show();
+			$time_from2.hide();
+		}else{
+			$time_from2.show();
+			$time_from1.hide();
+		}
+	});
+
+});
+</script>
+<style> 
+.ovrit 
+{ 
+background: #FFCC33; 
+} 
+.cross 
+{ 
+background: #FF0000; 
+} 
+
+.titl 
+{ 
+background: #f0f0f0; 
+} 
+</style> 
+<div id="rightTop">
+    <p>{$lang.index_dongtaimibaoguanli}</p>
+    <ul class="subnav">
+		<li><a class="btn3" href="index.php?module=my_money&act=mibao_zhengchang">{$lang.index_zhengchangshiyong}</a></li>
+		<li><a class="btn3" href="index.php?module=my_money&act=mibao_zanting">{$lang.index_yizanting}</a></li>
+		<li><a class="btn3" href="index.php?module=my_money&act=mibao_guoqi">{$lang.index_yiguoqi}</a></li>
+		<li><a class="btn3" href="index.php?module=my_money&act=mibao_xinka">{$lang.index_xinkaliebiao}</a></li>
+		<li><a class="btn3" href="index.php?module=my_money&act=mibao_sn_pi">{$lang.index_xinkashengcheng}</a></li>
+		<li><a class="btn3" href="index.php?module=my_money&act=index">{$lang.index_fanhuidaohang}</a></li>
+    </ul>
+</div>
+
+<div class="info">
+    <form method="post">
+            <table class="infoTable">
+<!--{foreach from=$index item=val}--> 
+            <tr>        
+              <th class="paddingT15">{$lang.mb_mibaosnd}</th>
+			  <input name="mibao_sn" type="hidden" value="{$val.mibao_sn}" />
+              <td class="paddingT15 wordSpacing5"><font color="#FF0000">{$val.mibao_sn}</font></td>
+            </tr>
+
+            <tr>
+              <th class="paddingT15">{$lang.mb_shengchengshijiand}</th>
+              <td class="paddingT15 wordSpacing5">{$val.add_time|date:Y-m-d H:i:s}</td>
+            </tr><BR>
+            <tr>
+              <th colspan="2" class="paddingT15">
+<fieldset style="width:100px">  
+		    <legend>{$lang.mb_dongtaimimaka}</legend>
+            <table id="table3" border="1" cellpadding=4 cellspacing=0 bordercolor='#3377FF' align=center class=Tlist1 id=Tlist1> 
+  <tr class='titl'>
+  <td colspan="9" align="right"><font color="#FF0000">{$val.mibao_sn}</font>&nbsp;&nbsp;&nbsp;&nbsp;</td>
+    </tr>
+  <tr align="center" class='titl'>
+  <th>&nbsp;</th>
+  <td>A</td>
+  <td>B</td>
+  <td>C</td>
+  <td>D</td>
+  <td>E</td>
+  <td>F</td>
+  <td>G</td>
+  <td>H</td>
+    </tr>
+	
+  <tr align="center" class='titl'>
+  <th>1</th>
+  <td class='outit'>&nbsp;<input name="A1" type="text" id="A1" value="{$val.A1}" size="3" maxlength="3" style="height:12px;" readonly/>&nbsp;</td>
+  <td class='outit'>&nbsp;<input name="B1" type="text" id="B1" value="{$val.B1}" size="3" maxlength="3" style="height:12px;" readonly/>&nbsp;</td>
+  <td class='outit'>&nbsp;<input name="C1" type="text" id="C1" value="{$val.C1}" size="3" maxlength="3" style="height:12px;" readonly/>&nbsp;</td>
+  <td class='outit'>&nbsp;<input name="D1" type="text" id="D1" value="{$val.D1}" size="3" maxlength="3" style="height:12px;" readonly/>&nbsp;</td>
+  <td class='outit'>&nbsp;<input name="E1" type="text" id="E1" value="{$val.E1}" size="3" maxlength="3" style="height:12px;" readonly/>&nbsp;</td>
+  <td class='outit'>&nbsp;<input name="F1" type="text" id="F1" value="{$val.F1}" size="3" maxlength="3" style="height:12px;" readonly/>&nbsp;</td>
+  <td class='outit'>&nbsp;<input name="G1" type="text" id="G1" value="{$val.G1}" size="3" maxlength="3" style="height:12px;" readonly/>&nbsp;</td>
+  <td class='outit'>&nbsp;<input name="H1" type="text" id="H1" value="{$val.H1}" size="3" maxlength="3" style="height:12px;" readonly/>&nbsp;</td>
+    </tr>
+  <tr align="center" class='titl'>
+  <th>2</th>
+  <td class='outit'>&nbsp;<input name="A2" type="text" id="A2" value="{$val.A2}" size="3" maxlength="3" style="height:12px;" readonly/>&nbsp;</td>
+  <td class='outit'>&nbsp;<input name="B2" type="text" id="B2" value="{$val.B2}" size="3" maxlength="3" style="height:12px;" readonly/>&nbsp;</td>
+  <td class='outit'>&nbsp;<input name="C2" type="text" id="C2" value="{$val.C2}" size="3" maxlength="3" style="height:12px;" readonly/>&nbsp;</td>
+  <td class='outit'>&nbsp;<input name="D2" type="text" id="D2" value="{$val.D2}" size="3" maxlength="3" style="height:12px;" readonly/>&nbsp;</td>
+  <td class='outit'>&nbsp;<input name="E2" type="text" id="E2" value="{$val.E2}" size="3" maxlength="3" style="height:12px;" readonly/>&nbsp;</td>
+  <td class='outit'>&nbsp;<input name="F2" type="text" id="F2" value="{$val.F2}" size="3" maxlength="3" style="height:12px;" readonly/>&nbsp;</td>
+  <td class='outit'>&nbsp;<input name="G2" type="text" id="G2" value="{$val.G2}" size="3" maxlength="3" style="height:12px;" readonly/>&nbsp;</td>
+  <td class='outit'>&nbsp;<input name="H2" type="text" id="H2" value="{$val.H2}" size="3" maxlength="3" style="height:12px;" readonly/>&nbsp;</td>
+    </tr>
+  <tr align="center" class='titl'>
+  <th>3</th>
+  <td class='outit'>&nbsp;<input name="A3" type="text" id="A3" value="{$val.A3}" size="3" maxlength="3" style="height:12px;" readonly/>&nbsp;</td>
+  <td class='outit'>&nbsp;<input name="B3" type="text" id="B3" value="{$val.B3}" size="3" maxlength="3" style="height:12px;" readonly/>&nbsp;</td>
+  <td class='outit'>&nbsp;<input name="C3" type="text" id="C3" value="{$val.C3}" size="3" maxlength="3" style="height:12px;" readonly/>&nbsp;</td>
+  <td class='outit'>&nbsp;<input name="D3" type="text" id="D3" value="{$val.D3}" size="3" maxlength="3" style="height:12px;" readonly/>&nbsp;</td>
+  <td class='outit'>&nbsp;<input name="E3" type="text" id="E3" value="{$val.E3}" size="3" maxlength="3" style="height:12px;" readonly/>&nbsp;</td>
+  <td class='outit'>&nbsp;<input name="F3" type="text" id="F3" value="{$val.F3}" size="3" maxlength="3" style="height:12px;" readonly/>&nbsp;</td>
+  <td class='outit'>&nbsp;<input name="G3" type="text" id="G3" value="{$val.G3}" size="3" maxlength="3" style="height:12px;" readonly/>&nbsp;</td>
+  <td class='outit'>&nbsp;<input name="H3" type="text" id="H3" value="{$val.H3}" size="3" maxlength="3" style="height:12px;" readonly/>&nbsp;</td>
+    </tr>
+  <tr align="center" class='titl'>
+  <th>4</th>
+  <td class='outit'>&nbsp;<input name="A4" type="text" id="A4" value="{$val.A4}" size="3" maxlength="3" style="height:12px;" readonly/>&nbsp;</td>
+  <td class='outit'>&nbsp;<input name="B4" type="text" id="B4" value="{$val.B4}" size="3" maxlength="3" style="height:12px;" readonly/>&nbsp;</td>
+  <td class='outit'>&nbsp;<input name="C4" type="text" id="C4" value="{$val.C4}" size="3" maxlength="3" style="height:12px;" readonly/>&nbsp;</td>
+  <td class='outit'>&nbsp;<input name="D4" type="text" id="D4" value="{$val.D4}" size="3" maxlength="3" style="height:12px;" readonly/>&nbsp;</td>
+  <td class='outit'>&nbsp;<input name="E4" type="text" id="E4" value="{$val.E4}" size="3" maxlength="3" style="height:12px;" readonly/>&nbsp;</td>
+  <td class='outit'>&nbsp;<input name="F4" type="text" id="F4" value="{$val.F4}" size="3" maxlength="3" style="height:12px;" readonly/>&nbsp;</td>
+  <td class='outit'>&nbsp;<input name="G4" type="text" id="G4" value="{$val.G4}" size="3" maxlength="3" style="height:12px;" readonly/>&nbsp;</td>
+  <td class='outit'>&nbsp;<input name="H4" type="text" id="H4" value="{$val.H4}" size="3" maxlength="3" style="height:12px;" readonly/>&nbsp;</td>
+    </tr>
+  <tr align="center" class='titl'>
+  <th>5</th>
+  <td class='outit'>&nbsp;<input name="A5" type="text" id="A5" value="{$val.A5}" size="3" maxlength="3" style="height:12px;" readonly/>&nbsp;</td>
+  <td class='outit'>&nbsp;<input name="B5" type="text" id="B5" value="{$val.B5}" size="3" maxlength="3" style="height:12px;" readonly/>&nbsp;</td>
+  <td class='outit'>&nbsp;<input name="C5" type="text" id="C5" value="{$val.C5}" size="3" maxlength="3" style="height:12px;" readonly/>&nbsp;</td>
+  <td class='outit'>&nbsp;<input name="D5" type="text" id="D5" value="{$val.D5}" size="3" maxlength="3" style="height:12px;" readonly/>&nbsp;</td>
+  <td class='outit'>&nbsp;<input name="E5" type="text" id="E5" value="{$val.E5}" size="3" maxlength="3" style="height:12px;" readonly/>&nbsp;</td>
+  <td class='outit'>&nbsp;<input name="F5" type="text" id="F5" value="{$val.F5}" size="3" maxlength="3" style="height:12px;" readonly/>&nbsp;</td>
+  <td class='outit'>&nbsp;<input name="G5" type="text" id="G5" value="{$val.G5}" size="3" maxlength="3" style="height:12px;" readonly/>&nbsp;</td>
+  <td class='outit'>&nbsp;<input name="H5" type="text" id="H5" value="{$val.H5}" size="3" maxlength="3" style="height:12px;" readonly/>&nbsp;</td>
+    </tr>
+  <tr align="center" class='titl'>
+  <th>6</th>
+  <td class='outit'>&nbsp;<input name="A6" type="text" id="A6" value="{$val.A6}" size="3" maxlength="3" style="height:12px;" readonly/>&nbsp;</td>
+  <td class='outit'>&nbsp;<input name="B6" type="text" id="B6" value="{$val.B6}" size="3" maxlength="3" style="height:12px;" readonly/>&nbsp;</td>
+  <td class='outit'>&nbsp;<input name="C6" type="text" id="C6" value="{$val.C6}" size="3" maxlength="3" style="height:12px;" readonly/>&nbsp;</td>
+  <td class='outit'>&nbsp;<input name="D6" type="text" id="D6" value="{$val.D6}" size="3" maxlength="3" style="height:12px;" readonly/>&nbsp;</td>
+  <td class='outit'>&nbsp;<input name="E6" type="text" id="E6" value="{$val.E6}" size="3" maxlength="3" style="height:12px;" readonly/>&nbsp;</td>
+  <td class='outit'>&nbsp;<input name="F6" type="text" id="F6" value="{$val.F6}" size="3" maxlength="3" style="height:12px;" readonly/>&nbsp;</td>
+  <td class='outit'>&nbsp;<input name="G6" type="text" id="G6" value="{$val.G6}" size="3" maxlength="3" style="height:12px;" readonly/>&nbsp;</td>
+  <td class='outit'>&nbsp;<input name="H6" type="text" id="H6" value="{$val.H6}" size="3" maxlength="3" style="height:12px;" readonly/>&nbsp;</td>
+    </tr>
+  <tr align="center" class='titl'>
+  <th>7</th>
+  <td class='outit'>&nbsp;<input name="A7" type="text" id="A7" value="{$val.A7}" size="3" maxlength="3" style="height:12px;" readonly/>&nbsp;</td>
+  <td class='outit'>&nbsp;<input name="B7" type="text" id="B7" value="{$val.B7}" size="3" maxlength="3" style="height:12px;" readonly/>&nbsp;</td>
+  <td class='outit'>&nbsp;<input name="C7" type="text" id="C7" value="{$val.C7}" size="3" maxlength="3" style="height:12px;" readonly/>&nbsp;</td>
+  <td class='outit'>&nbsp;<input name="D7" type="text" id="D7" value="{$val.D7}" size="3" maxlength="3" style="height:12px;" readonly/>&nbsp;</td>
+  <td class='outit'>&nbsp;<input name="E7" type="text" id="E7" value="{$val.E7}" size="3" maxlength="3" style="height:12px;" readonly/>&nbsp;</td>
+  <td class='outit'>&nbsp;<input name="F7" type="text" id="F7" value="{$val.F7}" size="3" maxlength="3" style="height:12px;" readonly/>&nbsp;</td>
+  <td class='outit'>&nbsp;<input name="G7" type="text" id="G7" value="{$val.G7}" size="3" maxlength="3" style="height:12px;" readonly/>&nbsp;</td>
+  <td class='outit'>&nbsp;<input name="H7" type="text" id="H7" value="{$val.H7}" size="3" maxlength="3" style="height:12px;" readonly/>&nbsp;</td>
+    </tr>
+  <tr align="center" class='titl'>
+  <th>8</th>
+  <td class='outit'>&nbsp;<input name="A8" type="text" id="A8" value="{$val.A8}" size="3" maxlength="3" style="height:12px;" readonly/>&nbsp;</td>
+  <td class='outit'>&nbsp;<input name="B8" type="text" id="B8" value="{$val.B8}" size="3" maxlength="3" style="height:12px;" readonly/>&nbsp;</td>
+  <td class='outit'>&nbsp;<input name="C8" type="text" id="C8" value="{$val.C8}" size="3" maxlength="3" style="height:12px;" readonly/>&nbsp;</td>
+  <td class='outit'>&nbsp;<input name="D8" type="text" id="D8" value="{$val.D8}" size="3" maxlength="3" style="height:12px;" readonly/>&nbsp;</td>
+  <td class='outit'>&nbsp;<input name="E8" type="text" id="E8" value="{$val.E8}" size="3" maxlength="3" style="height:12px;" readonly/>&nbsp;</td>
+  <td class='outit'>&nbsp;<input name="F8" type="text" id="F8" value="{$val.F8}" size="3" maxlength="3" style="height:12px;" readonly/>&nbsp;</td>
+  <td class='outit'>&nbsp;<input name="G8" type="text" id="G8" value="{$val.G8}" size="3" maxlength="3" style="height:12px;" readonly/>&nbsp;</td>
+  <td class='outit'>&nbsp;<input name="H8" type="text" id="H8" value="{$val.H8}" size="3" maxlength="3" style="height:12px;" readonly/>&nbsp;</td>
+    </tr>
+  <tr align="center" class='titl'>
+  <th>9</th>
+  <td class='outit'>&nbsp;<input name="A9" type="text" id="A9" value="{$val.A9}" size="3" maxlength="3" style="height:12px;" readonly/>&nbsp;</td>
+  <td class='outit'>&nbsp;<input name="B9" type="text" id="B9" value="{$val.B9}" size="3" maxlength="3" style="height:12px;" readonly/>&nbsp;</td>
+  <td class='outit'>&nbsp;<input name="C9" type="text" id="C9" value="{$val.C9}" size="3" maxlength="3" style="height:12px;" readonly/>&nbsp;</td>
+  <td class='outit'>&nbsp;<input name="D9" type="text" id="D9" value="{$val.D9}" size="3" maxlength="3" style="height:12px;" readonly/>&nbsp;</td>
+  <td class='outit'>&nbsp;<input name="E9" type="text" id="E9" value="{$val.E9}" size="3" maxlength="3" style="height:12px;" readonly/>&nbsp;</td>
+  <td class='outit'>&nbsp;<input name="F9" type="text" id="F9" value="{$val.F9}" size="3" maxlength="3" style="height:12px;" readonly/>&nbsp;</td>
+  <td class='outit'>&nbsp;<input name="G9" type="text" id="G9" value="{$val.G9}" size="3" maxlength="3" style="height:12px;" readonly/>&nbsp;</td>
+  <td class='outit'>&nbsp;<input name="H9" type="text" id="H9" value="{$val.H9}" size="3" maxlength="3" style="height:12px;" readonly/>&nbsp;</td>
+    </tr>
+  </th>
+      </table>  
+</fieldset>
+			  </td>
+
+            <tr>
+                <th class="paddingT15">{$lang.mb_bangdingyonghud}</th>
+                <td class="paddingT15 wordSpacing5">
+				<input name="user_name" type="text" value="{$val.user_name}" size="25">
+				</td>
+            </tr>	
+
+			<tr>
+                <th class="paddingT15">{$lang.mb_daoqishijiand}</th>		
+                <td class="paddingT15 wordSpacing5">{$lang.mb_shifouxiugai}
+				<input name="time_edit" type="checkbox" id="time_edit" value="YES" onclick="SetGroupChecked('time_edit');"/>
+<div id="time_from1" style="display: none;">
+
+<input name="dq_time" type="text" id="dq_time" value="<?php echo date("Y-m-d",time()+31622400);?>" size="25">
+
+
+</div>
+<div id="time_from2">
+<input name="dq_time_no" type="text" value="{$lang.mb_moren365tianhou}" size="25" readonly disabled/>
+</div>
+</td>
+            </tr>
+<!--{/foreach}-->					
+        <tr>
+            <th></th>
+            <td class="ptb20">
+                <input class="formbtn" type="submit" name="Submit" value="{$lang.mb_bangding}" />
+                <input class="formbtn" type="reset" name="Submit2" value="{$lang.reset}" />
+            </td>
+        </tr>
+
+        </table>
+		
+	
+    </form>
+</div>
+<script> 
+var Nrow = 9,Ncol = 8; 
+table3.onmouseover = new Function("var d='over'; moveit(d);"); //鼠标经过 对应行和列颜色
+table3.onmouseout = new Function("var d='out'; moveit(d);"); //鼠标离开恢复 对应行和列颜色
+table3.onclick = clickit; //鼠标点击 保留的颜色
+
+//不可缺少
+function get_Element(the_ele,the_tag){ 
+the_tag = the_tag.toLowerCase(); 
+if(the_ele.tagName.toLowerCase()==the_tag)return the_ele; 
+while(the_ele=the_ele.offsetParent){ 
+if(the_ele.tagName.toLowerCase()==the_tag)return the_ele; 
+} 
+return(null); 
+} 
+//不可缺少
+function setHorizontal(r,c,cn) 
+{ 
+for (var i=0;i<table3.rows[r].cells.length ;i++) 
+{ 
+table3.rows[r].cells[i].className = cn; 
+} 
+} 
+//不可缺少
+function setVertical(r,c,cn) 
+{ 
+for (var i=1;i<table3.rows.length ;i++) // i starts from 0 because of TH 
+{ 
+table3.rows[i].cells[c].className = cn; 
+} 
+} 
+//不可缺少
+function clickit(){ 
+if (currentRow == 0) 
+{ 
+return; 
+} 
+var cl = parseInt(clickl.innerText), 
+cc = parseInt(clickc.innerText); 
+if (cl+"" != "NaN" && cc+"" != "NaN") { 
+setVertical(currentRow,cc-1,"outit"); 
+setHorizontal(cl,currentCol,"outit"); 
+} 
+//鼠标点击 颜色背景保留 开始
+setVertical(currentRow,currentCol-1,"clkit");   //点击 行整排背景颜色
+setHorizontal(currentRow,currentCol-1,"clkit"); //点击 列整排背景颜色
+table3.rows[currentRow].cells[currentCol-1].className = "clkcr"; 
+clickl.innerText = currentRow + "/"+Nrow //点击左标 行
+clickc.innerText = currentCol + "/"+Ncol //点击坐标 列
+//鼠标点击 颜色背景保留 结束
+} 
+
+
+function moveit(dir){ 
+var the_obj = event.srcElement; 
+if(the_obj.tagName.toLowerCase() == "table") return; 
+if(the_obj.tagName.toLowerCase() == "th") 
+{ 
+var the_td = get_Element(the_obj,"th"); 
+} else 
+{ 
+var the_td = get_Element(the_obj,"td"); 
+} 
+var the_tr = the_td.parentElement; 
+currentRow = the_tr.rowIndex ; 
+currentCol = the_td.cellIndex+1 ; 
+//鼠标指着 列 背景效果
+setVertical(currentRow,currentCol-1,(dir=="over")?"ovrit":"outit"); 
+//鼠标指着 行 背景效果
+if (currentRow>0) 
+{ 
+setHorizontal(currentRow,currentCol-1,(dir=="over")?"ovrit":"outit"); 
+the_tr.cells[currentCol-1].className = (dir=="over")?"cross":"outit"; 
+var cl = parseInt(clickl.innerText), 
+cc = parseInt(clickc.innerText); 
+
+//点击保留背景颜色
+if (cl+"" != "NaN" && cc+"" != "NaN") { 
+table3.rows[cl].cells[cc-1].className = "clkcr"; 
+} 
+} 
+
+
+cline.innerText = currentRow //鼠标指针显示行
+ccell.innerText = currentCol //鼠标指针显示列
+
+if (ccell.innerText == 1){ccell.innerText = ""}
+if (ccell.innerText == 2){ccell.innerText = "A"}
+if (ccell.innerText == 3){ccell.innerText = "B"}
+if (ccell.innerText == 4){ccell.innerText = "C"}
+if (ccell.innerText == 5){ccell.innerText = "D"}
+if (ccell.innerText == 6){ccell.innerText = "E"}
+if (ccell.innerText == 7){ccell.innerText = "F"}
+if (ccell.innerText == 8){ccell.innerText = "G"}
+if (ccell.innerText == 9){ccell.innerText = "H"}
+
+} 
+
+</script> 
+
+{include file="footer.html"}

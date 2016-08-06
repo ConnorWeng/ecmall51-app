@@ -1,0 +1,23 @@
+{include file="header.html"}
+<script language="javascript">
+    $(function(){
+        $('#sotime,#endtime').datepicker({dateFormat: 'yy-mm-dd'});
+    });
+</script>
+<div class="mrightTop">
+    <div class="fontl">欢迎使用稽核系统1.0 </div>
+</div>
+
+<div id="rightTop">
+    <p>稽核系统</p>
+    <ul class="subnav">
+        <li><a class="btn3" href="index.php?module=my_check&act=check_resolve_list">保留金额</a></li>
+        <li><a class="btn3" href="index.php?module=my_check&act=check_behalf_list">代发稽核</a></li>
+        <li><a class="btn3" href="index.php?module=my_check&act=check_sphinx">sphinx信息</a></li>
+        <li><a class="btn3" href="index.php?module=my_check&act=batch_transfer">批量转账</a></li>
+         <li><a class="btn3" href="index.php?module=my_check&act=check_batch_list">批量记录</a></li>
+               <!--                   <li><a class="btn3" href="index.php?module=my_check&act=user_money_alicheck">阿里充值稽核</a></li>-->
+    </ul>
+</div>
+
+{include file="footer.html"}

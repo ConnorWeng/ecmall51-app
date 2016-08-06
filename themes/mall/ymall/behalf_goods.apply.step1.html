@@ -1,0 +1,31 @@
+{include file=header.html}
+<div id="main" class="w-full">
+<div id="page-apply" class="w mt10 mb20">
+   <div class="title padding5 strong fs14">
+      {$lang.i_want_join_behalf_area}
+   </div>
+   <div class="content border padding10 border-t-0 linehei20">
+      <h3 class="margin2 fs14" style="color:#549833;">
+          <span>{$lang.hello}！{$visitor.user_name}</span>
+     </h3>
+     <p class="f66 fs14 mt10">
+        {$lang.zhanghuzongjinere}<span style="font-size:16px;font-weight:bold; color:#FE5400;">{$my_money.money}</span>
+        &nbsp;{$lang.yuan}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        {$lang.dongjiejine}<span style="color:blue;">{$my_money.money_dj}</span>&nbsp;{$lang.yuan}
+        <a href="index.php?app=my_money&act=paylist" target="_blank" class="f44 ml20">&raquo;{$lang.lijichongzhi}</a>
+     </p>
+     <div style="height:1px;border-top:1px dashed #DDDEEE;margin:20px 0;"></div>
+     <h2 class="center fs22 mb20">{$lang.user_protocol}</h2>
+     <p class="fs14 f66">
+     	{$lang.rule_1}
+     </p>
+     <p class="fs14 f66 mt10">
+     	{$lang.rule_2}
+     </p>
+     <div class="center">
+       <form method="post" action="index.php?app=behalf_goods&act=apply"><input type="submit" class="btn-apply fs14 strong fff center" value="{$lang.user_agree}"></form>
+     </div>
+   </div>
+</div>
+</div>
+{include file=footer.html}

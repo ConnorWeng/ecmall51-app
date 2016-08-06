@@ -1,0 +1,79 @@
+{include file=member.header.html}
+<div class="content">
+    <div class="totline"></div><div class="botline"></div>
+    {include file=member.menu.html}
+    <div id="right">
+          <ul class="tab">
+				<li class="normal"><a href="index.php?app=my_money&act=jifen">礼品兑换</a></li>
+				<li class="active">兑换记录</li>
+          </ul>
+        <div class="wrap">
+            <div class="public table">
+		
+			
+                <table class="table_head_line">
+                    <!--{if $index}-->
+                    <tr class="line_bold">
+                        <th class="width1"></th>
+                        <th class="align1" colspan="7">
+                        </th>
+                    </tr>
+
+                    <tr class="line tr_color">
+                        <th></th>
+                        <th class="align1">物品名称</th>
+                        <th>积分</th>
+						<th>价值</th>
+                        <th>数量</th>
+                        <th align="center">{$lang.caozuoshijian}</th>
+                        <th align="center">{$lang.zhuangtai}</th>
+                        <th class="width4">{$lang.caozuo}</th>
+                    </tr>
+                    <!--{/if}-->
+                    <!--{foreach from=$index item=val name=v}-->
+                    <!--{if $smarty.foreach.v.last}--><tr class="line_bold"><!--{else}--><tr class="line"><!--{/if}-->
+                        <td class="align2"><input type="checkbox" class="checkitem" value="{$val.id}"/></td>
+                        <td class="link1">{$val.wupin_name}</td>
+                        <td align="center">{$val.jifen}</td>
+                        <td align="center">{$val.jiazhi}&nbsp;元</td>
+						<td align="center">{$val.shuliang}</td>
+                        <td align="center">{$val.add_time|date:Y-m-d H:i}</td>
+                     <td align="center">
+					 <!--{if $val.shenhe eq 0}-->未审核<!--{else}-->已审核<!--{/if}--></td>
+                        <td>
+                       <a href="javascript:drop_confirm('{$lang.drop_confirm}', '#');" class="delete">{$lang.drop}</a>
+                        </td>
+                    </tr>
+                    <!--{foreachelse}-->
+                    <tr>
+                        <td colspan="7" class="member_no_records padding6">{$lang.$smarty.get.act}{$lang.no_records}</td>
+                    </tr>
+
+                    <!--{/foreach}-->
+                    <!--{if $index}-->
+                    <tr>
+                        <th class="width1"></th>
+                        
+                        <td colspan="5" class="page word_spacing5">
+                           <p class="position2">
+                                {include file=member.page.bottom.html}
+                            </p>
+                         </td>
+                    </tr>
+                    <!--{/if}-->
+                </table>
+            </div>
+            <div class="wrap_bottom"></div>
+        </div>
+        <div class="clear"></div>
+        <div class="adorn_right1"></div>
+        <div class="adorn_right2"></div>
+        <div class="adorn_right3"></div>
+        <div class="adorn_right4"></div>
+    </div>
+    <div class="clear"></div>
+</div>
+<div class="clear"></div>
+<iframe id='iframe_post' name="iframe_post" frameborder="0" width="0" height="0">
+</iframe>
+{include file=footer.html}

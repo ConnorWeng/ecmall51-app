@@ -1,0 +1,183 @@
+{include file=header.whole.html}
+<script type="text/javascript" src="{lib file=mlselection.js}"></script>
+<style>
+.form-group{margin:0px;}
+</style>
+<script type="text/javascript">
+$(function(){    
+	
+	 $('#my_store_form').bootstrapValidator({
+		  feedbackIcons: {
+	            valid: 'glyphicon glyphicon-ok',
+	            invalid: 'glyphicon glyphicon-remove',
+	            validating: 'glyphicon glyphicon-refresh'
+	        }, 
+		  fields:{
+			  bh_name:{
+				  validators:{
+					  notEmpty:{}
+				  }
+			  },
+			  owner_name:{
+				  validators:{
+					  notEmpty:{}
+				  }
+			  },
+			  bh_address:{
+				  validators:{
+					  notEmpty:{}
+				  }
+			  }
+			 
+		  }
+	  }).on('success.form.bv', function(e) {
+		   // Prevent form submission
+          e.preventDefault();
+
+          // Get the form instance
+          var $form = $(e.target);
+
+          // Get the BootstrapValidator instance
+          var bv = $form.data('bootstrapValidator');
+
+          // Use Ajax to submit form data
+          $.post($form.attr('action'), $form.serialize(), function(result) {
+              //var json = $.parseJSON(result);
+              bootbox.alert(result.msg);
+              
+          }, 'json');
+         
+          //$form.data('bootstrapValidator').resetForm(true);
+       
+      });
+       
+   regionInit("region");
+        
+});
+
+</script>
+<div>
+	<h3 class="text-info">个人资料列表</h3>
+    <form method="post" action="{url module=behalf&amp;act=set_behalf}" class="form" id="my_store_form">
+    <table class="table table-striped">       
+          <tr>
+             <th>{$lang.bh_name}</th>
+             <td>
+                 <div class="form-group">
+                       <input type="text" class="form-control" name="bh_name" style="width:240px;" value="{$behalf.bh_name|escape}"/>
+                 </div>
+             </td>
+          </tr>
+          <tr>
+              <th>{$lang.owner_name}</th>
+              <td>
+                  <div class="form-group">
+                  	<input  type="text" class="form-control" style="width:240px;" name="owner_name" placeholder="{$lang.owner_name_note}" value="{$behalf.owner_name|escape}"/>
+                  </div>
+              </td>
+          </tr>
+           <tr>
+               <th>{$lang.region}:</th>
+               <td><div id="region" class="form-group">
+                   <input type="hidden" name="region_id" value="{$behalf.region_id}" class="mls_id" />
+                   <input type="hidden" name="region_name" value="{$behalf.region_name|escape}" class="mls_names" />
+                   <!-- {if $behalf.bh_id} -->
+                   <span>{$behalf.region_name|escape}</span>
+                   <input type="button" value="{$lang.edit}" class="edit_region" />
+                   <select style="display:none">
+                     <option>{$lang.select_pls}</option>
+                     {html_options options=$regions}
+                   </select>
+                   <!-- {else} -->
+                   <select class="select">
+                     <option>{$lang.select_pls}</option>
+                     {html_options options=$regions}
+                   </select>
+                   <!-- {/if} --></div>
+               </td>
+           </tr>
+           <tr>
+               <th>{$lang.address}:</th>
+               <td>
+                   <div class="form-group">
+                   		<input type="text" name="bh_address" class="form-control" value="{$behalf.bh_address|escape}" placeholder="{$lang.address_info}" style="width:340px;"/>
+                   </div>
+               </td>
+           </tr>
+           <tr>
+                <th>{$lang.max_orders}:</th>
+                <td>
+                	<div class="form-group">
+                		<input name="max_orders" type="text" class="form-control" style="width:240px;"  value="{$behalf.max_orders|escape}" /> <span class="field_notice">{$lang.max_orders_note}</span>
+                	</div>
+               </td>
+          </tr>
+          <tr>
+               <th>{$lang.zipcode}:</th>
+               <td>
+               		<div class="form-group">
+               			<input name="zipcode" type="text" class="form-control" style="width:240px;"  value="{$behalf.zipcode|escape}" />
+               		</div>
+               </td>
+         </tr>
+         <tr>
+             <th>{$lang.tel}:</th>
+             <td>
+             		<div class="form-group">
+             			<input name="bh_tel" type="text" class="form-control" style="width:240px;" value="{$behalf.bh_tel|escape}" />
+             		</div>
+             </td>
+         </tr>
+         <tr>
+               <th>{$lang.bh_qq}:</th>
+               <td>
+               		<div class="form-group">
+               			<input name="bh_qq" type="text" class="form-control" style="width:240px;" value="{$behalf.bh_qq|escape}" />
+               		</div>
+               </td>
+         </tr>
+        <tr>
+             <th>{$lang.bh_ww}:</th>
+             <td>
+             	<div class="form-group">
+             		<input name="bh_ww" type="text" class="form-control" style="width:240px;"  value="{$behalf.bh_ww|escape}" />
+             	</div>
+             </td>
+        </tr>
+        <tr>
+              <th>{$lang.bh_wx}:</th>
+              <td>
+              	<div class="form-group">
+              		<input name="bh_wx" type="text" class="form-control" style="width:240px;"  value="{$behalf.bh_wx|escape}" />
+              	</div>
+              </td>
+        </tr>
+        <tr>
+        	<th>{$lang.bh_notice}:</th>
+        	<td>
+        		<div class="form-group">
+        			<textarea name="bh_notice" class="form-control" style="width:600px;">{$behalf.bh_notice|escape}</textarea>
+        		</div>
+        	</td>
+        </tr>
+        <tr>
+           <th>{$lang.description}:</th>
+           <td>                                  
+            	 <div class="form-group">
+            	 	<textarea name="bh_mark" class="form-control" style="width:600px;">{$behalf.bh_mark}</textarea>
+            	 </div>
+             	<input type="hidden" name="bh_id" value="{$behalf.bh_id}">
+           </td>
+        </tr>
+        <tr>
+        	<th></th>
+        	<td>
+        		<div class="form-group">
+        			<input type="submit" class="btn btn-primary" value="{$lang.submit}" />
+        		</div>
+        	</td>
+        </tr>
+    </table>
+ </form>         			
+</div>
+{include file=footer.whole.html}

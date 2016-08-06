@@ -1,0 +1,83 @@
+﻿<script type="text/javascript">
+var _d = DialogManager.get('config_dialog');
+_d.setWidth(350);
+_d.setPosition('center');
+
+$("select[name='img_recom_id']").change(function(){
+    switchRecommend(this.value, 'img_cate_id');
+});
+
+switchRecommend($("select[name='img_recom_id']").val(), 'img_cate_id');
+
+function switchRecommend(recomId, selectName)
+{
+    if (recomId >= 0)
+    {
+        $("select[name='" + selectName + "']").hide();
+    }
+    else
+    {
+        $("select[name='" + selectName + "']").show();
+    }
+}
+$('#add_shop').click(function(){
+    $(this).before('<div class="field_item">'+
+     '<p><label>商家名称：</label><input type="text" name="cate_name[]" value="" /><br>'+
+     '<label>链接地址：</label><input type="text" name="cate_url[]" value=""/>'+
+     '<input type="button" value="删除商家" onclick="drop_shop(this)" /></p>'+
+     '<label>推荐类型:</label>'+
+     '<p><select name="img_recom_id[]">'+
+     '<option value="0">请选择...</option>'+
+        '<!-- {foreach from=$recommends key=recom_id item=recom_name} -->'+
+        '<option value="{$recom_id}">{$recom_name|escape}</option>'+
+        '<!-- {/foreach} -->'+
+    '</select>'+
+    '<select name="img_cate_id[]">'+
+        '<option value="0">请选择分类...</option>'+
+        '<!-- {html_options options=$gcategories} -->'+
+    '</select></p>'+
+'</div>');
+});
+function drop_shop(btnObj)
+{
+    $(btnObj).parents('.field_item').remove();
+}
+</script>
+<!--{if $options.return_params}-->    
+   <!-- {foreach from=$options.return_params item=option name=fee_option} -->
+      <div class="field_item">
+		    <p><label>商家名称：</label><input type="text" name="cate_name[]" value="{$option.cate_name}" /><br>
+		    <label>链接地址：</label><input type="text" name="cate_url[]" value="{$option.cate_url}"/>
+		    <input type="button" value="删除商家" onclick="drop_shop(this)" /></p>
+		    <label>推荐类型:</label>
+		    <p><select name="img_recom_id[]" onchange="switchRecommend(this.value)">
+		        <option value="0">请选择...</option>
+		        <!-- {foreach from=$recommends key=recom_id item=recom_name} -->
+		        <option value="{$recom_id}"{if $option.img_recom_id eq $recom_id} selected="selected"{/if}>{$recom_name|escape}</option>
+		        <!-- {/foreach} -->
+		    </select>
+		    <select name="img_cate_id[]">
+		        <option value="0">请选择分类...</option>
+		        <!-- {html_options options=$gcategories selected=$option.img_cate_id} -->
+		    </select></p>
+	</div>
+   <!-- {/foreach} -->
+<!--{else}-->
+<div class="field_item">
+    <p><label>商家名称：</label><input type="text" name="cate_name[]" value="" /><br>
+    <label>链接地址：</label><input type="text" name="cate_url[]" value=""/>
+    <input type="button" value="删除商家" onclick="drop_shop(this)" /></p>
+    <label>推荐类型:</label>
+    <p><select name="img_recom_id[]" onchange="switchRecommend(this.value)">
+        <option value="0">请选择...</option>
+        <!-- {foreach from=$recommends key=recom_id item=recom_name} -->
+        <option value="{$recom_id}">{$recom_name|escape}</option>
+        <!-- {/foreach} -->
+    </select>
+    <select name="img_cate_id[]">
+        <option value="0">请选择分类...</option>
+        <!-- {html_options options=$gcategories selected=$options.img_cate_id_} -->
+    </select></p>
+</div>
+<!--{/if}-->
+<input type="button" id="add_shop" value="新增商家" />

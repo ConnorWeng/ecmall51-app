@@ -1,0 +1,114 @@
+{include file="header.html"}
+{include file="header.nav.html"}
+<script type="text/javascript" src="{lib file=search_goods.js}" charset="utf-8"></script>
+<div id="goodslist">
+   <div class="col-left">
+      {include file="curlocal.html"}
+      <!--{if $categories}-->
+      <div class="sub">
+        
+        <dl ectype="dl_catalog">
+            <!--{foreach from=$categories item=category name=fe_category}-->
+            <!-- {if $smarty.foreach.fe_category.iteration le 6} -->
+            <dd><a href="{url app=search&cate_id=$category.cate_id}">{$category.cate_name|escape}</a>({$category.count})</dd>
+            <!-- {else} -->
+            <dd style="display:none"><a href="javascript:void(0);" id="{$category.cate_id}">{$category.cate_name|escape}</a>({$category.count})</dd>
+            <!-- {/if} -->
+            <!--{/foreach}-->
+            <div class="clr"></div>
+       </dl>
+       
+       <div class="sub-more">
+          <span id="show_catalog"><b></b>显示更多</span>
+          <span id="hide_catalog" style="display:none"><b class="shou"></b>收起</span>
+       </div>
+    </div>
+      <!--{/if}-->
+    <!--{if $brands}-->
+    <ul class="sband" ectype="ul_brand">
+       <h3>可供选择的品牌：</h3>
+       <!--{foreach from=$brands item=row}-->
+       <li><a hidefocus="true" href="javascript:void(0);" title="{$row.brand}" id="{$row.brand|escape:url}">{$row.brand|escape}</a><span>({$row.count})</span></li>
+       <!--{/foreach}-->
+       <div class="clr"></div>
+    </ul>
+    <!--{/if}-->
+    <div class="filters">
+       <ul>
+          <li><ins class="l"></ins><ins class="r"></ins><a href="#">所有商品</a></li>
+       </ul>
+       <div class="total"><span>找到相关商品  {$page_info.item_count} 件 </span>{include file=page.top.html}</div>
+       <div class="conditions">
+
+          <div class="bar">
+             <a href="javascript:;" ectype="display_mode" ecvalue="list">切换到列表</a>
+             <a href="javascript:;" ectype="display_mode" ecvalue="squares" class="square">切换到大图</a>&nbsp;&nbsp;
+             {$lang.order_by}：
+             <select ectype="order_by">{html_options options=$orders selected=$smarty.get.order}</select>
+             {$lang.region}：
+             <select ectype="select_region">
+                <option value="">请选择</option>
+                <!--{foreach from=$regions item=row}-->
+                <option value="{$row.region_id}" title="{$row.region_name|escape}"{if $smarty.get.region_id==$row.region_id} selected="selected"{/if}>{$row.region_name|escape}</option>
+                <!--{/foreach}-->
+             </select>
+             {$lang.price}：
+             <select ectype="select_price">
+                <option value="">请选择</option>
+                <!--{foreach from=$price_intervals item=row}-->
+                <!--{assign name=price value=$row.min - $row.max}-->
+                <option value="{$row.min} - {$row.max}" title="{$row.min} - {$row.max}"{if $smarty.get.price==$price} selected="selected"{/if}>{$row.min} - {$row.max}</option>
+                <!--{/foreach}-->
+             </select>
+          </div>
+       </div>
+       <div class="{$display_mode}" ectype="current_display_mode">
+          <!--{if $goods_list}-->
+          <!--{foreach from=$goods_list item=goods}-->
+          <dl>
+             <p><a hidefocus="true" href="{url app=goods&id=$goods.goods_id}" target="_blank"><img width="160" height="160" src="{$goods.default_image}" /></a></p>
+             <dt><a hidefocus="true" href="{url app=goods&id=$goods.goods_id}" target="_blank">{$goods.goods_name|escape|truncate:40}</a></dt>
+             <dd class="price">&yen; <em>{$goods.price}</em><span>最近成交 {$goods.sales|default:0} {$lang.unit}</span></dd>
+          </dl>
+          <!--{/foreach}-->
+          <!--{else}-->
+          <div style="line-height:40px;">没有找到符合条件的商品</div>
+          <!--{/if}-->
+          <div class="clr"></div>
+       </div>        
+       <div class="pageinfo">{include file=page.bottom.html}</div>
+    </div>
+   </div>
+   <div class="hot-sale">
+      <div class="title"><h2>商城推荐</h2></div>
+      <div class="content">
+         <!--{foreach from=$rec_list item=goods}-->
+         <dl class="item">
+            <p><a hidefocus="true" href="{url app=goods&id=$goods.goods_id}" target="_blank"><img width="160" height="160" src="{$goods.default_image}"></a></p>
+            <dt class="price">&yen; <em>{$goods.price}</em></dt>
+            <dd><a hidefocus="true" href="{url app=goods&id=$goods.goods_id}" target="_blank">{$goods.goods_name|escape}</a></dd>
+         </dl>
+         <!--{/foreach}-->
+      </div>
+      <div class="clr"></div>
+   </div>
+   <div class="recgoods">
+      <div class="title">
+         <span></span><h3>热卖产品</h3>
+      </div>
+      <div class="content">
+         <!--{foreach from=$hot_sales item=goods}-->
+         <dl>
+            <dt><a hidefocus="true" href="{url app=goods&id=$goods.goods_id}" target="_blank"><img width="160" height="160" src="{$goods.default_image}" /></a></dt>
+            <dd class="price">&yen; <em>{$goods.price}</em></dd>
+            <dd class="p-name"><a hidefocus="true" href="{url app=goods&id=$goods.goods_id}" target="_blank">{$goods.goods_name|escape}</a></dd>
+            <dd class="sell">最近成交 <em>{$goods.sales|default:0}</em> {$lang.unit}</dd>
+         </dl>
+         <!--{/foreach}-->
+         <div class="clr"></div>
+      </div>
+   </div>
+   <div class="clr"></div>
+</div>
+
+{include file="footer.html"}

@@ -1,0 +1,47 @@
+{include file="header.html"}
+<script language="javascript">
+$(function(){
+    $('#sotime,#endtime').datepicker({dateFormat: 'yy-mm-dd'});
+});
+</script>
+<div id="rightTop">
+    <p>{$lang.index_dongtaimibaoguanli}</p>
+    <ul class="subnav">
+		<li><a class="btn3" href="index.php?module=my_money&act=mibao_zhengchang">{$lang.index_zhengchangshiyong}</a></li>
+		<li><a class="btn3" href="index.php?module=my_money&act=mibao_zanting">{$lang.index_yizanting}</a></li>
+		<li><a class="btn3" href="index.php?module=my_money&act=mibao_guoqi">{$lang.index_yiguoqi}</a></li>
+		<li><a class="btn3" href="index.php?module=my_money&act=mibao_xinka">{$lang.index_xinkaliebiao}</a></li>
+		<li><span>{$lang.index_xinkashengcheng}</span></li>
+		<li><a class="btn3" href="index.php?module=my_money&act=index">{$lang.index_fanhuidaohang}</a></li>
+    </ul>
+</div>
+<div class="mrightTop">
+    <div class="fontl">
+        <form action="index.php?module=my_money&act=mibao_sn_pi" target="stafrm">
+            <div class="left">
+              
+              <input name="module" type="hidden" id="module" value="my_money" />
+              <input name="act" type="hidden" id="act" value="mibao_sn_pi" />
+              {$lang.mb_mikaqianzhui}
+              <input name="snprefix" type="text" id="snprefix" value="SN" size="8" />
+			  &nbsp;&nbsp;&nbsp;&nbsp;{$lang.mb_daxiezimu}
+			  <input name="ctype" type="radio" value="2" checked="checked" />
+			  {$lang.mb_chunshuzi}
+			  <input type="radio" name="ctype" value="1" />
+			  &nbsp;&nbsp;&nbsp;&nbsp;{$lang.mb_shengchengshuliang}
+              <input name="mnum" type="text" id="mnum" value="10" size="6" maxlength="6" />
+              &nbsp;&nbsp;{$lang.mb_zuheshu}
+              <input name="pwdgr" type="text" id="pwdgr" value="3" size="4" />
+			  &nbsp;&nbsp;{$lang.mb_zuhechangdu}
+              <input name="pwdlen" type="text" id="pwdlen" value="4" size="4" />
+              &nbsp;&nbsp; 
+              <input type="submit" class="formbtn" value="{$lang.mb_shengcheng}" />
+          </div>
+      </form>
+    </div>
+
+</div>
+
+ <iframe name="stafrm" frameborder="0" id="stafrm" width="98%" height="300"></iframe>
+ <br><br>
+{include file="footer.html"}

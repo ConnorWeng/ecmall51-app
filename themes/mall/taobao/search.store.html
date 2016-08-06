@@ -1,0 +1,83 @@
+﻿{include file=header.html}
+{include file="header.nav.html"}
+<script type="text/javascript">
+//<!CDATA[
+$(function (){
+    var order = '{$smarty.get.order}';
+    var arrow = '';
+
+    switch (order){
+        case 'credit_value desc' : order = '';
+        arrow = '{$lang.down_arrow}';
+        break;
+        default : order = 'credit_value desc';
+    }
+    $('#credit_grade').html('{$lang.credit_grade}' + arrow);
+    $('#credit_grade').click(function(){query('order', order);return false;});
+}
+);
+function query(name, value){
+    $("input[name='"+name+"']").val(value);
+    $('#search').submit();
+}
+
+//]]>
+</script>
+<div id="storelist">
+   {include file=curlocal.html}
+   <div class="title">
+   <form id="search" method="GET" action="index.php" style="background:none">
+       <input type="hidden" name="order" value="{$smarty.get.order|escape}"/>
+       <input type="hidden" name="app" value="search"/>
+       <input type="hidden" name="act" value="store"/>
+       <input type="hidden" name="cate_id" value="{$smarty.get.cate_id|escape}"/>
+         <span class="display_span">{$lang.store_name}：</span><input class="table_text" type="text" name="keyword" value="{$query.keyword|escape}" />
+         <span class="display_span">{$lang.user_name}：</span><input class="table_text" type="text" name="user_name" value="{$query.user_name|escape}" />
+         <span class="display_span">{$lang.region_name}：</span>
+         <select id="region_id" name="region_id" class="display_select">
+         <option value="">{$lang.region_name}</option>
+          {html_options options=$regions selected=$query.region_id}
+          </select>
+         <input class="btn-search-store" type="submit" name="Submit" value="{$lang.search}" />
+    </form> 
+    <div class="pageinfo">{include file=page.top.html}</div>         
+    </div>
+    <div style="margin-top:20px; clear:both">
+            <table width="100%" cellpadding='0' cellspacing='1' bgcolor="#E5E5E5">
+                <tr>
+                    <th colspan="2"bgcolor="#EBF4FB" height="30">{$lang.store}</th>
+                    <th bgcolor="#EBF4FB">{$lang.goods_num}</th>
+                    <th bgcolor="#EBF4FB">{$lang.seller}</th>
+                    <th bgcolor="#EBF4FB"><a id="credit_grade" href="javascript:void(0);">{$lang.credit_grade}</a></th>
+                    <th  bgcolor="#EBF4FB">{$lang.region_name}</th>
+                </tr>
+                <!--{foreach from=$stores item=store}-->
+                <tr>
+                    <td class="group_pic" bgcolor="#ffffff" width="70" align="center"><a target="_blank" href="{url app=store&id=$store.store_id}"><img src="{$store.store_logo}" width="70" height="70" align="absmiddle" style="margin:5px;" /></a></td>
+                    <td class="apellation" bgcolor="#ffffff" width="300" align="center"><a style="margin-left:10px;" href="{url app=store&id=$store.store_id}">{$store.store_name|escape}</a></td>
+                    <td class="price" bgcolor="#ffffff" style="font-family:Arial" align="center">{$store.goods_count}</td>
+                    <td class="member" bgcolor="#ffffff" align="center"><p class="name">{$store.user_name|escape}</p><a target="_blank" class="email" href="{$site_url}/index.php?app=message&amp;act=send&amp;to_id={$store.user_id}" align="center"><img src="{res file=images/web_mail.gif}" alt="{$lang.send_pm}" /></a></td>
+                    <td class="usershop" bgcolor="#ffffff" align="center">
+                        <!--{if $store.credit_value ge 0}-->
+                        <img src="{$store.credit_image}" />
+                        <!--{else}-->
+                        {$store.credit_value}
+                        <!--{/if}-->
+                    </td>
+                    <td class="time" bgcolor="#ffffff" align="center">{$store.region_name|escape}</td>
+                </tr>
+                <!-- {foreachelse} -->
+                <tr>
+                    <td colspan="6" bgcolor="#ffffff" align="center">
+                    <div style="line-height:30px;">没有你要找的店铺</div>
+                    </td>
+                </tr>
+                <!-- {/foreach} -->
+            </table>
+      </div>
+    <div class="pageinfo">
+        {include file=page.bottom.html}
+        <div class="clr"></div>
+    </div>
+</div>
+{include file=footer.html}

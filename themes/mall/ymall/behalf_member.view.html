@@ -1,0 +1,203 @@
+{include file="member.header.html"}
+<div class="content">
+    <div class="particular">
+        <div class="particular_wrap"><h2>{$lang.detail}</h2>
+        <style type="text/css">
+        .log_list { color:#666666; list-style:none; padding:5px 10px;  }
+        .log_list li { margin:8px 0px; }
+        .log_list li .operator { font-weight:bold; color:#FE5400; margin-right:5px; }
+        .log_list li .log_time { font-style:italic; margin:0px 5px; font-weight:bold; }
+        .log_list li .order_status { font-style:italic; margin:0px 5px; font-weight:bold; }
+        .log_list li .reason { font-style:italic; margin:0px 5px; font-weight:bold; }
+        </style>
+            <div class="mb10 clearfix">
+                <div class="state">{$lang.order_status}&nbsp;:&nbsp;<strong>{$order.status|modifier:order_status}</strong>
+                  <input type="button" value="{$lang.shipped_order}" class="btn1" ectype="dialog" dialog_title="{$lang.shipped_order}" dialog_id="behalf_order_shipped" uri="index.php?app=behalf_member&amp;act=shipped&amp;order_id={$order.order_id}"  dialog_width="400" id="order{$order.order_id}_action_shipped"{if $order.status neq ORDER_ACCEPTED} style="display:none"{/if} />
+                </div>
+                <div class="num">{$lang.order_sn}&nbsp;:&nbsp;{$order.order_sn}</div>
+                <div class="time">{$lang.add_time}&nbsp;:&nbsp;{$order.add_time|date:complete}</div>
+            </div>
+            
+            <h3>{$lang.order_info}</h3>
+            <dl class="info">
+                <dt>{$lang.buyer_info}</dt>
+                <dd>{$lang.buyer_name}&nbsp;:&nbsp;{$order.buyer_name|escape}</dd>
+                <dd>{$lang.phone}&nbsp;:&nbsp;{$order.phone_mob|default:-}</dd>
+                
+                 <dd>{$lang.QQ}&nbsp;:&nbsp;{$order.im_qq|default:-}<!--{if $order.im_qq}-->
+                    {imqq uin=$order.im_qq&site=$store.store_name|escape:url}
+                    <!--{/if}-->
+                   </dd>
+                 <dd>{$lang.im_ww}&nbsp;:&nbsp;{$order.im_aliww|default:-} <!--{if $order.im_aliww}-->
+                    {imww touid=$order.im_aliww|escape:url&charset=$charset}
+                    <!--{/if}--></dd>
+                 <dd>{$lang.email}&nbsp;:&nbsp;{$order.buyer_email|default:-}</dd>
+                  
+             </dl>
+            
+         <div class="ware_line">
+            <div class="ware">
+             <!--{foreach from=$merge_sgoods item=sg}-->
+              <div style="border-top:1px solid #efefef;">
+	                <dl class="info">
+		                <dt>{$lang.dangkou_info}</dt>
+		                <dd>{$lang.seller_name1}&nbsp;:&nbsp;{$sg.store_info.store_name|escape}</dd>
+		                <dd>{$lang.dangkou_address}&nbsp;:&nbsp;{$sg.store_info.mk_name}-{$sg.store_info.dangkou_address}</dd>
+		                <dd>{$lang.phone_tel}&nbsp;:&nbsp;{$sg.store_info.tel|default:-}</dd>
+		                 <dd>{$lang.qq}&nbsp;:&nbsp;{$sg.store_info.im_qq|default:-}</dd>
+		                 <dd>{$lang.region}&nbsp;:&nbsp;{$sg.store_info.region_name|mb_substr:2:中国}</dd>
+		                 <dd>{$lang.address}&nbsp;:&nbsp;{$sg.store_info.address|escape|default:-}</dd>
+		                 <dd>{$lang.ww}&nbsp;:&nbsp;{$sg.store_info.im_ww|default:-}</dd>
+		                 
+		            </dl>
+	                 <!--{foreach from=$sg.goods_list item=goods}-->
+	                <div class="ware_list">
+	                       <div class="ware_pic"><img src="{$goods.goods_image}" width="50" height="50"  /></div>
+	                    <div class="ware_text">
+	                        <div class="ware_text1">
+	                        <a href="{url app=goods&id=$goods.goods_id}">{$goods.goods_name|escape}</a>
+	                        {if $group_id}<a target="_blank" href="{url app=groupbuy&id=$group_id}"><strong class="color8">[{$lang.groupbuy}]</strong></a>{/if}
+	                        <br />
+	                        <span>{$sg.store_info.mk_name|escape}-{$sg.store_info.dangkou_address|escape}</span>&nbsp;&nbsp;
+	                        <!--{if $goods.sku}--><span>{$lang.sku}&nbsp;:&nbsp;<strong>{$goods.sku}</strong></span><!--{/if}-->&nbsp;&nbsp;
+	                        <span>{$goods.specification|escape}</span>
+	                        </div>
+	                        <div class="ware_text2">
+	                          <span>{$lang.goods_seller_bm}&nbsp;:&nbsp;<strong>{$goods.goods_seller_bm|escape}</strong></span>
+	                          <span>{$lang.quantity}&nbsp;:&nbsp;<strong>{$goods.quantity}</strong></span>
+	                          <span>{$lang.goods_price}&nbsp;:&nbsp;<strong>{$goods.price}</strong></span>
+	                          
+	                        </div>
+	                    </div>
+	                </div>
+	                <!--{/foreach}-->
+                </div>
+                 <!--{/foreach}-->
+                <div class="transportation">{$lang.shipping_fee}&nbsp;:&nbsp;<span>{$order_extm.shipping_fee|price}<!--{if $order_extm.shipping_name}--><strong>({$order_extm.shipping_name|escape})</strong><!--{/if}--></span>{$lang.preference}&nbsp;:&nbsp;<span>{$order.discount|price}</span>{$lang.order_amount}&nbsp;:&nbsp;<b>{$order.order_amount|price}</b>
+                </div>
+                <ul class="order_detail_list">
+                   <!--{if $order.payment_code}-->
+                    <li>{$lang.payment_name}&nbsp;:&nbsp;{$order.payment_name|escape}</li>
+                    <!--{/if}-->
+                    <!--{if $order.pay_message}-->
+                    <li>{$lang.pay_message}&nbsp;:&nbsp;{$order.pay_message|escape}</li>
+                    <!--{/if}-->
+                    <li>{$lang.add_time}&nbsp;:&nbsp;{$order.add_time|date:complete}</li>
+                    <!--{if $order.pay_time}-->
+                    <li>{$lang.pay_time}&nbsp;:&nbsp;{$order.pay_time|date:complete}</li>
+                    <!--{/if}-->
+                    <!--{if $order.ship_time}-->
+                    <li>{$lang.ship_time}&nbsp;:&nbsp;{$order.ship_time|date:complete}</li>
+                    <!--{/if}-->
+                    <!--{if $order.finished_time}-->
+                    <li>{$lang.finished_time}&nbsp;:&nbsp;{$order.finished_time|date:complete}</li>
+                    <!--{/if}-->                   
+                </ul>
+           </div>
+           
+           <div class="pl10" style="color:#666;line-height:24px;background-color:#f8f8f8;">
+              <!--{if $order.seller_message}--><div><font style="color:#fff;font-size:12px;font-weight:400;background-color:#f40;padding:3px 8px;">{$lang.seller_message}</font>&nbsp;&nbsp;{$order.seller_message|escape}</div><!--{/if}-->
+            </div>
+       </div>
+       <h3>{$lang.consignee_info}</h3>
+          <div class="goods">
+           {$lang.consignee_address}&nbsp;:&nbsp;{$order_extm.consignee|escape}<!--{if $order_extm.phone_mob}-->, &nbsp;{$order_extm.phone_mob}<!--{/if}--><!--{if $order_extm.phone_tel}-->,&nbsp;{$order_extm.phone_tel}<!--{/if}-->
+                ,&nbsp;{$order_extm.region_name|mb_substr:2:中国}&nbsp;{$order_extm.address|escape}
+                <!--{if $order_extm.zipcode}-->,&nbsp;{$order_extm.zipcode|escape}<!--{/if}--><br />
+           {$lang.shipping_name}&nbsp;:&nbsp;{$order_extm.shipping_name|escape}
+           <!--{if $order_extm.bh_id}-->
+                <span class="f60">{$order_extm.bh_id|escape}</span><br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{$lang.express}:&nbsp;&nbsp;&nbsp;<span class="f60">{$order_extm.dl_id|escape}</span>
+            <!--{/if}-->
+           <br/>
+            <!--{if $order.invoice_no}-->
+               {$lang.invoice_no}&nbsp;:&nbsp;{$order.invoice_no|escape}<!--&nbsp;&nbsp;&nbsp;&nbsp;<a href="{$shipping_info.query_url}&amp;{$order.invoice_no}" target="_blank">{$lang.query_logistics}</a>-->
+               <br />
+           <!--{/if}-->
+           <!--{if $order.postscript}-->
+           <font style="color:green;font-weight:400;">{$lang.postscript}</font>&nbsp;:&nbsp;{$order.postscript|escape}<br />
+           <!--{/if}-->
+            <!--{if $behalf_info }-->
+                <br />
+                <div style="margin-top:10px;">
+                 {$lang.behalf_info}{$lang.colon}
+                <hr style="border:none;border-top:1px solid #ccc;margin:5px 0;">
+                {$lang.contact}{$lang.colon}&nbsp;&nbsp;{$behalf_info.bh_name|escape}，&nbsp;&nbsp;{$behalf_info.bh_tel|escape}
+                <!--{if $behalf_info.bh_ww}-->
+                   &nbsp;&nbsp;，{imww touid=$behalf_info.bh_ww|escape:url&charset=$charset}
+                {$behalf_info.bh_ww}
+                <!--{/if}-->
+                <!--{if $behalf_info.bh_qq}-->
+                   	&nbsp;&nbsp;，{imqq uin=$behalf_info.bh_qq&site=$behalf_info.bh_name|escape:url}
+               {$behalf_info.bh_qq}
+                <!--{/if}-->
+                <br>
+                {$lang.reback_address}{$lang.colon}&nbsp;&nbsp;{$behalf_info.owner_name|escape}，&nbsp;&nbsp;{$behalf_info.bh_tel|escape}，&nbsp;&nbsp;{$behalf_info.region_name|mb_substr:2:中国}&nbsp;&nbsp;{$behalf_info.bh_address|escape}
+                </div>
+                <!--{/if}-->
+          </div>
+       <!--{if $refunds}-->
+          <h3>{$lang.apply_refund}
+          <!--{if $refunds.invoice_no}-->
+          <span class="ml20"><a href="http://www.kuaidi100.com/chaxun?com={$refunds.dl_code|escape}&nu={$refunds.invoice_no|escape}" class="show-pop-async color10" style="padding:2px;"  target="_blank;">>> {$lang.see_logistics_info}</a></span>
+          <!--{/if}-->
+          </h3>
+          <div style="padding:10px;color:#666;">{$lang.refund_name}:{$refunds.sender_name}<span style="color:#f40;">(
+            <!--{if $refunds.status eq 1}-->
+               {$lang.refunds_agree}
+            <!--{elseif $refunds.status eq 2}-->
+               {$lang.refunds_disagree}
+            <!--{/if}-->
+            <!--{if $refunds.pay_time}-->
+              &nbsp;&nbsp;{$lang.deal_time}:{$refunds.pay_time|date:Y-m-d H:i}
+            <!--{/if}-->
+            )
+          </span>&nbsp;&nbsp;&nbsp;&nbsp;{$lang.apply_time}:{$refunds.create_time|date:Y-m-d H:i}&nbsp;&nbsp;&nbsp;&nbsp;{$lang.refund_reason}:{$refunds.refund_reason}&nbsp;&nbsp;&nbsp;&nbsp;{$lang.refund_amount}:<span style="color:#f40;">{$refunds.apply_amount|price}</span>&nbsp;&nbsp;&nbsp;&nbsp;{$lang.refund_intro}:{$refunds.refund_intro}</div>
+       <!--{/if}-->
+        <!--{if $apply_fees}-->
+          <h3>{$lang.apply_fee}</h3>
+          <div style="padding:10px;color:#666;">{$lang.receiver_name}:{$apply_fees.receiver_name}<span style="color:#f40;">(
+            <!--{if $apply_fees.status eq 1}-->
+               {$lang.applied_fee_agree}
+            <!--{elseif $apply_fees.status eq 2}-->
+               {$lang.applied_fee_disagree}
+            <!--{/if}-->
+            <!--{if $apply_fees.pay_time}-->
+              &nbsp;&nbsp;{$lang.deal_time}:{$apply_fees.pay_time|date:Y-m-d H:i}
+            <!--{/if}-->
+            )
+          </span>&nbsp;&nbsp;&nbsp;&nbsp;{$lang.apply_time}:{$apply_fees.create_time|date:Y-m-d H:i}&nbsp;&nbsp;&nbsp;&nbsp;{$lang.apply_fee_reason}:{$apply_fees.refund_reason}&nbsp;&nbsp;&nbsp;&nbsp;{$lang.refund_amount}:<span style="color:#f40;">{$apply_fees.apply_amount|price}</span>&nbsp;&nbsp;&nbsp;&nbsp;{$lang.apply_intro}:{$apply_fees.refund_intro}</div>
+       <!--{/if}-->
+       <!--{if $order_logs}-->
+       <h3>{$lang.operate_log}</h3>
+        <ul class="log_list">
+            <!--{foreach from=$order_logs item=log}-->
+            <li>
+                <span class="operator"><!--{if $log.operator eq '0'}--><span style="color:green;">[{$lang.system}]</span><!--{else}-->{$log.operator|escape}<!--{/if}--></span>
+                            {$lang.at}
+                <span class="log_time">{$log.log_time|date:complete}</span>
+                            {$lang.change_status}
+                <span class="order_status">{$log.order_status}</span>
+                            {$lang.change_to}
+                <span class="order_status">{$log.changed_status}</span>
+                <!--{if $log.remark}-->
+                {$lang.reason}:<span class="reason">{$log.remark|escape}</span>
+                <!--{/if}-->
+            </li>
+            <!--{/foreach}-->
+        </ul>
+       <!--{/if}-->
+       </div>
+          <div class="particular_bottom"></div>
+        </div>
+
+        <div class="clear"></div>
+        <div class="adorn_right1"></div>
+        <div class="adorn_right2"></div>
+        <div class="adorn_right3"></div>
+        <div class="adorn_right4"></div>
+    </div>
+
+    <div class="clear"></div>
+</div>
+</div>
+{include file="footer.html"}

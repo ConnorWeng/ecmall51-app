@@ -1,0 +1,28 @@
+{include file=header.html}
+{include file=header.nav.html}
+<script type="text/javascript" src="{lib file=cart.js}" charset="utf-8"></script>
+<div id="cart">
+<form method="post" id="order_form">
+   <div id="cart-header">
+	  <div class="gwlc-2">
+	     <ul>
+		    <li>1.我的购物车</li>
+			<li class="curr">2.填写核对订单信息</li>
+			<li>3.成功提交订单</li>
+		 </ul>
+	  </div>
+	  <div class="clr"></div>
+   </div>
+   <div id="cart-goodslist">
+      <div class="title"><span class="left"></span>填写核对订单信息<span class="right"></span><div class="clr"></div></div>
+	  <div class="content">
+	     {include file=order.shipping.html}
+		 {include file=order.postscript.html}
+		 {include file=order.goods.html}
+		 {include file=order.amount.html}
+	  </div>
+	  <div class="bottom"><span class="left"></span><span class="right"></span><div class="clr"></div></div>
+   </div>
+</form>
+</div>
+{include file=footer.html}

@@ -1,0 +1,198 @@
+{include file=member.header.html}
+<div class="content">
+    <div class="totline"></div><div class="botline"></div>
+    {include file=member.menu.html}
+    <script src="{lib file=js/echarts.js}"></script>
+    <script type="text/javascript">
+        require.config({
+            paths: {
+                echarts: '{lib file=js}'
+            }
+        });
+        require(
+        [
+            'echarts',
+            'echarts/chart/pie',
+            'echarts/chart/funnel',
+            'echarts/chart/line',
+            'echarts/chart/map'
+        ],
+        function (ec) {
+            //--- 折柱 ---
+            var myChart = ec.init(document.getElementById('main'));
+            myChart.setOption({
+                title : {
+                    text: '用户买入记录统计',
+                    subtext: '',
+                    x:'center'
+                },
+                tooltip : {
+                    trigger: 'item',
+                    formatter: "{a} <br/>{b} : {c} ({d}%)"
+                },
+                legend: {
+                    orient : 'vertical',
+                    x : 'left',
+                    data:['已经提交','已发货','已完成','已取消','全额退款']
+                },
+                toolbox: {
+                    show : true,
+                    feature : {
+                        mark : {show: true},
+                        dataView : {show: true, readOnly: false},
+                        magicType : {
+                            show: true, 
+                            type: ['pie', 'funnel'],
+                            option: {
+                                funnel: {
+                                    x: '25%',
+                                    width: '50%',
+                                    funnelAlign: 'left',
+                                    max: 1548
+                                }
+                            }
+                        },
+                        restore : {show: true},
+                        saveAsImage : {show: true}
+                    }
+                },
+                calculable : true,
+                series : [
+                    {
+                        name:'访问来源',
+                        type:'pie',
+                        radius : '55%',
+                        center: ['50%', '60%'],
+                        data:[
+                            {value:{$two}, name:'已经提交'},
+                            {value:{$three}, name:'已发货'},
+                            {value:{$four}, name:'已完成'},
+                            {value:{$five}, name:'已取消'},
+                            {value:{$six}, name:'全额退款'},
+                        ]
+                    }
+                ]
+            });
+        }
+    );
+    </script>
+
+    <div id="right">
+
+        <ul class="tab">
+            <li class="normal"><a href="index.php?app=my_money&act=loglist">{$lang.wodezhanghu}</a></li>
+            <li class="active">{$lang.mairuchaxun}</li>
+            <li class="normal"><a href="index.php?app=my_money&act=seller">{$lang.maichuchaxun}</a></li>
+            <!--			<li class="normal"><a href="index.php?app=my_money&act=intolog">{$lang.zhuanruchaxun}</a></li>
+                                            <li class="normal"><a href="index.php?app=my_money&act=outlog">{$lang.zhuanchuchaxun}</a></li>-->
+            <li class="normal"><a href="index.php?app=my_money&act=flow">{$lang.flow}</a></li>
+        </ul>
+        <div id="main" style="height:200px;border:1px solid #ccc;padding:10px;"></div>
+        <div class="wrap">
+            <div class="public table">
+
+                <div class="user_search">
+                    <form method="get">
+                        <input name="app" type="hidden" value="my_money" />
+                        <input name="act" type="hidden" value="buyer" />
+                        <select name="select">
+                            <option value="1">{$lang.so_dingdan}</option>
+                            <option value="2">{$lang.so_jine}</option>
+                            <option value="3">{$lang.so_rizhi}</option>
+                        </select>
+
+                        <input name="so" type="text" class="text1 width8" id="so" value="">
+                        <!--<span>订单状态</span>
+                        <select name="type">
+                        <option value="all">所有订单</option>
+                                            <option value="pending">待付款的</option>
+                                            <option value="submitted">已提交的</option>
+                                            <option value="accepted">待发货的</option>
+                                            <option value="shipped">已发货的</option>
+                                            <option value="finished">已完成的</option>
+                                            <option value="canceled">已取消的</option>
+                                            </select>-->
+
+                        <input type="submit" class="btn" value="{$lang.so_so}" />
+                    </form>
+                </div>		
+
+                <table class="table_head_line" style="background:none;">
+                    <!--{if $my_money}-->
+                    <tr class="line_bold">
+                        <th class="width1" style="height:5px;"><!-- <input type="checkbox" id="all" class="checkall"/> --></th>
+                        <th class="align1" colspan="7" style="height:5px;">
+                            <!-- <label for="all"><span class="all">{$lang.checkall}</span></label>
+                            <a href="javascript:;" class="delete" uri="index.php?app=my_money&act=user_log_del" name="id" presubmit="confirm('{$lang.drop_confirm}')" ectype="batchbutton">{$lang.drop}</a> -->
+                        </th>
+                    </tr>
+
+                    <tr class="line tr_color">
+                        <th></th>
+                        <th class="align1">{$lang.caozuorizhi}</th>
+                        <th>{$lang.buyjia}</th>
+                        <th>{$lang.dingdanhao}</th>
+                        <th>{$lang.jine}</th>
+                        <th align="center">{$lang.caozuoshijian}</th>
+                        <th align="center">{$lang.zhuangtai}</th>
+                        <th class="width4">{$lang.caozuo}</th>
+                    </tr>
+                    <!--{/if}-->
+                    <!--{foreach from=$my_money item=val name=v}-->
+                    <!--{if $smarty.foreach.v.last}--><tr class="line_bold"><!--{else}--><tr class="line"><!--{/if}-->
+                        <td class="align2"><!-- <input type="checkbox" class="checkitem" value="$val.id"/> --></td>
+                        <td class="link1">{$val.log_text}</td>
+                        <td align="center">{$val.seller_name}</td>
+                        <td align="center"><a href="index.php?app=buyer_order&act=view&order_id={$val.order_id}" target="_blank">{$val.order_sn}</a></td>
+                        <td align="center">{$val.money_zs}{$val.yuan}<!--{if $val.caozuo==30}-->(已退回)<!--{/if}--></td>
+                        <td align="center">{$val.add_time|date:Y-m-d H:i}</td>
+                        <td align="center">
+                            <!--{if $val.caozuo==0}-->{$lang.caozuo0}<!--{/if}--><!--交易进行中-->
+                            <!--{if $val.caozuo==10}-->{$lang.caozuo10}<!--{/if}--><!--已支付-等待买家付支付-->
+                            <!--{if $val.caozuo==20}-->{$lang.caozuo20}<!--{/if}--><!--已付款-等待卖家发货-->
+                            <!--{if $val.caozuo==30}-->{$lang.caozuo30}<!--{/if}--><!--定单已经撤消-->
+                            <!--{if $val.caozuo==40}-->{$lang.caozuo40}<!--{/if}--><!--交易成功-->
+                            <!--{if $val.caozuo==50}-->{$lang.caozuo50}<!--{/if}--><!--资金已入帐-->
+                            <!--{if $val.caozuo==60}-->{$lang.caozuo60}<!--{/if}--><!--等待审核-->
+                            <!--{if $val.caozuo==61}-->{$lang.caozuo61}<!--{/if}--><!--审核通过-->
+                        </td>
+                        <td>
+                            <!-- <a href="javascript:drop_confirm('{$lang.drop_confirm}', 'index.php?app=my_money&act=user_log_del&id={$val.id}');" class="delete">{$lang.drop}</a> -->
+                        </td>
+                    </tr>
+                    <!--{foreachelse}-->
+                    <tr>
+                        <td colspan="8" class="member_no_records padding6">{$lang.$smarty.get.act}{$lang.no_records}</td>
+                    </tr>
+
+                    <!--{/foreach}-->
+                    <!--{if $my_money}-->
+                    <tr>
+                        <!-- <th class="width1"><input id="all2" type="checkbox" class="checkall" /></th>
+                        <th class="align1"><label for="all2">
+                            <span class="all">{$lang.checkall}</span>
+                            </label><a href="#" class="delete" uri="index.php?app=my_money&act=user_log_del" name="id" presubmit="confirm('{$lang.drop_confirm}')" ectype="batchbutton">{$lang.drop}</a>
+                        </th> -->
+                        <td colspan="8" class="page word_spacing5" style="float:none;">
+                            <p class="position2">
+                                {include file=member.page.bottom.html}
+                            </p>
+                        </td>
+                    </tr>
+                    <!--{/if}-->
+                </table>
+            </div>
+            <div class="wrap_bottom"></div>
+        </div>
+        <div class="clear"></div>
+        <div class="adorn_right1"></div>
+        <div class="adorn_right2"></div>
+        <div class="adorn_right3"></div>
+        <div class="adorn_right4"></div>
+    </div>
+    <div class="clear"></div>
+</div>
+<div class="clear"></div>
+<iframe id='iframe_post' name="iframe_post" frameborder="0" width="0" height="0">
+</iframe>
+{include file=footer.html}

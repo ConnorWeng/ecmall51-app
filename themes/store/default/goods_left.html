@@ -1,0 +1,58 @@
+       <!-- recommended  -->
+		<div id="goods_recommended_left" class="goods-recommended-left">
+		   <h2>
+		     <span>{$lang.goods_recommend}</span>
+		   </h2>
+		   <ul>
+		     <!--{foreach from=$rgoods_list item=rgoods name=fe_rgoods}-->
+		       <li>
+		         <div class="pic"><a href="{url app=goods&id=$rgoods.goods_id}" title="{$rgoods.goods_name|escape}" target="_blank"><img src="data/system/empty.gif" class="lazyload" data-ks-lazyload="{$rgoods.default_image}"></a></div>
+		         <div class="title"><a href="{url app=goods&id=$rgoods.goods_id}" title="{$rgoods.goods_name|escape|truncate:120}" target="_blank">{$rgoods.goods_name|escape|truncate:120}</a></div>
+		         <div class="name">
+		        	 <a href="{url app=shop&id=$rgoods.store_id}" target="_blank">{$rgoods.store_name}</a>&nbsp;&nbsp;
+		         	 <a href="{url app=shop&id=$rgoods.store_id}" target="_blank">{$rgoods.mk_name|escape}&nbsp;{$rgoods.dangkou_address|escape}</a>
+                    <!--{if $rgoods.im_ww}-->
+                    		<a title="与{$rgoods.store_name}店主交谈" href="http://amos.im.alisoft.com/msg.aw?v=2&uid={$rgoods.im_ww|escape:url}&site=cntaobao&s=2&charset={$charset}" target="_blank"><img border="0" src="http://amos.im.alisoft.com/online.aw?v=2&uid={$rgoods.im_ww|escape:url}&site=cntaobao&s=2&charset={$charset}" alt="与{$rgoods.store_name}店主交谈" align="absmiddle"/></a>
+                    <!--{/if}-->
+		         </div>
+		         <div class="price">
+		         <span class="left">{$rgoods.price|price}</span>
+		           <span class="right">
+                		<a class="icon-tb mr2" href="{url app=item_upload&dest=Taobao&goods_id=$goods.goods_id}" target="_blank" title="上传淘宝">淘宝</a>
+                		<a class="icon-al mr2" href="{url app=item_upload&dest=Alibaba&goods_id=$goods.goods_id}" target="_blank" title="上传阿里">阿里</a>
+                		<a class="icon-pp" href="{url app=item_upload&dest=Paipai&goods_id=$goods.goods_id}" target="_blank" title="上传拍拍">拍拍</a>
+                	</span>
+		         </div>
+		       </li>
+		     <!--{/foreach}-->
+		   </ul>		
+		</div>
+
+        <!--{if $smarty.get.app eq "goods"}-->
+        <div class="module_common">
+            <h2 class="common_title veins1">
+                <div class="ornament1"></div>
+                <div class="ornament2"></div>
+                <span class="ico1"><span class="ico2">{$lang.goods_history}</span></span>
+            </h2>
+            <div class="wrap">
+                <div class="wrap_child">
+                    <ul class="annals">
+                        <!--{foreach from=$goods_history item=gh_goods}-->
+                        <li><a href="{url app=goods&id=$gh_goods.goods_id}" class="center"><img src="{$gh_goods.default_image}" height="50" alt="{$gh_goods.goods_name|truncate:20|escape}" title="{$gh_goods.goods_name|escape}" /></a></li>
+                        <!--{/foreach}-->
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <!--{/if}-->
+        <script>
+        $(function(){
+        	var rec_goods_len = $('#goods_recommended_left ul li').length;
+        	var rec_goods_rnd = getRandom(rec_goods_len);
+        	for(i=rec_goods_rnd;i<rec_goods_len;i++)
+        	{
+        		$('#goods_recommended_left ul li').eq(i).insertBefore($('#goods_recommended_left ul li').eq(i-rec_goods_rnd));
+        	}
+        });
+        </script>

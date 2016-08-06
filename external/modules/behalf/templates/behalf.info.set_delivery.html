@@ -1,0 +1,73 @@
+{include file=header.whole.html}
+
+<script type="text/javascript">
+$(function(){    
+	
+	 $('#my_form').bootstrapValidator({
+		  feedbackIcons: {
+	            valid: 'glyphicon glyphicon-ok',
+	            invalid: 'glyphicon glyphicon-remove',
+	            validating: 'glyphicon glyphicon-refresh'
+	        }, 
+		  fields:{
+			  "deliveries[]":{
+				  validators:{
+					  notEmpty:{}
+				  }
+			  }
+			 
+		  }
+	  }).on('success.form.bv', function(e) {
+		   // Prevent form submission
+          e.preventDefault();
+
+          // Get the form instance
+          var $form = $(e.target);
+
+          // Get the BootstrapValidator instance
+          var bv = $form.data('bootstrapValidator');
+
+          // Use Ajax to submit form data
+          $.post($form.attr('action'), $form.serialize(), function(result) {
+              //var json = $.parseJSON(result);
+              bootbox.alert(result.msg);
+              
+          }, 'json');
+         
+          //$form.data('bootstrapValidator').resetForm(true);
+       
+      });
+
+        
+});
+
+</script>
+<div>
+	<h3 class="page-header text-info">HI，{$behalf.bh_name}</h3>
+	<div class="alert alert-warning">
+		亲，请选择您<b>可发的</b> 快递&物流！
+	</div>
+    <form method="post" action="{url module=behalf&amp;act=set_delivery}" class="form" id="my_form">
+    <div class="check">
+    	<div class="form-group">
+	    	<div class="row">
+		    	<!--{foreach  from=$deliveries item=d name=d_fee}-->  
+		    	<label class="col-xs-2">
+		    		<input type="checkbox" name="deliveries[]" class="form-control" value="{$d.dl_id}" {if in_array($d['dl_id'],$exist_deliveries)}checked="checked"{/if}/>
+		    		<label>{$d.dl_name}</label>
+		    	</label>
+		    	<!--{/foreach}-->  
+	    	</div>
+    	</div>
+    	<div style="height:20px;"></div>
+    	<div class="row">
+    		<div class="col-xs-2">
+    			<input type="submit" class="btn btn-primary" value="{$lang.submit}" />
+    		</div>
+    		
+    	</div> 
+        			
+    </div>		
+ 	</form>         			
+</div>
+{include file=footer.whole.html}

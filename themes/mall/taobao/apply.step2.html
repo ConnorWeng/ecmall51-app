@@ -1,0 +1,189 @@
+﻿{include file=header.html}
+{include file=header.nav.html}
+<script src="{lib file=mlselection.js}" charset="utf-8"></script>
+<script src="{lib file=jquery.plugins/jquery.validate.js}" charset="utf-8"></script>
+<style type="text/css">
+.d_inline{display:inline;}
+</style>
+<script type="text/javascript">
+//<!CDATA[
+var SITE_URL = "{$site_url}";
+var REAL_SITE_URL = "{$real_site_url}";
+$(function(){
+    regionInit("region");
+
+    $("#apply_form").validate({
+        errorPlacement: function(error, element){
+            var error_td = element.parents('td').next('td');
+            error_td.find('.field_notice').hide();
+            error_td.find('.fontColor3').hide();
+            error_td.append(error);
+        },
+        success: function(label){
+            label.addClass('validate_right').text('OK!');
+        },
+        onkeyup: false,
+        rules: {
+            owner_name: {
+                required: true
+            },
+            store_name: {
+                required: true,
+                remote : {
+                    url  : 'index.php?app=apply&act=check_name&ajax=1',
+                    type : 'get',
+                    data : {
+                        store_name : function(){
+                            return $('#store_name').val();
+                        },
+                        store_id : '{$store.store_id}'
+                    }
+                },
+                maxlength: 20
+            },
+            tel: {
+                required: true,
+                minlength:6,
+                checkTel:true
+            },
+            image_1: {
+                accept: "jpg|jpeg|png|gif"
+            },
+            image_2: {
+                accept: "jpg|jpeg|png|gif"
+            },
+            image_3: {
+                accept: "jpg|jpeg|png|gif"
+            },
+            notice: {
+                required : true
+            }
+        },
+        messages: {
+            owner_name: {
+                required: '{$lang.input_owner_name}'
+            },
+            store_name: {
+                required: '{$lang.input_store_name}',
+                remote: '{$lang.name_exist}',
+                maxlength: '{$lang.note_for_store_name}'
+            },
+            tel: {
+                required: '{$lang.input_tel}',
+                minlength: '{$lang.phone_tel_error}',
+                checkTel: '{$lang.phone_tel_error}'
+            },
+            image_1: {
+                accept: '{$lang.select_valid_image}'
+            },
+            image_2: {
+                accept: '{$lang.select_valid_image}'
+            },
+            image_3: {
+                accept: '{$lang.select_valid_image}'
+            },
+            notice: {
+                required: '{$lang.check_notice}'
+            }
+        }
+    });
+});
+//]]>
+</script>
+<div id="openstore">
+   <div id="cart-header">
+	  <div class="gwlc-2">
+	     <ul>
+		    <li>1.选择店铺类型</li>
+			<li class="curr">2.填写店主和店铺信息</li>
+			<li>3.完成</li>
+		 </ul>
+	  </div>
+	  <div class="clr"></div>
+   </div>
+   <div id="cart-goodslist">
+      <div class="title"><span class="left"></span>{$lang.i_want_open_store}<span class="right"></span><div class="clr"></div></div>
+	  <div class="content">
+                        <form method="post" enctype="multipart/form-data" id="apply_form">
+                        <table width="900" cellpadding="0" cellspacing="0" border="0" align="center">
+                            <tr>
+                                <th width="100" height="30">{$lang.owner_name}: </th>
+                                <td align="left"><input type="text" class="text width7" name="owner_name"/></td>
+                                <td align="left"><span class="fontColor3">*</span> <span class="field_notice">{$lang.note_for_owner_name}</span></td>
+                            </tr>
+                            <tr>
+                                <th height="30">{$lang.owner_card}: </th>
+                                <td align="left"><input type="text" class="text width7" name="owner_card"/></td>
+                                <td align="left"> <span class="field_notice">{$lang.note_for_owner_card}</span></td>
+                            </tr>
+                            <tr>
+                                <th>{$lang.store_name}: </th>
+                                <td align="left"><input type="text" class="text width7" name="store_name" id="store_name"/></td>
+                                <td align="left"><span class="fontColor3">*</span> <span class="field_notice">{$lang.note_for_store_name}</span></td>
+                            </tr>
+                            <tr>
+                                <th height="30">{$lang.store_category}: </th>
+                                <td align="left">
+                                    <div class="select_add"><select name="cate_id">
+                                    <option value="0">{$lang.select_pls}</option>
+                                    {html_options options=$scategories}
+                                    </select>
+                                    </div>
+                                </td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <th height="30">{$lang.region}: </th>
+                                <td align="left">
+                                <div class="select_add" id="region" style="width:500px;border:1px solide red;">
+                                    <input type="hidden" name="region_id" value="0" class="mls_id" />
+                                    <input type="hidden" name="region_name" value="" class="mls_names" />
+                                    <select class="d_inline">
+                                    <option value="0">{$lang.select_pls}</option>
+                                    {html_options options=$regions}
+                                    </select>
+                                </div>
+                                </td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <th height="30">{$lang.address}: </th>
+                                <td align="left"><input type="text" class="text width7" name="address"/></td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <th height="30">{$lang.zipcode}: </th>
+                                <td align="left"><input type="text" class="text width7" name="zipcode"/></td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <th height="30">{$lang.tel}: </th>
+                                <td align="left">
+                                    <input type="text" class="text width7" name="tel" />
+                                </td>
+                                <td align="left"><span class="fontColor3">*</span> <span class="field_notice">{$lang.input_tel}</span></td>
+                            </tr>
+                            <tr>
+                                <th height="30">{$lang.upload_image}: </th>
+                                <td align="left"><input type="file" name="image_1" /></td>
+                                <td align="left"><span class="field_notice">{$lang.note_for_image}</span></td>
+                            </tr>
+                            <tr>
+                                <th height="30">{$lang.upload_permit}: </th>
+                                <td align="left"><input type="file" name="image_2" /></td>
+                                <td align="left"><span class="field_notice">{$lang.note_for_image}</span></td>
+                            </tr>
+                            <tr>
+                                <td colspan="2" align="left"><input style="margin-left:100px;" type="checkbox" name="notice" value="1" id="warning" /> <label for="warning">{$lang.notice}</label></td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td colspan="3" height="100"><input class="btn-openstore" style="margin-left:100px;" type="submit" value="立即开店" /></td>
+                            </tr>
+                        </table>
+                        </form>
+						 </div>
+	  <div class="bottom"><span class="left"></span><span class="right"></span><div class="clr"></div></div>
+   </div>
+</div>
+{include file=footer.html}

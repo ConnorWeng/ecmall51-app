@@ -1,0 +1,57 @@
+﻿<div id="goldshop_recommended" class="mt10">	    
+   <ul class="tab_menu title relative">
+           <!--{foreach from=$widget_data.cate_name item=cname name=fee_cname}-->
+              <!--{if $smarty.foreach.fee_cname.first}-->
+                 <li class="current"><a href="javascript:;">{$cname}</a></li>
+              <!--{else}-->
+                 <li><a href="javascript:;">{$cname}</a></li>
+              <!--{/if}-->
+           <!-- {/foreach} -->
+          <b class="inline-block bg_index_icon mr10 fs18 center absolute" style="width:28px;height:40px;color:white;line-height:33px;left:0;top:-4px;">R</b>
+	      <div class="recommend_support_shop absolute yahei fs16">实拍推荐</div>
+	</ul>
+	<div class="clr"></div>
+   <div class="tab_box">
+   <!--{foreach from=$widget_data.goods_list item=good_list name=fee_good_list}-->
+         <!--{if $smarty.foreach.fee_good_list.first}-->
+                 <div class="content">
+			      	<!--{foreach from=$good_list item=goods name=fee_good}-->
+			      <dl style="{if $smarty.foreach.fee_good.iteration % 5 eq 0}margin-right:0px;{else}margin-right:9px;{/if}">
+			      	<dt class="img relative" style="height:238px;">
+			      	    <!-- <a class=" absolute bg_f44 fff" title="实拍" href="javascript:;" style="top:156px;right:5px;padding:1px 3px;color:white;border-radius:3px;">实</a>			      	     -->
+			         	<a href="{url app=goods&id=$goods.goods_id}" title="{$goods.goods_name|escape}" style="width:180px;height:180px;overflow:hidden;display:table-cell;vertical-align:middle;text-align:center;">
+			            	<img class="lazyload" alt="{$goods.goods_name|escape|truncate:20}" data-ks-lazyload="{$goods.default_image}" src="data/system/empty.gif" style="max-width:180px;max-height:180px;"/>			            	
+			         	</a>
+			         	<a class="goodname" href="{url app=goods&id=$goods.goods_id}">{$goods.goods_name|escape|truncate:48}</a>
+			         	
+			         	 
+			      	</dt>      	
+			      </dl>       
+			      <!--{/foreach}-->
+			   </div>
+         <!--{else}-->
+                 <div class="content hidden">
+			      	<!--{foreach from=$good_list item=goods name=fee_good}-->
+			      <dl style="{if $smarty.foreach.fee_good.iteration % 5 eq 0}margin-right:0px;{else}margin-right:9px;{/if}">
+			      	<dt class="img relative" style="height:238px;">			      	        
+			         	<a href="{url app=goods&id=$goods.goods_id}" title="{$goods.goods_name|escape}" style="width:180px;height:180px;overflow:hidden;display:table-cell;vertical-align:middle;text-align:center;">
+			            	<img class="lazyload" alt="{$goods.goods_name|escape|truncate:20}" data-ks-lazyload="{$goods.default_image}" src="data/system/empty.gif"  style="max-width:180px;max-height:180px;" />
+			         	</a>
+			         	<a class="goodname" href="{url app=goods&id=$goods.goods_id}">{$goods.goods_name|escape|truncate:48}</a>
+			      	</dt>      	
+			      </dl>       
+			      <!--{/foreach}-->
+			   </div>
+         <!--{/if}-->
+   <!--{/foreach}-->
+  </div>
+  <script>
+  	$('#goldshop_recommended').Tabs({});
+  	KISSY.use('datalazyload', function(S, DataLazyload) {
+  	    S.ready(function(S) {
+  	            var dataLazyload= DataLazyload({});
+  	    });
+  	});
+   </script>
+</div> 
+<div class="clr"></div>

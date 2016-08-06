@@ -1,0 +1,41 @@
+<div id="header">
+
+    <div class="widget_top_banner" area="top_banner" widget_type="area">
+         <!--{widgets page=index area=top_banner}-->
+   </div>
+   
+   <div class="logo"><a hidefocus="true" href="index.php"><img alt="{$site_title}" src="{$site_logo}" /></a></div>
+   <div class="search">
+      <ul class="tab">
+         <li {if $smarty.get.act eq 'index' || $smarty.get.act eq 'view' || $smarty.get.act eq ''}class="current"{/if} id="s_goods"><a href="javascript:;" hidefocus="true" onclick="searchtype('goods');">商品</a><b class="rc-lt"></b><b class="rc-rt"></b></li>
+         <li {if $smarty.get.act eq 'store'}class="current"{/if} id="s_store"><a href="javascript:;" hidefocus="true" onclick="searchtype('store');">品牌店铺</a><b class="rc-lt"></b><b class="rc-rt"></b></li>
+         <li {if $smarty.get.act eq 'groupbuy'}class="current"{/if} id="s_groupbuy"><a href="javascript:;" hidefocus="true" onclick="searchtype('groupbuy');">团购</a><b class="rc-lt"></b><b class="rc-rt"></b></li>
+         <div class="clr"></div>
+      </ul>
+      <div class="form">
+         <form method="GET" action="{url app=search}">
+             <div class="fields">
+                <input type="hidden" name="app" value="search" />
+                <input id="search-act" type="hidden" name="act" value="{if $smarty.get.act eq 'store'}store{elseif $smarty.get.act eq 'groupbuy'}groupbuy{else}index{/if}" />
+                <label for="keyword"></label>
+                <input type="text" id="keyword" name="keyword" maxlength="54"><b class="rc-lb"></b><b class="rc-lt"></b>
+             </div>
+             <button type="submit" class="btn-search-submit"></button>
+             <div class="action">
+                <a href="{url app=category}">高级搜索</a>
+                <a href="{url app=article&code=help}" target="_top">使用帮助</a>
+             </div>
+             <div class="clr"></div>
+          </form>
+       </div>
+       <p class="hot-keyword">
+          <!--{foreach from=$hot_keywords item=keyword name=fe_keyword}-->
+          <a href="{url app=search&keyword=$keyword}" {if $smarty.foreach.fe_keyword.iteration==4} class="h"{/if}>{$keyword}</a>
+          <!--{/foreach}-->
+          <b class="gr-l"></b>
+          <b class="gr-r"></b>
+      </p>
+      <div class="clr"></div>
+   </div>
+   <div class="clr"></div>
+</div>

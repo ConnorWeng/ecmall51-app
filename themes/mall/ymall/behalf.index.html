@@ -1,0 +1,154 @@
+{include file=header.html}
+<script type="text/javascript">
+   $(function(){
+	   $(".behalf-login").click(function(){
+		  window.location.href="{$site_url}/index.php?app=member&act=login";
+	   });
+   });
+</script>
+<div class="content-behalf w mt10 clearfix">
+    <!-- left start -->    
+    <div class="bleft mr10 float-left">
+      <div class="clearfix">
+         <!-- advs -->
+         <div class="behalf-ad">
+            <a href="#"><img src="advs/behalf/behalf_ad.png"/></a>
+         </div>
+         <!-- filters -->
+         <div class="behalf-filter mt10 border">
+          <form method="post">
+            <h3 class="pl10">{$lang.all_behalf}<span id="behalf-number" class="behalf-number">{$behalf_count}</span>{$lang.behalf_jia}</h3>
+            <dl>
+              <dt>{$lang.behalf_market}</dt>
+              <dd>
+                 <!--{foreach from=$markets item=market}-->
+                   <span><input type="checkbox" name="market[]" value="{$market.mk_id}"/>{$market.mk_name}</span>
+                 <!--{/foreach}-->              
+              </dd>
+            </dl>
+            <dl>
+              <dt>{$lang.behalf_delivery}</dt>
+              <dd>
+               <!--{foreach from=$deliveries item=delivery}-->
+                   <span><input type="checkbox" name="delivery[]" value="{$delivery.dl_id}"/>{$delivery.dl_name}</span>
+               <!--{/foreach}-->               
+              </dd>
+            </dl>
+            <dl>
+              <dt>&nbsp;</dt>
+              <dd>
+              <input type="submit" value="{$lang.start_filter}" class="border start-filter"/>
+              <!-- {if $query.market or $query.delivery} -->
+                 <a class="border start-filter" href="{url app=behalf}">{$lang.cancel_filter}</a>
+              <!-- {/if} -->
+              </dd>
+            </dl>
+          </form>
+         </div>
+         <!-- behalives -->
+         <div class="behalf-behalvies mt20">
+           <!-- {if $behalvies} -->
+            <!--{foreach from=$behalvies item=behalf}-->
+              <dl class="behalf-item padding10 clearfix">
+                 <dt>
+                   <a href="{$site_url}/index.php?app=bhstore&id={$behalf.bh_id}" title="{$behalf.bh_name}" target="_blank">
+                    <!--{if $behalf.bh_logo}-->
+                     <img src="{$site_url}/{$behalf.bh_logo}" width="100" height="100"/>
+                    <!--{else}-->
+                       <img src="{$site_url}/data/system/default_behalf_logo.gif" width="100" height="100"/>
+                    <!--{/if}--> 
+                   </a>                   
+                 </dt>
+                 <dd class="padding5">
+                   <div class="title relative"><strong class="fs18 strong mr5"><a href="{$site_url}/index.php?app=bhstore&id={$behalf.bh_id}" title="{$behalf.bh_name}" target="_blank">{$behalf.bh_name|escape}</a></strong>
+                   <span class="mr5">
+                   <!--{if $behalf.bh_qq}-->
+                   <a href="http://wpa.qq.com/msgrd?v=3&uin={$behalf.bh_qq}&site=qq&menu=yes"><img src="{$site_url}/data/system/qq_light.gif" width="16" height="16"/></a>
+                   <!--{else}-->
+                     <img src="{$site_url}/data/system/qq_nlight.gif" width="16" height="16"/>
+                   <!--{/if}--> 
+                   </span>
+                   <span>                   
+                   <a href="http://amos1.taobao.com/online.ww?v=2&uid={$behalf.bh_ww}&s=2"><img src="http://amos1.taobao.com/online.ww?v=2&uid={$behalf.bh_ww}&s=2"/></a>
+                   </span>
+                   <p class="add-behalf clearfix">
+                      <!--{if in_array($smarty.session.user_info.user_id,$behalf['users'])}-->
+                        <a class="block" href="javascript:;"><b class="fs12">√</b>{$lang.qianyue_success}</a>
+                      <!--{else}-->
+                        <a class="block" href="javascript:collect_sbehalf({$behalf.bh_id})"><b>+</b>{$lang.qianyue}</a>
+                      <!--{/if}-->
+                   </p>
+                   </div>
+                   <!-- zipcode -->
+                   <div class="region">
+                      <span class="mr10">{$lang.region}：{$behalf.region_name|escape}&nbsp;{$behalf.bh_address}</span>
+                      <span>{$lang.zipcode}:{$behalf.zipcode}</span>
+                   </div>
+                   <div class="desc">
+                      <!--{if $behalf.bh_mark}-->
+                         {$behalf.bh_mark}
+                      <!--{else}-->
+                         {$lang.not_desc}
+                      <!--{/if}--> 
+                   </div>
+                 </dd>
+              </dl>
+            <!--{/foreach}-->
+            <!-- {else} -->
+              <p class="center">{$lang.not_behalf_data}</p>
+            <!-- {/if} -->
+         </div>
+      
+      
+      </div>
+    </div>
+    <!-- left end -->
+    <!-- right start -->
+    <div class="bright float-right">
+       <div class="behalf-login" title="{$lang.join_behalf}">{$lang.join_behalf}</div>
+       <!-- advs -->
+         <div class="behalf-ad mt10">
+            <a href="#"><img src="advs/behalf/280.gif"/></a>
+         </div>
+       <h3>{$lang.new_deal}</h3>
+       <table class="new-deal" cellspacing="0" cellpadding="0" width="100%">
+         <tr>
+           <th>{$lang.member_buyer}</th>
+           <th>{$lang.member_behalf}</th>
+           <th>{$lang.deal_money}</th>
+           <th>{$lang.order_amount}</th>
+         </tr>
+        <!-- {foreach from=$orders item=order} -->
+          <tr>
+            <td>{$order.buyer_name|escape}</td>
+            <td>{$order.bh_id|escape}</td>
+            <td>{$order.order_amount|price}</td>
+            <td>
+            <!-- {if $order.evaluation_status} -->
+               {$lang.yes}
+            <!-- {else} -->
+               {$lang.no}
+            <!-- {/if} -->
+            </td>
+          </tr>
+        <!-- {/foreach} -->
+       </table>
+       <h3>{$lang.new_behalf}</h3>
+       <ul class="new-behalf mt5 pt10 clearfix">
+          <!--{foreach from=$newbehalvies item=behalf name=behalf_fee}-->
+              <li {if ($smarty.foreach.behalf_fee.iteration)%3 == 0}style="margin-right:0px;"{/if}> <a href="{$site_url}/index.php?app=behalf&id={$behalf.bh_id}" title="{$behalf.bh_name}" target="_blank">
+                    <!--{if $behalf.bh_logo}-->
+                     <img src="{$site_url}/{$behalf.bh_logo}" width="80" height="80"/>
+                    <!--{else}-->
+                       <img src="{$site_url}/data/system/default_behalf_logo.gif" width="80" height="80"/>
+                    <!--{/if}--> 
+                   </a>     
+               </li>
+          <!--{/foreach}-->
+       </ul>
+    </div>
+    <!-- right end -->
+    <div class="clearboth"></div>
+</div>
+
+{include file=footer.html}

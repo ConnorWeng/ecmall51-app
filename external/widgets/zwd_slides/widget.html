@@ -1,0 +1,32 @@
+<script src="includes/libraries/javascript/jquery.plugins/slides.min.jquery.js" charset="utf-8"></script>
+<div id="slider{$widget_data.model_id}" class="slides box overflowHidden s{$widget_data.model_id}" style="width:{$widget_data.width}px;height:{$widget_data.height}px;">
+    <!--{if !$widget_data.ads}-->
+    <div class="padding10 center">请配置</div>
+    <!--{else}-->
+   <div class="slides_container" style="width:{$widget_data.width}px;height:{$widget_data.height}px;">     
+      <!--{foreach from=$widget_data.ads item=ad name=fee_ad}-->			   
+	       <div><a href="{$ad.ad_link_url}" target="_blank"><img width="{$widget_data.width}" height="{$widget_data.height}" class="lazyload" src="data/system/empty.gif" data-ks-lazyload="{$ad.ad_image_url}" /></a></div> 
+	   <!--{/foreach}--> 
+   </div>
+   
+   <script>
+   //var jq111 = $.noConflict(true);
+   $('#slider{$widget_data.model_id}').slides({
+		preload: true,
+		preloadImage: 'data/system/empty.gif',
+		hoverPause: true,
+		generateNextPrev: false,
+		pagination: true,
+		generatePagination: true,
+		effect: 'slide',
+		play: 3000,
+		pause: 2000,
+		randomize: true		
+	});
+   $('#slider{$widget_data.model_id} .slides_container div').each(function(){
+       var xxx=$(this).index("#slider{$widget_data.model_id} .slides_container div");
+       $('#slider{$widget_data.model_id} .pagination li').eq(xxx-1).find('a').html('&nbsp;&nbsp;');
+  });   
+   </script>
+   <!--{/if}-->
+</div>

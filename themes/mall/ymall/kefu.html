@@ -1,0 +1,95 @@
+<style>
+.kefu-layer {background:#f44;/*#CB2B1E;  background:rgba(203, 26, 12, 0.9);*/ position: fixed; top: 130px; right: 1px; _position: absolute; z-index: 999; filter:progid:DXImageTransform.Microsoft.gradient(enabled='true',startColorstr='#E5333333', endColorstr='#E5333333');}
+.kefu-layer a {color: #00A0E9;}
+.kefu-layer a:hover {color: #ff8100; text-decoration: none;}
+.kefu-layer .left-part {width: 36px; float:left; position: relative; z-index:1;}
+.kefu-layer .left-part a {font-size:0; text-indent: -999em; display: block;}
+.kefu-layer .right-part {width: 94px; float: left; padding: 5px; overflow:hidden;}
+.kefu-layer .right-part .cn {background: #F7F7F7;}
+.kefu-layer .cn h3 {font-size: 14px; color: #333; font-weight:600; line-height: 24px; padding: 5px}
+.kefu-layer .cn ul {padding: 0 0 5px 8px;border-bottom: solid 1px #E6E4E4;}
+.kefu-layer .cn ul li {margin-top:5px;}
+.kefu-layer .cn ul li span {color: #777;}
+.kefu-layer .cn ul li img {vertical-align: middle;}
+.kefu-layer .btnOpen, .kefu-layer .btnCtn {  position: relative; z-index:9; top:0; left: 0; background-repeat: no-repeat;  display:block; width: 20px; height: 146px; padding: 8px;background-image: url(http://www.51zwd.com/themes/mall/ymall/styles/default/images/kefu.png); }
+.kefu-layer .btnOpen {background-position: -410px 0;}
+.kefu-layer .btnCtn {background-position: -450px 0;}
+.kefu-layer ul li.top {border-bottom: solid #ACE5F9 1px;}
+.kefu-layer ul li.bot {border-bottom: none;}
+</style>
+<script type="text/javascript">
+	$(function(){
+		$('#kefu_Show').click(function(){
+			$('#kefuView').animate({'width':'show','opacity': 'show'},'normal',function(){
+				$('#kefuView').show();
+			});
+			$('#kefu_Show').attr('style','display:none');
+			$('#kefu_Hide').attr('style','display:block');
+		})
+		$('#kefu_Hide').click(function(){
+			$('#kefuView').animate({'width':'hide','opacity': 'hide'},'normal',function(){
+				$('#kefuView').hide();
+			});
+			$('#kefu_Show').attr('style','display:block');
+			$('#kefu_Hide').attr('style','display:none');
+		})
+	});
+</script>
+<div id="kefu" class="kefu-layer">
+   <div class="left-part">
+    <a style="{if $index}display:none{else}display:block{/if}" id="kefu_Show" class="btnOpen" title="查看在线客服" onclick="javascript:;" href="javascript:void(0);">展开</a> 
+  	<a style="{if $index}display:block{else}display:none{/if}" id="kefu_Hide" class="btnCtn" title="关闭在线客服" onclick="javascript:;" href="javascript:void(0);">收缩</a> 
+  </div>
+  <div id="kefuView" class="right-part {if !$index}hidden{/if}" >
+    <div class="cn">
+      <h3 class="titZx">网站服务</h3>
+      <ul>
+        <li>
+        	<a target="_blank" href="http://wpa.b.qq.com/cgi/wpa.php?ln=1&key=XzgwMDAyOTA1MV8yMjA1MzBfODAwMDI5MDUxXzJf"><img border="0" src="http://wpa.qq.com/pa?p=2:800029051:51" alt="点击这里给我发消息" title="点击这里给我发消息"/></a>
+       </li>
+       <li>
+            <a target="_blank" href="http://wpa.b.qq.com/cgi/wpa.php?ln=1&key=XzgwMDAyOTA1MV8yMjA0ODFfODAwMDI5MDUxXzJf"><img border="0" src="http://wpa.qq.com/pa?p=2:800029051:51" alt="点击这里给我发消息" title="点击这里给我发消息"/></a>
+       </li>
+       <li>
+            <a target="_blank" href="http://wpa.b.qq.com/cgi/wpa.php?ln=1&key=XzgwMDAyOTA1MV8yMjA1MzNfODAwMDI5MDUxXzJf"><img border="0" src="http://wpa.qq.com/pa?p=2:800029051:51" alt="点击这里给我发消息" title="点击这里给我发消息"/></a>
+       </li>
+      </ul>
+      <h3 class="titZx">一件代发</h3>
+      <ul>        
+       <li>
+       		<!--51官方代发: 1002  -->
+            <a target="_blank" href="http://crm2.qq.com/page/portalpage/wpa.php?uin=800063451&aty=1&a=1002&curl=&ty=1"><img border="0" src="{res file=images/behalf/behalf_office.gif}" alt="点击这里给我发消息" title="点击这里给我发消息"/></a>
+
+       </li>
+       <li>
+       		<!--代发售后: 1003  -->
+            <a target="_blank" href="http://crm2.qq.com/page/portalpage/wpa.php?uin=800063451&aty=1&a=1003&curl=&ty=1"><img border="0" src="{res file=images/behalf/behalf_shouhou.gif}" alt="点击这里给我发消息" title="点击这里给我发消息"/></a>
+       </li>
+       <li>
+       		<!--代发投诉: 1006  -->
+       		<a target="_blank" href="http://crm2.qq.com/page/portalpage/wpa.php?uin=800063451&aty=1&a=1006&curl=&ty=1"><img border="0" src="{res file=images/behalf/behalf_toushu.gif}" alt="点击这里给我发消息" title="点击这里给我发消息"/></a>
+       </li>
+      </ul>
+      <!-- <h3>客户群</h3>
+      <ul>
+        <li><a target="_blank" href="http://wpa.qq.com/msgrd?v=3&uin={$smarty.const.QQGRP_NO}&site=qq&menu=yes"><img border="0" src="http://wpa.qq.com/pa?p=2:{$smarty.const.QQGRP_NO}:51" alt="点击这里给我发消息" title="点击这里给我发消息"/></a></li>
+      </ul> -->
+      <h3>工作时间</h3>
+      <ul>
+      	<li>10:00-20:00</li>
+      </ul>
+      <h3>客服电话</h3>
+      <ul>
+      	<li>网站:<br>{$smarty.const.KEFU_TEL}</li>
+      	<li>代发:<br>020-87031266</li>
+      </ul>
+      <!-- 
+      <h3>代发客服</h3>
+      <ul>
+      	<li>13829771925</li>
+      </ul>
+       -->
+      
+    </div>
+  </div>
+</div>

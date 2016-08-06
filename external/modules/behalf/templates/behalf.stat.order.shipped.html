@@ -1,0 +1,210 @@
+{include file=header.whole.html}
+<script type="text/javascript">
+   
+  $(function(){
+	  
+	  $('#query_time_wrapper').datetimepicker({format:'YYYY-MM-DD'});
+	  $('#query_time_form').bootstrapValidator({
+		  feedbackIcons: {
+	            valid: 'glyphicon glyphicon-ok',
+	            invalid: 'glyphicon glyphicon-remove',
+	            validating: 'glyphicon glyphicon-refresh'
+	        }, 
+		  fields:{
+			  query_time:{
+				  validators:{
+					  notEmpty:{},
+					  date:{
+						message:'请输入有效日期,格式形如：2015-01-01',
+					  	format:"YYYY-MM-DD"
+					  }
+				  }
+			  }
+		  }
+	  });
+	  
+	  $("#stat_btn").popover();
+	  
+	  <!--{if $order_list }-->
+	  
+	  var dt = $("#order_list_table").DataTable({
+			"ordering":true,
+		    "paging":true,
+		    "info":true,
+		    "searching":true,
+		    "columnDefs":[
+		       {"orderable":false,"targets":0},           
+		       {"orderable":false,"targets":[1]}           
+		     ],
+		     "order":[
+		        [0,null]      
+		     ],
+		     dom:"<'container-fluid' <'row' <'col-xs-2' l><'col-xs-7' B><'col-cs-3' f> > <t> <'row' <'col-xs-4' i><'col-xs-8 text-right' p>  >  >",
+		     "buttons":[
+		       'copy','excel','print','colvis'
+		    
+		     ],
+			"language":{
+				"url":"{lib file='/DataTables/zn.json'}",
+				"buttons":{
+					"copy":"复制表格",
+					"excel":"导出为EXCEL",
+					"print":"打印表格",
+					"colvis":"隐藏/显示列"
+				}
+			},
+			"pagingType":'full_numbers'
+		});
+	  //add table no
+	   dt.on('order.dt search.dt',
+			    function() {
+			        dt.column(0, {
+			            search: 'applied',
+			            order: 'applied'
+			        }).nodes().each(function(cell, i) {
+			            cell.innerHTML = i + 1;
+			        });
+			    }).draw(); 
+	  
+	  <!--{/if}-->
+	  
+	  jQuery('#btn_query_byfenrun').on('click',function(){
+		 $.getJSON("index.php?module=behalf&act=stat_all_fr",function(result){
+			  var retval = result.retval;
+			  var html = "您有已发货订单"+ retval.shipped_orders + "单，已完成订单"+ retval.finished_orders +
+			  "单，共"+ retval.total_orders +"单！快递分润"+ retval.fr_deliverys + "元，商品分润"+ retval.fr_result +"元。"
+			 $('#fenrun_area').removeClass('hidden').html(html);
+		 });
+	  });
+	
+  });
+
+</script>
+<div class="container-fluid">
+    <div style="height:10px;"></div>
+	<div class="panel panel-default">
+		<div class="panel-body">
+			<ul class="nav nav-tabs" role="tablist">
+			    <li role="presentation" class="active"><a href="#query_byday" aria-controls="query_byday" role="tab" data-toggle="tab">固定日期</a></li>
+			    <li role="presentation"><a href="#query_bycustom" aria-controls="query_bycustom" role="tab" data-toggle="tab">自定义时间段</a></li>
+			    <li role="presentation"><a href="#query_byfenrun" aria-controls="#query_byfenrun" role="tab" data-toggle="tab">发货及分润</a></li>
+			</ul>
+			<div style="height:20px;"></div>
+			<div class="tab-content">
+				<div role="tabpanel" class="tab-pane active" id="query_byday">
+						<form id="query_time_form" class="form-vertical" method="post">
+						<div class="form-group">
+						  <div class="row">
+						  	<label class="col-xs-1 text-right">发货日期</label>
+						  	<div class="col-xs-2">
+				   				<div class='input-group date' id='query_time_wrapper'>
+				                    <input type="text" class="form-control" name="query_time" value="{$start_time}">
+				                    <span class="input-group-addon">
+				                        <span class="glyphicon glyphicon-time"></span>
+				                    </span>
+				                </div>
+				            </div>
+				            <div class="col-xs-9"><small class="text-muted"><span class="glyphicon glyphicon-hand-right"></span> 指当日0:00-23:59:59</small></div>
+			              </div>
+				       </div>			      
+				       <input type="hidden" name="module" value="behalf" />
+				       <input type="hidden" name="act" value="stat_shipped_order" />
+				       <div class="form-group">
+				       		<div class="row">
+					       		<div class="col-xs-1"></div>
+						      	<div class="col-xs-2">
+					            	<input type="submit" class="btn btn-info" id="query_submit" value="开始统计"/>
+					            </div>
+					            
+				            </div>
+			            </div>
+					</form>
+				</div>
+				<div role="tabpanel" class="tab-pane" id="query_bycustom">
+				
+				</div>
+				<div role="tabpanel" class="tab-pane" id="query_byfenrun">
+					<button class="btn btn-info" id="btn_query_byfenrun">查看</button>
+					<div style="height:20px;"></div>
+					<div class="alert alert-info hidden" id="fenrun_area">
+					
+					</div>
+				</div>
+			 </div>		
+		  </div>
+	  </div>
+	  
+	  <!--{if $order_list}-->
+	  <div class="panel panel-default">
+		<div class="panel-body">	
+			<div class="row">
+				<div class="col-xs-10">
+					<label>统计：</label><span class="text-info">{$start_time}</span>&nbsp;&nbsp;
+					<b><a id="stat_btn" href="javascript:return false;" data-toggle="popover" data-trigger="focus" data-placement="top" data-content="统计结果：不包含发货和收货后，因全额退款引起取消的订单！">发货订单</a></b>总数量<b class="text-danger"> {$order_count|default:0} </b>单（共<b class="text-danger"> {$goods_count|default:0} </b>件），订单总金额<b class="text-danger"> {$order_amount|price} </b>
+					。其中，商品总金额<b class="text-danger"> {$order_goods_amount|price} </b>（含缺货和退款商品）；缺货<b class="text-danger"> {$lack_goods_count|default:0} </b>件，
+					缺货总金额<b class="text-danger"> {$lack_goods_amount|price} </b>；已退款订单<b class="text-danger"> {$back_order_count|default:0} </b>单，退款总金额<b class="text-danger"> {$back_order_amount|price} </b>。
+					
+					<!--{if $deliverys}-->
+						<strong class="text-warning">快递情况：</strong>
+						<!--{foreach from=$deliverys item=deliv}-->
+							<button class="btn btn-success btn-xs">{$deliv.name} <span class="badge">{$deliv.count|default:0}</span></button>
+						<!--{/foreach}-->
+					<!--{/if}-->
+					
+					<strong class="text-warning">分润情况：</strong>
+					快递分润<b class="text-danger"> {$kd_fr|default:0|price} </b>，
+					商品分润<b class="text-danger"> {$goods_fr|default:0|price} </b>，
+					
+				</div>
+				
+			</div>	
+			
+		</div>
+		
+			<table id="order_list_table" class="table table-condensed table-striped table-bordered table-hover" width="100%">
+		  	<thead>
+		  		<tr>
+		  		    <th class="text-center" width="30">NO</th>
+		  			<th class="text-center col-xs-1">订单编码</th>
+		  			<th class="text-center col-xs-1">订单状态</th>
+		  			<th class="text-center col-xs-1">下单时间</th>
+		  			<th class="text-center col-xs-1">支付时间</th>
+		  			<th class="text-center col-xs-1">发货时间</th>
+		  			<th class="text-center col-xs-1">成交时间</th>
+		  			<th class="text-center col-xs-1">快递单号</th>
+		  			<th class="text-center col-xs-1">订单金额</th>
+		  			<th class="text-center col-xs-1">商品金额</th>
+		  			<th class="text-center col-xs-1">买家</th>
+		  			<th class="text-center col-xs-2">档口名称</th>
+		  		</tr>
+		  	</thead>
+		  	<tbody>
+		  	<!--{foreach from=$order_list item=order}-->
+		  		<tr>
+		  		    <td class="text-center" width="30"></td>
+		  			<td class="text-center col-xs-1"><a href="index.php?module=behalf&act=show_order_detail&order_id={$order.order_id}">{$order.order_sn|escape}</a></td>
+		  			<td class="text-center col-xs-1">{$order.status|modifier:order_status}</td>
+		  			<td class="text-center col-xs-1"><!--{if $order.add_time }-->{$order.add_time|date:complete}<!--{/if}--></td>
+		  			<td class="text-center col-xs-1"><!--{if $order.pay_time }-->{$order.pay_time|date:complete}<!--{/if}--></td>
+		  			<td class="text-center col-xs-1"><!--{if $order.ship_time }-->{$order.ship_time|date:complete}<!--{/if}--></td>
+		  			<td class="text-center col-xs-1"><!--{if $order.finished_time }-->{$order.finished_time|date:complete}<!--{/if}--></td>
+		  			<td class="text-center col-xs-1">{$order.invoice_no|escape}</td>
+		  			<td class="text-center col-xs-1">{$order.order_amount|price}</td>
+		  			<td class="text-center col-xs-1">{$order.goods_amount|price}</td>
+		  			<td class="text-center col-xs-1">{$order.buyer_name|escape}</td>
+		  			<td class="text-center col-xs-2">{$order.seller_name|escape}</td>
+		  		</tr>
+		  	<!--{/foreach}-->
+		  	</tbody>
+		  </table>
+	   
+	  </div>
+	  <!--{else}-->
+				<div class="alert alert-warning">
+					<label>统计：</label><span class="text-info">{$start_time}</span>&nbsp;&nbsp;
+					<b><a id="stat_btn" href="javascript:return false;" data-toggle="popover" data-placement="top" data-trigger="focus" data-content="统计结果：不包含发货和收货后，因全额退款引起取消的订单！">发货订单</a></b>总数量<b class="text-danger"> {$order_count|default:0} </b>件，订单总金额<b class="text-danger"> {$order_amount|price} </b>；其中，商品总金额<b class="text-danger"> {$order_goods_amount|price} </b>。
+				</div>
+	  <!--{/if}-->
+	  
+</div>
+{include file=footer.whole.html}

@@ -1,0 +1,63 @@
+<script type="text/javascript">
+var _d = DialogManager.get('config_dialog');
+_d.setWidth(400);
+_d.setPosition('center');
+
+$("select[ectype='model_color_selector']").change(function(){
+	$(this).css('background', this.value);
+    $("input[ectype='model_color']").val(this.value);
+});
+
+$("select[name='img_recom_id']").change(function(){
+    switchRecommend(this.value, 'img_cate_id');
+});
+
+switchRecommend($("select[name='img_recom_id']").val(), 'img_cate_id');
+
+function switchRecommend(recomId, selectName)
+{
+    if (recomId >= 0)
+    {
+        $("select[name='" + selectName + "']").hide();
+    }
+    else
+    {
+        $("select[name='" + selectName + "']").show();
+    }
+}
+
+</script>
+<div class="field_item">
+    <label>楼层标记</label>
+    <p><input type="text" name="floor_name" value="{$options.floor_name}"/></p>
+</div>
+<div class="field_item">
+    <label>模块标题</label>
+    <p><input type="text" name="model_name" value="{$options.model_name}"/></p>
+</div>
+<div class="field_item">
+    <label>分类文字 （多个用半角逗号","隔开）</label>
+    <p><textarea name="cate_txt" style="width:300px;height:55px;">{$options.cate_txt}</textarea></p>
+</div>
+<div class="field_item">
+    <label>链接（多个用半角逗号","隔开）</label>
+    <p><textarea name="cate_url" style="width:300px;height:155px;">{$options.cate_url}</textarea></p>
+</div>
+<div class="field_item">
+    <label>商品推荐类型:</label>
+    <p><select name="img_recom_id">
+        <option value="0">请选择...</option>
+        <!-- {foreach from=$recommends key=recom_id item=recom_name} -->
+        <option value="{$recom_id}"{if $options.img_recom_id eq $recom_id} selected="selected"{/if}>{$recom_name|escape}</option>
+        <!-- {/foreach} -->
+    </select>
+    <select name="img_cate_id">
+        <option value="0">请选择分类...</option>
+        <!-- {html_options options=$gcategories selected=$options.img_cate_id} -->
+    </select>
+	</p>
+</div>
+<div class="field_item">
+    <label>宝贝数量</label>
+    <p><input type="text" name="goods_total" value="{$options.goods_total}"/></p>
+</div>

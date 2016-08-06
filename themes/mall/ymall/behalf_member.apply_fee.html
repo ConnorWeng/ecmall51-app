@@ -1,0 +1,73 @@
+<script type="text/javascript">
+$(function(){
+    $('#confirm_cancel').click(function(){
+        DialogManager.close('behalf_member_apply_fee');
+    });
+    
+    $("#order_apply_refund_form").validate({
+        errorPlacement: function(error, element){
+            var error_td = element.siblings('label');
+            error_td.append(error);
+        },
+        success: function(label){
+            label.hide();
+        },
+        submitHandler:function(form)
+        {        	
+        	form.submit();
+        },
+        onkeyup: false,
+        rules: {               
+        	apply_fee_reason: {
+               required: true
+            },
+            refund_amount:{
+            	required: true,                
+                number: true,
+                min:0,
+                max:100
+            }
+        },
+        messages: {               
+        	apply_fee_reason: {
+                required: '{$lang.select_required}'
+            },
+            refund_amount:{
+            	required: '{$lang.input_required}',
+                number: '{$lang.num_for_payAmount}',
+                min: '{$lang.min_for_payAmount}',
+                max: '{$lang.max_for_payAmount}'+'100'
+            }
+        }
+    });
+});
+</script>
+<ul class="tab">
+    <li class="active">{$lang.apply_fee}</li>
+</ul>
+<div class="content1">
+<div id="warning"></div>
+<form id="order_apply_refund_form" action="index.php?app=behalf_member&act=apply_fee&order_id={$order.order_id}&ajax" method="post" target="behalf_member">
+    <p>{$lang.apply_fee_reason}<em class="red">*</em>:
+    	<select name="apply_fee_reason" style="height:22px;line-height:22px;padding:1px 3px;width:120px;">
+    	  <option value="">{$lang.please_select_apply_reason}</option>
+    	  <option value="{$lang.change_order_goods}">{$lang.change_order_goods}</option>
+    	  <option value="{$lang.add_post_fee}">{$lang.add_post_fee}</option>
+    	  <option value="{$lang.bu_post_fee}">{$lang.bu_post_fee}</option>
+    	</select><label></label>
+    </p>
+    <p>
+     {$lang.refund_amount}<em class="red">*</em>:
+     <input type="text" name="refund_amount" class="text1" style="width:100px;"/> <span style="font-size:12px;font-weight:normal;">{$lang.zuiduo}&yen;100.00</span><label></label>
+    </p>
+    <p>
+     {$lang.apply_intro}:<label></label>
+     <textarea name="refund_intro" style="width:340px;height:120px;"></textarea>
+    </p>
+    <div class="btn">
+        <input type="submit" id="confirm_yes" class="btn1" value="{$lang.confirm}" />
+        <input type="button" id="confirm_cancel" class="btn2" value="{$lang.cancel}" />
+    </div>
+</form>
+</div>
+

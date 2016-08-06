@@ -1,0 +1,32 @@
+<div class="w-full" style="background-color:#{$widget_data.bgcolor}">
+<div id="top_advs_slider{$widget_data.model_id}" class=" w relative" style="width:{$widget_data.width}px;height:{$widget_data.height}px;">
+    <!--{if !$widget_data.ads}-->
+    <div class="padding10 center">请配置</div>
+    <!--{else}-->
+   <a class="sPrev absolute center fs22 pointer " style="right:20px;bottom:5px;width:16px;text-decoration:none;height:14px;z-index:1;display:none;"></a>
+   <a class="sNext absolute center fs22 pointer " style="right:5px;bottom:5px;width:16px;text-decoration:none;height:14px;z-index:1;display:none;"></a>
+   <div class="bd" style="width:{$widget_data.width}px;height:{$widget_data.height}px;z-index:0;">     
+      <!--{foreach from=$widget_data.ads item=ad name=fee_ad}-->			   
+	       <div><a href="{$ad.ad_link_url}" target="_blank"><img width="{$widget_data.width}" height="{$widget_data.height}" class="lazyload" {if $smarty.foreach.fee_ad.first} src="{$ad.ad_image_url}" {else} src="data/system/empty.gif" data-ks-lazyload="{$ad.ad_image_url}" {/if}/></a></div> 
+	   <!--{/foreach}--> 
+   </div>
+   
+   <script>
+   $('#top_advs_slider{$widget_data.model_id}').slide({
+ 		effect:'topLoop',
+ 		autoPlay:true,
+ 		interTime:5000,
+ 		delayTime:1000,
+ 		prevCell:'.sNext',
+ 		nextCell:'.sPrev',
+ 	}).hover(function(){
+ 		$(this).find('.sPrev').show();
+ 		$(this).find('.sNext').show();
+ 	},function(){
+ 		$(this).find('.sPrev').hide();
+ 		$(this).find('.sNext').hide();
+ 	});
+   </script>
+   <!--{/if}-->
+</div>
+</div>

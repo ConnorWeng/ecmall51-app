@@ -1,0 +1,23 @@
+﻿ <table width='920' align="center" cellpadding='0' cellspacing='1' bgcolor="#AACDED" id="cart_item_{$goods.rec_id}">
+            <tr>
+            <td width='7%' bgcolor="#EBF4FB" height="30">商品编号</td>
+    <td bgcolor="#EBF4FB" align="left">&nbsp;&nbsp;{$lang.store}: <a href="{url app=store&store_id=$goods_info.store_id}" target="_blank">{$goods_info.store_name|escape}</a>&nbsp;&nbsp;&nbsp;&nbsp;商品名称</td>
+    <td width='10%' bgcolor="#EBF4FB">规格</td>
+    <td width='9%' bgcolor="#EBF4FB">商品数量</td>
+	<td width='9%' bgcolor="#EBF4FB">总价</td>
+    </tr>
+<!--{foreach from=$goods_info.items item=goods}-->
+<tr>
+   <td bgcolor="#ffffff" style='padding:5px 0 5px 0;'>{$goods.goods_id}</td>
+   <td bgcolor="#ffffff" align="left" style="padding:5px;">
+      <div style="float:left;border:1px #ddd solid;margin-right:8px;">
+	     <a href="{url app=goods&id=$goods.goods_id}" target="_blank"><img src="{$goods.goods_image}" alt="{$goods.goods_name|escape}" width="65" height="65" /></a>
+	  </div>
+	  <span><a href="{url app=goods&id=$goods.goods_id}" target="_blank">{$goods.goods_name|escape}</a></span>
+   </td>
+   <td bgcolor="#ffffff">{$goods.specification|escape}</td>
+   <td bgcolor="#ffffff">{$goods.quantity}{$lang.goods_unit}</td>
+   <td bgcolor="#ffffff">{$goods.subtotal|price}</td>
+</tr>
+ <!--{/foreach}-->
+</table>

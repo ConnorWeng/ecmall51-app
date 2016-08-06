@@ -1,0 +1,67 @@
+{include file=member.header.html}
+<div class="content">
+    {include file=member.menu.html}
+    <div id="right">
+          <ul class="tab">
+                <li class="active">{$lang.wodezhanghu}</li>
+				<li class="normal"><a href="index.php?app=my_money&act=buyer">{$lang.mairuchaxun}</a></li>
+				<li class="normal"><a href="index.php?app=my_money&act=seller">{$lang.maichuchaxun}</a></li>
+				<li class="normal"><a href="index.php?app=my_money&act=intolog">{$lang.zhuanruchaxun}</a></li>
+				<li class="normal"><a href="index.php?app=my_money&act=outlog">{$lang.zhuanchuchaxun}</a></li>
+          </ul>
+	  
+        <div class="wrap margin1">
+            <div class="public table">
+				<div class="information_index" style="overflow:hidden; margin: 0px 0 -15px;">
+                 <div class="info">
+                        <h3 class="margin2">
+                            <span>{$lang.hello}！{$visitor.user_name}</span>
+                        </h3>
+                      <table class="width6">
+                      <tr>
+					  <td><span style="font-size:14px">
+					  <!--{foreach from=$my_money item=val key=key}-->
+{$lang.zhanghuzongjinere}<span style="font-size:16px;font-weight:bold; color:#FE5400;">{$val.money}</span>
+&nbsp;{$lang.yuan}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{$lang.dongjiejine}<span style="color:blue;">{$val.money_dj}</span>&nbsp;{$lang.yuan}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{$lang.jifen}<span style="color:blue;">{$val.jifen}</span></span>
+					  <!--{/foreach}-->
+					  </td>
+                      </tr>
+                      <tr>
+                      <td>{$lang.shangcidengluip}: {$visitor.last_ip}<br>
+                                    {$lang.shangcidenglushijian}:{$visitor.last_login|date:complete}<br> 
+                                    
+                                  &nbsp;<A 
+href="index.php?app=my_money&act=paylist">{$lang.lijichongzhi}</A>&nbsp;|&nbsp;<A 
+class=G href="index.php?app=my_money&act=txlist"><span style="color:green;">{$lang.tixian}</span></A>  
+					  </td> 
+
+                      </tr>
+                      </table>
+                  </div>
+                </div>			
+            </div>
+        </div>
+
+        <div class="wrap">
+          <div class="public table">
+            <h3 class="title" style="margin: -10px 0 20px; color:#3E3E3E">《51发支付》简介</h3>
+              <div style="color:#646665;float:left;font-size:12px;font-weight:normal;line-height:30px;">
+			  <span>　　51发支付是"我要做网店"（<a href="http://www.51zwd.com" target="_blank">www.51zwd.com</a>）于2009年9月正式推出专业在线支付平台，致力于为互联网用户和企业提供安全、便捷、专业的在线支付服务，完美结合上海商派网络科技有限公司旗下电子商务平台ECMALL，从而打造一个功能齐全、安全快速、数据同步 等一体化支付平台。<BR>
+　　51发支付构建全新的综合支付平台，业务覆盖B2B、B2C和C2C各领域，提供卓越的网上支付及清算服务。针对个人用户，51发支付提供了包括在线充值、提现、支付、交易管理等丰富功能；针对商家及用户，51发支付提供了安全可靠的支付清算服务和极富特色的个人网络兼职营销资源支持。<BR>
+　　51发支付易操作人性化客户管理平台，结合安全可靠的动态密码验证获得广大商家及用户们的认可。后台功能强大、高速程，序执行过程已接近100%全自动化操作，结合低成本高效率并且安全可靠的动态密码验证获得广大站长朋友们的青睐。<BR>
+　　充值支持银行及公司<BR>
+　　支付宝、财富通、百付宝、工商银行、农业银行、中国银行、建设银行、招商银行、上海浦东发展银行、邮政银行、农村信用合作社、中国银联、深圳发展银行、广东发展银行、民生银行、兴业银行、北京银行、广州市商业银行、深圳农村商业银行、交通银行、光大银行。<BR>
+　　&nbsp;&nbsp;<BR><BR>
+			  </span>		   </div>
+          </div>
+         </div>
+
+        <div class="clear"></div>
+        <div class="adorn_right1"></div>
+        <div class="adorn_right2"></div>
+        <div class="adorn_right3"></div>
+        <div class="adorn_right4"></div>
+    </div>
+
+<div class="clear"></div>
+{include file=footer.html}

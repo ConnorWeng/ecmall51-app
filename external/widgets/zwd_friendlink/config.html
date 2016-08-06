@@ -1,0 +1,38 @@
+﻿<script type="text/javascript">
+var _d = DialogManager.get('config_dialog');
+_d.setWidth(350);
+_d.setPosition({top:0,left:window.width/2}');
+
+</script>
+    
+<div class="field_item">	
+    <label>文章显示数量：</label>
+    <p><input type="text" name="amount" value="{$options.amount}" /></p> 
+</div>
+<div class="field_item">
+    <p><label>分类名称一：</label><input type="text" name="cate_name_1" value="{$options.cate_name_1}" /></p>
+    <label>推荐类型:</label>
+    <p><select name="cate_id1">
+    	<option value="0">请选择...</option>
+    	<!-- {html_options options=$acategories selected=$options.cate_id} -->
+    </select></p>
+</div>
+<div class="field_item">
+    <p><label>分类名称二：</label><input type="text" name="cate_name_2" value="{$options.cate_name_2}" /></p>
+    <label>推荐类型:</label>
+    <p><select name="cate_id2">
+    	<option value="0">请选择...</option>
+    	<!-- {html_options options=$acategories selected=$options.cate_id} -->
+    </select></p>
+</div>
+<div class="field_item">
+    <p><label>分类名称三：</label><input type="text" name="cate_name_3" value="{$options.cate_name_3}" /></p>
+    <label>推荐类型:</label>
+    <p><select name="cate_id3">
+    	<option value="0">请选择...</option>
+    	<!-- {html_options options=$acategories selected=$options.cate_id} -->
+    </select></p>
+</div>
+<div class="field_item">
+    <p><label>分类名称四：</label><input type="text" name="cate_name_4" value="{$options.cate_name_4}" /></p>    
+</div>

@@ -1,0 +1,34 @@
+<div id="nav">
+    <div class="banner"><a href="{url app=store&id=$store.store_id}">
+        <!--{if $store.store_banner}-->
+        <img src="{$store.store_banner}" width="1200" height="120" />
+        <!--{else}-->
+         <div style="width:1200px;height:120px;background:#F6F9DA;position:relative;">           
+           <h1 style="position:absolute;top:28px;left:60px;">
+           <a href="{url app=store&id=$store.store_id}" style="color:#666;text-decoration:none;font-size:22px;font-family:'microsoft yahei';">{$store.store_name|escape}</a>
+           <br>
+           <p style="font-size:12px;font-weight:normal;color:#676767;margin-top:6px;">{$store.mk_name|escape}-{$store.dangkou_address}&nbsp;&nbsp;
+           免费一键上传|支持多店铺&nbsp;&nbsp;数据包下载&nbsp;&nbsp;上新|下架更新
+           </p>
+           </h1>
+           <p style="position:absolute;top:80px;right:25px;">
+              <a href="{url app=my_store}" style="color:#559FDE;text-decoration:none;">登录后台免费上传店招</a>
+           </p>
+         </div>
+        <!--{/if}-->
+    </a></div>
+
+    <ul>
+        <li><a class="{if $smarty.get.app eq 'store' and $smarty.get.act eq 'index'}active{else}normal{/if}" href="{url app=store&id=$store.store_id}"><span>{$lang.store_index}</span></a></li>
+        {if $store.functions.groupbuy and $store.enable_groupbuy}
+        <li><a class="{if $smarty.get.app eq 'groupbuy' or $smarty.get.act eq 'groupbuy'}active{else}normal{/if}" href="{url app=store&act=groupbuy&id=$store.store_id}"><span>{$lang.nav_groupbuy}</span></a></li>
+        {/if}
+        <!--{foreach from=$store.store_navs item=store_nav}-->
+        <li><a class="{if $smarty.get.app eq 'store' and $smarty.get.act eq 'article' and $smarty.get.id eq $store_nav.article_id}active{else}normal{/if}" href="{url app=store&act=article&id=$store_nav.article_id}"><span>{$store_nav.title|escape}</span></a></li>
+        <!--{/foreach}-->
+        <li><a class="{if $smarty.get.app eq 'store' and $smarty.get.act eq 'credit'}active{else}normal{/if}" href="{url app=store&act=credit&id=$store.store_id}"><span>{$lang.credit_evaluation}</span></a></li>
+        <a class="collection" href="javascript:collect_store({$store.store_id})">{$lang.collect_the_store}</a>
+    </ul>
+
+    <div class="nav_bg"></div>
+</div>

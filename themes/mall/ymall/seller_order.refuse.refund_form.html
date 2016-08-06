@@ -1,0 +1,45 @@
+<script type="text/javascript">
+//<!CDATA[
+$(function(){
+       
+});
+
+
+function js_fail(str)
+{
+    $('#warning').html('<label class="error">' + str + '</label>');
+    $('#warning').show();
+}
+//]]>
+</script>
+<style>
+<!--
+#warning { border:red 1px solid; background:#FFB7B7; color:#000; padding:3px 10px; margin:8px 0px; display:none; color:#000; font-weight:normal; }
+#warning label { display:block; margin:3px 0px; }
+#warning label.error { color:#000; font-weight:normal; }
+-->
+</style>
+<ul class="tab">
+    <li class="active" style="color:#666;font-size:12px;font-weight:normal;">打回买家申请</li>
+</ul>
+<div class="eject_con">
+<div class="add">
+    <div id="warning"></div>
+    <form method="post" action="index.php?app=seller_order&act=refuse_protocol&id={$refund_info.id}" id="refund_form" target="iframe_post">
+    <ul>
+    	
+    		<li>
+            	<p style="border:1px solid #ff9900;padding:10px;display:block;width:500px;">
+            		<span class="strong fs14" style="color:#ff4400;">打回买家申请，等待买家修改协议。</span>
+            	</p>
+        	</li>
+        	<li>
+	            <h3>打回原因：</h3>
+	            <p><textarea name="refuse_reason" placeholder="请输入2-200字" style="width:432px;height:60px;border:1px solid #ddd;padding:4px;font-size:13px;"></textarea></p>
+        	</li>
+    	  
+    </ul>
+    <div class="submit"><input type="submit" class="btn" value="确 定" /></div>
+    </form>
+</div>
+</div>

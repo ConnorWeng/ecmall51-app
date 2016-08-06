@@ -1,0 +1,39 @@
+{include file="header.html"}
+<div id="rightTop">
+    <p>商付通设置</p>
+    <ul class="subnav">
+		<li><a class="btn3" href="index.php?module=my_money&act=index">{$lang.index_fanhuidaohang}</a></li>
+    </ul>
+</div>
+
+<div class="info">
+
+            <table class="infoTable">
+    <form method="post">
+<!--{foreach from=$index item=val}-->
+            <tr>
+                <th class="paddingT15">网银KEY</th>
+                <td class="paddingT15 wordSpacing5">
+				<input name="chinabank_key" type="text" id="chinabank_key" value="{$val.chinabank_key}" size="20">				</td>
+            </tr>
+            <tr>
+                <th class="paddingT15">网银MID</th>
+              <td class="paddingT15 wordSpacing5">
+				<input name="chinabank_mid" type="text" id="chinabank_mid" value="{$val.chinabank_mid}" size="20"></td>
+            </tr>
+            <tr>
+                <th class="paddingT15">网银URL</th>
+                <td class="paddingT15 wordSpacing5"><input name="chinabank_url" type="text" id="chinabank_url" value="{$val.chinabank_url}" size="80" /></td>
+            </tr>
+<!--{/foreach}-->
+	
+            <tr>
+            <th></th>
+            <td class="ptb20">
+                <input class="formbtn" type="submit" name="Submit" value="{$lang.submit}" />
+                <input class="formbtn" type="reset" name="Submit2" value="{$lang.reset}" />            </td>
+            </tr>
+    </form>
+      </table>	
+</div>
+{include file="footer.html"}

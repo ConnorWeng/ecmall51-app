@@ -1,0 +1,57 @@
+<script type="text/javascript" src="{lib file=mlselection.js}"></script>
+<script type="text/javascript">
+regionInit("region");
+$(function(){    
+    $('#cancel_button').click(function(){
+        DialogManager.close('behalf_member_adjust_consignee');
+    });
+});
+</script>
+<style type="text/css">
+.ajax_form_block { border-bottom:#dadada 1px dotted; padding-bottom:15px; padding-top:15px; }
+</style>
+<ul class="tab">
+    <li class="active">{$lang.adjust_consignee}</li>
+</ul>
+<div class="eject_con">
+    <form  method="post" target="behalf_member" action="index.php?app=behalf_member&act=adjust_consignee&order_id={$order.order_id}&ajax">
+    <div class="content_line" style="width:436px;">
+       <div style="margin-bottom:5px;">{$lang.consignee}:&nbsp;&nbsp;<input type="text" value="{$consignee.consignee|escape}" name="consignee" style="width:120px;height:20px;padding-left:4px;"/></div>
+       <div id="region" style="margin-bottom:5px;">{$lang.region}:
+                                    <input type="hidden" name="region_id" value="{$consignee.region_id}" class="mls_id" />
+                                    <input type="hidden" name="region_name" value="{$consignee.region_name|escape}" class="mls_names" />
+                                    <!-- {if $consignee.region_id} -->
+                                    <span>{$consignee.region_name|escape}</span>
+                                    <input type="button" value="{$lang.edit}" class="edit_region" />
+                                    <select style="display:none">
+                                      <option>{$lang.select_pls}</option>
+                                      {html_options options=$regions}
+                                    </select>
+                                    <!-- {else} -->
+                                    <select class="select">
+                                      <option>{$lang.select_pls}</option>
+                                      {html_options options=$regions}
+                                    </select>
+                                    <!-- {/if} -->
+       </div>
+       <div style="margin-bottom:5px;">{$lang.address}:&nbsp;&nbsp;<input type="text" value="{$consignee.address|escape}" name="address" style="width:240px;height:20px;padding-left:4px;"/></div>
+       <div style="margin-bottom:5px;">{$lang.phone_tel}:&nbsp;&nbsp;<input type="text" value="{$consignee.phone_tel|escape}" name="phone_tel" style="width:120px;height:20px;padding-left:4px;"/></div>
+       <div style="margin-bottom:5px;">{$lang.phone_mob}:&nbsp;&nbsp;<input type="text" value="{$consignee.phone_mob|escape}" name="phone_mob" style="width:120px;height:20px;padding-left:4px;"/></div>
+       <div style="margin-bottom:5px;">
+        <span>{$lang.logistics_company}:</span>
+        <select name="dl_id" style="width:120px;height:26px;line-height:24px;">
+           <option value="0">{$lang.please_select}</option>
+           <!--{foreach from=$deliverys item=delivery}-->  
+              <option value="{$delivery.dl_id}"  {if $delivery.dl_id eq $consignee.dl_id}selected{/if}>{$delivery.dl_name}</option>
+           <!--{/foreach}-->                 
+        </select>
+       </div>
+       <input type="hidden" name="order_id" value="{$consignee.order_id}">
+    </div>
+    
+    <div class="wrap_btn">
+        <input type="submit" class="btn1" value="{$lang.confirm}" />
+        <input type="button" id="cancel_button" class="btn2" value="{$lang.cancel}" />
+    </div>
+    </form>
+</div>

@@ -1,0 +1,69 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<base href="{$site_url}/" />
+<!-- Use IE7 mode -->
+<meta http-equiv="X-UA-Compatible" content="IE=EmulateIE7 charset={$charset}" />
+<meta http-equiv="Content-Type" content="text/html; charset={$charset}" />
+{$page_seo}
+
+<meta name="author" content="ecmall.shopex.cn" />
+<meta name="generator" content="ECMall {$ecmall_version}" />
+<meta name="copyright" content="ShopEx Inc. All Rights Reserved" />
+
+<link type="text/css" href="{res file=css/main.css}" rel="stylesheet"  />
+<script type="text/javascript" src="index.php?act=jslang"></script>
+<script type="text/javascript" src="{lib file=jquery.js}" charset="utf-8"></script>
+<script type="text/javascript" src="{lib file=ecmall.js}" charset="utf-8"></script>
+<script type="text/javascript" src="{res file=js/main.js}" charset="utf-8"></script>
+
+<!--{if $index}-->
+<script type="text/javascript" src="{lib file=kissy/build/kissy.js}"></script>
+<script type="text/javascript" src="{lib file=kissy/build/switchable/switchable-pkg.js}"></script>
+<script type="text/javascript" src="{res file=js/scroll.js}" charset="utf-8"></script>
+<!--{/if}-->
+<!--[if lte IE 6]>
+<script type="text/javascript" language="Javascript" src="{res file=js/hoverForIE6.js}"></script>
+<![endif]-->
+
+<script type="text/javascript">
+//<!CDATA[
+var SITE_URL = "{$site_url}";
+var REAL_SITE_URL = "{$real_site_url}";
+var PRICE_FORMAT = '{$price_format}';
+//]]>
+</script>
+
+{$_head_tags}
+<!--<editmode></editmode>-->
+</head>
+<body>
+<div id="top">
+    <div class="nav">
+       <div class="left">
+          {$lang.hello}，{$visitor.user_name|escape}，欢迎来购物 
+          <!--{if !$visitor.user_id}-->
+          <a href="{url app=member&act=login&ret_url=$ret_url}">{$lang.login}</a>
+          <a href="{url app=member&act=register&ret_url=$ret_url}">{$lang.register}</a>
+          <!--{else}-->
+          <a href="{url app=member&act=logout}">{$lang.logout}</a>
+          <!--{/if}-->
+       </div>
+       <ul class="right">
+          <li class="item">
+             <a href="{url app=member}">我的淘宝<ins></ins></a><b style="width:80px;"></b>
+             <div class="topexpend" style="width:72px;"><a href="{url app=my_goods}">出售中的宝贝</a><a href="{url app=seller_order}">已卖出的宝贝</a></div>
+          </li>
+          <li><a  href="{url app=category}">我要买</a></li>
+          <li><a  href="{url app=apply}">我要卖</a></li>
+          <li class="top-cart"><a href="{url app=cart}"><ins></ins>购物车(<b>{$cart_goods_kinds}</b>)</a></li>
+          <li class="item" style="background:none;">
+             <a href="{url app=app=my_favorite}">收藏夹<ins></ins></a><b></b>
+             <div class="topexpend"><a href="{url app=my_favorite}">收藏的宝贝</a><a href="{url app=my_favorite&type=store}">收藏的店铺</a></div>
+          </li>
+          <div class="clr"></div>
+       </ul>
+       <div class="clr"></div>
+    </div>
+</div>
+</div>

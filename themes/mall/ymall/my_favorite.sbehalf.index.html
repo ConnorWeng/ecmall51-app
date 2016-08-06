@@ -1,0 +1,114 @@
+{include file=member.header.html}
+<div class="content">
+    <div class="totline"></div><div class="botline"></div>
+    {include file=member.menu.html}
+    <div id="right">        
+        <div class="wrap">
+            <h2 class="fs22 strong f44 center" style="height:36px;line-height:36px;font-family:'microsoft yahei'">{$lang.behalf_signed}</h2>
+            
+            <div class="table" style="padding:10px 30px;">
+                <table>
+                    
+                    <tr class="line_bold">                        
+                        <th class="align1" colspan="11">
+                            <font style="color:#434343;font-size:14px;font-family:'microsoft yahei';">{$lang.default_signed_behalfs}</font>
+                        </th>
+                    </tr>
+                    <tr>
+                      <th></th>
+                      <th class="align2">{$lang.LOGO}</th>
+                      <th class="align2">{$lang.bh_name}</th>
+                      <th class="align2">{$lang.bh_owner}</th>
+                      <th class="align2">{$lang.bh_market}</th>
+                      <th class="align2">{$lang.region_address}</th>
+                      <th class="align2">{$lang.zipcode}</th>
+                      <th class="align2">{$lang.bh_ww}</th>
+                      <th class="align2">{$lang.QQ}</th>
+                      <th class="align2">{$lang.tel}</th>                      
+                      <th></th>
+                    </tr>
+                    <!--{foreach from=$default_signed_behalfs item=behalf name=v}-->
+                    <!--{if $smarty.foreach.v.last}--><tr class="line_bold"><!--{else}--><tr class="line" ><!--{/if}-->
+                        <td class="align2"><input type="checkbox" class="checkitem" value="{$behalf.bh_id}"/></td>
+                        <td class="align2" style="padding:10px 3px;">
+                            <p class="ware_pic"><a href="{url app=bhstore&id=$behalf.bh_id}" target="_blank"><img src="{$behalf.bh_logo}" height="50"  /></a></p>
+                        </td>
+                        <td class="align2" style="padding:5px 3px;">
+                            <p clss="ware_text" style="white-space:nowrap;"><a href="{url app=bhstore&id=$behalf.bh_id}" target="_blank">{$behalf.bh_name|escape}</a></p>
+                        </td>
+                        <td class="width2 align2" style="padding:5px 3px;">{$behalf.user_name|escape}|{$behalf.real_name|escape|default:-}</td>
+                        <td class="width5 align2" style="padding:5px 3px;"><span class="hintModal pointer">{$behalf.behalf_markets.0.mk_name|escape|truncate:10}...<div class="hintModal_container">
+                            <!--{foreach from=$behalf.behalf_markets item=market}-->
+                               <a href="javascript:;" class="mr5" style="white-space:nowrap;line-height:24px;">{$market.mk_name|escape}</a>
+                            <!--{/foreach}-->
+                        </div></span></td>
+                        <td class="width5 align2" style="padding:5px 3px;"><span class="hintModal pointer">{$behalf.region_name|escape|truncate:10}<div class="hintModal_container">{$behalf.region_name|escape}&nbsp;&nbsp;{$behalf.bh_address|escape}</div></span></td>
+                        <td class="width2 align2" style="padding:5px 3px;">{$behalf.zipcode|escape}</td>
+                        <td class="width2 align2" style="padding:5px 3px;">{$behalf.bh_ww|escape}</td>
+                        <td class="width2 align2" style="padding:5px 3px;">{$behalf.bh_qq|escape}</td>
+                        <td class="width2 align2" style="padding:5px 3px;">{$behalf.bh_tel|escape}</td>
+                        <td class="width2 align2" style="padding:5px 3px;"><a target="_blank" href="{url app=message&act=send&to_id=$behalf.bh_id}" class="email" title="{$lang.send_message}"></a></td>
+                    </tr>                    
+                    <!--{/foreach}-->                    
+                </table>
+            </div>
+            
+            
+            
+            
+            <div class="table" style="padding:10px 30px;">
+                <table>
+                    <!--{if $collect_behalf}-->
+                    <tr class="line_bold">
+                        <th class="width1"><input type="checkbox" id="all" class="checkall"/></th>
+                        <th class="align1" colspan="7">
+                            <label for="all"><span class="all">{$lang.checkall}</span></label>
+                            <a href="javascript:void(0);" class="delete" uri="index.php?app=my_favorite&act=drop&type=sbehalf" name="item_id" presubmit="confirm('{$lang.drop_confirm}')" ectype="batchbutton">{$lang.unsigned}</a>
+                        </th>
+                    </tr>
+                    <!--{/if}-->
+                    <!--{foreach from=$collect_behalf item=behalf name=v}-->
+                    <!--{if $smarty.foreach.v.last}--><tr class="line_bold"><!--{else}--><tr class="line"><!--{/if}-->
+                        <td class="align2"><input type="checkbox" class="checkitem" value="{$behalf.bh_id}"/></td>
+                        <td>
+                            <p class="ware_pic"><a href="{url app=bhstore&id=$behalf.bh_id}" target="_blank"><img src="{$behalf.bh_logo}" width="50" height="50"  /></a></p>
+                        </td>
+                        <td>
+                            <p class="ware_text"><a href="{url app=bhstore&id=$behalf.bh_id}" target="_blank">{$behalf.bh_name|escape}</a></p>
+                        </td>
+                        <td class="width2">{$behalf.user_name|escape}</td>
+                        <td class="width2"><a target="_blank" href="{url app=message&act=send&to_id=$behalf.bh_id}" class="email" title="{$lang.send_message}"></a></td>
+                        <td class="width5">{$behalf.region_name|escape}</td>
+                        <td class="width2"><a href="javascript:drop_confirm('{$lang.drop_confirm}', 'index.php?app=my_favorite&amp;act=drop&type=sbehalf&item_id={$behalf.bh_id}');" class="delete">{$lang.unsigned}</a></td>
+                    </tr>
+                    
+                    <!--{/foreach}-->
+                    <!--{if $collect_behalf}-->
+                    <tr>
+                        <th><input type="checkbox" id="all2" class="checkall"/></th>
+                        <th colspan="7">
+                            <p class="position1">
+                                <label for="all2"><span class="all">{$lang.checkall}</span></label>
+                                <a href="javascript:void(0);" class="delete" uri="index.php?app=my_favorite&act=drop&type=sbehalf" name="item_id" presubmit="confirm('{$lang.drop_confirm}')" ectype="batchbutton">{$lang.unsigned}</a>
+                            </p>
+                            <p class="position2">
+                                 {include file=member.page.bottom.html}
+                            </p>
+                        </th>
+                    </tr>
+                    <!--{/if}-->
+                </table>
+            </div>
+            <div class="wrap_bottom"></div>
+        </div>
+        <div class="clear"></div>
+        <div class="adorn_right1"></div>
+        <div class="adorn_right2"></div>
+        <div class="adorn_right3"></div>
+        <div class="adorn_right4"></div>
+    </div>
+    <div class="clear"></div>
+</div>
+<script src="{lib file='jquery.plugins/popModal/popModal.min.js'}"></script>
+<iframe name="iframe_post" width="0" height="0"></iframe>
+{include file=footer.html}

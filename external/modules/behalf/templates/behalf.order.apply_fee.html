@@ -1,0 +1,92 @@
+{include file=header.whole_nolefttop.html}
+<script type="text/javascript">
+	$(function(){
+		
+		$("#form").bootstrapValidator({
+			  feedbackIcons: {
+		            valid: 'glyphicon glyphicon-ok',
+		            invalid: 'glyphicon glyphicon-remove',
+		            validating: 'glyphicon glyphicon-refresh'
+		        }, 
+			  fields:{
+				  refund_amount:{
+					  validators:{
+						  notEmpty:{message:'金额必填！'},
+						  lessThan:{
+							value:100,
+							inclusive: true,
+							message:'金额大于100，请输入0-100之间的金额!'
+						  }//, 
+						  /* regexp:{
+							  regexp:/^[1-9]+(.[0-9]{1,2})?$/,
+							  message:'请输入0-100之间的金额'
+						  } */
+					  }
+				  },
+				  refund_intro:{
+					  validators:{
+						  notEmpty:{message:'请说明补差的原由！'}
+					  }
+				  }
+			  }
+		  });
+		
+	    $("#cancelbtn").on('click',function(){
+	    	window.parent.js_success(0);
+	    });
+		
+		
+	});
+</script>
+
+<div class="container-fluid">
+	<form id="form" class="form-horizontal" action="index.php?module=behalf&act=apply_fee&order_id={$order.order_id}" method="post">
+		<div class="form-group">
+			<label class="col-xs-2 text-right control-label">{$lang.apply_fee_reason}</label>
+			<div class="col-xs-9">
+				<select name="apply_fee_reason" class="form-control">
+		    	  <option value="{$lang.change_order_goods}">{$lang.change_order_goods}</option>
+		    	  <option value="{$lang.add_post_fee}">{$lang.add_post_fee}</option>
+		    	  <option value="{$lang.bu_post_fee}">{$lang.bu_post_fee}</option>
+		    	</select>
+			</div>
+		</div>
+		<div class="form-group">
+			<label class="col-xs-2 text-right control-label">{$lang.refund_amount}</label>
+			<div class="col-xs-9">
+				<input type="text" name="refund_amount" class="form-control" /> <span class="text-warning">{$lang.zuiduo}&yen;100.00</span>
+			</div>
+		</div>
+		<div class="form-group">
+			<label class="col-xs-2 text-right control-label">{$lang.apply_intro}</label>
+			<div class="col-xs-9">
+				<textarea name="refund_intro" class="form-control"></textarea>
+			</div>
+	     </div>
+		
+		 <div class="form-group">
+			<label class="col-xs-2 text-right control-label"></label>
+			<div class="col-xs-9">
+				<button class="btn btn-primary" id="savebtn" type="submit">保 存</button>
+				<button class="btn btn-success" id="cancelbtn">取 消</button>
+			</div>
+	     </div>
+	</form>
+
+
+
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+{include file=footer.whole.html}

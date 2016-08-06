@@ -1,0 +1,348 @@
+{include file=header.html}
+<script src="{lib file=mlselection.js}" charset="utf-8"></script>
+<script src="{lib file=jquery.plugins/jquery.validate.js}" charset="utf-8"></script>
+<style type="text/css">
+.d_inline{display:inline;}
+</style>
+<div class="content">
+<script type="text/javascript">
+//<!CDATA[
+var SITE_URL = "{$site_url}";
+var REAL_SITE_URL = "{$real_site_url}";
+$(function(){
+    regionInit("region");
+    //marketInit('market');
+    
+    jQuery.validator.addMethod('isDk',function(value,element){
+    	var dk = /^[A-Z|a-z|0-9][A-Z|a-z|0-9|\-|_]*$/;
+    	return this.optional(element)||(dk.test(value));
+    },"请正确填写档口地址");
+    jQuery.validator.addMethod('shopHttp',function(value,element){
+    	var shopHttp = /^https\:\/\/([a-z|A-Z|0-9|\-|_])+\.taobao\.com$/;
+    	return this.optional(element)||(shopHttp.test(value));
+    },"请正确填写淘宝店铺地址");
+   
+
+    $("#pply_form").validate({
+        errorPlacement: function(error, element){
+            var error_td = element.parents('td').next('td');
+            error_td.find('.field_notice').hide();
+            error_td.find('.fontColor3').hide();
+            error_td.append(error);
+        },
+        success: function(label){
+            label.addClass('validate_right').text('OK!');
+        },
+        onkeyup: false,
+        rules: {
+           /*  owner_name: {
+                required: true
+            },  */
+            store_name: {
+                required: true,                
+                maxlength: 20
+            },
+            tel: {
+                required: true,
+                minlength:6,
+                checkTel:true
+            },
+            im_qq:{
+            	required: true,
+            },
+            im_ww:{
+            	required: true,
+            	remote : {
+            		url:"index.php?app=apply&act=check_ww",
+            		type:'post',
+            		dataType:'json',
+            		data:{
+            			ww:function(){
+            				return $('#im_ww').val();
+            			}
+            		}
+            	}
+            },            
+            shop_http:{
+            	required: true,
+            	shopHttp: true,
+            	remote:{
+            		url:"index.php?app=apply&act=check_shop_address",
+            		type:"post",
+            		dataType:'json',
+            		data:{
+            			taobao:function(){
+            				return $('#shop_http').val();
+            			}
+            		}
+            	}
+            },
+            dangkou_address:{
+            	required: true,
+            	isDk: true
+            },
+            see_price:{
+            	required:true
+            },
+            mk_id:{
+            	required:true
+            },
+           /*  image_1: {
+            	required :true,
+                accept: "jpg|jpeg|png|gif"
+            },
+            image_2: {
+            	required :true,
+                accept: "jpg|jpeg|png|gif"
+            },
+            image_3: {
+                accept: "jpg|jpeg|png|gif"
+            }, */
+            notice:{
+                required : true
+            }
+        },
+        messages: {
+           /*  owner_name: {
+                required: '{$lang.input_owner_name}'
+            },  */
+            store_name: {
+                required: '{$lang.input_store_name}',
+                maxlength: '{$lang.note_for_store_name}'
+            },
+            tel: {
+                required: '{$lang.input_tel}',
+                minlength: '{$lang.phone_tel_error}',
+                checkTel: '{$lang.phone_tel_error}'
+            },
+            im_qq:{
+            	required: '{$lang.qq_required}',
+            },
+            im_ww:{
+            	required: '{$lang.ww_required}',
+            	remote:'{$lang.ww_checked}'
+            },           
+            shop_http:{
+            	required: '{$lang.shop_http_required}',
+            	shopHttp:'请输入正确的淘宝店铺网址: https://shop***.taobao.com',
+            	remote:'{$lang.shop_http_checked}'
+            },
+            dangkou_address:{
+            	required: '{$lang.dangkou_address_required}',
+            	isDk:'请输入正确的档口地址，只能包含数字、字母、下划线和短横线，如:A35-B'
+            },
+            see_price:{
+            	required:'必选'
+            },
+            mk_id:{
+            	required:'市场及楼层必选'
+            },
+            /* image_1: {
+            	required: '{$lang.idcard_photo}',
+                accept: '{$lang.select_valid_image}'
+            },
+            image_2: {
+            	required: '{$lang.cert_photo}',
+                accept: '{$lang.select_valid_image}'
+            },
+            image_3: {
+                accept: '{$lang.select_valid_image}'
+            }, */
+            notice: {
+                required: '{$lang.check_notice}'
+            }
+        }
+    });
+    
+    $('#mk_select').change(function(){
+    	if($(this).val() > 0)
+        {
+    		var url = REAL_SITE_URL + '/index.php?app=mlselection&type=market';
+            $.getJSON(url, {'pid':this.value}, function(data){
+                if (data.done)
+                {
+                    if (data.retval.length > 0)
+                    {
+                        $("#floor_select").empty().append("<option value=''>"+lang.select_pls+"</option>");
+                        var data  = data.retval;
+                        for (i = 0; i < data.length; i++)
+                        {
+                            $("#floor_select").append("<option value='" + data[i].mk_id + "'>" + data[i].mk_name + "</option>");
+                        }                        
+                    }
+                }
+                else
+                {
+                    alert(data.msg);
+                }
+            });
+        }    	
+    });
+    $('#floor_select').change(function(){
+    	if($(this).val() > 0)
+    	{
+    		$('#mls_mnames').val($("#mk_select option:selected").text()+'-'+$("#floor_select option:selected").text());
+    	}
+    });
+});
+//]]>
+</script>
+<div id="main" class="w-full">
+<div id="page-apply" class="w mt10 mb20">
+   <div class="title border padding5 fs14 strong">
+      {$lang.i_want_open_store}
+   </div>
+   <div class="content border border-t-0 padding10 apply2">
+      <form method="post" enctype="multipart/form-data" id="apply_form">
+         <table>
+           <tr>
+              <th>{$lang.region}{$lang.colon}</th>
+              <td>
+                <!--{if $nc neq 'nc'}-->
+                  <div class="select_add" id="region" style="width:500px;">
+                      <input type="hidden" name="region_id" value="{$store.region_id}" class="mls_id" />
+                      <input type="hidden" name="region_name" value="{$store.region_name}" class="mls_names" />
+                      {if $store.region_name}
+                      <span>{$store.region_name|escape}</span>
+                      <input type="button" value="{$lang.edit}" class="edit_region" />
+                      {/if}
+                      <select class="d_inline"{if $store.region_name} style="display:none;"{/if}>
+                         <option value="0">{$lang.select_pls}</option>
+                         {html_options options=$regions}
+                      </select>
+                   </div>
+                 <!--{else}-->
+                   <input type="hidden" name="region_id" value="318" class="mls_id" />
+                    <input type="hidden" name="region_name" value="{$lang.nc_region_name}" class="mls_names" />
+                   {$lang.nc_region_name}
+                 <!--{/if}-->
+               </td>
+               <td></td>
+            </tr>    
+            <tr>
+                <th>{$lang.market_floor}{$lang.colon}</th>
+                <td>
+                  <!--  <div class="select_add" id="market" style="width:500px;">
+                      <input type="hidden" name="mk_id" value="{$store.mk_id}" class="mls_mid" />
+                      <input type="hidden" name="mk_name" value="{$store.mk_name}" class="mls_mnames" />
+                      {if $store.mk_name}
+                      <span>{$store.mk_name|escape}</span>
+                      <input type="button" value="{$lang.edit}" class="edit_market" />
+                      {/if}
+                      <select class="d_inline"{if $store.mk_name} style="display:none;"{/if}>
+                         <option value="0">{$lang.select_pls}</option>
+                         {html_options options=$markets}
+                      </select>
+                   </div> -->
+                   <select class="d_inline" id="mk_select">
+                         <option value="0">{$lang.select_pls}</option>
+                         {html_options options=$markets}
+                   </select>
+                   <select class="d_inline" name="mk_id" id="floor_select">
+                   		<option value="">{$lang.select_pls}</option>
+                   </select>
+                   <input type="hidden" name="mk_name" value="{$store.mk_name}" id="mls_mnames" />
+                </td>
+                <td class="padding3"></td>
+            </tr>   
+            <tr>
+              <th>{$lang.store_category}{$lang.colon}</th>
+              <td>
+                 <div class="select_add">
+                    <select name="cate_id">
+                       <option value="0">{$lang.select_pls}</option>
+                       {html_options options=$scategories selected=$scategory.cate_id}
+                    </select>
+                 </div>
+              </td>
+              <td></td>
+           </tr>   
+           <tr>
+                <th>{$lang.dangkou_position}{$lang.colon}</th>
+                <td><input type="text" class="input border" name="dangkou_address" value="{$store.dangkou_address|escape}"/></td>
+                <td class="padding3"><span class="fontColor3">*</span> <span class="field_notice">{$lang.note_for_dangkou_address}</span></td>
+           </tr>
+           <!-- <tr>
+                     <th>{$lang.owner_name}: </th>
+                     <td class="width7"><input type="text" class="text width7" name="owner_name" value="{$store.owner_name|escape}"/></td>
+                     <td class="padding3"><span class="fontColor3">*</span> <span class="field_notice">{$lang.note_for_owner_name}</span></td>
+           </tr>    -->                
+           <tr>
+              <th>{$lang.store_name}{$lang.colon}</th>
+              <td><input type="text" class="input border" name="store_name" id="store_name" value="{$store.store_name|escape}"/></td>
+              <td class="padding3"><span class="fontColor3">*</span> <span class="field_notice">{$lang.note_for_store_name}</span></td>
+           </tr>
+            <tr>
+                <th>{$lang.taobao_shop}{$lang.colon}</th>
+                <td><input type="text" class="input border" name="shop_http" id="shop_http" value="{$store.shop_http|escape}" style="width:320px;"/></td>
+                <td class="padding3" ><span class="fontColor3">*</span> <span class="field_notice">{$lang.taobao_shop_note}</span></td>
+            </tr>
+            
+           
+           
+             <tr>
+                <th>{$lang.im_ww}{$lang.colon}</th>
+                <td><input type="text" class="input border" name="im_ww" id="im_ww" value="{$store.im_ww|escape}"/></td>
+                <td class="padding3" ><span class="fontColor3">*</span> <span class="field_notice">{$lang.im_ww_note}</span></td>
+            </tr>
+            
+            <tr>
+              <th>{$lang.goods_discount}{$lang.colon}</th>
+              <td >
+                <select name="see_price">
+                   <option value="">{$lang.select_pls}</option>
+                   <!--{foreach from=$goods_discounts item=ds}-->
+                      <option value="{$ds}">{$ds}</option>
+                   <!--{/foreach}-->
+                </select>
+                
+              </td>
+              <td class="padding3"></td>
+            </tr>
+             
+             <tr>
+                 <th>{$lang.tel}{$lang.colon}</th>
+                 <td>
+                     <input type="text" class="input border" name="tel"  value="{$store.tel|escape}"/>
+                 </td>
+                <td class="padding3"><span class="fontColor3">*</span> <span class="field_notice">{$lang.input_tel}</span></td>
+              </tr> 
+              <tr>
+                <th>{$lang.QQ}{$lang.colon}</th>
+                <td><input type="text" class="input border" name="im_qq" value="{$store.im_qq|escape}"/></td>
+                <td class="padding3" ><span class="fontColor3">*</span> <span class="field_notice">{$lang.QQ}</span></td>
+            </tr> 
+            <tr>
+                <th>{$lang.im_wx}{$lang.colon}</th>
+                <td><input type="text" class="input border" name="im_wx" value="{$store.im_wx|escape}"/></td>
+                <td class="padding3" > <span class="field_notice">{$lang.im_wx_note}</span></td>
+            </tr> 
+            
+              <tr>
+               <td colspan="3"><div style="border-bottom:1px dashed #ccc;height:0px;margin:10px 0;"></div></td>
+              </tr> 
+              <tr>
+                <th>{$lang.shop_service}{$lang.colon}</th>
+                <td>
+                  <input type="checkbox" name="serv_refund"/>{$lang.serv_refund} &nbsp;&nbsp;&nbsp;&nbsp;
+                  <input type="checkbox" name="serv_exchgoods"/>{$lang.serv_exchgoods} &nbsp;&nbsp;&nbsp;&nbsp;
+                  <input type="checkbox" name="serv_sendgoods"/>{$lang.serv_sendgoods}
+                </td>
+                <td></td>
+              </tr>
+              <tr>
+                 <td colspan="3" height='10'></td>
+              </tr>
+              <tr>
+                 <td colspan="2" class="warning"><p><input type="checkbox"{if $store} checked="checked"{/if} name="notice" value="1" id="warning" /> <label for="warning">{$lang.notice}</label></p></td>
+                 <td class="padding3"></td>
+              </tr>
+              <tr>
+                  <td colspan="3"><input class="btn-apply border0 fs14 strong fff pointer" type="submit" value="{$lang.submit}" /></td>
+              </tr>
+           </table>
+       </form>
+    </div>
+</div>
+</div>
+{include file=footer.html}

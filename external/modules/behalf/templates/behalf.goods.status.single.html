@@ -1,0 +1,9 @@
+<ul class="list-inline">
+	{if $goods.goods_status eq BEHALF_GOODS_PREPARED }<li><label class="label label-default">备货中</label></li>{/if}
+	{if $goods.goods_status eq BEHALF_GOODS_READY }<li><label class="label label-primary">已备货</label></li>{/if}
+	{if $goods.goods_status eq BEHALF_GOODS_TOMORROW }<li><label class="label label-warning">明天有</label></li>{/if}
+	{if $goods.goods_status eq BEHALF_GOODS_UNFORMED }<li><label class="label label-danger">未出货</label></li>{/if}
+	{if $goods.goods_status eq BEHALF_GOODS_UNSALE }<li><label class="label label-danger">已下架</label></li>{/if}
+	{if $goods.goods_status eq BEHALF_GOODS_SEND }<li><label class="label label-success">已发货</label></li>{/if}
+	{if $goods.goods_status eq BEHALF_GOODS_REBACK }<li><label class="label label-danger">已退货</label></li>{/if}
+</ul>

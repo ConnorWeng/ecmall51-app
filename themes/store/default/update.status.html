@@ -1,0 +1,55 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+    <head>
+        <meta http-equiv="X-UA-Compatible" content="IE=EmulateIE7 charset={$charset}" />
+        <meta http-equiv="Content-Type" content="text/html;charset={$charset}" />
+        <script type="text/javascript" src="{lib file=jquery.js}" charset="utf-8"></script>
+        <script>
+         $.post('index.php?app=shop&act=update_status').success(function(data) {
+             var stores = $.parseJSON(data);
+             var htmlStr = '';
+             for (var i = 0; i < stores.length; i++) {
+                 store = stores[i];
+                 htmlStr += '<tr>';
+                 htmlStr += '<td class="store_id">'+store.store_id+'</span>';
+                 htmlStr += '<td class="date">'+store.date+'</span>';
+                 htmlStr += '<td class="button"><input class="update" type="button" value="更新"/></span>';
+                 htmlStr += '</tr>';
+             }
+             $('table tbody')[0].innerHTML = htmlStr;
+         });
+         $(document).on('click', '.update', function(event) {
+             $(event.target).attr('disabled','disabled');
+             var storeId = $(event.target).parent().parent().find('.store_id').text();
+             $.ajax({
+                 type:'getJSON',
+                 dataType:'jsonp',
+                 jsonp:'jsonp_callback',
+                 url:"http://121.41.170.236:30005/store/" + storeId,
+                 success:function(json){
+                     if (json.status == 'ok') {
+                         alert("更新成功！");
+                     } else {
+                         alert("更新失败！");
+                     }
+                 },
+                 error:function(errors){
+                     alert("更新失败！");
+                 }
+             });
+         });
+        </script>
+    </head>
+    <body>
+        <div>
+            <table style="border: 1px solid gray">
+                <thead>
+                    <th>store_id</th>
+                    <th>update_date</th>
+                    <th>operation</th>
+                </thead>
+                <tbody></tbody>
+            </table>
+        </div>
+    </body>
+</html>

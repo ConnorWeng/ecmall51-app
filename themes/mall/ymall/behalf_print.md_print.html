@@ -1,0 +1,96 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<base href="{$site_url}/" />
+<!-- Use IE7 mode -->
+<!-- <meta http-equiv="X-UA-Compatible" content="IE=EmulateIE7 charset=$charset" /> -->
+<meta http-equiv="Content-Type" content="text/html; charset={$charset}" />
+{$page_seo}
+
+<meta name="author" content="51zwd.com" />
+<meta name="copyright" content="51zwd.com. All Rights Reserved" />
+<link href="{res file=css/global.css}" rel="stylesheet" type="text/css" />
+<link href="{lib file=easyui/themes/bootstrap/easyui.css}" rel="stylesheet" type="text/css" />
+<link href="{lib file=easyui/themes/icon.css}" rel="stylesheet" type="text/css" />
+<link href="{res file=css/print.css}" rel="stylesheet" type="text/css" />
+<script type="text/javascript" src="{lib file=easyui/jquery.min.js}" charset="utf-8"></script>
+<script type="text/javascript" src="{lib file=easyui/jquery.easyui.min.js}" charset="utf-8"></script>
+<script type="text/javascript" src="{lib file=easyui/locale/easyui-lang-zh_CN.js}" charset="utf-8"></script>
+<script language="javascript" src="{lib file=lodop/LodopFuncs.js}"></script>
+
+<script type="text/javascript">
+var SITE_URL = "{$site_url}";
+var REAL_SITE_URL = "{$real_site_url}";
+var PRICE_FORMAT = '{$price_format}';
+var jjname="{$behalf.owner_name}";
+var jjtel="{$behalf.bh_tel}";
+var jjadr="{$behalf.region_name}";
+var LODOP=getLodop(document.getElementById('LODOP_OB'),document.getElementById('LODOP_EM'));
+</script>
+<script type="text/javascript" src="{lib file=print/md_print.js}" charset="utf-8"></script>
+</head>
+<body class="easyui-layout" >
+<div style="display:none;">
+<object  id="LODOP_OB" classid="clsid:2105C259-1E0C-4534-8141-A753534CB4CA" width="0" height="0" > 
+       <embed id="LODOP_EM" type="application/x-print-lodop" width="0" height="0"></embed>
+</object>
+</div>
+<table id="dg"></table>
+<div id="query">
+	<div style="padding:5px;">
+		<a href="javascript:cancel_invoice();" class="easyui-linkbutton float-right" data-options="iconCls:'icon-app-del'" id="cancel_invoice">{$lang.cancel_invoice}</a>
+		<a href="javascript:get_failinfo();" class="easyui-linkbutton float-right" style="margin-right:5px;" data-options="iconCls:'icon-app-link'" id="get_failinfo">{$lang.get_failinfo}</a>
+		<a href="javascript:restore_invoice();" class="easyui-linkbutton" data-options="iconCls:'icon-app-in'" id="reload_invoice">{$lang.reload_invoice}</a>
+		<a href="javascript:print_all();" class="easyui-linkbutton" data-options="iconCls:'icon-print'" id="printall">{$lang.printall}</a>
+		<a href="javascript:async_ship();" class="easyui-linkbutton" data-options="iconCls:'icon-script-go'" id="async_shipped">{$lang.async_shipped}</a>
+		<span>
+		 当前模板：
+		<select id="select_template_setup" name="template" class="easyui-combobox" style="line-height:22px;">
+			<option value="zto">中通快递</option>
+			<option value="yto">圆通快递</option>
+		</select>
+		</span>
+		<span id="printer_equipment">
+		</span>
+		<!-- <a href="javascript:template_setup()" class="easyui-linkbutton" data-options="iconCls:'icon-print-add'" id="template_setup">{$lang.template_setup}</a> -->
+	</div>
+	<div style="clear:both;"></div>
+	<div style="padding:5px;">
+	  <form id="query_form">
+		<span>{$lang.order_sn}</span>
+		<input id="order_sn" style="width:120px;height:18px;line-height:18px;border:1px solid #ccc">
+		<span>{$lang.seller_bm}</span>
+		<input id="seller_bm" style="width:120px;height:18px;line-height:18px;border:1px solid #ccc">
+		<span>{$lang.buyer_name}</span>
+		<input id="buyer_name" style="width:120px;height:18px;line-height:18px;border:1px solid #ccc">
+		<span>{$lang.pay_time}</span>
+		<input id="from_timeto" name="from_timeto" class="easyui-datetimebox" style="width:145px;">
+		<span>-</span>
+		<input id="to_timeto" name="to_timeto" class="easyui-datetimebox" style="width:145px;">
+		<span>{$lang.order_status}</span>
+		<select id="order_status" class="easyui-combobox" name="type" style="line-height:22px;border:1px solid #ccc">
+			<option value="">所有状态</option>
+			<option value="accepted">待发货</option>
+			<option value="shipped">已发货</option>
+		</select>
+		<span>{$lang.deliverys}</span>
+		<select id="exp_delivery" class="easyui-combobox" name="delivery" style="line-height:22px;border:1px solid #ccc">
+			<option value="">所有快递</option>
+			<!--{foreach from=$deliverys item=delivery}-->
+			<option value="{$delivery.dl_id}">{$delivery.dl_name}</option>
+			<!--{/foreach}-->
+		</select>
+		<a href="javascript:;" class="easyui-linkbutton" data-options="iconCls:'icon-search'" id="btnSearch">{$lang.search}</a>
+		<a href="javascript:clearForm();" class="easyui-linkbutton" data-options="iconCls:'icon-clear'" id="btnClear">{$lang.clear}</a>
+	  </form>
+	</div>
+</div>	
+
+<div id="dlg_template_setup" class="easyui-dialog" data-options="closed:true" title="{$lang.template_setup}" style="width:400px;height:200px;padding:10px;">
+	
+</div>
+
+
+
+</body>
+</html>

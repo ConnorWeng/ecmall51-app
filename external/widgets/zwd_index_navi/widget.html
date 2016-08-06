@@ -1,0 +1,126 @@
+<div class="zwd-index-navi-list relative">
+   <dl class="relative city-navi">
+      <dt>
+       	<h3 class="">
+	   		<div class="fe_cloth_location" style="height:22px;line-height:22px;margin-top:4px;overflow:hidden;padding-left:30px;">
+	   			<a href="{url app=search&act=store}" target="_blank" class="yahei f55 block arrow_r" style="line-height:22px;">市场导航</a>
+	   		</div>
+	   	</h3>
+      </dt>
+      <div class="absolute svn-show1 hidden" style="top:-1px;left:146px;width:746px;min-height:54px;z-index:99;background:#fff;">
+	    <dd class="svn-show-c padding10">
+	       <ul class="clearfix padding10">
+	        <!--{foreach from=$widget_data.all_markets item=mark name=fe_mark}-->
+	          <li class="float-left mr10 mb10"><a href="{url app=search&act=store&mkid=$mark.mk_id}" title="{$mark.mk_name}" class="f99" target="_blank">{$mark.mk_name}</a></li>
+	          <li class="float-left mr10 mb10 aaa">|</li>
+	        <!--{/foreach}-->
+	      </ul>
+	    </dd>
+	  </div>
+   </dl>
+	   
+   <div class="by-market ml10">
+      <ul class="clearfix">
+        <!--{foreach from=$widget_data.markets item=market name=fe_market}-->
+          <li class="float-left" style="width:42px;"><a href="{url app=market&act=store&mkid=$market.mk_id}" target="svn" class="" title="{$market.mk_name}">{$market.mk_name|mb_substr2}</a></li>
+        <!--{/foreach}-->
+      </ul>
+   </div>
+   <!-- market end -->  
+   
+   <!--{foreach from=$widget_data.gcategory item=cate name=fe_cate}-->
+    <dl class="relative">
+      <dt><h3 style="border:0;padding:0 0 0 30px;margin-top:10px;height:22px;line-height:20px;" class="fe_cloth_{$smarty.foreach.fe_cate.iteration}">
+          <a href="{url app=search&act=index&cate_id=$cate.cate_id}" title="<!--{if $cate.cate_mname}-->{$cate.cate_mname}<!--{else}-->{$cate.cate_name}<!--{/if}-->" class="block arrow_r yahei" ><!--{if $cate.cate_mname}-->{$cate.cate_mname}<!--{else}-->{$cate.cate_name}<!--{/if}--></a>
+          </h3>
+      </dt>
+	  <dd class="by-cate">
+	      <ul class="clearfix pl3" style="height:22px;overflow:hidden;">
+	        <!--{foreach from=$cate['children'] item=cat name=fe_cat}-->
+	          <li class="float-left mr10"><a href="{url app=search&act=index&cate_id=$cat.cate_id}" title="<!--{if $cat.cate_mname}-->{$cat.cate_mname}<!--{else}-->{$cat.cate_name}<!--{/if}-->" class="f99 "><!--{if $cat.cate_mname}-->{$cat.cate_mname}<!--{else}-->{$cat.cate_name}<!--{/if}--></a></li>
+	        <!--{/foreach}-->
+	      </ul>
+	  </dd>
+	  <div class="absolute svn-show1 hidden" style="top:-1px;left:146px;width:746px;min-height:54px;z-index:99;background:#fff;">
+	    <dd class="svn-show-c padding10">
+	       <ul class="clearfix padding10">
+	        <!--{foreach from=$cate['children'] item=cat name=fe_cat}-->
+	          <li class="float-left mr10 mb10"><a href="{url app=search&act=index&cate_id=$cat.cate_id}" title="<!--{if $cat.cate_mname}-->{$cat.cate_mname}<!--{else}-->{$cat.cate_name}<!--{/if}-->" class="f99 "><!--{if $cat.cate_mname}-->{$cat.cate_mname}<!--{else}-->{$cat.cate_name}<!--{/if}--></a></li>
+	          <li class="float-left mr10 mb10 aaa">|</li>
+	        <!--{/foreach}-->
+	      </ul>
+	    </dd>
+	  </div>
+    </dl>
+   <!--{/foreach}-->
+   
+   
+   
+  <div class="absolute svn-show hidden" style="top:5px;left:159px;width:800px;min-height:400px;z-index:999;background:#fff;">
+    <div style="width:800px;min-height:400px;padding-bottom:30px;">
+       <h3 class="relative" style="height:auto;"><a class="close absolute" title="关闭" style="right:7px;top:6px;" href="javascript:;">X</a><!-- <span style="color:#eee;">亲，欢迎来到：<em></em></span> --></h3>
+       <div class="h5"></div>
+       <div class="pl10 pr10" style="border:0;">         
+         <dd id="svn">
+         
+         </dd>
+       </div>
+       <h4 style="position:absolute;bottom:0;height:24px;width:800px;text-algin:center;">
+       		<a href="javascript:;" class="close f44" title="收起本下拉框" style="margin-left:360px;font-size:14px;">收起本下拉框</a>
+       </h4>     
+    </div>  
+   </div>
+   
+   
+   <script>
+	 $(function(){	 
+		 $('.zwd-index-navi-list .by-market a').click(
+		   function(){
+			    $(this).parent('li').siblings('li').find('a').css('color','#666');
+			    $(this).parent('li').siblings('li').css('background','#fafafa');
+			    $(this).parent('li').css('background','#f44').css('border-radius','3px');
+			    $(this).css('color','white');
+			    $('#svn').html("<img src={$site_url}themes/mall/ymall/styles/default/images/loading-51zwd.GIF />");
+				$('.zwd-index-navi-list .svn-show h3 span em').html($(this).attr('title'));
+				$.getJSON($(this).attr('href'),function(json){
+					if(json !== false)
+					{	
+						$('#svn').html(json);
+					}
+					else
+					{
+						$('#svn').html('<font color=#2079b3>对不起，暂无店铺数据！</font>');
+					}
+				});
+				$('.zwd-index-navi-list .svn-show').show();
+				return false;
+		   });
+		 $('.zwd-index-navi-list .svn-show a.close').click(function(){
+			 $('.zwd-index-navi-list .by-market li').css('background','#fafafa');
+			 $('.zwd-index-navi-list .by-market a').css('color','#666');
+			 $('.zwd-index-navi-list .svn-show').hide();
+		 });
+		 
+		 $('.zwd-index-navi-list dl').hover(
+				   function(){					   
+					    $(this).find('.svn-show1').show();	
+				   },
+				   function(){
+					   $(this).find('.svn-show1').hide();
+		  });
+		 $("#market_floor_tab .hd li").live('mouseover',function(){
+			 var mf_index = $(this).index();
+			 $(this).siblings().removeClass('on');
+			 $(this).addClass('on');
+			 $("#market_floor_tab .bd ul").addClass('hidden');
+			 $("#market_floor_tab .bd ul").eq(mf_index).removeClass('hidden');
+		 });
+		 
+	 });
+	</script>
+
+
+</div>
+
+ 
+

@@ -1,0 +1,64 @@
+{include file=header.whole.html}
+
+  		<table class="table  table-striped table-bordered table-hover">
+  		<caption><h3 class="page-header  text-info">个人资料列表</h3></caption>                            
+                            <tr>
+                                <th class="col-xs-2 text-right">{$lang.bh_name}</th>
+                                <td class="col-xs-10">
+                                    {$behalf.bh_name|escape}
+                                </td>
+                            </tr>
+                            <tr>
+                                <th class="col-xs-2 text-right">{$lang.owner_name}</th>
+                                <td class="col-xs-10">
+                                    {$behalf.owner_name|escape}
+                                </td>
+                            </tr>
+                            <tr>
+                                <th class="col-xs-2 text-right">{$lang.region}</th>
+                                <td class="col-xs-10">{$behalf.region_name|escape}</td>
+                            </tr>
+                            <tr>
+                                <th class="col-xs-2 text-right">{$lang.address}:</th>
+                                <td class="col-xs-10">
+                                    {$behalf.bh_address|escape}
+                                </td>
+                            </tr>
+                             <tr>
+                                  <th class="col-xs-2 text-right">{$lang.max_orders}</th>
+                                  <td class="col-xs-10"><!--{if $behalf.max_orders}-->{$behalf.max_orders|escape}<!--{else}-->不限制<!--{/if}--></td>
+                            </tr>
+                             <tr>
+                                  <th class="col-xs-2 text-right">{$lang.zipcode}</th>
+                                  <td class="col-xs-10">{$behalf.zipcode|escape}</td>
+                            </tr>
+                            <tr>
+                                <th class="col-xs-2 text-right">{$lang.tel}</th>
+                                <td class="col-xs-10">{$behalf.bh_tel|escape}</td>
+                            </tr>
+                            <tr>
+                                  <th class="col-xs-2 text-right">{$lang.bh_qq}</th>
+                                  <td class="col-xs-10">{$behalf.bh_qq|escape}</td>
+                            </tr>
+                            <tr>
+                                  <th class="col-xs-2 text-right">{$lang.bh_ww}</th>
+                                  <td class="col-xs-10">{$behalf.bh_ww|escape}</td>
+                            </tr>
+                            <tr>
+                                  <th class="col-xs-2 text-right">{$lang.bh_wx}</th>
+                                  <td class="col-xs-10">{$behalf.bh_wx|escape}</td>
+                            </tr>
+                            <tr>
+                            	<th class="col-xs-2 text-right">{$lang.bh_notice}</th>
+                            	<td class="col-xs-10">
+                            		{$behalf.bh_notice|escape}
+                            	</td>
+                            </tr>
+                             <tr>
+                                <th class="col-xs-2 text-right">{$lang.description}</th>
+                                <td class="col-xs-10">                                  
+                                  {$behalf.bh_mark}
+                                </td>
+                             </tr>
+         </table>
+{include file=footer.whole.html}

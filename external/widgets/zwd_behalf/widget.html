@@ -1,0 +1,8 @@
+<div class="zwd_behalf  mt13">
+   <p class="fs14 f66 title relative"><a class="float-right fs12 f66 font-normal mr10 pointer">更多</a><em></em>{$widget_data.model_name}</p>
+	<ul class="pt5 pb10 clearfix">
+		<!-- {foreach from=$widget_data.images item=image name=fe_image} -->
+        <li class="float-left" {if $smarty.foreach.fe_image.iteration % 4 eq 0} style="margin-right:0;"{/if}><p><a href="{$image.ad_link_url}" class="block" title="{$image.ad_title_url}" target="_blank"><img src="{$image.ad_image_url}" alt="{$image.ad_title_url}"/></a></p><!-- <p class="center"><a class="ddd" href="{$image.ad_link_url}" target="_blank">{$image.ad_title_url}</a></p> --></li>
+        <!-- {/foreach} -->	
+    </ul>
+</div>

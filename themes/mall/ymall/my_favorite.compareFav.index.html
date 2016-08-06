@@ -1,0 +1,140 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+<script type="text/javascript" src="{lib file=jquery.js}" charset="utf-8"></script>
+<title>同款比价</title>
+<script type="text/javascript">
+$(document).ready(function(){
+	$("#chk_img").click(function(){
+		$(".product").css("display",this.checked?"inline":"none");
+	});
+	$("#chk_address").click(function(){
+		$("#print_address").css("display",this.checked?"inline":"none");
+	});
+
+});
+</script>
+<style type="text/css" media="print">
+.noprint{ display : none }
+</style>
+
+<style type="text/css" media="screen,print">
+.x-barcode{padding:0;margin:0}
+ body { margin:0; font-family:Arial, Helvetica, sans-serif; font-size:12px;} 
+.td_frame { padding:5px 0 5px 0; border-bottom:2px solid #000000; }
+ img { padding:2px; border:0;} 
+ p { margin:8px 0 8px 0;} 
+ h1 { font-size:16px; font-weight:bold; margin:0;} 
+ h2 { font-size:14px; font-weight:bold; margin:0;} 
+ .table_data_title { font-size:14px; font-weight:bold; height:25px; } 
+ .table_data_content { height:20px; line-height:20px;}
+  #print_confirm { width:100%; height:30px; border-top:1px solid #999999; padding-top:4px; background-color:#5473ae; position:absolute; }
+   #btn_print { width:71px; height:24px; background-image:url(images/material/btn_print.gif); cursor:pointer; margin-left:auto; margin-right:auto;}
+
+</style>
+</head>
+<body>
+<table class="table_frame" width="90%" border="0" align="center" cellpadding="0" cellspacing="0">
+  <tbody><tr>
+    <td>
+    <table width="100%" border="0" cellspacing="0" cellpadding="0">
+      <tbody><tr>
+        <td class="td_frame">
+        <table width="100%" border="0" cellpadding="0" cellspacing="0">
+        <tbody><tr>
+        <td></td>
+          <td>
+	          <div id="chk_print" class="noprint">
+	         	 <input name="chk_pic_print" type="checkbox" id="chk_img" >
+	             <label class="label_pic_print" for="chk_pic_print1">打印图片</label>
+	           </div>
+          </td>
+        </tr>
+          <tr>
+            <td width="70%">
+            <p>订单编号<strong>：   </strong></p>
+            <p>日期：<?php echo date('Y-m-d',time());  ?></p>
+            </td>
+            <td width="30%">
+            <p>客户：</p>
+            <p>电话：</p>
+            </td>
+          </tr>
+        </tbody></table>
+        </td>
+      </tr>
+    </tbody></table>
+    </td>
+  </tr>
+  
+  <tr>
+    <td class="td_frame">
+    <table width="98%" border="0" align="center" cellpadding="0" cellspacing="0">
+      <tbody><tr class="table_data_title">
+        <td width="40px">No</td>
+        <td>商家</td>
+        <td></td>
+        <td>商品</td>
+        <td>同款比价</td>
+        <td width="100px" align="center">数量</td>
+        <td>价格</td>
+        <td align="center">配货状态</td>
+      </tr>
+      
+     
+     <!--{foreach from=$goods item=good name=good_fee}-->
+      <tr>
+        <td>{$smarty.foreach.good_fee.iteration}</td>
+        <td>{$good.mk_name}{$good.dangkou_address}&nbsp;{$good.store_name}</td>
+        <td><img class="product" src="{$good.default_image}" width="80" align="absmiddle" style="display: none;">
+        </td>
+        <td><a target=_blank href="{url app=goods&id=$good.goods_id}">{$good.goods_name}</a>
+        </td>
+         <td><a target=_blank href="{$siteurl}/index.php?app=search&act=index&keyword={$good.goods_name_clean}">同款比价</a></td>
+        <td align="center"><div style="height:20pt;width:40pt;border:1pt solid #000"></div></td>
+        <td>{$good.price|price}</td>
+        <td align="center"><div style="height:20pt;width:20pt;border:1pt solid #000"></div></td>
+      </tr>
+  <!--{/foreach}-->
+    
+      
+    </tbody></table>
+    </td>
+  </tr>
+  <tr>
+    <td>
+    <table width="100%" border="0" align="center" cellpadding="0" cellspacing="0">
+      <tbody><tr>
+        <td width="50%" valign="top" style="height:150px;">
+        <p>备注：</p>
+         <p></p></td>
+        <td width="50%" valign="top">
+        <div id="print_address">
+          <p>客户名称：</p>
+          <p>电 话：</p>
+          <p>收货地址：</p>   
+          <p>邮 编：</p>
+          </div>
+          </td>
+      </tr>
+    </tbody></table>
+    </td>
+
+  <tr>
+    <td style="height:50px;">
+     {$qrcode}	
+    </td>
+  </tr>
+  <tr>
+    <td style="height:50px;"><h1>签字 (Signature)：</h1></td>
+  </tr>
+  <tr>
+    <td style="height:30px; padding-bottom:50px;" align="right"><strong>51网批【51wangpi.com】</strong></td>
+  </tr>
+</tbody></table>
+<div id="print_confirm" class="noprint"><div id="btn_print" onclick="javascript:window.print()"><B>打印</B></></div></div>
+
+
+
+</body></html>

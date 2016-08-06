@@ -1,0 +1,91 @@
+{include file=header.html}
+<div class="h10"></div>
+<div class="w overflowHidden">
+	<div id="page-search-goods">
+		<div class="glist">
+		 <!--{if $kw_search_tips}-->
+         <div class="goods-empty padding10 mb10">{$kw_search_tips}</div>
+         <!--{/if}-->
+	       			<div id="container" class="squares clearfix w985 masonry relative" ectype="current_display_mode">
+             				<!--{foreach from=$goods_list item=goods name=fe_goods}-->
+             				<dl class="item masonry-brick relative clearfix dl-{$goods.goods_id}" {if $smarty.foreach.fe_goods.iteration mod 5 eq 0}style="margin-right:0;"{/if}>
+             				    <!--{if $goods.zwd51_recommended}--><span class="rec"></span><!--{/if}-->
+               					<dt class="padding5">
+               					<a href="{url app=goods&id=$goods.goods_id}" class="relative" target="_blank" title="{$goods.goods_name|escape|truncate:120}">
+               					    <!--{if $goods.realpic and $goods.serv_realpic}-->
+								   <i class="shipa" title="{$lang.service_detail}"></i>
+								   <!--{/if}-->
+								   <!--{if $goods.serv_refund }-->
+								   <i class="tuixian" title="{$lang.service_send}"></i>
+								   <!--{/if}-->
+               						<img alt="{$goods.goods_name|escape|truncate:120}" {if $smarty.foreach.fe_goods.iteration lt 13}src="{$goods.default_image}"{else}src="data/system/empty.gif" data-ks-lazyload="{$goods.default_image}"{/if} class="lazyload"/>
+               					</a>
+               					</dt>
+                				<dd class="desc"><a href="{url app=goods&id=$goods.goods_id}" target="_blank" title="{$goods.goods_name|escape}">{$goods.goods_name|escape|truncate:60}</a></dd>
+                				<dd class="price twofloat clearfix"><em><!--{if $goods.price lte 600 }--><s>&yen;</s>{$goods.price}<!--{else}--><strong class="yahei fs16">{$lang.prepare_sell}</strong><!--{/if}--></em>
+								<span>
+								   <!--{if $goods.serv_realpic }-->
+								   <i class="icon_detail" title="{$lang.service_detail}"><a href="javascript:;" title="{$lang.service_detail}" class="block"></a></i><!--{/if}-->
+								   <!--{if $goods.serv_sendgoods }-->
+								   <i class="icon_send" title="{$lang.service_send}"><a href="javascript:;" title="{$lang.service_send}" class="block"></a></i><!--{/if}-->
+								   <!--{if $goods.serv_refund }-->
+								   <i class="icon_cash" title="{$lang.service_cash}"><a href="javascript:;" title="{$lang.service_cash}" class="block"></a></i><!--{/if}-->
+								   <!--{if $goods.serv_exchgoods }-->
+								   <i class="icon_change" title="{$lang.service_pattern}"><a href="javascript:;" title="{$lang.service_pattern}" class="block"></a></i><!--{/if}--></span>
+								</dd>
+                            	<dd class="delivery twofloat clearfix hidden"><em></em><span></span></dd>
+                            	<dd class="storeinfo twofloat clearfix">
+                					<em>
+                					   <a href="{url app=shop&id=$goods.store_id}" target="_blank">{$goods.mk_name|escape}&nbsp;{$goods.dangkou_address|escape}</a>
+                					</em>
+                                	<span class="">
+                                	    <a href="{url app=shop&id=$goods.store_id}" target="_blank">{$goods.store_name}</a>
+                                		
+                                	</span>
+                				</dd>
+                				<dd class="three-uploads twofloat clearfix">
+                				   <!--{if !$goods.collect_goods}-->
+                				   <em id="collect_goods_em_{$goods.goods_id}"><a href="javascript:collect_goods({$goods.goods_id});" class="inline-block pointer clearfix" style="border:1px solid #ccc;border-radius:3px;padding:1px 5px;height:16px;line-height:16px;" title="{$lang.collect}{$lang.collect_goods}"><i class="star5 float-left"></i><strong class="ml5 font-normal inline-block float-left" style="height:16px;">{$lang.collect}</strong></a></em>
+                				   <!--{else}-->
+                				    <em id="collect_goods_em_{$goods.goods_id}"><a href="javascript:alert('{$lang.collect_already}');" class="inline-block pointer clearfix" style="border:1px solid green;border-radius:3px;padding:1px 5px;height:16px;line-height:16px;" title="{$lang.collect_already}"><strong class="font-normal inline-block float-left" style="height:16px;"><font color=green>{$lang.collect_already}</font></strong></a></em> 
+                				   <!--{/if}-->
+                				   <span>
+                				      <a class="icon-tb mr2" href="{url app=item_upload&dest=Taobao&goods_id=$goods.goods_id}" target="_blank" title="上传淘宝">淘宝</a>
+                				      <a class="icon-al mr2" href="{url app=item_upload&dest=Alibaba&goods_id=$goods.goods_id}" target="_blank" title="上传阿里">阿里</a>
+                				      <a class="icon-pp" href="{url app=item_upload&dest=Paipai&goods_id=$goods.goods_id}" target="_blank" title="上传拍拍">拍拍</a>
+                				   </span>
+                				</dd>                            	
+             				</dl> 
+            				<!--{/foreach}-->
+          				</div>
+          			</div>
+          		</div>
+          		<div class="h10"></div>
+             			{include file=page.bottom.html}
+
+
+</div>
+<div class="h10"></div>
+<div class="h10"></div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+{include file=footer.html}

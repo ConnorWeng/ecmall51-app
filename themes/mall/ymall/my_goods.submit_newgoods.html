@@ -1,0 +1,54 @@
+{include file=member.header.html}
+<script>
+function checkgoodsHttp()
+{
+  //var s=document.form2.goods_url.value;
+  var s= document.getElementById("newgoods_style_url").getAttribute('value');
+  //    alert(s);
+  var patrn=/^https?:\/\/item.taobao.com\/item.htm\?id=\d+$/;
+  var patrn=/^https?:\/\/item.taobao.com\/item.htm\?(.*)id=\d+&?$/;
+  if (!patrn.exec(s)) {alert('宝贝网址输入错误，格式如：http(s)://item.taobao.com/item.htm?id=14226994398 ，后面没有斜杠哦！');  return false;}
+
+  return true;
+}
+$(function(){
+    $("#submit_newgoods_style").click(function(){
+        var s=$("#newgoods_style_url").val();
+        var patrn=/^https?:\/\/item.taobao.com\/item.htm\?id=\d+$/;
+        var patrn=/^https?:\/\/item.taobao.com\/item.htm\?(.*)id=\d+&?$/;
+        if (!patrn.exec(s)) {alert('宝贝网址输入错误，格式如：http(s)://item.taobao.com/item.htm?id=14226994398 ，后面没有斜杠哦！');  return false;}
+        $.ajax({
+            url: 'http://121.41.170.236:30005/item',
+            data: {
+              itemUri: s,
+            },
+            dataType: 'jsonp',
+            jsonp: 'jsonp_callback',
+            success: function(data) {
+              if (data.error) {
+                //console.log('failed');
+                alert("提交失败！");
+              } else {
+                //console.log('success');
+                alert('提交成功！');
+              }
+            }
+          });
+
+    });
+});
+</script>
+<div class="content">
+  <div style="border:1px solid #ccc;border-radius:3px;padding-bottom:20px;">
+   <div style="background:#f5f5f5;height:30px;line-height:30px;font-size:16px;color:#666;font-family:'microsoft yahei';padding-left:13px;border-bottom:1px solid #ccc;">新款提交</div>
+   <div style="color:#666;font-size:14px;text-align:center;margin-top:20px;"><b style="color:#f44;">一键提交档口新款</b> [只有收录档口的新款才能成功提交,先提交的排名靠前]</div>
+  <!--  <FORM name="form2" action="http://www.51zwd.com/caiji/updateOneGoodsApi.php" method="GET"  onsubmit="return checkgoodsHttp()" > -->
+      <div style="margin-top:20px;text-align:center;">
+            <span style="color:green;font-size:14px;">新款网址</span>
+            <INPUT name="goods_url" id="newgoods_style_url" style="width:360px;height:24px;line-height:24px;" value=""/>
+            <INPUT type="button" id="submit_newgoods_style" name="so_ga" value="一键提交新款"/>
+      </div>
+  <!--   </FORM> -->
+  </div>
+</div>
+{include file=footer.html}

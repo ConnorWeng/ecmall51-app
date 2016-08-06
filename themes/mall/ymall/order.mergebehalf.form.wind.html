@@ -1,0 +1,27 @@
+{include file=header.html}
+<style type="text/css">
+.mall-nav{ display:none}
+</style>
+<div id="main" class="w-full">
+<div id="page-order" class="w">
+   <div class="step step2 mt10 clearfix">
+      <span class="fs14 strong f60">{$lang.ckgwc}</span>
+      <span class="fs14 strong fff">{$lang.qrddxx}</span>
+      <span class="fs14 strong">{$lang.fk}</span>
+      <span class="fs14 strong">{$lang.qrsh}</span>
+      <span class="fs14 strong">{$lang.pj}</span>
+   </div>
+   <div class="order-form">
+      <form method="post" id="order_form">
+	     {include file=order.mergebehalf.shipping.wind.html}
+         {include file=order.mergebehalf.goods.wind.html}    
+         {include file=order.mergebehalf.postscript.wind.html}     
+	     {include file=order.mergebehalf.amount.wind.html}
+	     <input type="hidden" name="gids" value="{$gids}">
+      </form>
+   </div>
+</div>
+</div>
+<iframe id='iframe_post' name="iframe_post" frameborder="0" width="0" height="0">
+</iframe>
+{include file=footer.html}

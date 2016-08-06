@@ -1,0 +1,43 @@
+{include file="header.html"}
+<script type="text/javascript" src="index.php?act=jslang"></script>
+<script type="text/javascript">
+//<!CDATA[
+$(function(){
+    
+});
+//]]>
+</script>
+<div id="rightTop">
+  <p>{$lang.behalf}</p>
+  <ul class="subnav">
+    <li><a class="btn1" href="index.php?app=behalf">{$lang.manage}</a></li>
+    <li><a class="btn1" href="index.php?app=behalf&amp;wait_verify=1">{$lang.wait_verify}</a></li>
+  </ul>
+</div>
+<div class="info">
+  <form method="post" enctype="multipart/form-data">
+    <table class="infoTable">    
+      <tr>
+        <th class="paddingT15">{$lang.audit}:</th>
+        <td class="paddingT15 wordSpacing5"><p>
+            <label>
+            <input name="bh_allowed" type="radio" value="-1" checked="checked" />
+            {$lang.no_change}</label>
+            <label>
+            <input type="radio" name="bh_allowed" value="1" />
+            {$lang.behalf_yes}</label>
+            <label>
+            <input type="radio" name="bh_allowed" value="0" />
+            {$lang.behalf_no}</label>
+          </p></td>
+      </tr>     
+      <tr>
+        <th></th>
+        <td class="ptb20"><input type="hidden" name="id" value="{$smarty.get.id}" />
+          <input class="formbtn" type="submit" name="Submit" value="{$lang.submit}" />
+          <input class="formbtn" type="reset" name="Reset" value="{$lang.reset}" /></td>
+      </tr>
+    </table>
+  </form>
+</div>
+{include file="footer.html"} 

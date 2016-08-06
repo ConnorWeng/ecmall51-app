@@ -1,0 +1,376 @@
+{include file=header.html}
+<script type="text/javascript" src="{lib file=search_goods.js}" charset="utf-8"></script>
+<script type="text/javascript">
+var upimg   = '{res file=images/up.gif}';
+var downimg = '{res file=images/down.gif}';
+imgUping = new Image();
+imgUping.src = upimg;
+
+$(function(){
+
+	var order = '{$smarty.get.order}';
+	var css = '';
+	
+	<!--{if $smarty.get.order}-->
+	order_arr = order.split(' ');
+	switch (order_arr[1]){
+		case 'desc' : 
+			css = 'order-down btn-order-cur';
+		break;
+		case 'asc' :
+			css = 'order-up btn-order-cur';
+		break;
+		default : 
+			css = 'order-down-gray';
+	}
+	$('.btn-order a[ectype='+order_arr[0]+']').attr('class','btn-order-click '+css);
+	<!--{/if}-->
+	
+	$(".btn-order a").click(function(){
+		if(this.id==''){
+			dropParam('order');// default order
+			return false;
+		}
+		else
+		{
+			dd = " desc";
+			if(order != '') {
+				order_arr = order.split(' ');
+				if(order_arr[0]==this.id && order_arr[1]=="desc")
+					dd = " asc";
+				else dd = " desc";
+			}
+			replaceParam('order', this.id+dd);
+			return false;
+		}
+	});
+	
+	<!--{if $smarty.get.price}-->
+	var filter_price = '{$smarty.get.price}';
+	filter_price = filter_price.split('-');
+	$('input[name="start_price"]').val(number_format(filter_price[0],0));
+	$('input[name="end_price"]').val(number_format(filter_price[1],0));
+	<!--{/if}-->
+
+});
+
+
+</script>
+<div class="w mt10 mb10" area="top" widget_type="area">
+		<!--{widgets page=behalf_goods area=top}-->
+</div>
+<div id="main" class="w-full">
+	<div id="page-search-goods" class="w mb20 mt10">
+		<div class="w mb10 clearfix">
+		    {include file=curlocal_new.html}		   
+                
+                <!-- {if !$goods_list_order || $filters} -->
+      			<div class="attribute">
+            		<div class="selected-attr title">
+             			<!--{if $filters}-->
+             			<strong>{$lang.your_selected}{$lang.colon}</strong>
+             			<!--{foreach from=$filters item=filter}-->
+             			  <!--if $filter.key neq "service_detail" and $filter.key neq "service_model" and $filter.key neq "service_send" and $filter.key neq "service_cash" and $filter.key neq "service_pattern"-->             			  
+						   <a href="javascript:;" id="{$filter.key}"><b>{$filter.name}{$lang.colon}</b>{$filter.value}<span></span></a>
+						  <!--/if-->
+             			<!--{/foreach}-->
+             			<!--{else}-->
+             			<strong>{$lang.by_conditions}</strong>
+             			<!--{/if}-->
+          			</div>
+          			<div class="content">  
+						<!-- {if $categories} -->        
+                        <div class="each clearfix">
+                            <h4>
+                            <!--{if $filters.cate_id}-->
+                            	{$filters.cate_id.value|escape}{$lang.colon}
+                            <!--{else}-->
+                             	{$lang.by_search_category}{$lang.colon}
+                            <!--{/if}-->
+                            </h4>
+                            <div class="pv ul_search_category clearfix" ectype="ul_search_category">                              
+								<!--{foreach from=$categories item=gcategory}-->								
+									<a href="javascript:void(0);" id="{$gcategory.cate_id}" title="{$gcategory.cate_name|escape}">{$gcategory.cate_name|escape|truncate:14}</a>
+								<!--{/foreach}-->
+							</div>
+						</div>
+                       <!-- {/if} -->
+                       
+          			<?php if( OEM != 'nc' ){ ?>
+          			   <!-- {if $markets} -->        
+                        <div class="each clearfix">
+						   <h4>{$lang.by_market}{$lang.colon}</h4>
+						   <div class="pv" ectype="ul_market">
+						     <!--{foreach from=$markets item=market name=market_fee}-->
+						       <a href="javascript:void(0);" title="{$market.mk_name}" id="{$market.mk_id}">{$market.mk_name}</a>
+						     <!--{/foreach}-->
+						   </div>
+						</div>
+                       <!-- {/if} -->
+                   <?php  }  ?>  
+                   
+					<!--{if $floors}-->
+					<div class="each clearfix" style="border:0;">
+					   <h4>{$lang.by_market_floor}{$lang.colon}</h4>
+					   <div class="pv" ectype="ul_market_floor">
+					      <!--{foreach from=$floors item=floor name=floor_fee}-->
+					       <a href="javascript:void(0);" title="{$floor.mk_name}" id="{$floor.mk_id}">{$floor.mk_name}</a>
+					      <!--{/foreach}-->
+					   </div>
+					</div>
+					<!--{else}-->
+					<div class="each clearfix" style="border:0;">
+					   <h4>{$lang.by_market_floor}{$lang.colon}</h4>
+					   <div class="pv">					      
+					       <a href="javascript:void(0);" title="{$lang.all}" >{$lang.all}</a>
+					   </div>
+					</div>
+                    <!--{/if}-->
+
+             			
+              			
+          			</div>
+          			
+       			</div>
+                <!--{/if}-->
+                
+   			<div class="col-main">
+   			
+       			<div class="glist w985 mt10">
+          			<div class="clearfix">
+                		<div class="list-sort">
+                    		<div class="search-type clearfix" style="display:block;">
+								<div class="float-left btn-type">
+									<a href="{url app=behalf_goods&act=index}" class="current" style="border-left:1px solid #ddd;">推荐代发商品</a>
+									<a href="{url app=behalf_goods&act=store}" style="brder-right:0px;background:#f5f5f5;">推荐代发店铺</a>
+									
+									<!-- <a href="{url app=search&act=groupbuy}">搜索团购</a> -->
+								</div>
+								
+                    		</div>	
+                        	<form>                            	
+                            	<div class="float-left btn-order">
+                                	<!--<span>{$lang.order_by}{$lang.colon}</span>-->
+                                	<!--{foreach from=$orders item=order key=k name=fe_order}-->
+                                	<!--{if !$k}-->
+                                	<a class="btn-order-click default-sort" id="{$k}" href="javascript:;">{$order}</a>
+                                	<!--{else}-->
+                                	<a class="btn-order-click order-down-gray" ectype="{$k}" id="{$k}" href="javascript:;">{$order}<i></i></a>
+                                	<!--{/if}-->
+                                	<!--{/foreach}-->
+                            	</div>
+                            	<div class="service_type_btns float-left" ectype="ul_service_type">
+							      <a href="javascript:void(0);" title="{$lang.service_detail}" ectype="{if $filters.service_detail}0{else}1{/if}" 
+							      id="service_detail" class="{if $filters.service_detail}service_detail_on on{else}service_detail{/if}" style="{if $filters.service_detail}color:#900;{/if}">{$lang.service_detail}</a>
+								  <a href="javascript:void(0);" title="{$lang.service_send}" ectype="{if $filters.service_send}0{else}1{/if}" 
+								  id="service_send" class="{if $filters.service_send}service_send_on on{else}service_send{/if}" style="{if $filters.service_send}color:#900;{/if}">{$lang.service_send}</a>
+								  <a href="javascript:void(0);" title="{$lang.service_cash}" ectype="{if $filters.service_cash}0{else}1{/if}" 
+								  id="service_cash" class="{if $filters.service_cash}service_cash_on on{else}service_cash{/if}" style="{if $filters.service_cash}color:#900;{/if}">{$lang.service_cash}</a>
+								  <a href="javascript:void(0);" title="{$lang.service_pattern}" ectype="{if $filters.service_pattern}0{else}1{/if}" 
+								  id="service_pattern" class="{if $filters.service_pattern}service_pattern_on on{else}service_pattern{/if}" style="{if $filters.service_pattern}color:#900;{/if}">{$lang.service_pattern}</a>
+							   </div>
+                            	<div class="float-left time_chioce solid_arrow_up_wrapper">
+                            	   <div class="icon_time">{$lang.all_time}<b class="solid_arrow_up"></b></div>
+                            	   <div class="hidden time_btns" ectype="ul_time">
+                            	     <a href="javascript:;" id="111" class="nstyle">{$lang.all_time}</a><br><a href="javascript:;" id="1" class="nstyle">{$lang.oneday_time}</a>
+                            	     <a href="javascript:;" id="7" class="nstyle">{$lang.oneweek_time}</a><a href="javascript:;" id="30" class="nstyle">{$lang.onemonth_time}</a>
+                            	     <a href="javascript:;" id="90" class="nstyle">{$lang.threemonth_time}</a><a href="javascript:;" id="180" class="nstyle">{$lang.sixmonth_time}</a>
+                            	     <a href="javascript:;" id="100" class="nstyle">{$lang.oneyear_time}</a>
+                            	   </div>
+                            	</div>
+                            	<div class="float-left color_choice solid_arrow_up_wrapper">
+                            	   <div class="icon_color">{$lang.color}<b class="solid_arrow_up"></b></div>
+                            	   <div class="hidden color_btns" ectype="ul_color">
+                            	     <a href="javascript:;" id="all_color_id">{$lang.all}</a><br/>{$lang.usual_color}<br/>
+                            	     <a href="javascript:;">{$lang.c_black}</a><a href="javascript:;">{$lang.c_white}</a><a href="javascript:;">{$lang.c_gray}</a>
+                            	     <a href="javascript:;">{$lang.c_red}</a><a href="javascript:;">{$lang.c_orange}</a><a href="javascript:;">{$lang.c_yellow}</a>
+                            	     <a href="javascript:;">{$lang.c_green}</a><a href="javascript:;">{$lang.c_blue}</a><a href="javascript:;">{$lang.c_cyan}</a>
+                            	     <a href="javascript:;">{$lang.c_purple}</a><a href="javascript:;">{$lang.c_pink}</a><a href="javascript:;">{$lang.c_apricot}</a>
+                            	     <a href="javascript:;">{$lang.c_khaki}</a>
+                            	     <div class="mt5">
+                            	      <input type="text" name="color_kw" class="inp_color" placeholder="{$lang.search_color}"/><input type="button" class="btn_color" value="{$lang.search}"/>
+                            	     </div>
+                            	   </div>
+                            	</div>
+                            	<div class="float-left size_choice solid_arrow_up_wrapper">
+                            	   <div class="icon_size">{$lang.size}<b class="solid_arrow_up"></b></div>
+                            	   <div class="hidden size_btns" ectype="ul_size">
+                            	      <a href="javascript:;" id="all_size_id">{$lang.all}</a><br>
+                            	      {$lang.cloth}<br>
+                            	      <a href="javascript:;">{$lang.average_size}</a><a href="javascript:;">S</a><a href="javascript:;">M</a><a href="javascript:;">L</a>
+                            	      <a href="javascript:;">XL</a><a href="javascript:;">XXL</a><a href="javascript:;">XXXL</a><br>
+                            	      {$lang.trousers}<br>
+                            	      <a href="javascript:;">26</a><a href="javascript:;">27</a><a href="javascript:;">28</a><a href="javascript:;">29</a><a href="javascript:;">30</a><a href="javascript:;">31</a><br>
+                            	      {$lang.shoes}<br>
+                            	      <a href="javascript:;">35</a><a href="javascript:;">36</a><a href="javascript:;">37</a><a href="javascript:;">38</a><a href="javascript:;">39</a><a href="javascript:;">40</a><br>
+                            	      <div class="mt5">
+                            	         <input type="text" name="color_sz" class="inp_size" placeholder="{$lang.search_size}"/><input type="button" class="btn_size" value="{$lang.search}"/>
+                            	      </div>
+                            	   </div>
+                            	</div>
+                            	<div class="float-left filter-price">
+                                	<div class="filter-price-box">
+                                    	<b class="fp-input">
+                                        	<i class="ui-price-plain">&yen;</i>
+                                        	<input type="text" name="start_price" maxlength="6" value="" />
+                                    	</b>
+                                    	<i class="fp-split"></i>
+                                    	<b class="fp-input">
+                                        	<i class="ui-price-plain">&yen;</i>
+                                        	<input type="text" name="end_price" maxlength="6" value="" />
+                                    	</b>
+                                    	<a class="ui-btn-s-primary">{$lang.submit}</a>
+                                	</div>
+                            	</div>
+                        	</form>
+                    	</div>
+                        <!--{if $goods_list_order}-->
+                        <div class="goods-empty padding10 mb10">{$lang.no_records_and_give_order}</div>
+                        <!--{/if}-->
+                        <!--{if $kw_search_tips}-->
+                        <div class="goods-empty padding10 mb10">{$kw_search_tips}</div>
+                        <!--{/if}-->
+            			<div id="container" class="{$display_mode} goods-has clearfix w985 masonry relative" ectype="current_display_mode">
+             				<!--{foreach from=$goods_list item=goods name=fe_goods}-->
+             				<dl class="item masonry-brick relative clearfix dl-{$goods.goods_id}" {if $smarty.foreach.fe_goods.iteration mod 4 eq 0}style="margin-right:0;"{/if}>
+             				    <!--{if $goods.zwd51_recommended}--><span class="rec"></span><!--{/if}-->
+               					<dt class="padding5">
+               					<a href="{url app=goods&id=$goods.goods_id}" class="relative" target="_blank" title="{$goods.goods_name|escape|truncate:120}">
+               					    <!--{if $goods.realpic and $goods.serv_realpic}-->
+								   <i class="shipa" title="{$lang.service_detail}"></i>
+								   <!--{/if}-->
+								   <!--{if $goods.serv_refund }-->
+								   <i class="tuixian" title="{$lang.service_send}"></i>
+								   <!--{/if}-->
+               						<img alt="{$goods.goods_name|escape|truncate:120}" {if $smarty.foreach.fe_goods.iteration lt 13}src="{$goods.default_image}"{else}src="data/system/empty.gif" data-ks-lazyload="{$goods.default_image}"{/if} class="lazyload"/>
+               					</a>
+               					</dt>
+                				<dd class="desc"><a href="{url app=goods&id=$goods.goods_id}" target="_blank" title="{$goods.goods_name|escape}">{$goods.goods_name|escape|truncate:60}</a></dd>
+                				<dd class="price twofloat clearfix"><em><!--{if $goods.price lte 600 }--><s>&yen;</s>{$goods.price}<!--{else}--><strong class="yahei fs16">{$lang.prepare_sell}</strong><!--{/if}--></em>
+								<span>
+								   <!--{if $goods.serv_realpic }-->
+								   <i class="icon_detail" title="{$lang.service_detail}"><a href="javascript:;" title="{$lang.service_detail}" class="block"></a></i><!--{/if}-->
+								   <!--{if $goods.serv_sendgoods }-->
+								   <i class="icon_send" title="{$lang.service_send}"><a href="javascript:;" title="{$lang.service_send}" class="block"></a></i><!--{/if}-->
+								   <!--{if $goods.serv_refund }-->
+								   <i class="icon_cash" title="{$lang.service_cash}"><a href="javascript:;" title="{$lang.service_cash}" class="block"></a></i><!--{/if}-->
+								   <!--{if $goods.serv_exchgoods }-->
+								   <i class="icon_change" title="{$lang.service_pattern}"><a href="javascript:;" title="{$lang.service_pattern}" class="block"></a></i><!--{/if}--></span>
+								</dd>
+                            	<dd class="storeinfo twofloat clearfix">
+                					<em>
+                					   <a href="{url app=shop&id=$goods.store_id}" target="_blank">{$goods.mk_name|escape}&nbsp;{$goods.dangkou_address|escape}</a>
+                					</em>
+                                	<span class="">
+                                	    <a href="{url app=shop&id=$goods.store_id}" target="_blank">{$goods.store_name}</a>
+                                		
+                                	</span>
+                				</dd>
+                				<dd class="three-uploads twofloat clearfix">
+                				   <!--{if !$goods.collect_goods}-->
+                				   <em id="collect_goods_em_{$goods.goods_id}"><a href="javascript:collect_goods({$goods.goods_id});" class="inline-block pointer clearfix" style="border:1px solid #ccc;border-radius:3px;padding:1px 5px;height:16px;line-height:16px;" title="{$lang.collect}{$lang.collect_goods}"><i class="star5 float-left"></i><strong class="ml5 font-normal inline-block float-left" style="height:16px;">{$lang.collect}</strong></a></em>
+                				   <!--{else}-->
+                				    <em id="collect_goods_em_{$goods.goods_id}"><a href="javascript:alert('{$lang.collect_already}');" class="inline-block pointer clearfix" style="border:1px solid green;border-radius:3px;padding:1px 5px;height:16px;line-height:16px;" title="{$lang.collect_already}"><strong class="font-normal inline-block float-left" style="height:16px;"><font color=green>{$lang.collect_already}</font></strong></a></em> 
+                				   <!--{/if}-->
+                				   <span>
+                				      <a class="icon-tb mr2" href="{url app=item_upload&dest=Taobao&goods_id=$goods.goods_id}" target="_blank" title="上传淘宝">淘宝</a>
+                				      <a class="icon-al mr2" href="{url app=item_upload&dest=Alibaba&goods_id=$goods.goods_id}" target="_blank" title="上传阿里">阿里</a>
+                				      <a class="icon-pp" href="{url app=item_upload&dest=Paipai&goods_id=$goods.goods_id}" target="_blank" title="上传拍拍">拍拍</a>
+                				   </span>
+                				</dd>   
+                				<dd class="search_goods_byimage twofloat clearfix hidden">
+                					<div class="half"><a href="{url app=search_goods_byimage&amp;act=search_byname&amp;name=}{$goods.goods_name|escape:url}" class="" target="_blank">标题同款</a></div>
+                					<div class="half left-sp"><a href="{url app=search_goods_byimage&amp;img=}{$goods.default_image|escape:url}" class="" target="_blank">图片同款</a></div></dd>                         	
+             				</dl> 
+            				<!--{/foreach}-->
+          				</div>
+             			<!--{if !$goods_list_order}-->{include file=page.bottom.html}<!--{/if}-->
+          			</div>
+       			</div>
+  			</div>
+        	<div class="col-sub" style="margin-top:38px;">      			
+      			<div class="glist mb10" style="overflow:visible;">
+         			<div class="title"><h3>推荐商品</h3></div>
+         			
+         			   <div class="squares" area="right" widget_type="area">
+         			   
+         			
+		                       <!--{widgets page=search_goods area=right}-->
+
+          			
+         			   </div>
+         			</div>
+   			</div>
+    	</div>
+   		
+    </div>
+</div> 
+<script type="text/javascript">
+function item_masonry(){
+	    $('#container dl dt img').load(function(){
+	        $('#container').masonry({
+	            itemSelector: '#container dl',
+	            columnWidth:225,
+	            gutterWidth:16                            
+	        });   
+	    });
+	        
+	    $('#container').masonry({
+	        itemSelector: '#container dl',
+	        columnWidth:225,
+	        gutterWidth:16                            
+	    });
+	}
+	
+	$(function(){  		
+		
+		function item_callback(){ 
+	        item_masonry(); 
+	    }
+	 
+	    item_callback(); 
+	    $('#container dl').fadeIn();
+			
+		var sp =  <!--{if $smarty.get.page }-->{$smarty.get.page}<!--{else}-->1<!--{/if}-->;
+		var	scount = sp;
+		
+		$("#container").infinitescroll({
+	        navSelector     : ".page-bottom",
+	        nextSelector    : ".page-bottom a.down",
+	        itemSelector    : "#container dl",
+	        debug:true,
+	        loading:{
+	            img: "{res file=images/loading-51zwd.GIF}",
+	            msgText: ' ',
+	            finishedMsg: '加载完毕',
+	            finished: function(){
+	                sp++;
+	                if(sp-scount>=3){ //到第10页结束事件
+	                   // $("#new_more").remove();
+	                    $("#infscr-loading").hide();	
+						var tempUrl=$(".page-bottom a.down").attr("href");
+						var tempsp = 1+sp-1;
+						tempUrl=tempUrl.replace(/page=\d*/,"page="+tempsp);
+						$('.page-bottom').load(tempUrl+" div.page-bottom",function(){
+						   }); 
+						$('.page-top').load(tempUrl+" div.page-top",function(){
+					   });
+	                    $(".page-bottom").show();
+	                    $(window).unbind('.infscr');
+	                }
+	            } 
+	        },state:{
+			   currPage: <!--{if $smarty.get.page }-->{$smarty.get.page}<!--{else}-->1<!--{/if}-->		},errorCallback:function(){
+	            $(".page-bottom").show();
+	        }
+	        
+	    },function(newElements){
+	        var $newElems = $(newElements);
+	        $('#container').masonry('appended', $newElems, false);
+	        $newElems.fadeIn();
+	        item_callback();
+  	    $('img.lazyload').lazyload();
+	    });		
+	});
+</script>
+{include file=footer.html}

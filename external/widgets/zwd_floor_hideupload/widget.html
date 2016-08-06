@@ -1,0 +1,58 @@
+<div class="zwd_floor_hideupload clearfix mb10 zwd_floor{$widget_data.model_id}">
+    <div class="w_title">
+        <div class="store-names">
+	      <ul class="clearfix">
+		    <!-- {foreach from=$widget_data.keyword_list item=keyword name=fe_keyword_list} -->            
+            <li class="float-left"><a class="f66" href="{url app=search&act=store&keyword=$keyword}">{$keyword}</a></li>            
+            <!-- {/foreach} -->
+		   </ul>
+		</div>
+		<b class="inline-block bg_index_icon mr10 fs18 center absolute" style="width:28px;height:40px;color:white;line-height:33px;left:0;top:0px;">{$widget_data.floor_num}</b>	   
+        <h2>{$widget_data.model_name}</h2>
+	</div>
+    <div class="con clearfix">
+            <ul class="clearfix">
+            	<!--{foreach from=$widget_data.goods_list item=goods name=fe_goods}-->
+                <li class="float-left" {if $smarty.foreach.fe_goods.iteration % 6 eq 0} style="margin-right:0px;"{/if}>                
+                    <div class="g_img">
+                         <a href="{url app=goods&id=$goods.goods_id}" target="_blank"><img width="160" height="160" class="lazyload" data-ks-lazyload="{$goods.default_image}" src="data/system/empty.gif"/></a>
+                         <div class="address">{$goods.mk_name}-{$goods.dangkou_address}</div>
+                         <div class="uploads">
+                             <a  href="{url app=item_upload&dest=Taobao&goods_id=$goods.goods_id}" title="上传淘宝">淘宝传</a>
+                             <a  href="{url app=item_upload&dest=Alibaba&goods_id=$goods.goods_id}" title="上传阿里">阿里传</a>
+                             <a  href="{url app=item_upload&dest=Paipai&goods_id=$goods.goods_id}" title="上传拍拍">拍拍传</a>
+                          </div>
+                     </div>
+                    <div class="title"><a href="{url app=goods&id=$goods.goods_id}" target="_blank" class="fbu">{$goods.goods_name|escape|truncate:50}</a>
+					     
+					 </div>
+                     <div class="g_price">                          
+                          <strong><span>&yen;</span>{$goods.price}</strong>
+                          <a class="store-name" href="{url app=store&id=$goods.store_id}">{$goods.store_name|escape}</a>
+                     </div>
+                </li>
+                <!--{/foreach}-->
+            </ul>
+    </div>
+</div>
+<script>
+$(function(){
+	$(".zwd_floor{$widget_data.model_id} .con li .g_img").hover(function(){
+		$(this).find(".address").hide();
+		$(this).find('.uploads').css({bottom:"5px"});
+	},function(){
+		$(this).find(".address").show();
+		$(this).find('.uploads').css({bottom:"-35px"});
+	});
+});
+KISSY.use('datalazyload', function(S, DataLazyload) {
+    S.ready(function(S) {
+            var dataLazyload= DataLazyload({});
+    });
+});
+</script>
+
+
+
+
+

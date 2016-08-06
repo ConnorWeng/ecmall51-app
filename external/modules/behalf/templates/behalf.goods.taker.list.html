@@ -1,0 +1,624 @@
+{include file=header.whole.html}
+<script type="text/javascript">
+	function tag_printer(rows)
+	{		 
+		  $.post($("#form-nhd").attr('action'),  $("#form-nhd").serialize(), function(result) {
+          		console.log(result)
+			 	if(result.done)
+          		{
+          			$('#save_nhd_inp').val(result.retval);
+          		}
+          }, 'json');
+		  //console.log(rows);
+		  LODOP = getLodop();
+		  if(!confirm("下面将直接打印 "+rows.length+" 个标签，确定继续吗？")) return;
+		  
+		  LODOP.PRINT_INITA(0,0,326,121,"51zwd_代发_拿货单_标签打印");
+		  LODOP.SET_PRINT_PAGESIZE(1,860,320,"");
+		  
+		  for(i=0;i<rows.length;i++)
+		  {
+			  if(i%2 == 0)
+			  {
+			  	LODOP.NewPage();
+			  	LODOP.ADD_PRINT_RECT(8,8,145,112,2,0);
+			  	LODOP.ADD_PRINT_TEXT(13,13,140,15,rows[i][8]);
+			  	LODOP.SET_PRINT_STYLEA(0,"FontSize",8);
+			  	LODOP.SET_PRINT_STYLEA(0,"Bold",1);
+			  	LODOP.ADD_PRINT_TEXT(28,13,140,28,rows[i][9]);
+			  	LODOP.SET_PRINT_STYLEA(0,"FontSize",7);
+			  	LODOP.ADD_PRINT_BARCODE(57,13,'37mm','9mm',"128A",rows[i][2]);
+			  	LODOP.SET_PRINT_STYLEA(0,"ShowBarText",0);
+			  	LODOP.ADD_PRINT_TEXT(42,90,30,14,rows[i][12]);
+			  	LODOP.SET_PRINT_STYLEA(0,"FontSize",8);
+			  	//LODOP.ADD_PRINT_RECT(40,114,32,15,2,1);
+			  	LODOP.ADD_PRINT_TEXT(42,116,10,14,rows[i][14]);
+			  	LODOP.SET_PRINT_STYLEA(0,"FontSize",8);
+			  	LODOP.ADD_PRINT_TEXT(42,136,10,14,rows[i][13]);
+			  	LODOP.SET_PRINT_STYLEA(0,"FontSize",8);
+			  	LODOP.ADD_PRINT_TEXT(92,10,80,20,rows[i][15]);
+			  	LODOP.SET_PRINT_STYLEA(0,"FontSize",9);
+			  	LODOP.SET_PRINT_STYLEA(0,"AlignJustify",1);
+			  	LODOP.SET_PRINT_STYLEA(0,"Bold",1);
+			  	LODOP.ADD_PRINT_TEXT(93,116,42,20,rows[i][2].substring(10,rows[i][2].length));
+			  	LODOP.SET_PRINT_STYLEA(0,"FontSize",7);
+			  }
+			  else
+			  {
+				    LODOP.ADD_PRINT_RECT(8,165,145,112,2,0);
+				  	LODOP.ADD_PRINT_TEXT(13,170,140,15,rows[i][8]);
+				  	LODOP.SET_PRINT_STYLEA(0,"FontSize",8);
+				  	LODOP.SET_PRINT_STYLEA(0,'Bold',1);
+				  	LODOP.ADD_PRINT_TEXT(28,170,140,28,rows[i][9]);//颜色尺寸
+				  	LODOP.SET_PRINT_STYLEA(0,"FontSize",7);
+				  	LODOP.ADD_PRINT_BARCODE(57,170,'37mm','9mm',"128A",rows[i][2]);//商品编码
+				  	LODOP.SET_PRINT_STYLEA(0,"ShowBarText",0);
+				  	LODOP.ADD_PRINT_TEXT(42,247,30,14,rows[i][12]);//档口优惠
+				  	LODOP.SET_PRINT_STYLEA(0,"FontSize",8);
+				  	//LODOP.ADD_PRINT_RECT(40,271,32,15,2,1);
+				  	LODOP.ADD_PRINT_TEXT(42,273,10,14,rows[i][14]);
+				  	LODOP.SET_PRINT_STYLEA(0,"FontSize",8);
+				  	LODOP.ADD_PRINT_TEXT(42,293,10,14,rows[i][13]);
+				  	LODOP.SET_PRINT_STYLEA(0,"FontSize",8);
+				  	LODOP.ADD_PRINT_TEXT(92,167,80,20,rows[i][15]);
+				  	LODOP.SET_PRINT_STYLEA(0,"FontSize",9);
+				  	LODOP.SET_PRINT_STYLEA(0,"AlignJustify",1);
+				  	LODOP.SET_PRINT_STYLEA(0,"Bold",1);
+				  	LODOP.ADD_PRINT_TEXT(93,273,42,20,rows[i][2].substring(10,rows[i][2].length));
+				  	LODOP.SET_PRINT_STYLEA(0,"FontSize",7);
+			  }
+			  
+			 /*  if((i+1)%20 == 0)
+			  {
+				  LODOP.SET_PRINT_MODE("TAG_PRINT_TASK","拿货单标打印" + (i+1)/20 );
+				  LODOP.SET_PRINT_MODE("POS_BASEON_PAPER",true);
+				  LODOP.PRINT();
+			  } */
+			  
+		  }
+		  //if((rows.length)%20 != 0)
+		  //{
+			  LODOP.SET_PRINT_MODE("TAG_PRINT_TASK","拿货单标打印" + "end");
+			  LODOP.SET_PRINT_MODE("POS_BASEON_PAPER",true);
+			  LODOP.SET_SHOW_MODE("NP_NO_RESULT",true);
+			  LODOP.PRINT();			  
+		  //}
+		 
+	}
+	
+	function tag_preview(rows)
+	{
+		//console.log(rows);
+		  LODOP = getLodop();
+		  
+		  LODOP.PRINT_INITA(0,0,326,121,"51zwd_代发_拿货单_标签打印");
+		  LODOP.SET_PRINT_PAGESIZE(1,860,320,"");
+		  
+		  var preview_len = rows.length > 20 ? 20 : rows.length;
+		  
+		  for(i=0;i<preview_len;i++)
+		  {
+			  if(i%2 == 0)
+			  {
+			  	LODOP.NewPage();			  	
+			  	LODOP.ADD_PRINT_RECT(8,8,145,112,2,0);
+			  	LODOP.ADD_PRINT_TEXT(13,13,140,15,rows[i][8]);
+			  	LODOP.SET_PRINT_STYLEA(0,"FontSize",8);
+			  	LODOP.SET_PRINT_STYLEA(0,"Bold",1);
+			  	LODOP.ADD_PRINT_TEXT(28,13,140,28,rows[i][9]);
+			  	LODOP.SET_PRINT_STYLEA(0,"FontSize",7);
+			  	LODOP.ADD_PRINT_BARCODE(57,13,'37mm','9mm',"128A",rows[i][2]);
+			  	LODOP.SET_PRINT_STYLEA(0,"ShowBarText",0);
+			  	LODOP.ADD_PRINT_TEXT(42,90,30,14,rows[i][12]);
+			  	LODOP.SET_PRINT_STYLEA(0,"FontSize",8);
+			  	//LODOP.ADD_PRINT_RECT(40,114,32,15,2,1);
+			  	LODOP.ADD_PRINT_TEXT(42,116,10,14,rows[i][14]);
+			  	LODOP.SET_PRINT_STYLEA(0,"FontSize",8);
+			  	LODOP.ADD_PRINT_TEXT(42,136,10,14,rows[i][13]);
+			  	LODOP.SET_PRINT_STYLEA(0,"FontSize",8);
+			  	LODOP.ADD_PRINT_TEXT(92,10,80,20,rows[i][15]);
+			  	LODOP.SET_PRINT_STYLEA(0,"FontSize",9);
+			  	LODOP.SET_PRINT_STYLEA(0,"AlignJustify",1);
+			  	LODOP.SET_PRINT_STYLEA(0,"Bold",1);
+			  	LODOP.ADD_PRINT_TEXT(93,116,42,20,rows[i][2].substring(10,rows[i][2].length));
+			  	LODOP.SET_PRINT_STYLEA(0,"FontSize",7);
+
+			  }
+			  else
+			  {
+			  	LODOP.ADD_PRINT_RECT(8,165,145,112,2,0);
+			  	LODOP.ADD_PRINT_TEXT(13,170,140,15,rows[i][8]);
+			  	LODOP.SET_PRINT_STYLEA(0,"FontSize",8);
+			  	LODOP.SET_PRINT_STYLEA(0,'Bold',1);
+			  	LODOP.ADD_PRINT_TEXT(28,170,140,28,rows[i][9]);//颜色尺寸
+			  	LODOP.SET_PRINT_STYLEA(0,"FontSize",7);
+			  	LODOP.ADD_PRINT_BARCODE(57,170,'37mm','9mm',"128A",rows[i][2]);//商品编码
+			  	LODOP.SET_PRINT_STYLEA(0,"ShowBarText",0);
+			  	LODOP.ADD_PRINT_TEXT(42,247,30,14,rows[i][12]);//档口优惠
+			  	LODOP.SET_PRINT_STYLEA(0,"FontSize",8);
+			  	//LODOP.ADD_PRINT_RECT(40,271,32,15,2,1);
+			  	LODOP.ADD_PRINT_TEXT(42,273,10,14,rows[i][14]);
+			  	LODOP.SET_PRINT_STYLEA(0,"FontSize",8);
+			  	LODOP.ADD_PRINT_TEXT(42,293,10,14,rows[i][13]);
+			  	LODOP.SET_PRINT_STYLEA(0,"FontSize",8);
+			  	LODOP.ADD_PRINT_TEXT(92,167,80,20,rows[i][15]);
+			  	LODOP.SET_PRINT_STYLEA(0,"FontSize",9);
+			  	LODOP.SET_PRINT_STYLEA(0,"AlignJustify",1);
+			  	LODOP.SET_PRINT_STYLEA(0,"Bold",1);
+			  	LODOP.ADD_PRINT_TEXT(93,273,42,20,rows[i][2].substring(10,rows[i][2].length));
+			  	LODOP.SET_PRINT_STYLEA(0,"FontSize",7);
+			  }
+			  
+			 
+			  
+		  }
+		 
+			  LODOP.SET_PRINT_MODE("TAG_PRINT_TASK","拿货单标打印" + "preview");
+			  LODOP.SET_PRINT_MODE("POS_BASEON_PAPER",true);
+			  LODOP.SET_SHOW_MODE("NP_NO_RESULT",true);
+			  //LODOP.PRINT_DESIGN();			  
+			  LODOP.PREVIEW();			  
+		  
+		 
+	}
+	
+	function print_table(rows)
+	{
+		if($('#save_nhd_inp').val() == null || $('#save_nhd_inp').val() == '')
+		{
+			bootbox.confirm({
+				'buttons':{
+					'confirm':{
+						'label':'继续打印'
+					},
+					'cancel':{
+						'label':'取消打印'
+					}
+				},
+				'title':'打印拿货单',
+				'message':'亲，请先<font color=red>打印标签</font>自动保存拿货单。这样拿货单才会显示名称，便于您管理拿货单！<br>标签打印完后，请继续打印，<font color=red>不要刷新</font>页面，谢谢！',
+				'callback':function(result){
+					if(result)
+					{
+						print_table_real(rows)
+					}
+					else
+					{						
+					}
+				}
+			});
+		}
+		else
+		{
+			print_table_real(rows);
+		}
+	}
+	
+	function print_table_real(rows)
+	{
+		var table_html="<table cellspacing='0' cellpadding='3' border='1' width='100%' bordercolor='#cccccc' style='border-collapse:collapse;font-size:12px;'><thead><tr><th width='3%'></th><th width='10%'>商品编码</th><th width='23%'>商品名称</th><th width='13%'>市场</th><th width='7%'>货号</th><th width='5%'>单价</th><th width='13%'>颜色尺寸</th><th width='6%'>优惠</th><th width='10%'>买家留言</th></tr></thead><tbody>";
+		
+		for($i = 0;$i < rows.length; $i++ )
+		{
+			table_html += "<tr><td width='3%'>"+($i + 1)+"</td><td width='10%'>"+rows[$i][2]+"</td><td width='23%'>"+rows[$i][4]+
+			"</td><td width='13%'>"+rows[$i][5]+"</td><td width='7%'>"+rows[$i][7]+"</td><td width='5%'>"+rows[$i][6]+"</td><td width='13%'>"+rows[$i][9]+
+			"</td><td width='6%'>"+rows[$i][10]+"</td><td width='10%'>"+rows[$i][11]+"</td></tr>";
+		}
+		
+		table_html += "</tbody><tfoot><tr><td></td><td>本页动态合计</td>"+
+		"<td tdata='pageNO' format='#'><p align='center'><b>第<font color='#0000FF'>#</font>页</b></p></td>"+
+		"<td tdata='pageCount' format='#' align='left'><p align='center'><b>总<font color='#0000FF'>##</font>页</b></td>"+
+		"<td></td><td colspan='2' tdata='subSum' format='#,##0.00' align='left'>小计<font color='#0000FF'>###</font></td>"+
+		"<td colspan='2' tdata='subSum' format='#,##0.00' align='left'>小计<font color='#0000FF'>###</font></td>"+
+		"</tr></tfoot></table>";
+		
+		var title_html ="<table cellspacing='0' cellpadding='3' border='0' width='100%' style='font-size:12px;'><thead><tr><th align='center' ><h2 style='font-size:16px;font-weight:bold;padding:0px;'>拿货单</h2></th></tr></thead><tbody><tr>"+
+		"<td align='right'>代发名称：{$bh_name}&nbsp;&nbsp;&nbsp;&nbsp;拿货日期：{$smarty.now|date:simple}&nbsp;&nbsp;&nbsp;&nbsp;拿货人：__________&nbsp;&nbsp;</td>"+
+		"</tr></tbody></table>";
+		
+		var thanks_html ="<div style='text-align:left;font-size:11px;'>感谢您对我要做网店51zwd.com的支持！"+ $('#save_nhd_inp').val() + "</div>"
+		
+		LODOP = getLodop();
+		LODOP.PRINT_INIT("打印拿货单表格");
+		LODOP.ADD_PRINT_TABLE("1%","0.1%","99.8%","4%",title_html);
+		LODOP.SET_PRINT_STYLEA(0,"ItemType",1);
+		LODOP.SET_PRINT_STYLEA(0,"LinkedItem",1);			
+		LODOP.ADD_PRINT_HTM("5%","0.1%","40%","3%",thanks_html);
+		LODOP.SET_PRINT_STYLEA(0,"ItemType",1);
+		//LODOP.SET_PRINT_STYLEA(0,"LinkedItem",1);	
+		LODOP.ADD_PRINT_TABLE("7%","0.1%","99.8%","90%",table_html);
+		LODOP.SET_PRINT_STYLEA(0,"FontSize",7);
+		LODOP.SET_SHOW_MODE("NP_NO_RESULT",true);
+		LODOP.PREVIEW();	
+	}
+	
+   
+  $(function(){
+	  $('#query_time_wrapper').datetimepicker({format:'YYYY-MM-DD HH:mm:ss'});
+	  $('#query_endtime_wrapper').datetimepicker({format:'YYYY-MM-DD HH:mm:ss'});
+	  $('#query_time_wrapper').on('dp.change',function(e){
+		  $('#query_endtime_wrapper').data("DateTimePicker").minDate(e.date);
+	  });
+	  $('#query_endtime_wrapper').on('dp.change',function(e){
+		  $('#query_time_wrapper').data("DateTimePicker").maxDate(e.date);
+	  }); 
+	  $('#query_time_form').bootstrapValidator({
+		  feedbackIcons: {
+	            valid: 'glyphicon glyphicon-ok',
+	            invalid: 'glyphicon glyphicon-remove',
+	            validating: 'glyphicon glyphicon-refresh'
+	        }, 
+		  fields:{
+			  query_time:{
+				  feedbackIcons:'false',
+				  validators:{
+					  notEmpty:{},
+					  date:{
+						message:'请输入有效日期,格式形如：2015-01-01 23:59:59',
+					  	format:"YYYY-MM-DD HH:mm:ss"
+					  }
+				  }
+			  },
+			  query_endtime:{
+				  validators:{
+					  notEmpty:{},
+					  date:{
+						message:'请输入有效日期,格式形如：2015-01-01 23:59:59',
+					  	format:"YYYY-MM-DD HH:mm:ss"
+					  },
+					  /* remote:{
+						url:"index.php?module=behalf&act=check_querytime",
+						data:{'query_time':$('#query_time_wrapper').data("DateTimePicker").date}
+					  },  */
+					  different:{
+						  field:'query_time',
+						  message:'结束时间应该大于开始时间'
+					  } 
+				  }
+			  },
+			  'market[]':{
+				  validators:{
+					  notEmpty:{ message:'至少选择一个市场' }
+				  }
+			  }
+		  }
+	  });
+	  
+	  <!--{if $goods_list}-->
+	  var dt = $("#goods_list_table").DataTable({
+			"ordering":true,
+		    "paging":true,
+		    "info":true,
+		    "searching":true,
+		    "columnDefs":[
+		       {"orderable":false,"targets":0},           
+		       {"orderable":false,"targets":[1]},           
+		       {"orderable":false,"targets":[11]},           
+		       {"visible":false,"targets":[12]},           
+		       {"visible":false,"targets":[13]},           
+		       {"visible":false,"targets":[14]},           
+		       {"visible":false,"targets":[15]}
+		      
+		     ],
+		     "order":[
+		        [0,null]      
+		     ],
+		     //dom:"Bfrtip",
+		     dom:"<'container-fluid' <'row' <'col-xs-2' l><'col-xs-7' B><'col-cs-3' f> > <t> <'row' <'col-xs-4' i><'col-xs-8 text-right' p>  >  >",
+		     "buttons":[
+		       'excel',{
+		    	   text:'打印表格',
+		    	   className:'btn btn-default',
+		    	   action:function(e,dt,node,config){
+		    		   print_table(dt.data());
+		    	   }
+		    	   
+		       },'colvis',{
+		    	   text:'标签打印',
+		    	   className:'btn btn-info',
+		    	   action:function(e,dt,node,config){
+							tag_printer(dt.data());
+		    	   }
+		        },
+		           {
+		    	  	 text:'预览10页',
+		    	   	 className:'btn btn-default',
+		    	   	 action:function(e,dt,node,config){
+							tag_preview(dt.data());
+		    	   	 }
+		    	   }
+		    
+		     ],
+			"language":{
+				"url":"{lib file='/DataTables/zn.json'}",
+				"buttons":{
+					"copy":"复制表格",
+					"excel":"导出EXCEL",
+					"print":"打印表格",
+					"colvis":"隐/显列"
+				}
+			},
+			"pagingType":'full_numbers'
+		});
+	  //add table no
+	   dt.on('order.dt search.dt',
+			    function() {
+			        dt.column(0, {
+			            search: 'applied',
+			            order: 'applied'
+			        }).nodes().each(function(cell, i) {
+			            cell.innerHTML = i + 1;
+			        });
+			    }).draw(); 
+	   
+	  <!--{/if}-->
+	  
+	  
+		  
+		  
+		  
+		 // $("#savebtn-nhd").on('click',function(e){ 
+	  		  //alert('f');
+	  		  
+			  $("#form-nhd").bootstrapValidator({
+				  feedbackIcons: {
+			            valid: 'glyphicon glyphicon-ok',
+			            invalid: 'glyphicon glyphicon-remove',
+			            validating: 'glyphicon glyphicon-refresh'
+			        }, 
+				  fields:{
+					  nhd_name:{
+						  validators:{
+							  notEmpty:{}
+						  }
+					  },
+					  nhd_taker:{
+						  validators:{
+							  //notEmpty:{}
+						  }
+					  }
+				  }
+			  }).bootstrapValidator('validate').on('success.form.bv', function(e) {
+				   // Prevent form submission
+		            e.preventDefault();
+
+		            // Get the form instance
+		            var $form = $(e.target);
+
+		            // Get the BootstrapValidator instance
+		            var bv = $form.data('bootstrapValidator');
+
+		            // Use Ajax to submit form data
+		            $.post($form.attr('action'), $form.serialize(), function(result) {
+		            	$('#modal-nhd').modal('hide');
+		                //var json = $.parseJSON(result);
+		                //bootbox.alert(result.msg);
+		            }, 'json');
+		           
+		            $form.data('bootstrapValidator').resetForm(true);
+		         
+		        });
+	  		  
+	  		  
+		 // }).addClass('disabled');
+		 
+		 jQuery("#checkall").on('ifChecked ifUnchecked',function(){			 
+			 var checkall = this.checked ? 'check':'uncheck';
+			 jQuery("input[name='market[]']").iCheck(checkall);
+			/* jQuery("input[name='market[]']").each(function(i){
+				this.checked = checkall;
+			}); */
+		 });
+	
+  });
+
+</script>
+<div class="container-fluid">
+	<div class="panel panel-default">
+		<div class="panel-body">
+			<!-- <div class="">
+				<h4 class="blue09c">拿货单生成与商品标签打印</h4>
+			</div> -->
+			<div class="">
+				<form id="query_time_form" class="form-vertical" method="post">
+					<div class="form-group">
+					  <div class="row">
+					  	<label class="col-xs-1 text-right text-warning">支付时间</label>
+					  	<div class="col-xs-4">
+			   				<div class='input-group date' id='query_time_wrapper'>
+			   				    <span class="input-group-addon">从</span>
+			                    <input type="text" class="form-control" name="query_time" value="{$start_time}">
+			                    <span class="input-group-addon">
+			                        <span class="glyphicon glyphicon-time"></span>
+			                    </span>
+			                </div>
+			            </div>
+			            
+			            <div class="col-xs-4">
+			   				<div class='input-group date' id='query_endtime_wrapper'>
+			   					<span class="input-group-addon">至</span>
+			                    <input type="text" class="form-control" name="query_endtime" value="{$end_time}">
+			                    <span class="input-group-addon">
+			                        <span class="glyphicon glyphicon-time"></span>
+			                    </span>
+			                </div>
+			            </div>
+			            <div class="col-xs-3">
+			            	<small class="text-muted"><span class="glyphicon glyphicon-hand-right"></span> 包含开始时间和结束时间。</small>
+			            </div>
+		              </div>
+			       </div>
+			       <div class="form-group">
+	                  <div class="row">
+		                   <div class="checkbox">
+		                    <strong class="col-xs-1 text-right">快递公司</strong> 
+		                	<div class="col-xs-4">
+		                		<select name="delivery" class="form-control selectpicker">
+		                			<option value="0">全部快递</option>
+		                			<!--{foreach from=$deliverys item=deli}-->
+				                	    <option value="{$deli.dl_id}" {if $deli.dl_id eq $delivery}selected{/if}>{$deli.dl_name|escape}</option>
+				                	<!--{/foreach}-->
+		                		</select>
+		                	</div>
+		                </div>
+		               </div>
+		            </div>
+			       <div class="form-group">
+	                  <div class="row">
+		                   <div class="checkbox">
+		                     <strong class="col-xs-1 text-right">拿货市场</strong> 
+		                	<div class="col-xs-11">
+		                	<!--{foreach from=$markets item=market}-->
+		                	    <label><input type="checkbox" name="market[]" value="{$market.mk_id}" {if in_array($market.mk_id,$market_choice)}checked{/if}> {$market.mk_name|escape}</label>
+		                	<!--{/foreach}-->
+		                	<!--{if $markets}-->
+		                	<label>
+		                		<input type="checkbox" id="checkall"/><strong>全选</strong>
+		                	</label>
+		                	<!--{else}-->
+		                		<b text="text-danger">没有拿货市场，您不能使用搜索功能！</b>
+		                	<!--{/if}-->
+		                	</div>
+		                </div>
+		               </div>
+		            </div>
+			       <input type="hidden" name="module" value="behalf" />
+			       <input type="hidden" name="act" value="gen_taker_list" />
+			       <div class="form-group">
+			       		<div class="row">
+				       		<div class="col-xs-1"></div>
+					      	<div class="col-xs-4">
+				            	<input type="submit" class="btn btn-info" id="query_submit" value="生成拿货单" />
+				           		 <!--{if $goods_list and !$default_search }-->
+				            	<!--  <button class="btn btn-success" data-toggle="modal" data-target="#modal-nhd">分配拿货单</button>-->
+				          		<!--{/if}-->
+				            </div>
+			            </div>
+		            </div>
+				</form>
+			</div>
+		   <input type="hidden" name="save_nhd" value="" id="save_nhd_inp" />
+		  </div>
+	  </div>
+	  <div class="alert alert-warning alert-dismissible" role="alert">
+    	<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+    	默认为<b><所有></b>待拿货商品，在结果面板右上角<strong><结果中搜索></strong>可搜索结果中任意内容（即二次搜索），包括未显示的分页内容！生成拿货单后，可保存拿货单亦可分配给拿货员，便于管理和对账！<b class="text-danger"><推荐></b>
+      </div>
+	  <!--{if $goods_list}-->
+	  <div class="panel panel-default">
+		<div class="panel-body">	
+			<div class="row">
+				<div class="col-xs-10">
+					<label>统计：</label><span class="text-info"><small>{$start_time}</span>（大于等于）  至   （小于）</small><span class="text-info">{$end_time}</span>&nbsp;&nbsp;
+					商品总数量<b class="text-danger"> {$total_count} </b>件，商品金额<b class="text-danger"> {$total_amount|price} </b>，档口优惠<b class="text-danger"> {$store_bargin|price} </b>，
+					合计<b class="text-danger"> {$last_amount|price} </b>。<!--{if $rest_count }--> <b class="text-warning">您还有<b class="text-danger"> {$rest_count|default:0} </b>条记录没显示！</b> <!--{/if}-->
+				</div>
+				<div class="col-xs-2">
+					
+				</div>
+			</div>	
+			
+		</div>
+		
+			<table id="goods_list_table" class="table table-condensed table-striped table-bordered table-hover" width="100%">
+		  	<thead>
+		  		<tr>
+		  		    <th class="text-center" width="30">NO</th>
+		  			<th class="text-center col-xs-1 hidden-print">商品图片</th>
+		  			<th class="text-center col-xs-1">商品编码</th>
+		  			<th class="text-center col-xs-1">订单编码</th>
+		  			<th class="text-center col-xs-2">商品名称</th>
+		  			<th class="text-center col-xs-1">所属市场</th>
+		  			<th class="text-center col-xs-1">商品单价</th>
+		  			<th class="text-center col-xs-1">货号</th>
+		  			<th class="text-center col-xs-1">商家编码</th>
+		  			<th class="text-center col-xs-1">颜色尺寸</th>
+		  			<th class="text-center col-xs-1">档口优惠</th>
+		  			<th class="text-center col-xs-1">买家留言</th>
+		  			<th class="text-center">优惠打印</th>
+		  			<th class="text-center">订单商品总数</th>
+		  			<th class="text-center hidden-print">快递简称</th>
+		  			<th></th>
+		  		</tr>
+		  	</thead>
+		  	<tbody>
+		  	<!--{foreach from=$goods_list item=goods name=fe_goods}-->
+		  		<tr>
+		  		    <td class="text-center" width="30"></td>
+		  			<td class="text-center col-xs-1 hidden-print">
+		  			<img src="{$goods.goods_image}" width="50">
+		  			</td>
+		  			<td class="text-center col-xs-1">{$goods.goods_no}</td>
+		  			<td class="text-center col-xs-1"><a href="index.php?module=behalf&act=show_order_detail&order_id={$goods.order_id}" target="_blank">{$goods.order_sn}</a></td>
+		  			<td class=" col-xs-2">{$goods.goods_name}</td>
+		  			<td class="text-center col-xs-1">{$goods.market_name}_{$goods.floor_name}_{$goods.store_address}</td>
+		  			<td class="text-center col-xs-1">{$goods.goods_price}</td>
+		  			<td class="text-center col-xs-1">{$goods.goods_sku|escape}</td>
+		  			<td class="text-center col-xs-1">{$goods.goods_attr_value}</td>
+		  			<td class=" col-xs-1">{$goods.goods_specification}</td>
+		  			<td class="text-center col-xs-1"><!--{if $goods.store_bargin}-->{$goods.store_bargin}<!--{/if}--></td>
+		  			<td class=" col-xs-1">{$goods.order_postscript|escape}</td>
+		  			<td class="text-center"><!--{if $goods.store_bargin gt 0}-->{$goods.store_bargin}/H<!--{/if}--></td>
+		  			<td class="text-center">{if $goods.order_goods_quantity gt 1}D{/if}</td>
+		  			<td class="text-center hidden-print">{$goods.delivery_name}</td>
+		  			<td>{$goods.order_sn}</td>
+		  		</tr>
+		  	<!--{/foreach}-->
+		  	</tbody>
+		  </table>
+	   
+	  </div>
+	  <!--{else}-->
+	  <div class="alert alert-warning"><span class="glyphicon glyphicon-heart"></span> 亲！没有找到相关的数据，请继续挖掘吧……</div>
+	  <!--{/if}-->
+	  
+	  <div id="modal-nhd" class="modal fade">
+	  	<div class="modal-dialog">
+	  		<div class="modal-content">
+	  		   <form method="post" id="form-nhd" action="index.php?module=behalf&act=save_nhd">
+	  			<div class="modal-header">
+       	 			<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        			<h4 class="modal-title">拿货单信息</h4>
+      			</div>
+      			<div class="modal-body">
+        			<div class="container-fluid">
+        				
+        					<div class="form-group">
+        						<label class="control-label col-xs-12">拿货单名称</label>
+        						<div class="col-xs-12">
+        							<input type="text" name="nhd_name" value="{$smarty.now|date:complete}" class="form-control">
+        					    </div>
+        					</div>
+        					<div class="form-group">
+        						<label class="col-xs-12">拿货员</label>
+        						<div class="col-xs-12">
+	        						<select class="form-control" name="nhd_taker">
+	        							<!--{foreach from=$takers item=tak}-->
+	        							<option value="{$tak.user_id}">{$tak.user_name} | {$tak.real_name}</option>
+	        							<!--{/foreach}-->
+	        						</select>
+	        					</div>
+        					</div>
+        					<input type="hidden" name="goods_count" value="{$total_count}">
+        					<input type="hidden" name="goods_amount" value="{$total_amount}">
+        					<input type="hidden" name="store_bargin" value="{$store_bargin}">
+        					<input type="hidden" name="behalf" value="{$bh_id}">
+        					<input type="hidden" name="market_id" value="{$mkids}">
+        					<input type="hidden" name="market_name" value="{$mknames}">
+        					<input type="hidden" name="content" value="{$content}">
+        					<input type="hidden" name="search_time" value="{$start_time}/{$end_time}">
+        					<input type="hidden" name="search_delivery" value="{$delivery}">
+        				
+        			</div>
+      			</div>
+      			<div class="modal-footer">
+      				<a href="index.php?module=behalf&act=manage_goodstaker" class="btn btn-link">设置拿货员</a>
+      				<button type="submit" class="btn btn-primary" id="savebtn-nhd">保 存</button>
+        			<button type="button" class="btn btn-default" data-dismiss="modal">关 闭</button>
+     			</div>
+     			</form>
+	  		</div>
+	  	</div>
+	  </div>
+</div>
+{include file=footer.whole.html}

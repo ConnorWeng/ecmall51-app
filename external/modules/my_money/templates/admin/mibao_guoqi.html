@@ -1,0 +1,92 @@
+{include file="header.html"}
+<script language="javascript">
+$(function(){
+    $('#sotime,#endtime').datepicker({dateFormat: 'yy-mm-dd'});
+});
+</script>
+<div id="rightTop">
+    <p>{$lang.index_dongtaimibaoguanli}</p>
+    <ul class="subnav">
+		<li><a class="btn3" href="index.php?module=my_money&act=mibao_zhengchang">{$lang.index_zhengchangshiyong}</a></li>
+		<li><a class="btn3" href="index.php?module=my_money&act=mibao_zanting">{$lang.index_yizanting}</a></li>
+		<li><span>{$lang.index_yiguoqi}</span></li>
+		<li><a class="btn3" href="index.php?module=my_money&act=mibao_xinka">{$lang.index_xinkaliebiao}</a></li>
+		<li><a class="btn3" href="index.php?module=my_money&act=mibao_sn_pi">{$lang.index_xinkashengcheng}</a></li>
+		<li><a class="btn3" href="index.php?module=my_money&act=index">{$lang.index_fanhuidaohang}</a></li>
+    </ul>
+</div>
+<div class="mrightTop">
+    <div class="fontl">
+        <form method="get">
+            <div class="left">
+              <input name="module" type="hidden" id="module" value="my_money" />
+              <input name="act" type="hidden" id="act" value="mb_soso" />
+			  <input name="ztai" type="hidden" id="ztai" value="3" />
+              {$lang.so_mibaosn}
+              <input name="sombsn" type="text" id="sombsn" />
+			  {$lang.so_bangdingshijian}
+              <input name="sotime" type="text" id="sotime" value="<?php echo $_GET["sotime"];?>" size="10" maxlength="10" />
+              {$lang.so_zhi}<input name="endtime" type="text" id="endtime" value="<?php echo $_GET["endtime"];?>" size="10" maxlength="10" />
+                
+                <input type="submit" class="formbtn" value="{$lang.query}" />
+          </div>
+      </form>
+    </div>
+  <div class="fontr">{include file=page.top.html}</div>
+</div>
+
+<div class="tdare">
+    <table width="100%" cellspacing="0">
+
+        <tr class="tatr1">
+            <td width="20" class="firstCell"><input id="checkall_1" type="checkbox" class="checkall"/></td>
+            <td align="left">{$lang.mb_id}</td>
+            <td>{$lang.mb_mibaosnhao}</td>
+            <td width="120">{$lang.mb_shengchengshijian}</td>
+            <td>{$lang.mb_bangdingyonghu}</td>
+			<td width="120">{$lang.mb_bangdingshijian}</td>
+			<td>{$lang.mb_shengyushijian}</td>
+            <td class="handler">{$lang.mb_guanlicaozuo}</td>
+        </tr>
+
+        <!--{foreach from=$index item=val}-->
+        <tr class="tatr2">
+            <td width="20" class="firstCell"><input type="checkbox" class="checkitem" value="{$val.id}" /></td>
+            <td align="left"><b>{$val.id}</b></td>
+            <td align="left">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font color="#FF0000">{$val.mibao_sn}</font></td>
+            <td><!--{if $val.user_name}--><a href="index.php?app=user&act=edit&id={$val.user_id}">{$val.user_name}</a><!--{else}-->{$lang.mb_weibangding}<!--{/if}--></td>
+			<td>{$val.bd_time|date:Y-m-d}</td>
+			<td>{$val.dq_time|date:Y-m-d}</td>
+			<td><font color="#FF0000">
+			<?php $dq_time = $this->_var['val']['dq_time']-time(); 
+			if($dq_time>0)
+			{
+			echo $dq_time = sprintf("%0.0f",$dq_time = $dq_time/24/60/60);
+			echo "{$lang.mb_tian}";
+			}
+			else
+			{
+			echo "{$lang.mb_yiguoqi}";
+			}
+			?></font>
+			&nbsp;|&nbsp;&nbsp;<font color="#FF0000">{$lang.mb_yizanting}</font>
+			</td>
+            <td><a href="index.php?module=my_money&act=mibao_edit_mibao&id={$val.id}">{$lang.mb_bianjimibao}</a>&nbsp;&nbsp;|&nbsp;&nbsp;<a href="javascript:drop_confirm('{$lang.mb_ninquedingyaohuifugaiyonghudemibaogongnengma}', 'index.php?module=my_money&act=mibao_huifu&id={$val.id}');">{$lang.mb_huifushiyong}</a></td>
+        </tr>
+        <!--{foreachelse}-->
+        <tr class="no_data">
+            <td colspan="8">{$lang.no_data}</td>
+        </tr>
+        <!--{/foreach}-->
+    </table>
+    <!--{if $index}-->
+<div id="dataFuncs">
+    <div id="batchAction" class="left paddingT15">
+      
+    </div>
+    <div class="pageLinks">{include file=page.bottom.html}</div>
+    <div class="clear"></div>
+  </div>
+  <!--{/if}-->
+</div>
+{include file="footer.html"}

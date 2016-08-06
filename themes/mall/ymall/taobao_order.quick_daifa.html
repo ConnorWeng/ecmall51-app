@@ -1,0 +1,459 @@
+<script type="text/javascript">
+var searchedSpecs = {};
+$(function(){
+    var behalfs = {$behalfsJSON};
+    $('#mainform').on('keydown', function(event) {
+        if (event.keyCode === 13 && event.target.className === 'search_keywords') {
+            event.preventDefault();
+            $('.search_goods_btn').click();
+        }
+    });
+    $('#cancel').click(function () {
+        DialogManager.close('taobao_order_quick_daifa');
+    });
+    $('.submit_btn').click(function (event) {
+        $('.submit_btn').attr('disabled', 'true');
+        var bhId = $("input[type='radio'][name='behalf']:checked").val();
+        var goods_ids = '';
+        $('.zwd_list span.goods_id').each(function() {
+            goods_ids += $(this).text() + ','
+        });
+        if (goods_ids.length > 0) {
+            goods_ids = goods_ids.substr(0, goods_ids.length - 1);
+        }
+        $.getJSON(SITE_URL + '/index.php?app=taobao_order&act=is_behalf_goods&bh_id=' + bhId + '&goods_ids=' + goods_ids, {}, function (data) {
+            if (data) {
+                if (countNum('.order_goods .good_num') !== countNum('.zwd_list .num')) {
+                    if (!confirm('亲，发现您所选择的宝贝数目与淘宝订单中不一致，确认下单？')) {
+                        $('.submit_btn').removeAttr('disabled');
+                        return false;
+                    }
+                }
+                $('#operation').val(event.target.id);
+                $('#mainform').submit();
+            } else {
+                alert('亲，您选择的代发不支持该宝贝所在的市场，请选择其他代发再试一下');
+                $('.submit_btn').removeAttr('disabled');
+                return false;
+            }
+        });
+    });
+    $('.search_goods_btn').click(function() {
+        $('.search_goods').children().remove();
+        searchedSpecs = {};
+        var keywords = $('.search_keywords').val();
+        var bhId = $("input[type='radio'][name='behalf']:checked").val();
+        $.getJSON(SITE_URL + '/index.php?app=taobao_order&act=searchGoods&bh_id=' + bhId + '&keywords=' + encodeURI(keywords), {}, function(data) {
+            var goods = {};
+            for(var i = 0; i < data.length; i++) {
+                var good = data[i];
+                if (goods[good.goods_id]) {
+                    goods[good.goods_id].push(good);
+                } else {
+                    goods[good.goods_id] = [good];
+                }
+            }
+            var html = '';
+            for (var goodsId in goods) {
+                html += '<li class="good">';
+                html += '<div class="good_pic">';
+                html += '<img src="' + goods[goodsId][0].default_image + '"/>';
+                html += '</div>';
+                html += '<div class="good_detail">';
+                html += '<div class="good_title"><h6><a href="'+SITE_URL+'/index.php?app=goods&id='+goodsId+'" target="_blank">'+goods[goodsId][0].goods_name+'</a></h6></div>';
+                html += '<div class="good_info">';
+                html += '<div class="outer_iid">' + goods[goodsId][0].attr_value + '</div>'
+                html += '<div class="good_spec">';
+                html += '<input class="goods_id" type="hidden" value="' + goodsId + '">'
+                html += '<select class="searched_spec_1" style="width:80px">';
+                for(var j = 0; j < goods[goodsId].length; j++) {
+                    if (!searchedSpecs[goodsId]) {
+                        searchedSpecs[goodsId] = {};
+                    }
+                    if (searchedSpecs[goodsId][goods[goodsId][j].spec_1]) {
+                        searchedSpecs[goodsId][goods[goodsId][j].spec_1].push({
+                            spec_2: goods[goodsId][j].spec_2,
+                            spec_id: goods[goodsId][j].spec_id,
+                            price: goods[goodsId][j].price
+                        });
+                    } else {
+                        searchedSpecs[goodsId][goods[goodsId][j].spec_1] = [{
+                            spec_2: goods[goodsId][j].spec_2,
+                            spec_id: goods[goodsId][j].spec_id,
+                            price: goods[goodsId][j].price
+                        }];
+                        html += '<option>' + goods[goodsId][j].spec_1 + '</option>';
+                    }
+                }
+                html += '</select>';
+                html += '</div>';
+                html += '<div class="good_price"><input class="searched_num" type="text" value="1" style="width:20px"/>&nbsp;&nbsp;X&nbsp;&nbsp;¥<span>' + goods[goodsId][0].price + '</span>&nbsp;<a id="add_to_matched_' + goodsId + '" class="add_to_matched" style="cursor:pointer" onclick="addToMatched(' + goodsId + ');">加入订单</a></div>'
+                html += '</div>';
+                html += '</div>';
+                html += '</li>';
+            }
+            $('.search_goods').append(html);
+            $('.searched_spec_1').change();
+        });
+    });
+    $('.searched_spec_1').die().live('change', function(event) {
+        var $searchedSpec1 = $(this);
+        var spec_1 = $searchedSpec1.val();
+        var $searchedSpec2 = $searchedSpec1.siblings('select');
+        var goodsId = $searchedSpec1.siblings('input.goods_id').val();
+        $searchedSpec2.remove();
+        var spec_2s = searchedSpecs[goodsId][spec_1];
+        var searchedSpec2Str = '<select class="searched_spec_2" style="width:80px">';
+        for (var i = 0; i < spec_2s.length; i++) {
+            if (!spec_2s[i]['spec_2']) {
+                searchedSpec2Str = searchedSpec2Str.replace('select', 'select style="display:none;" ');
+            }
+            searchedSpec2Str += '<option price="' + spec_2s[i]['price'] + '" value="'+ spec_2s[i]['spec_id'] +'">' + spec_2s[i]['spec_2'] + '</option>'
+        }
+        searchedSpec2Str += '</select>';
+        $searchedSpec1.after(searchedSpec2Str);
+        $('.searched_spec_2').change();
+    });
+    $('.searched_spec_2').die().live('change', function(event) {
+        var $searchedSpec2 = $(this);
+        var price = $searchedSpec2.find('option:selected').attr('price');
+        $searchedSpec2.closest('.good_info').find('.good_price span').text(price);
+    });
+    $("input[type='radio'][name='delivery']").die().live('click',function(){
+        refreshShipFee($(this));
+    });
+    $("input[type='radio'][name='behalf']").click(function(){
+        var id = $(this).val();
+        $.post('index.php?app=order&act=get_deliverys_by_behalf&ajax=1',{id:id, quantity:countNum('.order_goods .good_num')},function(data){
+            if(data != 'false')
+            {
+                data = eval(data);
+                var str_temp = "";
+                for(i=0;i<data.length;i++)
+                {
+                    if(i == 0)
+                    {
+                        str_temp = str_temp + "<input type='radio' name='delivery' fee='"+data[i]['dl_fee']+"' value='"+ data[i]['dl_id'] + "' checked='checked'/>"+ data[i]['dl_name'] +"(&yen;"+data[i]['dl_fee']+ ")&nbsp;&nbsp;";
+                    }
+                    else
+                    {
+                        str_temp = str_temp + "<input type='radio' name='delivery' fee='"+data[i]['dl_fee']+"' value='"+ data[i]['dl_id'] + "'/>"+ data[i]['dl_name'] +"(&yen;"+data[i]['dl_fee']+ ")&nbsp;&nbsp;";
+                    }
+                }
+                //$("#delivery_area").html();
+                $("#delivery_area").html(str_temp);
+                behalf_delivery_amount = parseInt($("input[type='radio'][name='delivery']:checked").attr('fee'));
+                $('.matched_ship_fee').text(behalf_delivery_amount);
+                for (var i in behalfs) {
+                    var b = behalfs[i]
+                    if (b.bh_id == id) {
+                        var html = '{$lang.contact}{$lang.colon}&nbsp;&nbsp;' + b.bh_name + ',&nbsp;&nbsp;' + b.bh_tel;
+                        if (b.bh_ww) {
+                            html += '&nbsp;&nbsp;<a title="与' + b.bh_name + '店主交谈" href="http://amos.im.alisoft.com/msg.aw?v=2&uid=' + b.bh_ww + '&site=cntaobao&s=2&charset={$charset}" target="_blank"><img border="0" src="http://amos.im.alisoft.com/online.aw?v=2&uid=' + b.bh_ww + '&site=cntaobao&s=2&charset={$charset}" alt="与' + b.bh_name + '店主交谈" align="absmiddle"/></a>';
+                        }
+                        if (b.bh_qq) {
+                            html += '&nbsp;&nbsp;<a title="与' + b.bh_name + '店主交谈" href="http://crm2.qq.com/page/portalpage/wpa.php?uin=800063451&aty=1&a=' + b.bh_qq + '&curl=&ty=1" style="display:inline-block;width:16px;overflow:hidden;vertical-align:middle;"><img src="http://wpa.qq.com/pa?p=1:800063451:9" alt="QQ"></a>';
+                        }
+                        html += '<br>{$lang.reback_address}{$lang.colon}&nbsp;&nbsp;' + b.owner_name + ',&nbsp;&nbsp;' + b.bh_tel + '&nbsp;&nbsp;' + b.region_name + '&nbsp;&nbsp;' + b.bh_address + '&nbsp;&nbsp;{$lang.zipcode}:' + b.zipcode + '<br>';
+                        if (b.bh_notice) {
+                            html += '<p class="f40"><font color=red>{$lang.emerge_notice}{$lang.colon}</font> ' + b.bh_notice + '</p>';
+                        }
+                        $('.behalf_info_container').html(html);
+                        break;
+                    }
+                }
+            }else
+            {
+                $("#delivery_area").html();
+            }
+        });
+    });
+    if ($('.zwd_list > li').length === 0) {
+        $('.search_keywords').val(parseTitle($('.order_goods > li:eq(0)').find('.good_title').text()));
+        $('.search_goods_btn').click();
+    }
+    $("input[type='radio'][name='behalf']").click();
+    refreshShipFee($("input[type='radio'][name='delivery']:checked"));
+});
+
+function refreshShipFee($dl) {
+    var dlId = $dl.attr('value');
+    var dlText = $dl.next('label').text();
+    var bhId = $("input[type='radio'][name='behalf']:checked").val();
+    $.getJSON(SITE_URL + '/index.php?app=taobao_order&act=get_ship_fee&bh_id=' + bhId + '&dl_id=' + dlId + '&goods_quantity=' + countNum('.zwd_list .num'), {}, function(fee) {
+        $('.matched_ship_fee').text(parseInt(fee));
+        dlText = dlText.substring(0, dlText.indexOf('(')) + '(¥' + parseInt(fee) + ')';
+        $dl.next('label').text(dlText);
+    });
+}
+
+function countNum(selector) {
+    var num = 0;
+    $(selector).each(function() {
+        num += parseInt($(this).text());
+    });
+    return num;
+}
+
+function removeFromMatched(specId) {
+    var $specIdInput = $('.spec_id[value=' + specId + ']');
+    var $good = $specIdInput.closest('li.good');
+    $good.remove();
+    updateTotalValue();
+}
+
+function addToMatched(goodsId) {
+    var $a = $('#add_to_matched_' + goodsId);
+    var $li = $a.closest('li.good');
+    var specId = $li.find('.searched_spec_2').val();
+    var $specIdInput = $('.spec_id[value=' + specId + ']');
+    var num = $li.find('input.searched_num').val();
+    if ($specIdInput.length === 0 && specId) {
+        var spec = $li.find('.searched_spec_1 option:selected').text() + ' ' + $li.find('.searched_spec_2 option:selected').text();
+        var defaultImage = $li.find('img').attr('src');
+        var $goodTitle = $li.find('.good_title a');
+        var goodHttp = $goodTitle.attr('href');
+        var title = $goodTitle.text();
+        var price = $li.find('.good_price span').text();
+        var outerIid = $li.find('.outer_iid').text();
+        var html = '<li class="good">' +
+            '<div class="good_pic">' +
+            '<img src="' + defaultImage + '"></img>' +
+            '</div>' +
+            '<div class="good_detail">' +
+            '<div class="good_title"><h6><a href="' + goodHttp + '" target="_blank">' +title + '</a></h6></div>' +
+            '<div class="good_info">' +
+            '<div class="outer_iid">' + outerIid + '</div>' +
+            '<div class="good_spec">' + spec + '</div>' +
+            '<div class="good_price"><span class="num">' + num + '</span>&nbsp;&nbsp;X&nbsp;&nbsp;<span class="price">¥' + price + '</span>&nbsp;<a class="remove_from_matched" style="cursor:pointer" onclick="removeFromMatched(' + specId + ')">' + '{$lang.remove_from_matched}' + '</a></div>' +
+            '</div>' +
+            '</div>' +
+            '<input class="spec_id" type="hidden" name="spec_id_' + specId + '" value="' + specId + '"/>' +
+            '<input class="num_hidden" type="hidden" name="num_' + specId + '" value="' + num + '"/>' +
+            '<span class="goods_id" style="display: none;">' + goodsId + '</span>' +
+            '<div class="clear"></div>' +
+            '</li>';
+        $('.zwd_list').append(html);
+    } else {
+        var $li = $specIdInput.closest('li.good');
+        var $numSpan = $li.find('.good_price > span.num');
+        var newNum = parseInt($numSpan.text()) + parseInt(num);
+        $numSpan.text(newNum);
+        var $numHidden = $li.find('.num_hidden').val(newNum);
+    }
+    updateTotalValue();
+}
+
+function updateTotalValue() {
+    var text = $('.matched_total_value strong').text();
+    var symbol = text.substr(0, 1);
+    var total = 0.00;
+    $('.content_part:eq(1) li.good').each(function() {
+        var $li = $(this);
+        var $priceSpan = $li.find('span.price');
+        var price = parseFloat($priceSpan.text().substr(1));
+        var $numSpan = $li.find('span.num');
+        var num = parseInt($numSpan.text());
+        total += num * price;
+    });
+    $('.matched_total_value strong').text(symbol + total);
+    refreshShipFee($("input[type='radio'][name='delivery']:checked"));
+}
+
+function search(name) {
+    $('.search_keywords').val(parseTitle(name));
+    $('.search_goods_btn').click();
+}
+
+function searchOuterIid(outerIid) {
+    $('.search_keywords').val(parseOuterIid(outerIid));
+    $('.search_goods_btn').click();
+}
+
+function parseTitle(title) {
+    var matches, regex;
+    regex = /[A-Z]?\d+/g;
+    matches = regex.exec(title);
+    while ((matches != null) && matches[0].length === 4 && matches[0].substr(0, 3) === '201') {
+      matches = regex.exec(title);
+    }
+    var huohao =  (matches != null ? matches[0] : void 0) || '';
+    return title.replace(huohao, '').replace('#', '');
+};
+
+function parseOuterIid(outerIid) {
+    var search = outerIid.replace('#', '');
+    var parts = search.split('_');
+    if (parts.length > 2) {
+        return parts[0] + ' ' + parts[2];
+    } else {
+        return search;
+    }
+}
+</script>
+<style type="text/css">
+.ajax_form_block { border-bottom:#dadada 1px dotted; padding-bottom:15px; padding-top:15px; }
+.content_part { width:50%; border:0; padding:0; float:left; }
+.good { height:60px; margin-bottom: 5px; }
+.good_detail { width:320px; }
+.good_pic, .good_detail, .good_spec { float:left; }
+.good_price { float:right; }
+.good_pic img { width:60px; height:60px; }
+.good_title { line-height:14px; height:28px; overflow:hidden; }
+.good_title h6 { font-size:10px; }
+.good_info { height:32px; }
+.outer_iid, .good_price, .good_spec { line-height:16px; height:16px; }
+.total_value { text-align:right; }
+.search_keywords { width:360px; }
+.search_goods_btn { border:1px solid black; cursor:pointer; }
+.search_goods { height:180px; overflow:scroll; }
+.add_to_matched { color:#32cd32; }
+.add_to_matched:hover { color:#32cd32; }
+.remove_from_matched { color:red; }
+</style>
+<ul class="tab">
+    <li class="active">{$lang.quick_daifa}</li>
+</ul>
+<div class="eject_con">
+    <form id="mainform" method="post" action="index.php?app=taobao_order&act=quick_daifa&order_id={$order_id}">
+
+        <div class="content_part">
+            <div class="content_line">
+                {$lang.order_goods}
+            </div>
+            <div class="content_line">
+                <ul class="order_goods">
+                    <!-- {foreach from=$goods item=good} -->
+                    <li class="good">
+                        <div class="good_pic">
+                            <a href="{$good.good_http}" target="_blank"><img src="{$good.default_image}"></img></a>
+                        </div>
+                        <div class="good_detail">
+                            <div class="good_title"><h6><a href="javascript:search('{$good.goods_name}')" target="_blank">{$good.goods_name}</a></h6></div>
+                            <div class="good_info">
+                                <div class="outer_iid"><a href="javascript:searchOuterIid('{$good.outer_iid}')" target="_blank">{$good.outer_iid}</a></div>
+                                <div class="good_spec">{$good.spec_value_1}&nbsp;{$good.spec_value_2}&nbsp;&nbsp;</div>
+                                <div class="good_price"><span class="good_num">{$good.num}</span>&nbsp;&nbsp;X&nbsp;&nbsp;{$good.price|price}&nbsp;</div>
+                            </div>
+                        </div>
+                        <div class="clear"></div>
+                    </li>
+                    <!-- {/foreach} -->
+                </ul>
+                <div class="total_value"><h3>{$lang.order_amount}:<strong class="color8" id="order_amount">{$taobao_total_fee|price}</strong>+{$taobao_post_fee}({$lang.ship_fee})</h3></div>
+            </div>
+        </div>
+
+        <div class="content_part">
+            <div class="content_line">
+                {$lang.51zwd_goods}
+            </div>
+            <div class="content_line">
+                <ul class="zwd_list">
+                    <!-- {foreach from=$matched_goods item=good} -->
+                    <li class="good">
+                        <div class="good_pic">
+                            <img src="{$good.default_image}"></img>
+                        </div>
+                        <div class="good_detail">
+                            <div class="good_title"><h6><a href="{url app=goods&id=$good.goods_id}" target="_blank">{$good.goods_name}</a></h6></div>
+                            <div class="good_info">
+                                <div class="outer_iid">{$good.outer_iid}</div>
+                                <div class="good_spec">{$good.spec_value_1}&nbsp;{$good.spec_value_2}</div>
+                                <div class="good_price"><span class="num">{$good.num}</span>&nbsp;&nbsp;X&nbsp;&nbsp;<span class="price">{$good.price|price}</span>&nbsp;<a class="remove_from_matched" style="cursor:pointer" onclick="removeFromMatched({$good.spec_id})">{$lang.remove_from_matched}</a></div>
+                            </div>
+                        </div>
+                        <input class="spec_id" type="hidden" name="spec_id_{$good.spec_id}" value="{$good.spec_id}"/>
+                        <input class="num_hidden" type="hidden" name="num_{$good.spec_id}" value="{$good.num}"/>
+                        <span class="goods_id" style="display: none;">{$good.goods_id}</span>
+                        <div class="clear"></div>
+                    </li>
+                    <!-- {/foreach} -->
+                </ul>
+                <div class="total_value matched_total_value"><h3>{$lang.order_amount}:<strong class="color8" id="order_amount">{$total_price|price}</strong>+<span class="matched_ship_fee">{$ship_fee}</span>({$lang.ship_fee})</h3></div>
+            </div>
+        </div>
+
+        <div class="clear"></div>
+
+        <div class="content_part">
+            <ul>
+                <li class="good">
+                    <div class="good_pic">
+                    </div>
+                    <div class="good_detail">
+                    </div>
+                    <div class="clear"></div>
+                </li>
+            </ul>
+        </div>
+
+        <div class="content_part">
+            <div class="content_line">
+                没匹配货源？快搜索一下吧！
+            </div>
+            <div class="content_line">
+                <input type="text" name="search_keywords" class="search_keywords" placeholder="可直接输入'档口地址 款号'搜索" />
+                <a class="search_goods_btn">搜索</a>
+                <ul class="search_goods">
+                </ul>
+            </div>
+        </div>
+
+        <div class="clear"></div>
+
+        <div>
+            <dl>
+                <dd>
+                    <em style="vertical-align:middle;">{$lang.choice_behalf}{$lang.colon}</em>
+
+                    <!--{foreach from=$behalfs item=behalf name=behalf_fee}-->
+                    <input type="radio" name="behalf" value="{$behalf.bh_id}" {if $smarty.foreach.behalf_fee.first} checked="checked" {/if} /><label style="vertical-align:middle;">{$behalf.bh_name}</label>&nbsp;&nbsp;
+                    <!--{/foreach}-->
+                </dd>
+
+                <dd class="mt10">
+                    <em style="vertical-align:middle;">{$lang.choice_delivery}{$lang.colon}</em>
+                    <span id="delivery_area">
+                        <!--{foreach from=$deliverys item=delivery name=delivery_fee}-->
+                        <input type="radio" name="delivery" value="{$delivery.dl_id}" fee="{$delivery.dl_fee}" {if $smarty.foreach.delivery_fee.first} checked="checked" {/if} /><label style="vertical-align:middle;">{$delivery.dl_name}(&yen;{$delivery.dl_fee|default:0})</label>&nbsp;&nbsp;
+                        <!--{/foreach}-->
+                    </span>
+                </dd>
+                <dd class="mt10" style="line-height:20px;">
+                   <!--{foreach from=$behalfs item=behalf_info name=behalf_fee}-->
+                 <div class="behalf_info_container behalf_info_{$behalf_info.bh_id} {if !$smarty.foreach.behalf_fee.first}hidden{/if}">
+                    {$lang.contact}{$lang.colon}&nbsp;&nbsp;{$behalf_info.bh_name|escape},&nbsp;&nbsp;{$behalf_info.bh_tel|escape}
+                      <!--{if $behalf_info.bh_ww}-->
+                         &nbsp;&nbsp;<a title="与{$behalf_info.bh_name}店主交谈" href="http://amos.im.alisoft.com/msg.aw?v=2&uid={$behalf_info.bh_ww|escape:url}&site=cntaobao&s=2&charset={$charset}" target="_blank"><img border="0" src="http://amos.im.alisoft.com/online.aw?v=2&uid={$behalf_info.bh_ww|escape:url}&site=cntaobao&s=2&charset={$charset}" alt="与{$behalf_info.bh_name}店主交谈" align="absmiddle"/></a>
+                      <!--{/if}-->
+                      <!--{if $behalf_info.bh_qq}-->
+                          &nbsp;&nbsp;{imqq uin=$behalf_info.bh_qq&site=$behalf_info.bh_name|escape:url}
+                      <!--{/if}-->
+                      <br>
+                      {$lang.reback_address}{$lang.colon}&nbsp;&nbsp;{$behalf_info.owner_name|escape|default:姓名未填},&nbsp;&nbsp;{$behalf_info.bh_tel|escape}&nbsp;&nbsp;{$behalf_info.region_name|escape}&nbsp;&nbsp;{$behalf_info.bh_address|escape}&nbsp;&nbsp;{$lang.zipcode}:{$behalf_info.zipcode|escape}
+                      <br>
+                      <!--{if $behalf_info.bh_notice}-->
+                      <p class="f40"><font color=red>{$lang.emerge_notice}{$lang.colon}</font> {$behalf_info.bh_notice|escape}</p>
+                      <!--{/if}-->
+
+                  </div>
+             <!--{/foreach}-->
+                </dd>
+
+            </dl>
+        </div>
+
+        <div style="margin-top:8px">
+            <em style="vertical-align:middle;">{$lang.postscript}{$lang.colon}</em>
+            <textarea name="postscript" rows="3" style="width:99%"></textarea>
+        </div>
+
+        <div class="wrap_btn">
+            <a href="http://www.51zwd.com/article/22.html" target="_blank" style="color:#0082C4;">{$lang.behalf_fee_info}</a>
+            <input type="button" id="order" class="btn1 submit_btn" value="{$lang.add_to_order}" />
+            <input type="button" id="cancel" class="btn2" value="{$lang.cancel}" />
+        </div>
+        <input id="operation" type="hidden" name="operation" value="cart" />
+    </form>
+</div>

@@ -1,0 +1,37 @@
+<?php
+
+return array(
+    'drop_collect_goods_successed'  => '删除收藏商品成功。',
+    'drop_collect_store_successed'  => '删除收藏店铺成功。',
+        'drop_collect_behalf_successed' => '删除收藏的代发成功。',
+        'drop_collect_sbehalf_successed' => '解除签约的代发成功。',
+    'collect_goods_ok' => '收藏商品成功。',
+    'collect_store_ok' => '收藏店铺成功。',
+        'collect_behalf_ok' => '收藏代发成功。',
+        'collect_sbehalf_ok' => '签约代发成功。',
+    'no_goods' => '没有符合条件的商品',
+    'no_records' => '没有符合条件的店铺',
+        'no_behalfs' => '没有符合条件的代发',
+        'no_signed_behalfs' => '没有签约的代发',
+    'send_message' => '发站内信',
+    'collect_behalf' => '代发',
+        'collect_sbehalf' => '已签约的代发',
+        'unsigned' =>'解约',
+        'compareFav' => '同款比价',
+        'printFav' => '打印清单',
+    'dataPack' => '下载数据包',
+	'default_signed_behalfs'=>'系统默认已签约',
+	'bh_name'=>'代发名称',
+	'bh_owner'=>'用户名|姓名',
+	'region_address'=> '详细地址',
+	'bh_ww' => '旺旺号',
+	'tel'=> '电话',
+	'bh_market'=>'拿货范围',
+	'collect_time'=>'收藏时间',
+	'operation'=>'操作',
+	'recently_add'=>'最近上架',
+	'goods_already_collected'=>'抱歉，您已经收藏了此商品！',
+	'store_already_collected'=>'抱歉，您已经收藏了此店铺！',
+);
+
+?>

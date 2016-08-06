@@ -1,0 +1,28 @@
+{include file="header.html"}
+<div style="padding:20px;line-height:24px;">
+<form method="post">
+<input type="hidden" name="amount" value="200">
+<p>按店铺信用度导出前200个店铺数据:<input type="submit" value="导出CSV"></p>
+</form>
+</div>
+<div style="padding:20px;line-height:24px;">
+<form method="post">
+<input type="hidden" name="amount" value="300">
+<input type="hidden" name="unbeyound_behalf_area" value="1">
+<p>按店铺信用度导出前300个店铺数据，且不包含已在代发区的店铺:<input type="submit" value="导出CSV">
+&nbsp;&nbsp;&nbsp;&nbsp; <input type="checkbox" name="closed_store" style="vertical-align:middle;"> 包含已关闭的店铺</p>
+</form>
+</div>
+<div style="padding:20px;line-height:24px;">
+<form method="post">
+<input type="hidden" name="amount" value="all">
+<p>按市场导出所有店铺数据,请选择市场（建议分批导出，每次只导出1-2个市场）:</p>
+<p>
+<!--{foreach from=$markets item=mark }-->
+<label><input type="checkbox" name="mids[]" value="{$mark.mk_id}" style="vertical-align:middle;">&nbsp;{$mark.mk_name}&nbsp;&nbsp;</label>
+<!--{/foreach}-->
+</p>
+<p><input type="submit" value="导出CSV"></p>
+</form>
+</div>
+{include file="footer.html"}

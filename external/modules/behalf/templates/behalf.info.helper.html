@@ -1,0 +1,101 @@
+{include file=header.whole.html}
+<script type="text/javascript">
+<!--
+	$(function(){
+		$('[data-toggle="modal"]').on('click',function(){
+			$('#faq_pid').val($(this).attr('data-pid'));
+		});
+		
+		$('#faqform').bootstrapValidator({
+			  feedbackIcons: {
+		            valid: 'glyphicon glyphicon-ok',
+		            invalid: 'glyphicon glyphicon-remove',
+		            validating: 'glyphicon glyphicon-refresh'
+		        }, 
+			  fields:{
+				  content:{
+					  validators:{
+						  notEmpty:{},
+						  stringLength:{
+							  min:10,
+							  message:'最少10个字'
+						  }
+					  }
+				  }
+				 
+			  }
+		  }).on('success.form.bv', function(e) {
+			   // Prevent form submission
+	          e.preventDefault();
+
+	          // Get the form instance
+	          var $form = $(e.target);
+
+	          // Get the BootstrapValidator instance
+	          var bv = $form.data('bootstrapValidator');
+
+	          // Use Ajax to submit form data
+	          $.post($form.attr('action'), $form.serialize(), function(result) {
+	              //var json = $.parseJSON(result);
+	              $('#modal-nhd').modal('hide');
+	             /*  if(result.done)
+	              	bootbox.alert("恭喜，提交成功！");
+	              else
+	              	bootbox.alert("抱歉，提交失败！"); */
+	              
+	              
+	          }, 'json');
+	         
+	          $form.data('bootstrapValidator').resetForm(true);
+	       
+	      });
+		
+		$("#savebtn-nhd").on('click',function(){
+			
+			$('#faqform').submit();
+			$('#modal-nhd').modal('hide');
+			//location.reload(true);
+		});
+	});
+//-->
+</script>
+<h2 class="page-header">常见问题
+</h2>
+<!--{foreach from=$list item=li name=fe_li}-->
+<dl>
+	<dt><span class="glyphicon glyphicon-hand-right"></span>&nbsp;&nbsp;{$li.title} 
+	<a class="btn btn-info btn-xs pull-right" data-pid="{$li.id}" data-toggle="modal" data-target="#modal-nhd">回复</a></dt>
+	<dd>
+	<!--{foreach from=$li.anwsers item=ans name=fe_ans}-->
+	
+		<div class="alert alert-default text-muted">{$ans.content}</div>
+	
+	<!--{/foreach}-->
+	</dd>
+</dl>
+<!--{/foreach}-->
+
+<div id="modal-nhd" class="modal fade">
+	  	<div class="modal-dialog">
+	  		<div class="modal-content">
+	  		
+	  			<div class="modal-header">
+      			</div>
+      			<div class="modal-body">
+        			<div class="container-fluid">
+        				<form id="faqform" action="{url module=behalf&amp;act=faq}" method="post">
+							<input type="hidden" id="faq_pid" name="pid" value="">
+							<textarea name="content" style="height:200px;" class="form-control"></textarea><br>
+						</form>
+        			</div>
+      			</div>
+      			<div class="modal-footer">
+      				<button type="submit" class="btn btn-primary" id="savebtn-nhd">保 存</button>
+        			<button type="button" class="btn btn-default" data-dismiss="modal">关 闭</button>
+     			</div>
+	  		</div>
+	  	</div>
+	  </div>
+
+
+{include file=footer.whole.html}

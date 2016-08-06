@@ -1,0 +1,36 @@
+{include file=header.html}
+<style type="text/css">
+.mall-nav{ display:none}
+</style>
+<div id="main" class="w-full">
+<div id="page-order" class="w">
+   <div class="step step2 mt10 clearfix">
+      <span class="fs14 strong f60">{$lang.ckgwc}</span>
+      <span class="fs14 strong fff">{$lang.qrddxx}</span>
+      <span class="fs14 strong">{$lang.fk}</span>
+      <span class="fs14 strong">{$lang.qrsh}</span>
+      <span class="fs14 strong">{$lang.pj}</span>
+   </div>
+   <div class="order-form">
+      <form method="post" id="order_form">
+	     {include file=order.shipping.wind.html}
+         {include file=order.goods.wind.html}
+         {include file=order.postscript.wind.html}
+	     {include file=order.amount.wind.html}
+	     <input type="hidden" name="gids" value="{$gids}">
+      </form>
+   </div>
+</div>
+</div>
+<!--{if $smarty.get.shipping_choice neq '1'}-->
+<form action="{url app=order&amp;goods=cart&amp;store_id=$smarty.get.store_id&amp;shipping_choice=1}" method="post" id="seller_method_form">  		
+<!--{else}-->
+<form action="{url app=order&amp;goods=cart&amp;store_id=$smarty.get.store_id}" method="post" id="seller_method_form">     
+<!--{/if}-->
+
+    <input type="hidden" name="gids" value="{$gids}">
+    <input type="hidden" name="so" value="1">
+</form>
+<iframe id='iframe_post' name="iframe_post" frameborder="0" width="0" height="0">
+</iframe>
+{include file=footer.html}

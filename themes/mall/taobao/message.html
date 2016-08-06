@@ -1,0 +1,69 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<base href="{$site_url}/" />
+<meta http-equiv="Content-Type" content="text/html; charset={$charset}" />
+{$page_seo}
+
+<link type="text/css" href="{res file=css/main.css}" rel="stylesheet"  />
+<link type="text/css" href="{res file=css/link.css}" rel="stylesheet"  />
+
+<script type="text/javascript">
+//<!CDATA[
+<!--{if $redirect}-->
+window.setTimeout("{$redirect}", 4000);
+<!--{else}-->
+window.setTimeout("javascript:history.back()", 4000);
+<!--{/if}-->
+//]]>
+</script>
+</head>
+<body>
+<div class="succeed" id="succeed">
+			<div class="s_cornor_t">
+				<div class="s_cornor_tl">
+				</div>
+				<div class="s_cornor_tr">
+				</div>
+			</div>
+			<div class="s_cornor_c">
+				<table width="100%" border="0" cellpadding="0" cellspacing="0">
+					<tbody>
+						<tr>
+							<td width="100" align="right">
+								<div class="s_m_icon"></div></td>
+							<td>
+								<h1 class="h1">{$message}</h1>
+								<!--{if $err_file}-->
+                                <b>Error File: <strong>{$err_file}</strong> at <strong>{$err_line}</strong> line.</b>
+                                <!--{/if}-->
+							</td>
+						</tr>
+						<tr>
+							<td colspan="2" align="center">
+								<strong></strong></td>
+						</tr>
+						<tr>
+							<td colspan="2" align="center">
+							</td>
+						</tr>
+						<tr>
+							<td colspan="2" align="center">
+								<font color="#999999"><strong id="transfer">10</strong>&nbsp;秒后自动返回&nbsp;<a href="index.php">首页</a>，请稍候...</font></td>
+						</tr>
+						<tr>
+							<td colspan="2" align="right">
+								<a href="index.php"><img border="0" alt="{$site_title}" src="{$site_logo}" /></a></td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+			<div class="s_cornor_b">
+				<div class="s_cornor_bl">
+				</div>
+				<div class="s_cornor_br">
+				</div>
+			</div>
+		</div>
+</body>
+</html>

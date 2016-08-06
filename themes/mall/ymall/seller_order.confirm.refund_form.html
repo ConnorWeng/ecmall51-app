@@ -1,0 +1,82 @@
+<script type="text/javascript">
+//<!CDATA[
+$(function(){
+    
+    $('#refund_form').validate({
+        /*errorPlacement: function(error, element){
+            var _message_box = $(element).parent().find('.field_message');
+            _message_box.find('.field_notice').hide();
+            _message_box.append(error);
+        },
+        success       : function(label){
+            label.addClass('validate_right').text('OK!');
+        },*/       
+        errorLabelContainer: $('#warning'),
+        invalidHandler: function(form, validator) {
+           var errors = validator.numberOfInvalids();
+           if(errors)
+           {
+               $('#warning').show();
+           }
+           else
+           {
+               $('#warning').hide();
+           }
+        },
+        onkeyup : false,
+        rules : {
+        	zf_pass : {
+                required : true
+            }
+        },
+        messages : {
+        	zf_pass : {
+                required : '请输入正确的51发支付密码。 '
+            }
+        }
+    });
+
+    
+    
+   
+});
+
+
+function js_fail(str)
+{
+    $('#warning').html('<label class="error">' + str + '</label>');
+    $('#warning').show();
+}
+//]]>
+</script>
+<style>
+<!--
+#warning { border:red 1px solid; background:#FFB7B7; color:#000; padding:3px 10px; margin:8px 0px; display:none; color:#000; font-weight:normal; }
+#warning label { display:block; margin:3px 0px; }
+#warning label.error { color:#000; font-weight:normal; }
+-->
+</style>
+<ul class="tab">
+    <li class="active" style="color:#666;font-size:12px;font-weight:normal;">同意买家申请</li>
+</ul>
+<div class="eject_con">
+<div class="add">
+    <div id="warning"></div>
+    <form method="post" action="index.php?app=seller_order&act=confirm_protocol&id={$refund_info.id}" id="refund_form" target="iframe_post">
+    <ul>
+    	
+    		<li>
+            	<p style="border:1px solid #ff9900;padding:10px;display:block;width:500px;">
+            	<span class="strong fs14" style="color:#ff4400;">同意买家申请，直接转账给买家。</span>
+            	</p>
+        	</li>
+        	<li>
+	            <h3 style="width:90px;">51发支付密码：</h3>
+	            <p><input type="password" class="text width_normal" style="border:1px solid #BAD8FA;padding:2px;" name="zf_pass" /></p>
+        	</li>
+    	      
+    </ul>
+    <div class="submit"><input type="submit" class="btn" value="确 定" /></div>
+    </form>
+</div>
+</div>

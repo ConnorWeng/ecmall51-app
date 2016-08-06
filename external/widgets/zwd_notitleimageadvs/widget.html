@@ -1,0 +1,11 @@
+<!-- {if $widget_data.images} -->
+<div class="zwd_imagesadvs_no">   
+	<ul class="content clearfix">
+		<!-- {foreach from=$widget_data.images item=image name=fe_image} -->
+        <li class="float-left" style="{if $image.ad_margin}margin:{$image.ad_margin}{/if}"><a href="{$image.ad_link_url|default:#}" class="href-img-transparents" target="_blank"><img {if $image.ad_width} width="{$image.ad_width}px"{/if} {if $image.ad_height} height="{$image.ad_height}px"{/if} {if $widget_data.lazyload } class="lazyload" src="data/system/empty.gif" data-ks-lazyload="{$image.ad_image_url}" {else} src="{$image.ad_image_url}" {/if} /></a></li>
+        <!-- {/foreach} -->	
+    </ul>
+</div>
+<!-- {else} -->
+<div style="padding:10px; text-align:center;">请配置</div>
+<!-- {/if} -->

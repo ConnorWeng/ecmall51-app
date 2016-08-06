@@ -1,0 +1,107 @@
+{include file=header.whole_nolefttop.html}
+<script type="text/javascript">
+	$(function(){
+		
+		$("#form").bootstrapValidator({
+			  feedbackIcons: {
+		            valid: 'glyphicon glyphicon-ok',
+		            invalid: 'glyphicon glyphicon-remove',
+		            validating: 'glyphicon glyphicon-refresh'
+		        }, 
+			  fields:{
+				  remark:{
+					  validators:{
+						 callback:{
+							 message:'请说明取消原因，不少于5个字',
+							 callback: function(value, validator) {
+								 if($("input[name='cancel_reason'][flag='other_reason']:checked"))
+								 {
+									 var newValue = value.replace(/[^\x00-\xff]/g, "**");
+									 //var cancel_reason = validator.getFieldElements('remark').val();
+									 if(newValue.length < 5)
+								     {
+										 //alert(newValue.length);
+										 return false;
+								     }
+									  
+								 }
+								 return true;
+							 }
+						 }
+					  }
+				  }
+			  }
+		  });
+		
+	    $("#cancelbtn").on('click',function(){
+	    	window.parent.js_success(0);
+	    });
+		
+	    $("input[name='cancel_reason']").click(function(){
+	        if ($(this).attr('flag') == 'other_reason')
+	        {
+	            $('#other_reason').show();
+	        }
+	        else
+	        {
+	            $('#other_reason').hide();
+	        }
+	    });
+		
+	});
+</script>
+
+<div class="container-fluid">
+	<form id="form" class="form-horizontal" action="index.php?module=behalf&act=cancel_order&order_id={$order.order_id}" method="post">
+		<div class="form-group">
+			<label class="col-xs-2 text-right control-label">{$lang.order_sn}</label>
+			<div class="col-xs-9">
+				{$order.order_sn}
+			</div>
+		</div>
+		<div class="form-group">
+			<label class="col-xs-2 text-right control-label">{$lang.cancel_reason}</label>
+			<div class="col-xs-9">
+				<ul class="list-unstyled">
+				 	<li><input type="radio" checked name="cancel_reason" id="d1" value="{$lang.cancel_reason1}" /> <label for="d1">{$lang.cancel_reason1}</label></li>
+            		<li><input type="radio" name="cancel_reason" id="d2" value="{$lang.cancel_reason2}" /> <label for="d2">{$lang.cancel_reason2}</label></li>
+            		<li><input type="radio" name="cancel_reason" id="d3" value="{$lang.cancel_reason3}" /> <label for="d3">{$lang.cancel_reason3}</label></li>
+            		<li><input type="radio" name="cancel_reason" flag="other_reason" id="d4" value="{$lang.other_reason}" /> <label for="d4">{$lang.other_reason}</label></li>
+				</ul>
+			</div>
+		</div>
+		<div class="form-group">
+			<label class="col-xs-2 text-right control-label"></label>
+			<div class="col-xs-9">
+				<dd id="other_reason" style="display:none">
+		            <textarea id="other_reason_input" class="form-control"  name="remark"></textarea>
+		        </dd>
+			</div>
+	     </div>
+		
+		 <div class="form-group">
+			<label class="col-xs-2 text-right control-label"></label>
+			<div class="col-xs-9">
+				<button class="btn btn-primary" id="savebtn" type="submit">确 定</button>
+				<button class="btn btn-default" id="cancelbtn">取 消</button>
+			</div>
+	     </div>
+	</form>
+
+
+
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+{include file=footer.whole.html}

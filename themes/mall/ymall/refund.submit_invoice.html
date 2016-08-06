@@ -1,0 +1,88 @@
+<script type="text/javascript">
+//<!CDATA[
+$(function(){
+	$("#refund_form").validate({
+        errorPlacement: function(error, element){
+            var error_td = element.siblings('label');
+            error_td.append(error);
+        },
+        success: function(label){
+            label.hide();
+        },
+        submitHandler:function(form)
+        {   
+        	form.submit();
+        },
+        onkeyup: false,
+        rules: {               
+        	th_deli_id: {
+               required: true
+            },
+            th_invoice:{
+        	  required: true
+          }
+        },
+        messages: {               
+        	th_deli_id: {
+                required: '必选'
+            },
+            th_invoice: {
+                required: '{$lang.input_required}'
+            }
+        }
+    });
+    
+});
+
+
+function js_fail(str)
+{
+    $('#warning').html('<label class="error">' + str + '</label>');
+    $('#warning').show();
+}
+//]]>
+</script>
+<style>
+<!--
+label{color:red;}
+#warning { border:red 1px solid; background:#FFB7B7; color:#000; padding:3px 10px; margin:8px 0px; display:none; color:#000; font-weight:normal; }
+#warning label { display:block; margin:3px 0px; }
+#warning label.error { color:#000; font-weight:normal; }
+
+-->
+</style>
+<ul class="tab">
+    <li class="active" style="color:#666;font-size:12px;font-weight:normal;">提交退货凭证，声明已退货</li>
+</ul>
+<div class="eject_con">
+<div class="add">
+    <div id="warning"></div>
+    <form method="post" action="index.php?app=buyer_order&act=submit_invoice&id={$refund_info.id}" id="refund_form" target="iframe_post">
+    <ul>
+    		
+    		
+        	<li>
+	            <h3>物流公司：</h3>
+	            <p>
+	            	<select name="th_deli_id">
+	            		<option value="">请选择</option>
+	            		<!--{foreach from=$deliveries item=deli}-->
+	            			<option value="{$deli.dl_id}">{$deli.dl_name}</option>
+	            		<!--{/foreach}-->
+	            	</select><label></label>
+	            </p>
+        	</li>
+        	<li>
+	            <h3>物流单号：</h3>
+	            <p><input type="text" name="th_invoice" ><span>请准确填写，否则卖家有权拒绝退款。</span><label></label></p>
+        	</li>
+        	<li>
+	            <h3>发货说明：</h3>
+	            <p><textarea name="th_detail" placeholder="请输入0-200字" style="width:432px;height:60px;border:1px solid #ddd;padding:4px;font-size:13px;"></textarea></p>
+        	</li>
+    	  
+    </ul>
+    <div class="submit"><input type="submit" class="btn" value="确 定" /></div>
+    </form>
+</div>
+</div>

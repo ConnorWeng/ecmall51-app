@@ -1,0 +1,90 @@
+{include file="header.html"}
+<script type="text/javascript">
+$(function(){
+    $('#login_form').validate({
+        errorPlacement: function(error, element){
+            $(element).parent('td').append(error); 
+        },
+        success       : function(label){
+            label.addClass('validate_right').text('OK!');
+        },
+        onkeyup : false,
+        rules : {
+            user_name : {
+                required : true
+            },
+            password : {
+                required : true
+            },
+            captcha : {
+                required : true,
+                remote   : {
+                    url : 'index.php?app=captcha&act=check_captcha',
+                    type: 'get',
+                    data:{
+                        captcha : function(){
+                            return $('#captcha1').val();
+                        }
+                    }
+                }
+            }
+        },
+        messages : {
+            user_name : {
+                required : '{$lang.user_name_required}'
+            },
+            password  : {
+                required : '{$lang.password_required}'
+            },
+            captcha : {
+                required : '{$lang.captcha_required}',
+                remote   : '{$lang.captcha_error}'
+            }
+        }
+    });
+});
+</script>
+</head>
+
+<body>
+<div id="tb-login">
+   <div class="logo"><a href="index.php"><img alt="{$site_title}" src="{$site_logo}" /></a></div>
+   <div class="left"><img src="https://login.taobao.com/static/img/login_bg2.png" /></div>
+   <div class="right">
+      <div class="title">
+         <ul>
+            <li>{$lang.user_login}</li>
+         </ul>
+      </div>
+      <div class="content">
+         <form method="post" id="login_form">
+            <table border="0" width="300" align="center">
+               <tr>
+                  <td width="70">{$lang.user_name}：</td><td><input type="text" name="user_name" style="width:154px;"/> </td>
+               </tr>
+               <tr>
+                  <td>{$lang.password}：</td><td><input type="password" name="password"  style="width:154px;"/> </td>
+               </tr>
+               <!--{if $captcha}-->
+               <tr>
+                  <td>{$lang.captcha}：</td><td>
+                  <input type="text" name="captcha" style="width:70px;" id="captcha1" />
+                  <a href="javascript:change_captcha($('#captcha'));" style=" position:absolute;left:168px;top:69px;display:block" hidefocus="true"><img id="captcha" src="index.php?app=captcha&amp;{$random_number}" /></a>
+                  </td>
+               </tr>
+               <!--{/if}-->
+               <tr>
+                  <td></td><td><input type="submit" class="login-submit" name="Submit" value="" /></a>&nbsp;&nbsp;<a href="{url app=find_password}" class="find-password">{$lang.forget_password}</a></td>
+               </tr>
+                <tr>
+                  <td></td><td><a href="{url app=member&act=register&ret_url=$ret_url}" title="{$lang.register_now}">{$lang.not_member}</a></td>
+               </tr>
+            </table>
+             <input type="hidden" name="ret_url" value="{$ret_url}" />
+         </form>
+      </div>
+      <div class="bottom"></div>
+   </div>
+   <div class="clr"></div>
+</div>
+{include file=footer.html}

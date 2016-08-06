@@ -1,0 +1,15 @@
+﻿               
+<div class="w order-goods-price-bycate mb10 text-right f66" style="line-height:24px;">
+      <p class="pr10">{$lang.goods_price_amount}{$lang.colon}<span id="goods_price_amount" class="fs14 strong f90 inline-block text-left" style="width:80px;">{$goods_amount|price}</span></p>
+      <p class="pr10">{$lang.behalf_price_amount}{$lang.colon}<span id="behalf_price_amount" class="fs14 strong f90 inline-block text-left" style="width:80px;">{$merge_behalf_amount|price}</span></p>
+      <p class="pr10">{$lang.delivery_price_amount}{$lang.colon}<span class="fs14 strong f90 inline-block text-left delivery_price_amount" style="width:80px;">&yen;</span></p>
+</div>               
+                <div class="make_sure w mb10">
+                    <p>
+                        <a href="{url app=cart}" class="back">{$lang.backto_cart}</a>
+                        <span class="ml20">{$lang.order_amount}{$lang.colon}</span>
+					   	<strong  id="order_amount">{$goods_amount|price}</strong>
+                        <a href="javascript:void($('#order_form').submit());" class="btn-step fff center strong fs14 ml20">{$lang.shopping_step_three}</a>
+                    </p>
+                </div>
+                <div class="w price-notice mt10 mb10 pt10 f60 pb10">{$lang.price_notice}</div>

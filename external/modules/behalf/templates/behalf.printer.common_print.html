@@ -1,0 +1,304 @@
+{include file=header.whole.html}
+<script type="text/javascript">
+
+var jjname="{$behalf.owner_name}";
+var jjtel="{$behalf.bh_tel}";
+var jjadr="{$behalf.region_name}";
+var dt;
+var LODOP=getLodop(document.getElementById('LODOP_OB'),document.getElementById('LODOP_EM'));
+
+$(function(){
+	//var detailRows = [];
+	jQuery("#checkall").on('ifChecked ifUnchecked',function(){			 
+		 var checkall = this.checked ? 'check':'uncheck';
+		 jQuery("input[name='orders']").iCheck(checkall);
+		
+	 });
+	
+});
+
+function createYtoPage(FJName,GoodsInfo,FJTel,Order_sn,SJName,SJAdr,SJTel,SJRemark,Paytime)
+{	
+	<!--{if $print_templates['yto']}-->
+      {$print_templates.yto}
+	<!--{else}-->	
+		LODOP.ADD_PRINT_TEXT(93,123,102,24,FJName);
+		LODOP.SET_PRINT_STYLEA(0,"FontSize",12);
+		LODOP.ADD_PRINT_TEXT(117,73,331,104,GoodsInfo);
+		LODOP.SET_PRINT_STYLEA(0,"FontSize",11);
+		LODOP.ADD_PRINT_TEXT(221,158,107,20,FJTel);
+		LODOP.SET_PRINT_STYLEA(0,"FontSize",10);
+		LODOP.ADD_PRINT_TEXT(371,70,321,28,Order_sn);
+		LODOP.SET_PRINT_STYLEA(0,"FontSize",12);
+		LODOP.ADD_PRINT_TEXT(106,487,87,26,SJName);
+		LODOP.SET_PRINT_STYLEA(0,"FontSize",12);
+		LODOP.ADD_PRINT_TEXT(136,485,282,90,SJAdr);
+		LODOP.SET_PRINT_STYLEA(0,"FontSize",12);
+		LODOP.ADD_PRINT_TEXT(225,483,246,24,SJTel);
+		LODOP.SET_PRINT_STYLEA(0,"FontSize",12);
+		LODOP.ADD_PRINT_TEXT(299,421,367,161,SJRemark);
+		LODOP.SET_PRINT_STYLEA(0,"FontSize",15);
+		LODOP.SET_PRINT_STYLEA(0,"Bold",1);
+		LODOP.ADD_PRINT_TEXT(235,158,105,20,Paytime);
+   <!--{/if}-->
+}
+
+   function createZtoPage(FJName,GoodsInfo,FJTel,Order_sn,SJName,SJAdr,SJTel,SJRemark,Paytime)
+   {
+	   <!--{if $print_templates['zto']}-->
+	      {$print_templates.zto}
+	   <!--{else}-->
+		   	LODOP.ADD_PRINT_TEXT(108,127,112,24,FJName);
+		   	LODOP.SET_PRINT_STYLEA(0,"FontSize",12);
+		   	LODOP.ADD_PRINT_TEXT(135,72,331,114,GoodsInfo);
+		   	LODOP.SET_PRINT_STYLEA(0,"FontSize",11);
+		   	LODOP.ADD_PRINT_TEXT(252,81,107,20,FJTel);
+		   	LODOP.SET_PRINT_STYLEA(0,"FontSize",10);
+		   	LODOP.ADD_PRINT_TEXT(381,77,180,28,Order_sn);
+		   	LODOP.SET_PRINT_STYLEA(0,"FontSize",12);
+		   	LODOP.ADD_PRINT_TEXT(105,478,112,26,SJName);
+		   	LODOP.SET_PRINT_STYLEA(0,"FontSize",12);
+		   	LODOP.ADD_PRINT_TEXT(140,476,282,75,SJAdr);
+		   	LODOP.SET_PRINT_STYLEA(0,"FontSize",12);
+		   	LODOP.ADD_PRINT_TEXT(221,480,180,24,SJTel);
+		   	LODOP.SET_PRINT_STYLEA(0,"FontSize",12);
+		   	LODOP.ADD_PRINT_TEXT(268,438,307,146,SJRemark);
+		   	LODOP.SET_PRINT_STYLEA(0,"FontSize",15);
+		   	LODOP.SET_PRINT_STYLEA(0,"Bold",1);
+		   	LODOP.ADD_PRINT_TEXT(271,95,105,20,Paytime);
+		   	LODOP.ADD_PRINT_TEXT(302,297,100,35,"已验视");
+		   	LODOP.SET_PRINT_STYLEA(0,"FontSize",18);
+		   	LODOP.SET_PRINT_STYLEA(0,"Bold",1);
+   		<!--{/if}-->
+   }
+
+   function createStoPage(FJName,GoodsInfo,FJTel,Order_sn,SJName,SJAdr,SJTel,SJRemark,Paytime)
+   {	   
+	   <!--{if $print_templates['sto']}-->
+	      {$print_templates.sto}
+	   <!--{else}-->
+		   	LODOP.ADD_PRINT_TEXT(105,126,112,24,FJName);
+		   	LODOP.SET_PRINT_STYLEA(0,"FontSize",12);
+		   	LODOP.ADD_PRINT_TEXT(130,74,331,109,GoodsInfo);
+		   	LODOP.SET_PRINT_STYLEA(0,"FontSize",11);
+		   	LODOP.ADD_PRINT_TEXT(241,156,107,20,FJTel);
+		   	LODOP.SET_PRINT_STYLEA(0,"FontSize",10);
+		   	LODOP.ADD_PRINT_TEXT(364,78,201,28,Order_sn);
+		   	LODOP.SET_PRINT_STYLEA(0,"FontSize",12);
+		   	LODOP.ADD_PRINT_TEXT(105,493,112,26,SJName);
+		   	LODOP.SET_PRINT_STYLEA(0,"FontSize",12);
+		   	LODOP.ADD_PRINT_TEXT(140,484,282,95,SJAdr);
+		   	LODOP.SET_PRINT_STYLEA(0,"FontSize",12);
+		   	LODOP.ADD_PRINT_TEXT(245,517,246,24,SJTel);
+		   	LODOP.SET_PRINT_STYLEA(0,"FontSize",12);
+		   	LODOP.ADD_PRINT_TEXT(272,418,342,141,SJRemark);
+		   	LODOP.SET_PRINT_STYLEA(0,"FontSize",15);
+		   	LODOP.SET_PRINT_STYLEA(0,"Bold",1);
+		   	LODOP.ADD_PRINT_TEXT(256,158,105,20,Paytime);
+		   	LODOP.ADD_PRINT_TEXT(330,283,110,55,"已验视\n2059");
+		   	LODOP.SET_PRINT_STYLEA(0,"FontSize",18);
+		   	LODOP.SET_PRINT_STYLEA(0,"Bold",1);
+		   	LODOP.ADD_PRINT_TEXT(410,699,100,35,"4.6");
+		   	LODOP.SET_PRINT_STYLEA(0,"FontSize",17);
+	   <!--{/if}-->
+
+   }
+
+
+</script>
+
+<div class="container-fluid">
+    <div class="row order-list">
+    	<div class="col-xs-12">
+    		<form class="form-inline">
+    			<div class="form-group">    				
+	    			 <div class="input-group input-group-sm">
+	    				<label class="input-group-addon">状态</label>
+		    			<select class="form-control selectpicker" name="type">
+							<option value="accepted">待发货</option>
+							<option value="shipped" {if $smarty.get.type eq 'shipped'}selected{/if}>已发货</option>
+							<option value="finished" {if $smarty.get.type eq 'finished'}selected{/if}>已完成</option>
+						</select>
+	    			</div> 
+	    		</div>
+	    		<div class="form-group">
+	    			<label class="text-success">商品编码</label>
+	    			<input type="text" name="goods_no" class="form-control input-sm">
+	    		</div>
+	    		<div class="form-group">
+	    			<label>订单号</label>
+	    			<input type="text" name="order_sn" class="form-control input-sm">
+	    		</div>
+	    		<div class="form-group">
+	    			<label>商家编码</label>
+	    			<input type="text" name="seller_bm" class="form-control input-sm">
+	    		</div>
+	    		
+	    		<div class="form-group">
+	    			<label>支付时间</label>
+	    			<div class='input-group date' id='add_time_from_wrapper'>
+	                    <input type="text" class="form-control input-sm" name="add_time_from"  value="{$query.add_time_from}">
+	                    <span class="input-group-addon">
+	                        <span class="glyphicon glyphicon-time"></span>
+	                    </span>
+	                </div>
+    				-
+    				<div class='input-group date' id='add_time_to_wrapper'>
+	                    <input type="text" class="form-control input-sm" name="add_time_to" value="{$query.add_time_to}">
+	                    <span class="input-group-addon">
+	                        <span class="glyphicon glyphicon-time"></span>
+	                    </span>
+	                </div>
+	    		</div>
+	    		
+	    		<div class="form-group">
+	    			<div class="input-group input-group-sm">
+	    				<label class="input-group-addon">快递</label>
+		    			<select class="form-control selectpicker " name="exp_delivery">
+							<option value="">所有快递</option>
+							<!--{foreach from=$deliverys item=deli}-->
+							<option value="{$deli.dl_id}" {if $query_dl eq $deli.dl_id}selected{/if}>{$deli.dl_name}</option>
+							<!--{/foreach}-->
+						</select>
+					</div>
+	    		</div>
+	    		<input type="hidden" name="module" value="behalf" />
+	            <input type="hidden" name="act" value="common_print" />
+	           
+	    		<div class="form-group">
+	    			<button class="btn btn-primary btn-sm"><span class="glyphicon glyphicon-search"></span> 搜索</button>	    			
+	    		</div>
+	    		 <!--{if $query.buyer_name or $query.add_time_from or $query.add_time_to or $query.order_sn or $query_goods_name or $query_goods_seller_bm or $query_oos or $query.invoice_no or $query_dl}-->
+               	<div class="form-group">
+               		<a class="btn btn-info btn-sm" href="{url module=behalf&act=common_print&type=$query.type}">{$lang.cancel_query}</a>
+               	</div>
+                <!--{/if}-->
+	    	</form>
+    	</div>
+    </div>
+    
+    <div class="alert alert-warning alert-dismissible" role="alert">
+    	<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+    	单击快递单号栏<b>编辑</b>，按回车或在输入框外点击<b>保存</b>！鼠标置于输入框内，按<b>ESC键</b>取消编辑。
+    </div>
+    <div class="row">    	
+    	<div class="col-xs-7">
+    		<!-- <button class="btn btn-primary btn-sm" onClick="javascript:restore_invoice();"><span class="glyphicon glyphicon-save"></span> 保存单号</button> -->
+    		<button class="btn btn-primary btn-sm" onClick="javascript:print_all();"><span class="glyphicon glyphicon-print"></span> 打印选中</button>
+    		<button class="btn btn-primary btn-sm" onClick="javascript:async_ship();"><span class="glyphicon glyphicon-send"></span> 同步发货</button>
+    	</div>
+    	<div class="col-xs-2">
+    			<div class="input-group input-group-sm">
+	    			<label class="input-group-addon">当前模板</label>
+	    			<select id="template_select" name="template" class="form-control selectpicker">
+	    				<option value="sto">申通快递</option>
+	    				<option value="yto">圆通快递</option>
+						<option value="zto">中通快递</option>
+	    			</select>
+    			</div>
+    	</div>
+    	<div class="col-xs-3">
+    		<div id="printer_equipment" class="input-group input-group-sm"></div>
+    	</div>
+    	
+    </div>
+    
+    <div style="height:10px;"></div>
+    <div class="container-fluid">
+    	<div class="row">
+	    	<table id="order_list_table" class="table table-striped table-bordered table-hover" celllspacing="0" border="0" width="100%">
+			<thead>
+				<tr>
+					<th class="text-center" style="width:30px;">
+						 <input type="checkbox" id="checkall"/>
+					</th>
+					<th class=" text-center" style="width:60px;">订单编号</th>				
+					<th class=" text-center" style="width:60px;">收件人</th>
+					<th class=" text-center" style="width:100px;">收件人省市区</th>
+					<th class=" text-center" style="width:120px;">收件人详细地址</th>
+					<th class=" text-center" style="width:60px;">收件人手机</th>
+					<th class=" text-center" style="width:60px;">收件邮编</th>
+					<th class=" text-center" style="width:60px;">快递公司</th>
+					<th class=" text-center" style="width:60px;">快递单号</th>
+					<th class=" text-center">内装货品</th>
+					<th class=" text-center" style="width:60px;">订单状态</th>
+					<th class=" text-center" style="width:60px;">支付时间</th>
+					<th></th>
+					<th></th>
+				</tr>
+			</thead>
+			<tfoot>
+				    <th class="text-center"></th>
+					<th class=" text-center"></th>
+					<th class=" text-center"></th>
+					<th class=" text-center"></th>
+					<th class=" text-center"></th>
+					<th class=" text-center"></th>
+				    <th class=" text-center"></th>
+					<th class=" text-center"></th>
+					<th class=" text-center"></th>
+					<th class=" text-center"></th>
+					<th class=" text-center"></th>
+					<th class=" text-center"></th>
+					<th></th>
+					<th></th>
+			</tfoot>
+			<tbody>
+			<!--{foreach from=$orders item=order name=fe_order}-->
+			    <tr id="row_{$order.order_id}">
+			    	<td class="text-center">
+			    		<input type="checkbox" value="{$order.order_id}" name="orders" class="checkitem" <!--{if $order.status eq ORDER_FINISHED || $order.status eq ORDER_CANCELED}--> disabled="disabled" <!--{/if}-->/>
+			    	</td>
+			    	<td class=" text-center">
+			    		<a href="index.php?module=behalf&act=show_order_detail&order_id={$order.order_id}&hisuri={$smarty.server.SERVER_NAME|escape:url]}{$smarty.server.REQUEST_URI|escape:url}">{$order.order_sn|escape}</a>
+			    	</td>
+			    	<td class=" text-center">
+			    		{$order.consignee|escape}
+			    	</td>
+			    	<td class=" ">
+			    		{$order.consignee_region|escape}
+			    	</td>
+			    	<td class=" ">
+			    	    {$order.consignee_address|escape}
+			    	</td>
+			    	<td class=" text-center">
+			    	   {$order.phone_mob|escape}
+			    	</td>
+			    	<td class=" text-center">
+			    	   {$order.zipcode|escape}
+			    	</td>
+			    	<td class=" text-center">
+			    	   {if $order.delivery_bm and $order.invoice_no}<a  href="http://www.kuaidi100.com/chaxun?com={$order.delivery_bm|escape}&nu={$order.invoice_no|escape}" target="_blank" >{$order.dl_name|escape}{else}{$order.dl_name|escape}{/if}</a>
+			    	</td>
+			    	<td class="inpTd text-center" id="invoice_{$order.order_id}">
+			    		{$order.invoice_no|escape}
+			    	</td>
+			    	<td class="">
+			    		{$order.goods_info|escape}
+			    	</td>
+			    	
+			    	<td class=" text-center">
+			    		<span class="{if $order.status eq ORDER_CANCELED}text-danger{elseif $order.status eq ORDER_SHIPPED}text-success{elseif $order.status eq ORDER_FINISHED}text-info{/if}">
+			    		{$order.status|modifier:order_status}</span>
+			    	</td>
+			    	<td class="text-center">
+			    		<small class="text-muted">{$order.pay_time|date:complete}</small>
+			    	</td>
+			    	<td>{$order.order_sn|escape}</td>
+			    	<td>{$order.pay_time|date:m-d-H-i}</td>
+			    </tr>
+				
+			<!--{/foreach}-->
+			</tbody>
+		
+		
+		</table>
+    	</div>
+    </div>
+	{include file=page.bottom.html}
+
+
+</div>
+<script type="text/javascript" src="{res file=js/common_print.js}?dt={$datevar}"></script>
+<script type="text/javascript" src="{res file=js/jquery.jeditable.mini.js}"></script>
+{include file=footer.whole.html}

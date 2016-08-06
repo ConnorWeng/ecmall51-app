@@ -1,0 +1,19 @@
+{include file=header.html}
+<div id="main" class="w-full">
+<div id="page-apply" class="w mt10 mb20">
+   <div class="title padding5 strong fs14">
+      {$lang.i_want_add_behalf}
+   </div>
+   <div class="content border padding10 border-t-0 linehei20">
+          <h2 class="center fs22 mb20">{$lang.user_protocol}</h2>
+          <div class="user-protocol-content  pl20">
+            {$lang.user_protocol_content}
+          </div>
+          <div class="user-btns">
+             <a href="{url app=bhapply&step=2}" class="btn-apply fs14 strong fff center">{$lang.user_agree}</a>
+             <a href="{url app=message&act=newpm}" class="btn-apply fs14 strong fff center">{$lang.user_disagree}</a>
+          </div>
+   </div>
+</div>
+</div>
+{include file=footer.html}

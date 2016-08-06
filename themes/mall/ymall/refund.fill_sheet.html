@@ -1,0 +1,264 @@
+{include file="header.html"}
+<style type="text/css">
+.mall-nav{ display:none}
+b{margin-left:5px;font-weight:normal;color:red;}
+</style>
+<script type="text/javascript">
+
+$(function(){
+	$("#refund_form").validate({
+        errorPlacement: function(error, element){
+            var error_td = element.siblings('b');
+            error_td.append(error);
+        },
+        success: function(label){
+            label.hide();
+        },
+        submitHandler:function(form)
+        {   
+        	form.submit();
+        },
+        onkeyup: false,
+        rules: {               
+        	is_reback_goods: {
+               required: true
+            },
+            refund_category:{
+            	required: true
+            },
+            refund_goods_amount:{
+            	required: true,                
+                number: true,
+                min:0,      
+                <!--{if $order_info.status neq $smarty.const.ORDER_ACCEPTED}-->
+                max:{$refund_goods_amount}
+                <!--{else}-->
+                max:{$order_info.goods_amount}
+                <!--{/if}-->
+            },
+            refund_delivery_amount:{
+            	required: true,                
+                number: true,
+                min:0,               
+                max:{$order_info.shipping_fee}
+            }
+        },
+        messages: {               
+        	is_reback_goods: {
+                required: '必选'
+            },
+            refund_category:{
+            	required: '必须'
+            },
+            refund_goods_amount:{
+            	required: '{$lang.input_required}',
+                number: '必须是数字',
+                min: '最少0.00元',            
+                <!--{if $order_info.status neq $smarty.const.ORDER_ACCEPTED}-->
+                max: '最多'+'{$refund_goods_amount}'+'元'
+                <!--{else}-->
+                max: '最多'+'{$order_info.goods_amount}'+'元'
+                <!--{/if}-->
+            },
+            refund_delivery_amount:{
+            	required: '{$lang.input_required}',
+                number: '必须是数字',
+                min: '最少0.00元',               
+                max: '最多'+'{$order_info.shipping_fee}'+'元'
+                
+            }
+        }
+    });
+	
+	$("input[type='radio'][name='is_receive_goods']").click(function(){
+		if($(this).val() == 'no')
+		{
+			$("input[type='radio'][name='is_reback_goods'][value='no']").attr('checked',true);
+			$("input[type='radio'][name='is_reback_goods'][value='yes']").attr('disabled',true);
+		}
+		else
+		{
+			$("input[type='radio'][name='is_reback_goods'][value='yes']").attr('disabled',false);
+			$("input[type='radio'][name='is_reback_goods']").attr('checked',false);
+		}
+	});
+	
+});
+
+</script>
+<div id="main" class="w-full">
+<div id="page-cart" class="w cart-index mb20">
+   <div class="step step2 mt10 clearfix">
+      <span class="fs14 strong">{$lang.refund_goods_choice}</span>
+      <span class="fs14 strong fff">{$lang.refund_fill_sheet}</span>
+      <span class="fs14 strong">{$lang.refund_handle}</span>
+      <span class="fs14 strong">{$lang.refund_finished}</span>
+   </div>
+   
+   
+   <div class="cartbox w mb10">
+      <!--{if $order_info.status neq $smarty.const.ORDER_ACCEPTED}-->
+      <div class="amount mb10 mt10">
+      	<span class="f66">{$lang.your_choice} <span class="f60 strong">{$order_goods|modifier:count}</span> {$lang.zhp}，{$lang.this_refund_amount} <span class="f60 strong">{$refund_goods_amount}</span> {$lang.yuan}</span>         
+      	<span><a href="{url app=buyer_order&amp;act=refund_apply&amp;order_id=$order_info.order_id}" class="ml20 blu">[{$lang.return_choose_goods}]</a></span>
+      </div>
+      
+      <div class="title clearfix mb10" style="background:#f5f5f5;border-top:1px solid #CAE1FE;">
+         <span class="sellect-all" style="width:176px;">&nbsp;</span>
+         <span class="col-desc">{$lang.store_goods}</span>
+         <span>{$lang.price}</span>
+         <span>{$lang.quantity}</span>
+         <span>{$lang.payed_amount}</span>
+         <span>{$lang.goods_status}</span>
+      </div>
+       <!--{/if}-->
+      <div class="content">
+                 
+         <div class="store-each">
+            <div class="store-name pb1"></div>
+            
+            <!--{foreach from=$order_goods item=goods name=fe_goods}-->
+            <dl class="goods-each clearfix" id="cart_item_{$goods.rec_id}">
+               <dd class="select">&nbsp;</dd>
+               <dd class="pic"><a class="block" href="{url app=goods&id=$goods.goods_id}" target="_blank"><img src="{$goods.goods_image}" alt="{$goods.goods_name|escape}" width="48" height="48" /></a></dd>
+               <dd class="desc">
+                  <p><a href="{url app=goods&id=$goods.goods_id}" target="_blank">{$goods.goods_name|escape}</a></p>
+                  <span class="f66">{$goods.specification|escape}</span>
+               </dd>
+               
+               <dd class="price">{$goods.price|price}</dd>
+               <dd class="quantity">
+                  {$goods.quantity}
+               </dd>
+               <dd class="price">{$goods.subtotal|price}</dd>
+               <dd class="price">
+                   {$order_info.status|modifier:order_status}
+               </dd>
+            </dl>            
+            <!-- {/foreach} -->
+            
+            
+            
+            <div class="mt10 w auto clearfix">
+            	<div><span class="fs14 f66 strong">{$lang.please_fill_sheet}</span><span class="ml10 f66">{$lang.fill_relatived_items}</span></div>
+            </div>
+            
+            <div class="mt10 w auto clearfix refund-wrapper">
+               <div class="float-left order-info">
+                    <h3 class="mt5 mb5 f33">{$lang.order_info}</h3>
+                    <p class="pl20 f33 mt10 mb5">{$lang.order_sn}: {$order_info.order_sn}</p>
+                    <p class="f33" style="line-height:26px;">
+                    	{$lang.add_time}: {$order_info.add_time|date:complete|default:-}<br>
+                    	{$lang.pay_time}: {$order_info.pay_time|date:complete|default:-}<br>
+                    	{$lang.ship_time}: {$order_info.ship_time|date:complete|default:-}<br>
+                    	{$lang.finished_time}: {$order_info.finished_time|date:complete|default:-}<br>
+                    	{$lang.order_status}: <span class="f60">{$order_info.status|modifier:order_status}</span><br>
+                    	{$lang.payed_order}: <span class="f60 strong">{$order_info.order_amount|price}</span><br>
+                    	<span class="ml20">({$lang.hanyunfei} <span class="strong">{$order_info.shipping_fee}</span> {$lang.yuan})</span>
+                    </p>
+                    <p class="mt10"><a href="{url app=buyer_order&amp;act=view&amp;order_id=$order_info.order_id}" class="dblu" target="_blank">>>{$lang.view_order_detail}</a></p>
+               		<hr style="margin:10px 0;border:none;border-top:1px dotted #ccc;">
+               		<h3 class="f33">{$lang.seller_info}</h3>
+               		<p class="mt10"><a href="{url app=shop&amp;id=$order_info.seller_id}" class="dblu" target="_blank">{$order_info.seller_name}</a></p>
+               </div>
+               <div class="float-left formpart">
+               <form id="refund_form" action="{url app=buyer_order&amp;act=save_refund_sheet}" method="post">
+               		<table>
+               		 <!--{if $order_info.status neq $smarty.const.ORDER_ACCEPTED}-->	
+                            <tr>
+               				<td class="col1">是否收到货品<span class="xinghao">*</span></td>
+               				<td class="col2">
+               					<input id="rcv-yes" type="radio" autocomplete="off" value="yes" name="is_receive_goods" {if $refund_info.is_receive_goods eq 'yes' or !$refund_info.is_receive_goods}checked{/if}>
+                                                <label for="rcv-yes">已收到全部（或部分）货品</label>
+                                                <input id="rcv-no" type="radio" autocomplete="off" value="no" name="is_receive_goods" {if $refund_info.is_receive_goods eq 'no'}checked{/if}>
+                                                <label for="rcv-no">没有收到货品</label>
+               				</td>
+               			</tr>
+               			<tr>
+               				<td class="col1">是否需要退货<span class="xinghao">*</span></td>
+               				<td class="col2">
+               					<input id="back-yes" type="radio" value="yes" name="is_reback_goods" {if $refund_info.is_reback_goods eq 'yes'}checked{/if}>
+                                                <label for="back-yes">需要退货</label>
+                                                <input id="back-no" type="radio" value="no" name="is_reback_goods" {if $refund_info.is_reback_goods eq 'no'}checked{/if}>
+                                                <label for="back-no">不需要退货</label>
+                                                <b></b>
+               				</td>
+               			</tr>
+                          <!--{else}-->
+                          <input  type="hidden" value="no" name="is_receive_goods" >
+                          <input  type="hidden" value="no" name="is_reback_goods" >
+                          <!--{/if}-->
+               			<tr>
+               				<td class="col1">退款原因<span class="xinghao">*</span></td>
+               				<td class="col2">
+               					<select class="inp" name="refund_category">
+               						<option value="">请选择……</option>
+               						<option value="不履行15天包换服务" {if $refund_info.refund_category eq '不履行15天包换服务'}selected{/if}>不履行15天包换服务</option>
+               						<option value="外观问题" {if $refund_info.refund_category eq '外观问题'}selected{/if}>外观问题</option>
+               						<option value="未履行7天无理由退货" {if $refund_info.refund_category eq '未履行7天无理由退货'}selected{/if}>未履行7天无理由退货</option>
+               						<option value="未按约定发货" {if $refund_info.refund_category eq '未按约定发货'}selected{/if}>未按约定发货</option>
+               						<option value="与卖家协商一致" {if $refund_info.refund_category eq '与卖家协商一致'}selected{/if}>与卖家协商一致</option>
+               						<option value="非产品问题" {if $refund_info.refund_category eq '非产品问题'}selected{/if}>非产品问题</option>
+               						<option value="假货（品牌问题）" {if $refund_info.refund_category eq '假货（品牌问题）'}selected{/if}>假货（品牌问题）</option>
+               						<option value="做工质量问题" {if $refund_info.refund_category eq '做工质量问题'}selected{/if}>做工质量问题</option>
+               						<option value="少件（含少配件）" {if $refund_info.refund_category eq '少件（含少配件）'}selected{/if}>少件（含少配件）</option>
+               					</select>
+               					<b></b>
+               				</td>
+               			</tr>
+               			<tr>
+               				<td class="col1">需要退款的货品金额<span class="xinghao">*</span></td>
+               				<td class="col2">
+                                            <input type="text" class="inp" name="refund_goods_amount" value="{$refund_info.refund_goods_amount|default:0.00}">
+                                            <!--{if $order_info.status neq $smarty.const.ORDER_ACCEPTED}-->
+                                            <label class="aaa ml5">[最多{$refund_goods_amount}元]</label>
+                                            <!--{else}-->
+                                            <label class="aaa ml5">[最多{$order_info.goods_amount}元]</label>
+                                            <!--{/if}-->
+                                            <b></b>
+               				</td>
+               			</tr>
+               			<tr>
+               				<td class="col1">需要退款的运费金额<span class="xinghao">*</span></td>
+               				<td class="col2">
+                                            <input type="text" class="inp" name="refund_delivery_amount" value="{$refund_info.refund_delivery_amount|default:0.00}"><label class="aaa ml5">[最多{$order_info.shipping_fee}元]</label><b></b>
+               				</td>
+               			</tr>
+               			<tr>
+               				<td class="col1">退款说明<span class="xinghao">*</span></td>
+               				<td class="col2">
+               					<textarea placeholder="内容在0-200字之间" name="refund_intro">{$refund_info.refund_info|escape}</textarea>
+               				</td>
+               			</tr>
+               		</table>
+               		<input type="hidden" name="order_id" value="{$order_info.order_id}">
+               		<input type="hidden" name="goods_info" value="{$goods_ids}">
+            		
+               		<div class="declare">
+						<span class="bufen">您仅能成功申请一次退款，请仔细确认您的退款金额。
+					</div>
+					
+					<div class="center">
+					   <input type="image" alt="确定" src="static/btns/apply_refund.png">
+					</div>
+				 </form>
+               </div>
+            </div>
+            
+            
+           
+            
+            
+         </div>
+         
+      </div>
+      
+      <!-- //tiq -->
+      
+      
+      
+   </div>
+  
+</div>
+</div>
+{include file="footer.html"}

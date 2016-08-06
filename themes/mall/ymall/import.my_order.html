@@ -1,0 +1,115 @@
+{include file=member.header.html}
+{$build_upload}
+<style>
+h2.title a.fold {position: absolute; top: 4px; right: 8px; width: 13px; height: 13px; overflow: hidden; display: block;}
+.span_close {background: url({res file=images/member/close.gif});}
+.span_open {background: url({res file=images/member/open.gif});}
+.title {line-height: 24px; height: 24px; position: relative; background: #f5f5f5; font-size: 12px; color: #3e3e3e; padding-left: 20px; word-spacing: 3px; cursor: pointer;}
+
+.btn { background:transparent url({res file=images/member/btn.gif}) repeat scroll 0 -590px; color:#3E3E3E; display:block; float:left; height: 24px; line-height:20px; margin: 0 3px; text-align:center; text-decoration:none; width:78px;}
+.f_l{ float:left; }
+.sub_btn {background:transparent url({res file=images/member/btn.gif}) no-repeat scroll 0 -253px; border:0 none; color:#3F3D3E; cursor:pointer; font-weight:bold; height:32px; width:120px; }
+.gray{color: #B9B9B9; line-height: 22px; margin-left: 10px; }
+.select select { color: #3D3D3D; padding: 2px; }
+.table_text td { height : 30px; vertical-align:middle; }
+</style>
+<script type="text/javascript">
+//<!CDATA[
+
+function add_uploadedfile(file_data)
+{
+    $('label.right').show();
+}
+function uploadSuccess(file, serverData) {
+    try {
+        eval('serverData = '+serverData);
+        var errorMsg = '';
+        var progress = new FileProgress(file,  this.customSettings);
+        if (serverData.done) {
+            serverData.retval.file_name = file.name;
+            add_uploadedfile(serverData.retval);
+            progress.setStatus(lang.finish);
+            progress.setComplete();
+            progress.toggleCancel(false);
+        } else {
+            //addImage(SITE_URL + "/includes/libraries/javascript/swfupload/images/error.gif");
+            progress.setStatus(lang.error);
+            progress.toggleCancel(false);
+            if(typeof(serverData.msg) == 'object'){
+                $.each(serverData.msg, function(i, val){
+                    errorMsg += lang.get(val.msg) + '[' + val.obj + ']\n';
+                });
+            } else {
+                errorMsg += lang.get(serverData.msg);
+            }
+            if(errorMsg != ''){
+                swfupload_error(errorMsg);
+            }
+        }
+
+
+    } catch (ex) {
+        this.debug(ex);
+    }
+}
+
+function swfupload_error(str)
+{
+    $('#warning').append('<label class="error">' + str + '</label>');
+    $('#warning').show();
+}
+$(function(){
+       // gcategoryInit("gcategory");
+});
+//]]>
+</script>
+<div class="content">
+  <div class="totline"></div>
+  <div class="botline"></div>
+  {include file=member.menu.html}
+  <div id="right">
+    <div class="wrap">
+      <div class="public">
+        <form method="post" enctype="multipart/form-data" id="orders_form">
+            <h2 class="title">
+            {$lang.import_order_csv}
+          </h2>
+          <ul{if $step eq 2} style="display:none"{/if}>
+          <table class="table_text word_spacing5" style="margin-top:15px">
+            <tr>
+              <td valign="top"><p>{$lang.select_file}: </p></td>
+              <td><input type="file" name="csv" id="csv" /> <span class="gray">{$lang.note_for_order_file}</span></td>
+            </tr>
+            <tr>
+              <td valign="top">{$lang.charset}: </th>
+              <td><p>
+                  <label> </label>
+                  <label>{$lang.chinese}</label>
+              </p>
+                </td>
+            </tr>
+            <tr>
+              <td valign="top">{$lang.file_format}: </th>
+              <td>{$lang.file_format_limit}</td>
+            </tr>
+            <tr>
+              <td valign="top"><p>{$lang.import_guide}: </p></td>
+              <td><span class="gray" style="display:block;color:#666666;">{$lang.import_guide_content}</span></td>
+            </tr>
+          </table>
+          <div class="send_out">
+            <input class="sub_btn" type="submit" value="{$lang.import}" />
+          </div>
+          </ul>
+          
+          
+          </td>
+           </tr>
+          </table>
+        </form>
+      </div>
+    </div>
+  </div>
+  <div class="clear"></div>
+</div>
+{include file=footer.html}

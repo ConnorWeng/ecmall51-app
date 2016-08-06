@@ -1,0 +1,82 @@
+{include file=behalf.header.html}
+<script type="text/javascript">
+   
+  $(function(){
+	    
+	  $('#query_time_wrapper').datetimepicker({format:'YYYY-MM-DD'});
+	  $('#query_time_form').bootstrapValidator({
+		  feedbackIcons: {
+	            valid: 'glyphicon glyphicon-ok',
+	            invalid: 'glyphicon glyphicon-remove',
+	            validating: 'glyphicon glyphicon-refresh'
+	        }, 
+		  fields:{
+			  query_time:{
+				  validators:{
+					  notEmpty:{},
+					  date:{
+						message:'请输入有效日期,格式形如：2015-01-01',
+					  	format:"YYYY-MM-DD"
+					  }
+				  }
+			  }
+		  }
+	  }); 
+	
+  });
+
+</script>
+<div class="container-fluid">
+	<div class="panel panel-default">
+		<div class="panel-body">
+			<div class="">
+				<h4 class="blue09c">配货管理</h4>
+			</div>
+			<div class="">
+				<form id="query_time_form" class="form-inline" method="post">
+					<div class="form-group">
+		   				<div class='input-group date' id='query_time_wrapper'>
+		                    <input type="text" class="form-control" name="query_time" >
+		                    <span class="input-group-addon">
+		                        <span class="glyphicon glyphicon-time"></span>
+		                    </span>
+		                </div>
+			       </div>
+			       <input type="hidden" name="module" value="behalf" />
+			       <input type="hidden" name="act" value="manage_goods_warehouse" />
+			       <div class="form-group">
+		            	<input type="submit" class="btn btn-info" id="query_submit" value="日结算单" />
+		            </div>
+				</form>
+			</div>
+		    <div class="row">
+		    	<div class="col-xs-12">
+		    		<h5><strong>统计：</strong><span class="text-info">2015-12-2</span>，待备货总数量 <b class="text-danger">75</b> 件，待备货总金额 <b class="text-danger">75</b> 元；已备货的总商品数 <b class="text-danger">75</b> 件，金额 <b class="text-danger">75</b> 元；今日总商品数 <b class="text-danger">75</b> 件，总金额 <b class="text-danger">75</b> 元。</h5>
+		    	</div>
+		    </div>
+		  </div>
+	  </div>
+	  <table class="table table-striped table-bordered" width="100%">
+	  	<thead>
+	  		<tr>
+	  			<th class="text-center col-xs-1">市场</th>
+	  			<th class="text-center col-xs-1">拿货人</th>
+	  			<th class="text-center col-xs-2">拿货数量/金额</th>
+	  			<th class="text-center col-xs-2">退货数量/金额</th>
+	  			<th class="text-center col-xs-1">日期</th>
+	  			<th class="text-center col-xs-5">操作</th>
+	  		</tr>
+	  	</thead>
+	  	<tbody>
+	  		<tr>
+	  			<td class="text-center col-xs-1"></td>
+	  			<td class="text-center col-xs-1"></td>
+	  			<td class="text-center col-xs-2"></td>
+	  			<td class="text-center col-xs-2"></td>
+	  			<td class="text-center col-xs-1"></td>
+	  			<td class="text-center col-xs-5"></td>
+	  		</tr>
+	  	</tbody>
+	  </table>
+</div>
+{include file=behalf.footer.html}

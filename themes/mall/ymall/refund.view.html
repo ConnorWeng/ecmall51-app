@@ -1,0 +1,242 @@
+{include file="header.html"}
+<style type="text/css">
+.mall-nav{ display:none}
+b{margin-left:5px;font-weight:normal;color:red;}
+</style>
+<script type="text/javascript">
+
+$(function(){
+	$('*[ectype="dialog"]').click(function(){
+        var id = $(this).attr('dialog_id');
+        var title = $(this).attr('dialog_title') ? $(this).attr('dialog_title') : '';
+        var url = $(this).attr('uri');
+        var width = $(this).attr('dialog_width');
+		var style = $(this).attr('dialog_class');
+		var opacity = $(this).attr('dialog_opacity');
+        ajax_form(id, title, url, width, style, opacity);
+        return false;
+    });
+	
+});
+
+</script>
+<div id="main" class="w-full">
+<div id="page-cart" class="w cart-index mb20">
+   <div class="step {if $refund_info.refund_status neq $smarty.const.REFUND_FINISHED}step3{else}step4{/if} mt10 clearfix">
+      <span class="fs14 strong">{$lang.refund_goods_choice}</span>
+      <span class="fs14 strong ">{$lang.refund_fill_sheet}</span>
+      <span class="fs14 strong {if $refund_info.refund_status neq $smarty.const.REFUND_FINISHED}fff{/if}">{$lang.refund_handle}</span>
+      <span class="fs14 strong {if $refund_info.refund_status eq $smarty.const.REFUND_FINISHED}fff{/if}">{$lang.refund_finished}</span>
+   </div>
+   
+   
+   <div class="cartbox w mb10">
+   	  
+   	  <div style="background:#F2F7FA;border:1px solid #CDE1EB;margin-top:10px;">
+   	  	  <div style="padding:20px;">
+   	  	  		<strong class="fs14">当前退款状态：</strong>
+	   	  		<b class="fs14 f60 strong">
+	   	  			<!--{if $refund_info.refund_status eq $smarty.const.REFUND_APPLYING}-->
+	   	  				买家提交申请，等待卖家处理。
+	   	  			<!--{elseif $refund_info.refund_status eq $smarty.const.REFUND_CLOSED}-->
+                                                退款申请已关闭，请联系51网站客服解决。
+	   	  			<!--{elseif $refund_info.refund_status eq $smarty.const.REFUND_MODIFIED}-->
+	   	  				卖家不同意协议，打回申请。
+	   	  			<!--{elseif $refund_info.refund_status eq $smarty.const.REFUND_FINISHED}-->
+	   	  				协议达成，退款成功。
+	   	  			<!--{elseif $refund_info.refund_status eq $smarty.const.REFUND_PENDING}-->
+	   	  			            卖家同意协议，等待买家发货。
+	   	  			<!--{elseif $refund_info.refund_status eq $smarty.const.REFUND_SHIPPED}-->
+	   	  			            买家已发货，等待卖家确认收货。
+	   	  			<!--{/if}-->
+	   	  		
+	   	  		</b>
+   	  	  </div>
+   	  	  <div style="background:#FFFBDD;border-top:1px dotted #cccCCC;padding:20px;">
+                      <strong>重要提示：</strong>您还可以主动联系卖家&nbsp;&nbsp;<a href="{url app=shop&amp;id=$order_info.seller_id}" class="dblu" target="_blank">{$order_info.seller_name}</a>
+                      <!--{if $refund_info.refund_status eq $smarty.const.REFUND_MODIFIED}-->
+                      <span class="f60 ml10"><strong>打回申请原由：</strong>{$refund_info.refuse_reason|default:-}</span>
+                      <!--{/if}-->
+   	  	  </div>
+   	  
+   	  </div>
+   
+     
+      
+      <div class="content">  
+                 
+         <div class="store-each">
+            <div class="store-name pb1"></div>
+            
+           
+            
+            
+            
+            
+            
+            <div class="mt10 w auto clearfix refund-wrapper">
+               <div class="float-left order-info">
+                    <h3 class="mt5 mb5 f33">{$lang.order_info}</h3>
+                    <p class="pl20 f33 mt10 mb5">{$lang.order_sn}: {$order_info.order_sn}</p>
+                    <p class="f33" style="line-height:26px;">
+                    	{$lang.add_time}: {$order_info.add_time|date:complete|default:-}<br>
+                    	{$lang.pay_time}: {$order_info.pay_time|date:complete|default:-}<br>
+                    	{$lang.ship_time}: {$order_info.ship_time|date:complete|default:-}<br>
+                    	{$lang.finished_time}: {$order_info.finished_time|date:complete|default:-}<br>
+                    	{$lang.order_status}: <span class="f60">{$order_info.status|modifier:order_status}</span><br>
+                    	{$lang.payed_order}: <span class="f60 strong">{$order_info.order_amount|price}</span><br>
+                    	<span class="ml20">({$lang.hanyunfei} <span class="strong">{$order_info.shipping_fee}</span> {$lang.yuan})</span>
+                    </p>
+                    <p class="mt10"><a href="{url app=buyer_order&amp;act=view&amp;order_id=$order_info.order_id}" class="dblu" target="_blank">>>{$lang.view_order_detail}</a></p>
+               		<hr style="margin:10px 0;border:none;border-top:1px dotted #ccc;">
+               		<h3 class="f33">{$lang.seller_info}</h3>
+               		<p class="mt10"><a href="{url app=shop&amp;id=$order_info.seller_id}" class="dblu" target="_blank">{$order_info.seller_name}</a></p>
+               </div>
+               <div class="float-left formpart">
+               
+               		<table>
+               			<tr>
+               				<td class="col1 strong fs14">{if $refund_info.refund_status neq $smarty.const.REFUND_FINISHED}申请{/if}退款总金额:</td>
+               				<td class="col2 f60 strong fs14">{$refund_info.total_refund_amount|price}</td>
+               			</tr>
+                                <!--{if $refund_info.refund_status eq $smarty.const.REFUND_FINISHED}-->
+                                <tr>
+               				<td class="col1 f60">支付退款时间:</td>
+               				<td class="col2 f60">{$refund_info.pay_time|date:complete}</td>
+               			</tr>
+                                <!--{/if}-->
+               			<tr>
+               				<td class="col1">申请退款时间:</td>
+               				<td class="col2">{$refund_info.apply_time|date:complete}</td>
+               			</tr>
+               			<tr>
+               				<td class="col1">是否收到货品:</td>
+               				<td class="col2">               					
+               					<!--{if $refund_info.is_receive_goods eq 'yes'}-->
+								<label>已收到全部（或部分）货品</label>
+								<!--{elseif $refund_info.is_receive_goods eq 'no'}-->
+								<label>没有收到货品</label>
+								<!--{/if }-->
+               				</td>
+               			</tr>
+               			<tr>
+               				<td class="col1">是否需要退货:</td>
+               				<td class="col2">
+               					<!--{if $refund_info.is_reback_goods eq 'yes'}-->
+								<label>需要退货</label>
+								<!--{elseif $refund_info.is_reback_goods eq 'no'}-->
+								<label>不需要退货</label>
+								<!--{/if }-->
+               				</td>
+               			</tr>
+               			<tr>
+               				<td class="col1">退款原因:</td>
+               				<td class="col2">
+               					{$refund_info.refund_category}               					
+               				</td>
+               			</tr>
+               			<tr>
+               				<td class="col1">需要退款的货品金额<span class="xinghao">*</span></td>
+               				<td class="col2">
+               					{$refund_info.refund_goods_amount|price}  
+               				</td>
+               			</tr>
+               			<tr>
+               				<td class="col1">需要退款的运费金额<span class="xinghao">*</span></td>
+               				<td class="col2">
+               					{$refund_info.refund_delivery_amount|price}  
+               				</td>
+               			</tr>
+               			<tr>
+               				<td class="col1">退款说明<span class="xinghao">*</span></td>
+               				<td class="col2">
+               					{$refund_info.refund_intro}  
+               				</td>
+               			</tr>
+               			
+               			<!--{if $refund_info.refund_status eq $smarty.const.REFUND_SHIPPED}-->
+               			<tr>
+               				<td class="col1 strong f60 fs16">退货信息</td>
+               				<td class="col2">
+               				</td>
+               			</tr>
+               			<tr>
+               				<td class="col1">物流公司:</td>
+               				<td class="col2">{$refund_info.th_deli_name}</td>
+               			</tr>
+               			<tr>
+               				<td class="col1">物流单号:</td>
+               				<td class="col2">{$refund_info.th_invoice}</td>
+               			</tr>
+               			<tr>
+               				<td class="col1">发货说明:</td>
+               				<td class="col2">{$refund_info.th_detail}</td>
+               			</tr>               			
+               			
+               			<!--{/if}-->
+               			
+               			
+               		</table>
+               		
+            		
+               		<div class="declare">
+						<span class="bufen">您仅能成功申请一次退款。
+					</div>
+					
+					<div class="mt10 center">
+					  <!--{if $refund_info.refund_status eq $smarty.const.REFUND_APPLYING or $refund_info.refund_status eq $smarty.const.REFUND_MODIFIED}-->
+                                          <a  href="index.php?app=buyer_order&amp;act=fill_refund_sheet&amp;id={$refund_info.id}&amp;ajax=no" title="买家修改申请"><img src="static/btns/modify_refund.png"/></a>
+					   <!--{/if}-->
+					  <!--{if $refund_info.refund_status eq $smarty.const.REFUND_PENDING}-->
+               			   <input type="image" src="static/btns/submit_invoice.png" style="cursor:pointer;" uri="index.php?app=buyer_order&amp;act=submit_invoice&amp;id={$refund_info.id}" dialog_width="600" dialog_id="agree_protocol" dialog_title="提交发货信息" ectype="dialog" />
+					   <!--{/if}-->					  
+					</div>
+				 
+               </div>
+            </div>
+            
+            
+           <div class="title clearfix mt10" style="background:#f5f5f5;border:1px solid #CAE1FE;">
+		         <span class="sellect-all" style="width:176px;">&nbsp;</span>
+		         <span class="col-desc">{$lang.store_goods}</span>
+		         <span>{$lang.price}</span>
+		         <span>{$lang.quantity}</span>
+		         <span>{$lang.payed_amount}</span>
+		         <span>{$lang.goods_status}</span>
+		      </div>
+          
+          
+           <!--{foreach from=$order_goods item=goods name=fe_goods}-->
+            <dl class="goods-each clearfix" id="cart_item_{$goods.rec_id}">
+               <dd class="select">&nbsp;</dd>
+               <dd class="pic"><a class="block" href="{url app=goods&id=$goods.goods_id}" target="_blank"><img src="{$goods.goods_image}" alt="{$goods.goods_name|escape}" width="48" height="48" /></a></dd>
+               <dd class="desc">
+                  <p><a href="{url app=goods&id=$goods.goods_id}" target="_blank">{$goods.goods_name|escape}</a></p>
+                  <span class="f66">{$goods.specification|escape}</span>
+               </dd>
+               
+               <dd class="price">{$goods.price|price}</dd>
+               <dd class="quantity">
+                  {$goods.quantity}
+               </dd>
+               <dd class="price">{$goods.subtotal|price}</dd>
+               <dd class="price">
+                   {$order_info.status|modifier:order_status}
+               </dd>
+            </dl>            
+            <!-- {/foreach} -->  
+            
+         </div>
+         
+      </div>
+      
+      <!-- //tiq -->
+      
+      
+      
+   </div>
+  
+</div>
+</div>
+<iframe id="iframe_post" width="0" height="0" frameborder="0" name="iframe_post"></iframe>
+{include file="footer.html"}

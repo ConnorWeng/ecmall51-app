@@ -1,0 +1,191 @@
+{include file=header.html}
+{include file=top.html}
+<script type="text/javascript">
+/* 替换参数 */
+function replaceParam(key, value)
+{
+    var params = location.search.substr(1).split('&');
+    var found  = false;
+    for (var i = 0; i < params.length; i++)
+    {
+        param = params[i];
+        arr   = param.split('=');
+        pKey  = arr[0];
+        if (pKey == 'page')
+        {
+            params[i] = 'page=1';
+        }
+        if (pKey == key)
+        {
+            params[i] = key + '=' + value;
+            found = true;
+        }
+    }
+    if (!found)
+    {
+        value = transform_char(value);
+        params.push(key + '=' + value);
+    }
+    location.assign(SITE_URL + '/index.php?' + params.join('&'));
+}
+
+/* 删除参数 */
+function dropParam(key)
+{
+    var params = location.search.substr(1).split('&');
+    for (var i = 0; i < params.length; i++)
+    {
+        param = params[i];
+        arr   = param.split('=');
+        pKey  = arr[0];
+        if (pKey == 'page')
+        {
+            params[i] = 'page=1';
+        }
+        if (pKey == key)
+        {
+            params.splice(i, 1);
+        }
+    }
+    location.assign(SITE_URL + '/index.php?' + params.join('&'));
+}
+
+$(function(){
+
+	var order = '{$smarty.get.order}';
+	var css = '';
+	
+	<!--{if $smarty.get.order}-->
+	order_arr = order.split(' ');
+	switch (order_arr[1]){
+		case 'desc' : 
+			css = 'order-down btn-order-cur';
+		break;
+		case 'asc' :
+			css = 'order-up btn-order-cur';
+		break;
+		default : 
+			css = 'order-down-gray';
+	}
+	$('.btn-order a[ectype='+order_arr[0]+']').attr('class','btn-order-click '+css);
+	<!--{/if}-->
+	
+	$(".btn-order a").click(function(){
+		if(this.id==''){
+			dropParam('order');// default order
+			return false;
+		}
+		else
+		{
+			dd = " desc";
+			if(order != '') {
+				order_arr = order.split(' ');
+				if(order_arr[0]==this.id && order_arr[1]=="desc")
+					dd = " asc";
+				else dd = " desc";
+			}
+			replaceParam('order', this.id+dd);
+			return false;
+		}
+	});
+	
+});
+</script>
+
+<div id="content">
+    <div id="left">
+        {include file=left.html}
+    </div>
+
+    <div id="right">
+        <div class="die6">{$store.description|escape:editor}</div>
+
+        <!--{if $recommended_goods}-->
+        <div class="module_special">
+            <h2 class="common_title veins2">
+                <div class="ornament1"></div>
+                <div class="ornament2"></div>
+                <span class="ico1"><span class="ico2">{$lang.recommended_goods}</span></span>
+            </h2>
+            <div class="wrap">
+                <div class="wrap_child">
+                    <div class="major" style="padding-bottom:10px;">
+                        <ul class="list">
+                            <!--{foreach from=$recommended_goods item=rgoods}-->
+                            <li style="position:relative;">
+                               <span class="rec"></span>
+                                <div class="pic"><a href="{url app=goods&id=$rgoods.goods_id}" target="_blank" style="overflow:hidden;display:table-cell;vertical-align:middle;text-align:center;"><img src="{$rgoods.default_image}" style="max-width:170px;max-height:170px;" /></a></div>
+                                <h3><a href="{url app=goods&id=$rgoods.goods_id}" target="_blank">{$rgoods.goods_name|escape}</a></h3>
+                                <p style="float:left;" class="goods_price">{$ngoods.price|price}</p>
+                            </li>
+                            <!-- {/foreach} -->
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!--{/if}-->
+
+        
+        <div>
+        
+        
+        </div>
+                            	
+                            	
+        <div class="module_special">
+            <h2 class="common_title veins2">
+                <div class="ornament1"></div>
+                <div class="ornament2"></div>
+                <span class="ico1"><span class="ico2">{$lang.all_goods}</span></span>
+                <div class="btn-order">             
+		              <!--{foreach from=$orders item=order key=k name=fe_order}-->
+		                  	<!--{if !$k}-->
+		                  	<a class="btn-order-click default-sort" id="{$k}" href="javascript:;">{$order}</a>
+		                  	<!--{else}-->
+		                  	<a class="btn-order-click order-down-gray" ectype="{$k}" id="{$k}" href="javascript:;">{$order}<i></i></a>
+		                  	<!--{/if}-->
+		              <!--{/foreach}-->
+		        </div>
+            </h2>
+            <div class="wrap">
+                <div class="wrap_child">
+                    <!--{if $new_goods}-->
+                    <div class="major">
+                        <ul class="list">
+                            <!--{foreach from=$new_goods item=ngoods}-->
+                            <li style="width:228px;height:330px;position:relative;">
+                                <div class="pic" style="width:224px;height:227px;"><a href="{url app=goods&id=$ngoods.goods_id}" target="_blank" style="overflow:hidden;display:table-cell;vertical-align:middle;text-align:center;width:227px;height:217px;"><img src="data/system/empty.gif" data-ks-lazyload="{$ngoods.default_image}" style="max-width:200px;max-height:200px;width:auto;height:auto;"/></a></div>
+                                <h3 style="margin-bottom:3px;text-align:left;width:224px;"><a href="{url app=goods&id=$ngoods.goods_id}" target="_blank" style="color:#666;">{$ngoods.goods_name|escape}</a></h3>
+                                <div style="overflow:hidden;padding:0 5px;">
+                                   <span style="float:left;" class="goods_price">{$ngoods.price|price}</span>
+                                   <span style="float:right;" class="goods_databag"><font color="#f44" style="font-size:14px;font-weight:bold;">＋</font> <a href="javascript:;" style="color:#3984d0;text-decoration:none;">{$lang.add_databag}</a></span>
+                             
+                                </div>
+                                <div style="overflow:hidden;padding:5px;">
+                                  <span style="float:left;"><font color="#f44">★</font> <a href="javascript:collect_goods({$ngoods.goods_id})" style="color:#3984d0;">{$lang.collect_goods}</a></span>
+                                  <span style="float:right"><a class="icon-tb" href="{url app=item_upload&dest=Taobao&goods_id=$ngoods.goods_id}" title="上传淘宝">{$lang.taobao_upload}</a><a class="icon-al" href="{url app=item_upload&dest=Alibaba&goods_id=$ngoods.goods_id}" title="上传阿里">{$lang.ali_upload}</a><a class="icon-pp" href="{url app=item_upload&dest=Paipai&goods_id=$ngoods.goods_id}" title="上传拍拍">{$lang.paipai_upload}</a></span>
+                                </div>
+                                <!--{if $ngoods.realpic }-->
+								   <i class="icon_detail" title="{$lang.service_detail}"><a href="javascript:;"  class="block"></a></i>
+								<!--{/if}-->
+                            </li>
+                            <!--{/foreach}-->
+                        </ul>
+                    </div>
+                    <!--{else}-->
+                    <div class="nothing"><p>{$lang.no_records}</p></div>
+                    <!--{/if}-->
+                </div>
+            </div>
+        </div>
+        {include file=page.bottom.html}
+        
+    </div>
+
+    <div class="clear"></div>
+    
+    
+</div>
+
+{include file=footer.html}

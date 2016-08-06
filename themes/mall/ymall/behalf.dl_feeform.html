@@ -1,0 +1,83 @@
+{include file=member.header.html}
+<style>
+.borline td { padding:10px 0px; }
+.ware_list th { text-align:left; }
+</style>
+<script type="text/javascript">
+
+$(function(){
+	jQuery.extend(jQuery.validator.messages, {
+		 number: "请输入合法的数字",
+	});
+    $('#profile_form').validate({
+         errorPlacement: function(error, element){
+            $(element).parent('span').after(error);
+        },
+        rules : {
+        	fees : {
+                number:true,
+            }
+        },
+        messages : {
+        	fees : {
+                number:'{$lang.not_number}',
+            }
+        } 
+    });
+   
+});
+</script>
+<div class="content">
+    {include file=member.menu.html}
+    <div id="right">
+            
+            <div class="wrap">
+                <div class="public">
+                <form method="post" enctype="multipart/form-data" id="profile_form">
+                    <div class="information">                        
+                        <div class="info individual">
+                            <h2 class="fs18 mb10">HI,{$behalf.bh_name|escape}</h2>
+                            <p class="lh24 f66 mb10 pl10">请设置快递费用：</p>
+                            <!--{if $deliveries}-->
+                            <div class="mb10 border padding10" style="line-height:24px;">                              
+                              <table>
+                               <!--{foreach  from=$deliveries item=d name=d_fee}-->
+                                   <tr> 
+                                    <td width="80"><em class="">{$d.dl_name}{$lang.colon}</em></td>                                    
+                                    <td class="pb5">
+                                    <input type="hidden" name="dl_ids[]" value="{$d.dl_id}"/>              
+                                    <input type="text" style="height:20px;width:60px;" class="pl5 f66" name="dl1_quantity[]"  value="{$d.first_amount}"/>
+                                    <em class=" ">件内，</em> 
+                                    <input type="text" style="height:20px;width:60px;" class="pl5 f66" name="dl1_fee[]"  value="{$d.first_price}"/>
+                                    <em class=" ">元，每增加</em> 
+                                    <input type="text" style="height:20px;width:60px;" class="pl5 f66" name="dl2_quantity[]"  value="{$d.step_amount}"/>
+                                    <em class=" ">件，增加运费</em> 
+                                    <input type="text" style="height:20px;width:60px;" class="pl5 f66" name="dl2_fee[]"  value="{$d.step_price}"/>
+                                    <em class="">元 </em>
+                                    </td>
+                                    
+                                   </tr>
+                               <!--{/foreach}-->   
+                               </table>                               
+                            </div>
+                            <div><input type="submit" class="btn" value="{$lang.save_edit}" /></div>
+                            <!--{else}-->
+                                                                                                  您还没有可用的快递,<a href="{url app=behalf_member&act=set_delivery}">去设置</a>!
+                            <!--{/if}-->
+                        </div>
+                    </div>
+                </form>
+                </div>
+                <div class="wrap_bottom"></div>
+            </div>
+
+            <div class="clear"></div>
+            <div class="adorn_right1"></div>
+            <div class="adorn_right2"></div>
+            <div class="adorn_right3"></div>
+            <div class="adorn_right4"></div>
+        </div>
+        <div class="clear"></div>
+    </div>
+</div>
+{include file=footer.html}

@@ -1,0 +1,73 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<base href="{$site_url}/" />
+<!-- Use IE7 mode -->
+<!-- <meta http-equiv="X-UA-Compatible" content="IE=EmulateIE7 charset=$charset" /> -->
+<meta http-equiv="Content-Type" content="text/html; charset={$charset}" />
+{$page_seo}
+
+<meta name="author" content="51zwd.com" />
+<meta name="copyright" content="51zwd.com. All Rights Reserved" />
+<link href="{res file=css/global.css}" rel="stylesheet" type="text/css" />
+<link href="{lib file=easyui/themes/bootstrap/easyui.css}" rel="stylesheet" type="text/css" />
+<link href="{lib file=easyui/themes/icon.css}" rel="stylesheet" type="text/css" />
+<link href="{res file=css/print.css}" rel="stylesheet" type="text/css" />
+<script type="text/javascript" src="{lib file=easyui/jquery.min.js}" charset="utf-8"></script>
+<script type="text/javascript" src="{lib file=easyui/jquery.easyui.min.js}" charset="utf-8"></script>
+<script type="text/javascript" src="{lib file=easyui/locale/easyui-lang-zh_CN.js}" charset="utf-8"></script>
+<script type="text/javascript" src="{lib file=print/index.js}" charset="utf-8"></script>
+</head>
+<body class="easyui-layout" style="overflow-y:hidden;" scroll="no">
+
+	<div data-options="region:'north',border:false" style="height:60px;background:#fff;padding:10px">
+		<a href="index.php"><img height="47" src="{$site_logo}" alt="{$site_title}" /></a>
+		<a href="index.php?app=behalf_member" class="easyui-linkbutton float-right" data-options="iconCls:'icon-user'" plain="true" target="_blank">用户中心</a>
+	</div>
+	<div data-options="region:'west',split:true,title:null,border:false" style="width:190px;height:100%;padding-left:5px;">
+		<div class="easyui-accordion" data-options="multiple:true" style="width:180px;">
+			<div title="{$lang.baseinfo}" data-options="iconCls:'icon-base',collapsed:false" style="padding:10px 20px;">
+				<ul>
+					<li class="dot_ccc pl10"><div><a href="index.php?app=behalf_print&act=get_behalf" target="mainFrame">{$lang.sender_info}</a></div></li>
+				</ul>
+			</div>
+			<div title="{$lang.e_miandan}" data-options="iconCls:'icon-app',collapsed:false" style="padding:10px 20px;">
+				<ul>
+					<li class="dot_ccc pl10"><div><a href="index.php?app=behalf_print&act=md_print" target="mainFrame">{$lang.md_print}</a></div></li>
+					<li class="dot_ccc pl10"><div><a href="index.php?app=behalf_print&act=constructing" target="mainFrame">{$lang.md_template}</a></div></li>
+				</ul>
+			</div>
+			<div title="{$lang.delivery_print}" data-options="iconCls:'icon-print',collapsed:false" style="padding:10px 20px;">
+				<ul>
+					<li class="dot_ccc pl10"><div><a href="index.php?app=behalf_print&act=constructing" target="mainFrame">{$lang.tag_print}</a></div></li>
+					<li class="dot_ccc pl10"><div><a href="index.php?app=behalf_print&act=kdd_print" target="mainFrame">{$lang.kd_print}</a></div></li>
+					<li class="dot_ccc pl10"><div><a href="index.php?app=behalf_print&act=kdd_template" target="mainFrame">{$lang.kd_template}</a></div></li>
+				</ul>
+			</div>
+		</div>
+	</div>
+	<div data-options="region:'south',border:false" style="height:50px;background:#fafafa;padding:10px;">
+		<p class="center">Copyright © 2010-2015 我要做网店    版权所有    沪ICP备11047876号</p>
+	</div>
+	<div id="mainPanel" data-options="region:'center',title:null">
+		<div id="tabs" class="easyui-tabs" fit="true" border="false">
+			<div title="{$lang.home}" data-options="iconCls:'icon-home'" style="padding:10px;font-size:14px;">
+				<h1 style="margin-top:20px;font-weight:400;">欢迎使用 51zwd.com 打印系统!</h1>
+				<div style="border:1px solid #eee;border-radius:5px;padding:10px;margin-top:20px;line-height:24px;">
+				  	<h4 style="font-size:16px;color:red;">使用须知</h4>
+				  	<p>1. 获取待发货订单快递单号。目前只提供<font color="#f40">“圆通快递”</font>电子面单号。建议在网络不繁忙时获取，成功机率高！</p>
+				  	<p>2. 打印电子面单。检查订单列表中是否有<font color="#f40">“快递单号为空”</font>的订单，以免打印没有快递单号的订单。 </p>
+				  	<p>3. 同步发货。<font color="#f40">建议打印电子面单之后再同步发货</font>。已发货订单也可打印。</p>
+				  	<p>4. 双击可修改收件人信息，只用于临时打印，不会保存到系统中。</p>
+				  	<p>5. 改变订单列表显示数量，以便同时处理更多数据。</p>
+				</div>
+			</div>
+		</div>
+	
+	</div>
+
+
+
+
+</body>
+</html>

@@ -1,0 +1,175 @@
+{include file=header.whole_nolefttop.html}
+<link href="http://netdna.bootstrapcdn.com/font-awesome/3.0.2/css/font-awesome.css" rel="stylesheet">
+<script type="text/javascript" src="{res file=js/bootstrap-wysiwyg.js}"></script>
+<script type="text/javascript" src="{res file=js/jquery.hotkeys.js}"></script>
+<script type="text/javascript">
+	$(function(){
+		
+				
+	    $("#cancelbtn").on('click',function(){
+	    	window.parent.js_success(0);
+	    });
+		
+	   
+		
+	});
+</script>
+<div class="alert alert-warning" style="margin:0;">
+	亲，这是订单备忘录！只有自己可见，谨防诈骗信息……
+</div>
+
+    <form id="behalf_ordernote" action="index.php?module=behalf&act=save_ordernote&order_id={$order_id}">
+				<div class="form-group">
+					<div class="btn-toolbar" data-role="editor-toolbar" data-target="#editor">
+				      <div class="btn-group">
+				        <a class="btn dropdown-toggle" data-toggle="dropdown" title="大小"><i class="icon-text-height"></i>&nbsp;<b class="caret"></b></a>
+				          <ul class="dropdown-menu">
+				          <li><a data-edit="fontSize 5"><font size="5">大字</font></a></li>
+				          <li><a data-edit="fontSize 3"><font size="3">正常</font></a></li>
+				          <li><a data-edit="fontSize 1"><font size="1">小字</font></a></li>
+				          </ul>
+				      </div>
+				      <div class="btn-group">
+				        <a class="btn" data-edit="bold" title="粗体 (Ctrl/Cmd+B)"><i class="icon-bold"></i></a>
+				        <a class="btn" data-edit="italic" title="斜体 (Ctrl/Cmd+I)"><i class="icon-italic"></i></a>
+				        <a class="btn" data-edit="strikethrough" title="删除线"><i class="icon-strikethrough"></i></a>
+				        <a class="btn" data-edit="underline" title="下划线 (Ctrl/Cmd+U)"><i class="icon-underline"></i></a>
+				      </div>
+				      <div class="btn-group">
+				        <a class="btn" data-edit="insertunorderedlist" title="点状列表"><i class="icon-list-ul"></i></a>
+				        <a class="btn" data-edit="insertorderedlist" title="数字列表"><i class="icon-list-ol"></i></a>
+				      </div>
+				      <div class="btn-group">
+				        <a class="btn" data-edit="justifyleft" title="左对齐 (Ctrl/Cmd+L)"><i class="icon-align-left"></i></a>
+				        <a class="btn" data-edit="justifycenter" title="居中 (Ctrl/Cmd+E)"><i class="icon-align-center"></i></a>
+				        <a class="btn" data-edit="justifyright" title="右对齐 (Ctrl/Cmd+R)"><i class="icon-align-right"></i></a>
+				      </div>
+				     
+				      <div class="btn-group">
+				        <a class="btn" data-edit="undo" title="撤销 (Ctrl/Cmd+Z)"><i class="icon-undo"></i></a>
+				        <a class="btn" data-edit="redo" title="重做 (Ctrl/Cmd+Y)"><i class="icon-repeat"></i></a>
+				      </div>
+				      
+				    </div>
+				
+				    <div id="editor">
+				      {$ordernote.content}
+				    </div>
+				</div>
+			    <div class="form-group text-right">
+			    	<button class="btn btn-primary" id="savebtn" type="submit">确 定</button>
+					<button class="btn btn-default" id="cancelbtn">取 消</button>
+			    </div>
+			   </form>
+	
+
+
+
+
+
+
+<script type="text/javascript">
+$(function(){
+	  function initToolbarBootstrapBindings() {
+		  
+	      var fonts = ['Serif', 'Sans', 'Arial', 'Arial Black', 'Courier', 
+	            'Courier New', 'Comic Sans MS', 'Helvetica', 'Impact', 'Lucida Grande', 'Lucida Sans', 'Tahoma', 'Times',
+	            'Times New Roman', 'Verdana'],
+	            fontTarget = $('[title=Font]').siblings('.dropdown-menu');
+	      
+	      $.each(fonts, function (idx, fontName) {
+	          fontTarget.append($('<li><a data-edit="fontName ' + fontName +'" style="font-family:\''+ fontName +'\'">'+fontName + '</a></li>'));
+	      });
+	      
+	      $('a[title]').tooltip({container:'body'});
+	      
+	    	$('.dropdown-menu input').click(function() {return false;})
+			    .change(function (){ 
+			    	$(this).parent('.dropdown-menu').siblings('.dropdown-toggle').dropdown('toggle');
+			    })
+	        .keydown('esc', function () {this.value='';$(this).change();});
+
+	      $('[data-role=magic-overlay]').each(function () { 
+	        var overlay = $(this), target = $(overlay.data('target')); 
+	        overlay.css('opacity', 0).css('position', 'absolute').offset(target.offset()).width(target.outerWidth()).height(target.outerHeight());
+	      });
+	      
+	      if ("onwebkitspeechchange"  in document.createElement("input")) {
+	        var editorOffset = $('#editor').offset();
+	        $('#voiceBtn').css('position','absolute').offset({top: editorOffset.top, left: editorOffset.left+$('#editor').innerWidth()-35});
+	      } else {
+	        $('#voiceBtn').hide();
+	      }
+		}
+	  
+		function showErrorAlert (reason, detail) {
+			var msg='';
+			if (reason==='unsupported-file-type') { msg = "Unsupported format " +detail; }
+			else {
+				console.log("error uploading file", reason, detail);
+			}
+			$('<div class="alert"> <button type="button" class="close" data-dismiss="alert">&times;</button>'+ 
+			 '<strong>File upload error</strong> '+msg+' </div>').prependTo('#alerts');
+		}
+		
+	    initToolbarBootstrapBindings();  
+		$('#editor').wysiwyg();
+	    //window.prettyPrint && prettyPrint();
+	    
+		 $('#behalf_ordernote').bootstrapValidator({
+			  feedbackIcons: {
+		            valid: 'glyphicon glyphicon-ok',
+		            invalid: 'glyphicon glyphicon-remove',
+		            validating: 'glyphicon glyphicon-refresh'
+		        }, 
+			  fields:{
+				/*   content:{
+					  validators:{
+						  notEmpty:{},
+						  stringLength:{
+							  min:10,
+							  message:'最少10个字'
+						  }
+					  }
+				  } */
+				 
+			  }
+		  }).on('success.form.bv', function(e) {
+			   // Prevent form submission
+	          e.preventDefault();
+
+	          // Get the form instance
+	          var $form = $(e.target);
+
+	          // Get the BootstrapValidator instance
+	          var bv = $form.data('bootstrapValidator');
+			  var cc = $('#editor').html();
+	          // Use Ajax to submit form data
+	          $.post($form.attr('action'),{'content':cc} , function(result) {
+	              //var json = $.parseJSON(result);
+	              bootbox.alert(result.msg);
+	              window.parent.js_success(result.retval);
+	          }, 'json');
+	         
+	          //$form.data('bootstrapValidator').resetForm(true);
+	       
+	      });
+		 
+		
+});
+
+
+
+</script>
+
+
+
+
+
+
+
+
+
+
+
+{include file=footer.whole.html}

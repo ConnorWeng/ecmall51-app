@@ -1,0 +1,146 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<base href="{$site_url}/" />
+<!-- Use IE7 mode -->
+<meta http-equiv="X-UA-Compatible" content="IE=EmulateIE7 charset={$charset}" />
+<meta http-equiv="Content-Type" content="text/html;charset={$charset}" />
+{$page_seo}
+
+<meta name="author" content="www.51zwd.com" />
+<meta name="copyright" content="www.51zwd.com All Rights Reserved" />
+<link href="{res file=shop.css}" rel="stylesheet" type="text/css" />
+<link href="{res file=gshop.css}" rel="stylesheet" type="text/css" />
+<script type="text/javascript" src="index.php?act=jslang"></script>
+<script type="text/javascript" src="{lib file=jquery.js}" charset="utf-8"></script>
+<script type="text/javascript" src="{lib file=ecmall.js}" charset="utf-8"></script>
+<script type="text/javascript" src="{lib file=jquery.plugins/jquery.lazyload.js}"></script>
+<script type="text/javascript">
+//<!CDATA[
+var SITE_URL = "{$site_url}";
+var REAL_SITE_URL = "{$real_site_url}";
+var PRICE_FORMAT = '{$price_format}';
+
+$(function(){
+    var span = $("#child_nav");
+    span.hover(function(){
+        $("#float_layer:not(:animated)").show();
+    }, function(){
+        $("#float_layer").hide();
+    });
+    
+    $(".top-search .search-type").hover(function(){
+    	$(this).addClass("hover");
+    	},function(){
+    	$(this).removeClass("hover");
+    	});
+    	$(".top-search .search-type li:eq(1)").click(function(){
+    	var act0=$(".top-search .search-type li:eq(0)").attr("act");
+    	var text0=$(".top-search .search-type li:eq(0)").html();
+    	$("#form-search-act").attr("value",$(this).attr("act"));
+    	$(".top-search .search-type li:eq(0)").attr("act",$(this).attr("act"));
+    	$(".top-search .search-type li:eq(0)").html($(this).html());
+    	$(".top-search .search-type li:eq(1)").attr("act",act0);
+    	$(".top-search .search-type li:eq(1)").html(text0);
+    	});
+    	$(".top-search li").click(function(){
+    	/*
+    	$(".top-search li").each(function(){
+    	$(this).removeClass("current");
+    	});
+    	$(this).addClass("current");
+    	$(".top-search-box input[name='act']").val(this.id);
+    	*/
+    	if($.trim($(".top-search-box input[name='keyword']").val())==""){
+    	$(".top-search-box input[name='keyword']").attr("class","");
+    	$(".top-search-box input[name='keyword']").addClass(this.id+"_bj kw_bj keyword");
+    	}
+    	});
+    	$(".top-search-box input[name='keyword']").focus(function(){
+    	$(this).attr("class","keyword");
+    	}).blur(function(){
+    	if($.trim($(this).val())=="") {
+    	$(this).attr("class",$(this).parent().find("input[name='act']").val()+"_bj kw_bj keyword");
+    	}
+    	}); 
+    	$("#goods51_description img").lazyload({
+    		threshold:200,
+    	});
+    	$("img").lazyload();
+});
+//]]>
+</script>
+{$_head_tags}
+</head>
+
+<body>
+<div style="width:100%;height:32px;line-height:15px;background:#f5f5f5;">
+   <div class="store-head-top" style="width:1200px;margin:0 auto;">
+      <p style="float:left;margin-top:8px;">
+        {$lang.hello},{$visitor.user_name|escape}
+        <!--{if !$visitor.user_id}-->
+        [<a href="{url app=member&act=login&ret_url=$ret_url}" style="color:#666;">{$lang.login}</a>]
+        [<a href="{url app=member&act=register&ret_url=$ret_url}" style="color:#666;">{$lang.register}</a>]
+        <!--{else}-->
+        <a class="note" href="{url app=message&act=newpm}">{$lang.user_center}</a>&nbsp;
+        [<a href="{url act=logout}">{$lang.logout}</a>]
+        <!--{/if}-->
+        </p>
+       
+       <div id="subnav" style="position:relative;float:right;margin-top:8px;">       
+        <p>
+        <a class="shopping" href="{url app=cart}">{$lang.shopping_cart}</a> <span>|</span>
+        <a class="favorite" href="{url app=my_favorite}">{$lang.favorite}</a> <span>|</span>
+        <a class="note" href="{url app=message&act=newpm}">{$lang.pm}<!--{if $new_message}-->({$new_message})<!--{/if}--></a> <span>|</span>
+        <a class="help" href="{url app=article&code=help}">{$lang.help_center}</a>
+        <!--{foreach from=$navs.header item=nav}-->
+        <span>|</span> <a class="user_defined" href="{$nav.link}"{if $nav.open_new} target="_blank"{/if}>{$nav.title|escape}</a>
+        <!--{/foreach}-->
+        </p>
+    </div>
+   
+   </div>
+    
+</div>
+<div id="head">
+    <h1 title="{$site_title|escape}">
+    <!--{if $OEM eq 'nc'}-->
+     <a href="index.php"><img src="{$siteurl}/data/system/nc_logo.gif" alt="{$site_title|escape}" width="140" height="47"/></a>
+    <!--{else }-->
+    <a href="index.php"><img src="{$site_logo}" alt="{$site_title|escape}" width="140" height="47"/></a>
+    <!--{/if }-->    
+    </h1>
+
+    
+
+    <div id="topbtn">
+        <span><font color="#f44">★</font> <a href="javascript:collect_store({$store.store_id})">{$lang.collect_the_store}</a></span>
+         <span style="margin-left:20px;"><b style="background: url("http://gtms01.alicdn.com/tps/i1/T10UoUFmdeXXXZNWvV-828-130.png") no-repeat scroll -792px -86px rgba(0, 0, 0, 0);display: inline-block;height: 16px;width: 16px;"></b>用手机逛本店</span>
+    </div>
+
+    <div id="path">
+        <span>店铺名称：{$store.store_name|escape}</span>
+        <span style="background-color:#f44;padding:1px 5px;border-radius:3px;margin-left:10px;"><a href="{url app=store&id=$store.store_id}" style="color:white;">进入店铺</a></span>
+        <span style="margin-left:10px;">好评率：<font color=red>{$store.praise_rate}</font>%</span>
+    </div>
+
+    <div id="search" class="top-search">
+        <div id="{if $OEM eq 'nc'}nc_search{/if}" class="top-search-box clearfix">
+	         	<div class="form-fields float-left">
+	           		<form method="GET" action="{url app=search}">
+	               		<input type="hidden" name="app" value="search" />
+	               		<input type="hidden" name="act" value="{if $smarty.get.act eq 'store'}store{else}index{/if}" id="form-search-act"/>
+						<ul class="search-type">
+						  <li class="first-li" act="{if $smarty.get.act eq 'store'}store{else}index{/if}">{if $smarty.get.act eq 'store'}{$lang.store}{else}{$lang.goods}{/if}</li>
+						  <li act="{if $smarty.get.act eq 'store'}index{else}store{/if}">{if $smarty.get.act eq 'store'}{$lang.goods}{else}{$lang.store}{/if}</li>
+						</ul>
+						<p class="search-span"><p>
+						<input type="text"   name="keyword" value="{$smarty.get.keyword}" class="keyword {if !$smarty.get.keyword}kw_bj {if $smarty.get.act eq 'store'}store{elseif $smarty.get.act eq 'groupbuy'}groupbuy{else}index{/if}_bj {/if}" />
+	               		<input type="submit" value="{$lang.search}" class="submit yahei strong" hidefocus="true" />
+	            	</form>				
+	         	</div>
+	          </div>
+	        </div>   
+    </div>
+</div>
+<div style="clear:both;height:0px;width:100%;border-bottom:1px dotted #f44;"></div>

@@ -1,0 +1,72 @@
+﻿<script type="text/javascript">
+var _d = DialogManager.get('config_dialog');
+_d.setWidth(350);
+_d.setPosition('center');
+
+$("select[name='img_recom_id_1']").change(function(){
+    switchRecommend(this.value, 'img_cate_id_1');
+});
+$("select[name='img_recom_id_2']").change(function(){
+    switchRecommend(this.value, 'img_cate_id_2');
+});
+$("select[name='img_recom_id_3']").change(function(){
+    switchRecommend(this.value, 'img_cate_id_3');
+});
+$("select[name='img_recom_id_4']").change(function(){
+    switchRecommend(this.value, 'img_cate_id_4');
+});
+
+switchRecommend($("select[name='img_recom_id_1']").val(), 'img_cate_id_1');
+switchRecommend($("select[name='img_recom_id_2']").val(), 'img_cate_id_2');
+switchRecommend($("select[name='img_recom_id_3']").val(), 'img_cate_id_3');
+switchRecommend($("select[name='img_recom_id_4']").val(), 'img_cate_id_4');
+
+function switchRecommend(recomId, selectName)
+{
+    if (recomId >= 0)
+    {
+        $("select[name='" + selectName + "']").hide();
+    }
+    else
+    {
+        $("select[name='" + selectName + "']").show();
+    }
+}
+</script>
+    
+<div class="field_item">	
+    <label>文章显示数量：</label>
+    <p><input type="text" name="amount" value="{$options.amount}" /></p> 
+</div>
+<div class="field_item">
+    <p><label>分类名称一：</label><input type="text" name="cate_name_1" value="{$options.cate_name_1}" /></p>
+    <label>推荐类型:</label>
+    <p><select name="cate_id1">
+    	<option value="0">请选择...</option>
+    	<!-- {html_options options=$acategories selected=$options.cate_id} -->
+    </select></p>
+</div>
+<div class="field_item">
+    <p><label>分类名称二：</label><input type="text" name="cate_name_2" value="{$options.cate_name_2}" /></p>
+    <label>推荐类型:</label>
+    <p><select name="cate_id2">
+    	<option value="0">请选择...</option>
+    	<!-- {html_options options=$acategories selected=$options.cate_id} -->
+    </select></p>
+</div>
+<div class="field_item">
+    <p><label>分类名称三：</label><input type="text" name="cate_name_3" value="{$options.cate_name_3}" /></p>
+    <label>推荐类型:</label>
+    <p><select name="cate_id3">
+    	<option value="0">请选择...</option>
+    	<!-- {html_options options=$acategories selected=$options.cate_id} -->
+    </select></p>
+</div>
+<div class="field_item">
+    <p><label>分类名称四：</label><input type="text" name="cate_name_4" value="{$options.cate_name_4}" /></p>
+    <label>推荐类型:</label>
+    <p><select name="cate_id4">
+    	<option value="0">请选择...</option>
+    	<!-- {html_options options=$acategories selected=$options.cate_id} -->
+    </select></p>
+</div>

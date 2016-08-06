@@ -1,0 +1,31 @@
+{include file=header.html}
+{include file="header.nav.html"}
+<div id="all-catalog">
+   {include file=curlocal.html}
+   <!--{foreach from=$gcategorys item=gcategory}-->
+   <div class="box">
+      <span class="tp"><span></span></span>
+      <div class="title"><h3><a href="{url app=search&cate_id=$gcategory.id}">{$gcategory.value|escape}</a></h3></div>
+      <div class="content">
+	  <!--{foreach from=$gcategory.children item=child name=fe_child}-->
+	    <div class="each <!-- {if $smarty.foreach.fe_child.iteration % 2 eq 0} -->write<!--{/if}-->">
+        <table>
+           <tr>
+	          <td><h2 style="margin-right:20px;"><a href="{url app=search&cate_id=$child.id}">{$child.value|escape}</a></h2></td>
+              <td>
+         
+		 <!-- {foreach from=$child.children item=child2} -->
+		 <a href="{url app=search&cate_id=$child2.id}">{$child2.value|escape}</a>
+		 <!--{/foreach}-->
+         </td>
+         </tr>
+         </table>
+         
+	    </div>
+	  <!--{/foreach}-->
+      </div>
+      <span class="bt"><span></span></span>
+   </div>
+   <!--{/foreach}-->
+</div>
+{include file=footer.html}

@@ -1,0 +1,141 @@
+{include file=member.header.html}
+<?php
+$shuzi1 = round(rand(1,8));
+$shuzi2 = round(rand(1,8));
+$shuzi3 = round(rand(1,8));
+
+$quzimu1= round(rand(65,72));
+$quzimu2= round(rand(65,72));
+$quzimu3= round(rand(65,72));
+
+$zimu1 = chr($quzimu1);
+$zimu2 = chr($quzimu2);
+$zimu3 = chr($quzimu3);
+
+?>
+<script type="text/javascript">
+function tousers() {
+    $('.money_btn').attr('disabled', 'true');
+    var tx_money = $("#tx_money").val();
+    var tx_password = $("#post_zf_pass").val();
+    tx_money = parseInt(tx_money);
+    if(tx_money <= 2)
+    {
+        alert("提现金额要大于2元！");
+        $('.money_btn').removeAttr('disabled');
+        return false;
+    }
+    if(tx_password == '' || tx_password == undefined)
+    {
+        alert("支付密码不能为空！");
+        $('.money_btn').removeAttr('disabled');
+        return false;
+    }
+    return true;
+}
+</script>
+<div class="content">
+    <div class="totline"></div><div class="botline"></div>
+    {include file=member.menu.html}
+    <div id="right">
+          <ul class="tab">
+                                <li class="active">{$lang.tixianshenqing}</li>
+                                <li class="normal"><a href="?app=my_money&act=txlog">{$lang.tixianjilu}</a></li>
+                                <li class="normal"><a href="?app=my_money&act=mylist">{$lang.shezhitixianzhanghao}</a></li>
+          </ul>
+
+        <div class="wrap margin1">
+            <div class="public table">
+                                <div class="information_index" style="overflow:hidden; margin: 0px 0 -15px;">
+                 <div class="info">
+                        <h3 class="margin2">
+                            <span>{$lang.hello}！{$visitor.user_name}</span>
+                        </h3>
+<table class="width6">
+                      <tr>
+                                          <td><span style="font-size:14px">
+                                          <!--{foreach from=$my_money item=val key=key}-->
+{$lang.zhanghuzongjinere}<span style="font-size:16px;font-weight:bold; color:#FE5400;">{$val.money}</span>
+&nbsp;{$lang.yuan}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{$lang.dongjiejine}<span style="color:blue;">{$val.money_dj}</span>&nbsp;{$lang.yuan}
+<!--&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{$lang.jifen}<span style="color:blue;">{$val.jifen}</span>-->
+
+                                              </span>
+                                          <!--{/foreach}-->
+                                          </td>
+                      </tr>
+                      <tr>
+                      <td style="font-weight:400;line-height:22px;">{$lang.shangcidengluip}: {$visitor.last_ip}<br>
+                                    {$lang.shangcidenglushijian}:{$visitor.last_login|date:complete}<br>
+
+                                    &nbsp;<A
+href="index.php?app=my_money&act=paylist">{$lang.lijichongzhi}</A>&nbsp;|&nbsp;<A
+class=G href="index.php?app=my_money&act=txlist"><span style="color:green;">{$lang.tixian}</span></A>
+                                          </td>
+
+                      </tr>
+                      </table>
+                  </div>
+                </div>
+            </div>
+        </div>
+
+
+
+         <div class="wrap">
+            <div class="public table">
+                                  <h3 class="title" style="margin: -10px 0 20px; color:#3E3E3E">{$lang.tixianshenqingd}</h3>
+                  <div style="color:#646665;float:left;font-size:12px;font-weight:normal;line-height:30px;">
+                  <p style="background-color:#E5F5FF;border:1px solid #C9D5E2;padding:0px 10px;color:#0082C4;">请优先使用<font clor=#F24A30><b>支付宝充值</b></font>！提现金额需大于2元，每笔提现收取1.2%（最低2元）的手续费！每月仅<font color=#F24A30><b>10日-15日</b></font>处理提现业务，1-2天内到账</p>
+                                 <div style="padding-left:10px;">
+                                 <p style="bckground-color:#FFFBCC;border:0px solid #C9D5E2;padding:0px 0px;color:#ff0000;margin-top:6px;">提交提现申请后，您的提现金额会暂时被冻结，直到每月17日前统一发放！<a href="{url app=my_money&act=txlog}" style="color:#0082C4;">取消提现？</a></p>
+                                 <p style="bckground-color:#FFFBCC;border:0px solid #C9D5E2;padding:0px 0px;color:#ff0000;margin-top:0px;">为了资金安全，没有正确设置提现账号的统一打回  !</p>
+                                  <form name="to_users" onSubmit="return tousers();" action="index.php?app=my_money&act=txsq" method="post" style="font-weight:400;">
+                                  <span>{$lang.tixianzhanghu}：</span>
+                                  <!--{if $val.bank_sn==""}-->
+                                  <a href="?app=my_money&act=mylist">{$lang.qingxianshezhizhanghao}</a>
+                                  <!--{else}-->
+                                  <?php echo substr($this->_var['val']['bank_sn'],0,4);?><font color="#FF0000">****</font><?php echo substr($this->_var['val']['bank_sn'],-4);?>
+                                  <span>&nbsp;&nbsp;&nbsp;&nbsp;{$lang.huming}：</span>
+                                  <font color="#FF0000">*</font><?php echo $this->_var['val']['bank_username'];?>&nbsp;/&nbsp;<?php echo $this->_var['val']['bank_name'];?>
+                                  <!--{/if}-->
+                                  <BR>
+                  <span>{$lang.tixianjine}：</span>
+                  <input name="tx_money" type="text" id="tx_money" size="8" value="2">
+                  &nbsp;{$lang.yuan}　<BR>
+                                  <!--{if $val.mibao_id==0}-->
+                  <span>{$lang.zhifumima}：</span>
+                                  <input name="post_zf_pass" type="password" id="post_zf_pass" size="12">
+                                  <!--{else}-->
+                                  <span>{$lang.dongtaimima}：</span>
+<b>
+<font color="red">
+<?php echo $shuzi1.$zimu1;?><input type="text" id="user_shuzi1" name="user_shuzi1"  size="3" maxlength="3"/>
+<?php echo $shuzi2.$zimu2;?><input type="text" id="user_shuzi2" name="user_shuzi2"  size="3" maxlength="3"/>
+<?php echo $shuzi3.$zimu3;?><input type="text" id="user_shuzi3" name="user_shuzi3"  size="3" maxlength="3"/>
+</font>
+</b>
+<input name="user_zimuz1" id="user_zimuz1" type="hidden" value="<?php echo $zimu1.$shuzi1;?>" />
+<input name="user_zimuz2" id="user_zimuz2" type="hidden" value="<?php echo $zimu2.$shuzi2;?>" />
+<input name="user_zimuz3" id="user_zimuz3" type="hidden" value="<?php echo $zimu3.$shuzi3;?>" />
+                                  <!--{/if}-->
+
+                  <BR><BR><span><input type="submit" class="money_btn" value="{$lang.tixianshenqing}" /></span>
+                </form>
+                           </div>
+                        </div>
+         </div>
+                </div>
+
+
+        <div class="clear"></div>
+        <div class="adorn_right1"></div>
+        <div class="adorn_right2"></div>
+        <div class="adorn_right3"></div>
+        <div class="adorn_right4"></div>
+    </div>
+    <div class="clear"></div>
+</div>
+<div class="clear"></div>
+<iframe id='iframe_post' name="iframe_post" frameborder="0" width="0" height="0">
+</iframe>
+{include file=footer.html}

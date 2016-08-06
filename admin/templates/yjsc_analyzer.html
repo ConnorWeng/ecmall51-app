@@ -1,0 +1,42 @@
+{include file="header.html"}
+<style>
+ .top50 table
+ {
+     border-collapse: collapse;
+     border: none;
+ }
+ .top50 td
+ {
+     border: solid #000 1px;
+ }
+ .top50_yjsc
+ {
+     text-align: right;
+ }
+</style>
+<div class="top50">
+    <h1>最近7天内一键上传排名前50店铺({$before7days}至今)</h1>
+    <table>
+        <thead>
+            <th>店铺名</th>
+            <th>档口</th>
+            <th>店主QQ</th>
+            <th>店主手机</th>
+            <th>实时同步</th>
+            <th>一键上传次数</th>
+        </thead>
+        <tbody>
+        <!--{foreach from=$top50_stores item=store}-->
+            <tr>
+                <td>{$store.store_name}</td>
+                <td>{$store.mk_name} {$store.dangkou_address}</td>
+                <td>{$store.im_qq}</td>
+                <td>{$store.tel}</td>
+                <td>{$store.auto_sync}</td>
+                <td class="top50_yjsc">{$store.yjsc}</td>
+            </tr>
+        <!--{/foreach}-->
+        </tbody>
+    </table>
+</div>
+{include file="footer.html"}

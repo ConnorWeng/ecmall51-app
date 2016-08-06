@@ -1,0 +1,35 @@
+<?php 
+return array (
+  'site_name' => 'ECMall演示站',
+  'site_title' => '51zwd商城',
+  'site_description' => '51zwd的商城扩展版本',
+  'site_keywords' => '51zwd 商城 小淘宝',
+  'icp_number' => '',
+  'site_status' => '1',
+  'closed_reason' => '',
+  'hot_search' => '外套,女装,女鞋,女裙,女裤',
+  'template_name' => 'ymall',
+  'style_name' => 'default',
+  'captcha_status' => 
+  array (
+    'register' => '1',
+  ),
+  'time_zone' => '8',
+  'time_format_simple' => 'Y-m-d',
+  'time_format_complete' => 'Y-m-d H:i:s',
+  'price_format' => '¥%s',
+  'statistics_code' => '',
+  'sitemap_enabled' => true,
+  'sitemap_frequency' => 1,
+  'rewrite_enabled' => false,
+  'guest_comment' => true,
+  'enable_radar' => true,
+  'email_type' => '0',
+  'email_host' => '',
+  'email_port' => '25',
+  'email_addr' => '',
+  'email_id' => '',
+  'email_pass' => '',
+  'email_test' => '',
+);
+?>

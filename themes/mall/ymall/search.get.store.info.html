@@ -1,0 +1,66 @@
+  <!--{if $store}-->
+  <div class="store-info clearfix">
+			<div class="row_1 float-left">
+			    <a href="{url app=store&id=$store.store_id}">
+			       <img src="{$store.store_logo|escape}" width="80" height="80" />
+			    </a>
+			</div>
+            <div class="row_2 float-left ml5">
+                <div class="address"><em>{$store.mk_name|escape}-{$store.dangkou_address|escape}</em></div>
+                
+                <div class="owner_info mt5">
+				    <!--
+                     <span>{$lang.owner}{$lang.colon}</span>
+                     <a href="{url app=store&id=$store.store_id}">{$store.user_name|escape}</a>
+                     -->
+                    <a class="icon" style="border:1px solid #ccc;padding:3px;" target="_blank" href="http://www.taobao.com/webww/ww.php?ver=3&touid={$store.im_ww}&siteid=cntaobao&status=1&charset=utf-8">旺</a>
+                    <a class="icon" style="border:1px solid #ccc;padding:3px;" target="_blank" href="http://wpa.qq.com/msgrd?v=3&uin={$store.im_qq}&site=qq&menu=yes">QQ</a>	
+					<a class="icon" style="border:1px solid #ccc;padding:3px;" target="_blank" href="{$store.shop_http|default:#}">淘</a>
+					<!--{if $store.see_price}-->
+					<span class="zhe" style="background:#333;color:white;padding:1px 5px;">{$store.see_price}</span>
+					<!--{/if}-->
+                 </div>
+                 <div class="mt5 overflowHidden" style="height:18px;width:130px;"><span>{$lang.tel}:</span><em class="ml5" title="{$store.tel|escape|default:-}">{$store.tel|escape|default:-}</em></div>
+			</div>
+            <div class="row_4 float-left ml5">
+			     <div>
+				    <span>{$lang.credit_value_desc}:</span>
+                     <!--{if $store.credit_value ge 0}-->
+                     <img src="{$store.credit_image}" style="vertical-align:middle;" />
+                     <!--{else}-->
+                     {$store.credit_value}
+                     <!--{/if}-->
+                 </div>
+			     <div class="">
+				   <span>{$lang.service_type}:</span>
+				   <span>
+					{if $store.realpic}<i class="icon_detail"><a href="javascript:;" title="{$lang.service_detail}" class="block">&nbsp;</a></i>{/if}
+					{if $store.serv_sendgoods}<i class="icon_send"><a href="javascript:;" title="{$lang.service_send}" class="block">&nbsp;</a></i>{/if}
+					{if $store.serv_refund}<i class="icon_cash"><a href="javascript:;" title="{$lang.service_cash}" class="block">&nbsp;</a></i>{/if}
+					{if $store.serv_exchgoods}<i class="icon_change"><a href="javascript:;" title="{$lang.service_pattern}" class="block">&nbsp;</a></i>{/if}
+					{if !$store.serv_exchgoods && !$store.serv_refund && !$store.serv_sendgoods && !$store.realpic}<font color="#999;">{$lang.not_service_exist}</font>{/if}
+				   </span>
+				  </div>
+			</div>
+            <div class="row_5 float-left" style="width:200px;">
+			    <div class="mb5">
+                      <span>{$lang.mainbussiness}{$lang.colon}</span><a href="{url app=store&id=$store.store_id}">{$store.business_scope|default:-}</a>
+                </div>
+                <table width="100%" cellpadding="0" cellspacing="0">
+                	<tr>
+                		<td width="50%"><p>{$lang.praise_rate}:<font color=red>{$store.praise_rate}</font><em>%</em></p></td>
+                		<td width="50%"><p>{$lang.realpic_rate}:-</p></td>
+                	</tr>
+                	<tr>
+                		<td width="50%"><p>{$lang.lack_rate}:<font color=red>{$rates.lack_rate}</font><em>%</em></p></td>
+                		<td width="50%"><p>{$lang.back_rate}:<font color=red>{$rates.back_rate}</font><em>%</em></p></td>
+                	</tr>
+                </table>
+                 
+            </div>
+            <div class="row_6 arrow_up" {if ($smarty.foreach.fe_store.iteration mod 5) gt 3}style="right:10px;"{/if}></div>
+</div>	    
+<!--{else}-->   
+  <div>{$lang.store_not_exist}</div>       
+<!--{/if}-->            
+  

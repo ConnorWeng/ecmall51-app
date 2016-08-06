@@ -1,0 +1,179 @@
+{include file=header.whole_nolefttop.html}
+
+<script type="text/javascript">
+var _orig_goods_amount = {$order.goods_amount},
+_orig_shipping_fee = {$shipping.shipping_fee},
+_orig_order_amount = {$order.order_amount};
+
+function number_format(num, ext){
+    if(ext < 0){
+        return num;
+    }
+    num = Number(num);
+    if(isNaN(num)){
+        num = 0;
+    }
+    var _str = num.toString();
+    var _arr = _str.split('.');
+    var _int = _arr[0];
+    var _flt = _arr[1];
+    if(_str.indexOf('.') == -1){
+        /* 找不到小数点，则添加 */
+        if(ext == 0){
+            return _str;
+        }
+        var _tmp = '';
+        for(var i = 0; i < ext; i++){
+            _tmp += '0';
+        }
+        _str = _str + '.' + _tmp;
+    }else{
+        if(_flt.length == ext){
+            return _str;
+        }
+        /* 找得到小数点，则截取 */
+        if(_flt.length > ext){
+            _str = _str.substr(0, _str.length - (_flt.length - ext));
+            if(ext == 0){
+                _str = _int;
+            }
+        }else{
+            for(var i = 0; i < ext - _flt.length; i++){
+                _str += '0';
+            }
+        }
+    }
+
+    return _str;
+}
+
+/* 格式化金额 */
+function price_format(price){
+    if(typeof(PRICE_FORMAT) == 'undefined'){
+        PRICE_FORMAT = '&yen;%s';
+    }
+    price = number_format(price, 2);
+
+    return PRICE_FORMAT.replace('%s', price);
+}
+
+function recount_order_amount(){
+    var order_amount = 0;
+    order_amount = Number($('#goods_amount_input').val()) + Number($('#shipping_fee_input').val());
+    $('#order_amount').html(price_format(order_amount));
+}
+
+$(function(){
+		
+	$("#form1").bootstrapValidator({
+			  feedbackIcons: {
+		            valid: 'glyphicon glyphicon-ok',
+		            invalid: 'glyphicon glyphicon-remove',
+		            validating: 'glyphicon glyphicon-refresh'
+		        }, 
+			  fields:{
+				  goods_amount:{
+					  validators:{
+						  notEmpty:{},
+						  regexp:{
+							  regexp:/^[1-9]+(.[0-9]{1,2})?$/,
+							  message:'请输入正确的金额'
+						  }
+					  }
+				  },
+				  shipping_fee:{
+					  validators:{
+						  notEmpty:{},
+						  regexp:{
+							  regexp:/^[1-9]+(.[0-9]{1,2})?$/,
+							  message:'请输入正确的金额'
+						  }
+						  
+				  	  }
+			  		}
+			   }
+		  }).on('success.field.bv', function(e, data) {
+			  //console.log('data:'+data);
+			    /* recount_order_amount();
+	            if (data.field == 'postalCode') {
+	                // The postal code is valid
+	                $('#lookupBtn').prop('disabled', false).removeClass('btn-success btn-warning').addClass('btn-success');
+	            }  */
+	        });
+	
+	    $('#goods_amount_input').keyup(function(){
+	        recount_order_amount();
+	    });
+	    $('#shipping_fee_input').keyup(function(){
+	        recount_order_amount();
+	    });
+		
+	    $("#cancelbtn").on('click',function(){
+	    	window.parent.js_success(0);
+	    });
+		
+	
+});
+</script>
+
+<div class="container-fluid">
+	<form id="form1" class="form-horizontal" action="index.php?module=behalf&act=adjust_fee&order_id={$order.order_id}" method="post">
+		
+		<div class="form-group">
+			<label class="col-xs-3 text-right control-label">{$lang.buyer_name}</label>
+			<div class="col-xs-9">
+				{$order.buyer_name|escape}
+			</div>
+		</div>
+		<div class="form-group">
+			<label class="col-xs-3 text-right control-label">{$lang.order_sn}</label>
+			<div class="col-xs-9">
+				{$order.order_sn}
+			</div>
+		</div>
+		<div class="form-group">
+			<label class="col-xs-3 text-right control-label">{$lang.goods_amount}</label><div class="col-xs-3">{$order.goods_amount|price}</div>
+			<div class="col-xs-6">
+				<input type="text" id="goods_amount_input" class="form-control" name="goods_amount" value="{$order.goods_amount}"/>
+			</div>
+		</div>
+		<div class="form-group">
+			<label class="col-xs-3 text-right control-label">{$lang.shipping_fee}</label><div class="col-xs-3">{$shipping.shipping_fee|price}</div>
+			<div class="col-xs-6">
+				<input type="text" id="shipping_fee_input" class="form-control" name="shipping_fee" value="{$shipping.shipping_fee}" />
+			</div>
+		</div>
+		<p class="text-warning">{$lang.adjust_fee_notice}</p>
+		<div class="form-group">
+			<label class="col-xs-3 text-right control-label">{$lang.order_amount}</label>
+			<div class="col-xs-9">
+				 <strong class="text-default" id="order_amount">{$order.order_amount|price}</strong>
+			</div>
+		</div>
+		
+		 <div class="form-group">
+			<label class="col-xs-3 text-right control-label"></label>
+			<div class="col-xs-9">
+				<button class="btn btn-primary" id="savebtn" type="submit">确 定</button>
+				<button class="btn btn-success" id="cancelbtn">取 消</button>
+			</div>
+	     </div>
+	</form>
+
+
+
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+{include file=footer.whole.html}

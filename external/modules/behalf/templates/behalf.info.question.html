@@ -1,0 +1,71 @@
+{include file=header.whole.html}
+<script type="text/javascript">
+<!--
+	$(function(){
+		
+		$('#questionform').bootstrapValidator({
+			  feedbackIcons: {
+		            valid: 'glyphicon glyphicon-ok',
+		            invalid: 'glyphicon glyphicon-remove',
+		            validating: 'glyphicon glyphicon-refresh'
+		        }, 
+			  fields:{
+				  title:{
+					  validators:{
+						  notEmpty:{},
+						  stringLength:{
+							  min:10,
+							  message:'最少10个字'
+						  }
+					  }
+				  }
+				 
+			  }
+		  }).on('success.form.bv', function(e) {
+			   // Prevent form submission
+	          e.preventDefault();
+
+	          // Get the form instance
+	          var $form = $(e.target);
+
+	          // Get the BootstrapValidator instance
+	          var bv = $form.data('bootstrapValidator');
+
+	          // Use Ajax to submit form data
+	          $.post($form.attr('action'), $form.serialize(), function(result) {
+	              //var json = $.parseJSON(result);
+	              if(result.done)
+	              	bootbox.alert("恭喜，提交成功！");
+	              else
+	              	bootbox.alert("抱歉，提交失败！");
+	              
+	              
+	          }, 'json');
+	         
+	          $form.data('bootstrapValidator').resetForm(true);
+	       
+	      });
+	});
+	
+	
+//-->
+</script>
+<form class="form form-vertical" id="questionform" action="{url module=behalf&amp;act=myquestion}">
+	<div class="form-group">
+		<div class="row">
+			<label class="col-xs-1">我的问题</label>
+			<div class="col-xs-7">
+				<textarea name="title" class="form-control" style="height:300px;"></textarea>
+			</div>
+		</div>
+	</div>
+	<div class="form-group">
+		<div class="row">
+			<div class="col-xs-1"></div>
+			<div class="col-xs-7">
+				<button class="btn btn-info btn-lg">提 交</button>
+			</div>
+		</div>
+	</div>
+</form>
+{include file=footer.whole.html}

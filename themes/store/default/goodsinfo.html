@@ -1,0 +1,381 @@
+<script type="text/javascript" src="{lib file=goodsinfo.js}" charset="utf-8"></script>
+<script type="text/javascript">
+//<!CDATA[
+/* buy */
+function buy()
+{
+    if (goodsspec.getSpec() == null)
+    {
+        jBox.info(lang.select_specs,null);
+        return;
+    }
+    var spec_ids = goodsspec.getSpec();
+
+    /* var quantity = $("#quantity").val();
+    if (quantity == '')
+    {
+        alert(lang.input_quantity);
+        return;
+    }
+    if (parseInt(quantity) < 1 || isNaN(quantity))
+    {
+        alert(lang.invalid_quantity);
+        return;
+    } */
+    if(typeof(spec_ids) == 'number')
+    {
+        var quantity = $("#quantity").val();
+        if (quantity == '')
+        {
+            jBox.info(lang.input_quantity,null);
+            return;
+        }
+        if (parseInt(quantity) < 1 || isNaN(quantity))
+        {
+            jBox.info(lang.invalid_quantity,null);
+            return;
+        }
+        add_to_cart(spec_ids, quantity);
+    }
+    if(typeof(spec_ids) == 'object')
+    {
+        var data_spec = new Array();
+        var data_quantity = new Array();
+        for(var i=0;i<spec_ids.length;i++)
+        {
+            var quantity = $("#quantity"+spec_ids[i]).val();
+            if (parseInt(quantity) > 0)
+            {
+                data_spec.push(spec_ids[i]);
+                data_quantity.push(quantity);
+            }
+        }
+        if (data_quantity.length < 1 )
+        {
+            jBox.info(lang.invalid_quantity,null);
+            return;
+        }
+
+        add_to_carts(data_spec,data_quantity);
+    }
+    //alert("spec_ids:"+typeof(spec_ids));
+
+    //add_to_cart(spec_id, quantity);
+}
+
+/* add cart */
+function add_to_cart(spec_id, quantity)
+{
+    var url = SITE_URL + '/index.php?app=cart&act=add&ajax=1';
+    $.getJSON(url, {'spec_id':spec_id, 'quantity':quantity}, function(data){
+        if(data.retval == 'user_not_login')
+        {
+            //ajax_form('user_login_form','123',SITE_URL + '/index.php?app=default&act=loginWithAjax');
+            jBox.open('iframe:'+SITE_URL+'/index.php?app=default&act=loginWithAjax',null,440,448,{ buttons: {}});
+            return false;
+        }
+        if (data.done)
+        {
+            $('.bold_num').text(data.retval.cart.kinds);
+            $('.bold_mly').html(price_format(data.retval.cart.amount));
+            $('.ware_cen').slideDown('slow');
+            setTimeout(slideUp_fn, 5000);
+        }
+        else
+        {
+            jBox.info(data.msg,null);
+        }
+    });
+}
+
+function add_to_carts(data_spec,data_quantity)
+{
+    var url = SITE_URL + '/index.php?app=cart&act=adds&ajax=1';
+    $.getJSON(url, {'spec_id':data_spec,'quantity':data_quantity}, function(data){
+        if(data.retval == 'user_not_login')
+        {
+            //ajax_form('user_login_form','123',SITE_URL + '/index.php?app=default&act=loginWithAjax');
+            jBox.open('iframe:'+SITE_URL+'/index.php?app=default&act=loginWithAjax',null,440,448,{ buttons: {}});
+            return false;
+        }
+        if (data.done)
+        {
+            $('.bold_num').text(data.retval.cart.kinds);
+            $('.bold_mly').html(price_format(data.retval.cart.amount));
+            $('.ware_cen').slideDown('slow');
+            setTimeout(slideUp_fn, 5000);
+        }
+        else
+        {
+            jBox.info(data.msg,null);
+        }
+    });
+}
+
+var specs = new Array();
+<!--{foreach from=$goods._specs item=spec}-->
+specs.push(new spec({$spec.spec_id}, '{$spec.spec_1|escape}', '{$spec.spec_2|escape}', {$spec.price}, {$spec.stock}));
+<!--{/foreach}-->
+var specQty = {$goods.spec_qty};
+var defSpec = {$goods.default_spec|escape};
+var goodsspec = new goodsspec(specs, specQty, defSpec);
+
+
+$(function(){
+    $('.spinnerExample').spinner({});
+    // 默认加载ip所对应的城市的运费
+    //load_city_logist({$goods.delivery_template_id},{$goods.store_id});
+    $("#update_store_goods_help_ta").click(function(){
+        $(this).attr('disabled','disabled');
+         $.ajax({
+            type:'getJSON',
+            dataType:'jsonp',
+            jsonp:'jsonp_callback',
+            url:"http://121.41.170.236:30005/store/{$store.store_id}",
+            success:function(json){
+                //console.log(json);
+                if(json.status == 'ok')
+                {
+                    jBox.info("更新成功！",null);
+                    $("#update_store_goods_help_ta").removeAttr('disabled');
+                }
+
+            },
+            error:function(errors){
+                console.log(errors);
+                jBox.alert("更新失败,等会再试吧！",null);
+                $("#update_store_goods_help_ta").removeAttr('disabled');
+            }
+        });
+
+    });
+    $("#update_store_goods_help_ta_this").click(function(){
+        $(this).attr('disabled','disabled');
+        $.ajax({
+            url: 'http://121.41.170.236:30005/update',
+            data: {
+              goodsId: {$smarty.get.id}
+            },
+            dataType: 'jsonp',
+            jsonp: 'jsonp_callback',
+            success: function(data) {
+              if (data.error) {
+                  jBox.alert("更新商品失败,等会再试吧！",null);
+                  $("#update_store_goods_help_ta_this").removeAttr('disabled');
+                  //console.log('failed');
+              } else {
+                 jBox.info("更新商品成功！",null);
+                 $("#update_store_goods_help_ta_this").removeAttr('disabled');
+                 location.reload();
+                 //console.log('success');
+              }
+            }
+          });
+
+    });
+});
+//]]>
+</script>
+
+<style>
+.clearfix:after{ content:'\20'; display:block; height:0; clear:both; overflow:hidden}
+.hidden{ display:none}
+.postage{margin-top:3px;width:330px;}
+.postage .postage-cont{float:left;position:relative; z-index:999}
+.postage .postage-info{float:left;}
+.postage .postage-cont span{border:1px #ddd solid;margin-top:3px; display:inline-block;padding-left:5px;padding-right:15px; height:22px; line-height:22px; background:url('{res file=images/T1XZCWXd8iXXXXXXXX-16-16.gif}') no-repeat right 3px; cursor:pointer;margin-right:10px;}
+.postage-area{ position:absolute;left:0;top:26px;width:285px;padding:5px;border:1px #ddd solid; background:#fff;}
+.postage-area a{padding:0px 5px 0px 5px; display:inline-block; height:22px; line-height:22px; text-decoration:none;color:#0066CC}
+.postage-area a:hover,.postage-area .selected{ background:#0066CC;color:#fff;}
+.postage-area .cities{border-top:1px #ddd solid;margin-top:5px;padding-top:5px;}
+
+.handle ul a{ text-decoration:none;}
+.handle ul li.solid a{color:#fff;}
+.handle ul li.dotted a{color:#7A7A7A}
+.goods-service{margin-left:5px;}
+.goods-service:hover{}
+.goods-service a{color:#999;text-decoration:none;}
+.goods-service:hover a{color:#f44;}
+</style>
+<img style="display:none" src="http://121.199.181.165:30004/store/{$store.store_id}" alt="capture intime"/>
+<h2 class="ware_title" style="font-size:16px;color:#666;margin:0 0 25px 0;letter-spacing:1px;">{$goods.goods_name|escape}</h2>
+
+<div class="ware_info" style="width:900px;margin:0 0 20px 10px;">
+    <div class="ware_pic" style="width:460px;">
+        <div class="big_pic" style="width:462px;height:462px;display:table-cell;vertical-align:middle;text-align:center;background:white;border:0;">
+            <a href="javascript:;"><span class=""><img src="{$goods._images.0.thumbnail|default:$default_image}" style="max-width:460px;max-height:460px;"  /></span></a>
+        </div>
+
+        <div class="bottom_btn" style="width:460px;">
+            <!-- <a class="collect" href="javascript:collect_goods({$goods.goods_id});" title="{$lang.add_to_favorite}"></a> -->
+            <div class="left_btn"></div>
+            <div class="right_btn"></div>
+            <div class="ware_box" style="width:425px;">
+                <ul>
+                    <!--{foreach from=$goods._images item=goods_image name=fe_goods_image}-->
+                    <li class="{if $smarty.foreach.fe_goods_image.first}ware_pic_hover{/if}" style="text-align:center;"><img src="{$goods_image.thumbnail}" height="55" /></li>
+                    <!--{/foreach}-->
+                </ul>
+            </div>
+        </div>
+        <script>
+            $(function(){
+                var btn_list_li = $("#btn_list > li");
+                btn_list_li.hover(function(){
+                    $(this).find("ul:not(:animated)").slideDown("fast");
+                },function(){
+                    $(this).find("ul").slideUp("fast");
+                });
+            });
+        </script>
+        <!-- {if $share} -->
+        <ul id="btn_list">
+            <li id="btn_list1" title="{$lang.collect_goods}">
+                <span class="title"><i>∨</i>{$lang.goods_collected_to}</span>
+                <ul class="drop_down">
+                    <li><img src="{$siteurl}data/system/blue32_062.jpg"/><a href="javascript:collect_goods({$goods.goods_id});" title="{$lang.add_to_favorite}">{$lang.add_to_myfavorite}</a></li>
+                    <!-- {foreach from=$share item=item} -->
+                    <!-- {if $item.type eq 'collect'} --><li><!-- {if $item.logo} --><img src="{$item.logo}" /><!-- {/if} --><a target="_blank" href="{$item.link}">{$item.title|escape}</a></li><!-- {/if} -->
+                    <!-- {/foreach} -->
+                </ul>
+            </li>
+            <li id="btn_list2" title="{$lang.share_goods}">
+                <span class="title"><i>∨</i>{$lang.goods_shared_to}</span>
+                <ul class="drop_down">
+                  <!-- JiaThis Button BEGIN -->
+                    <div class="jiathis_style">
+                        <a class="jiathis_button_tools_1"></a><br>
+                        <div style="height:5px;"></div>
+                        <a class="jiathis_button_tools_2"></a><br>
+                        <div style="height:5px;"></div>
+                        <a class="jiathis_button_tools_3"></a><br>
+                        <div style="height:5px;"></div>
+                        <a class="jiathis_button_tools_4"></a><br>
+                        <div style="height:5px;"></div>
+                        <a href="http://www.jiathis.com/share?uid=2030416" class="jiathis jiathis_txt jiathis_separator jtico jtico_jiathis" target="_blank">更多</a>
+                        <a class="jiathis_counter_style"></a>
+                    </div>
+                    <script type="text/javascript" >
+                    var jiathis_config={
+                        data_track_clickback:true,
+                        summary:"",
+                        shortUrl:true,
+                        hideMore:false
+                    }
+                    </script>
+                    <!-- JiaThis Button END -->
+                </ul>
+            </li>
+            <li id="btn_list3">
+                <div class="update-store-goods-this" >
+                   <input type="button" id="update_store_goods_help_ta_this" value="{$lang.update_store_goods_this}"/>
+                </div>
+            </li>
+        </ul>
+        <!-- {/if} -->
+    </div>
+
+    <div class="ware_text">
+        <div class="handle" style="positon:relative;">
+             <span class="fontColor11">{$lang.take_price} : </span>
+             <span class="fontColor2" style="font-size:24px;font-weight:500;color:#e4393c;font-family:Tahoma,Arial;" ectype="goods_price">&nbsp;&nbsp;<!--{if $goods.max_price gte 600}--><strong class="yahei fs16">{$lang.prepare_sell}</strong><!--{elseif $goods.min_price eq $goods.max_price }--><span style="font-family:Arial;font-weight:normal;">&yen;</span>{$goods.min_price}<!--{elseif $goods.max_price gt $goods.min_price}--><span style="font-family:Arial;font-weight:normal;">&yen;</span>{$goods.min_price} - <span style="font-family:Arial;font-weight:normal;">&yen;</span>{$goods.max_price}<!--{/if}--></span>
+            <!--{if $goods.good_http}--><span style="border:1px solid #ddd;width:70px;height:20px;line-height:20px;background:#fff;position:absolute;right:15px;top:15px;"><a href="{$goods.good_http}" style="color:#aaa;text-decoration:none;display:block;position:relative;text-align:center;" target="_blank"><i class="left-arrow-4"></i>{$lang.go_taobao}</a></span><!--{/if} -->
+            <br /> <br />
+             <p class="fontColor11" style="margin-bottom:10px;">{$lang.tb_price} : </span><span class="fontColor5" >&nbsp;&nbsp;&nbsp;&nbsp;<s style="text-decoration:line-through;">{$goods.tb_price|price}</s></p>
+             <p class="fontColor7" style="margin-bottom:10px;font-size:12px;color:#ff9900;">{$lang.praise_rate} : </span><span style="color:#ff4400;font-size:14px;">&nbsp;&nbsp;&nbsp;&nbsp;<b>{$goods.rates.praise_rate|default:0.00}</b></span> <em>%</em></p>
+             <p class="fontColor11" style="margin-bottom:10px;font-size:12px;color:#ff9900;">{$lang.lack_rate} : </span><span style="color:#ff4400;font-size:14px;">&nbsp;&nbsp;&nbsp;&nbsp;<b>{$goods.rates.lack_rate|default:0.00}</b></span> <em>%</em></p>
+             <p class="fontColor11" style="font-size:12px;color:#ff9900;">{$lang.back_rate} : </span><span style="color:#ff4400;font-size:14px;" >&nbsp;&nbsp;&nbsp;&nbsp;<b>{$goods.rates.back_rate|default:0.00}</b></span> <em>%</em></p>
+
+        </div>
+        <div class="rate" style="overflow:visible">
+            <span class="fontColor11">{$lang.goods_seller_bm}:</span><span class="fontColor12">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{$goods_seller_bm|escape}</span><br/>
+            <span class="letter1 fontColor11">{$lang.sku}:</span><span class="fontColor12">&nbsp;&nbsp;&nbsp;{$goods.sku}</span><br/>
+            <span class="letter1 fontColor11">{$lang.views}:</span><span class="fontColor12">&nbsp;&nbsp;&nbsp;{$goods.views|default:0} 次</span><br/>
+            <span class="letter1 fontColor11">{$lang.add_goods_time}:</span><span class="fontColor12">&nbsp;&nbsp;&nbsp;{$goods.add_time|date:goods}</span><br/>
+            <!-- end tyioocom -->
+            <span class="letter1 fontColor11">{$lang.sale_situation}:</span><span class="fontColor12">&nbsp;&nbsp;&nbsp;{$sales_info}{$comments}</span><br />
+            <span class="letter1 fontColor11">{$lang.services}:</span>
+            <span class="goods-service" style="margin:0 0 0 7px;"><i class="icon_danbao" title="{$lang.assure_exhange}"></i></span>
+            <!--{if $goods.realpic}--><span class="goods-service"><i class="icon_detail" title="{$lang.real_goods_photo}"></i><!--{/if} -->
+            <!--{if $store.serv_sendgoods}--><span class="goods-service"><i class="icon_send" title="{$lang.service_send}"></i><!--{/if} -->
+            <!--{if $store.serv_refund}--><span class="goods-service"><i class="icon_cash" title="{$lang.service_cash}"></i><!--{/if} -->
+            <!--{if $store.serv_exchgoods}--><span class="goods-service"><i class="icon_change" title="{$lang.service_pattern}"></i></span><!--{/if} -->
+        </div>
+
+        <div class="handle">
+            <!--{if $goods.spec_qty gt 0}-->
+            <dl style="overflow:hidden;">
+                <dt style="float:left;width:58px;text-align:right;"><span class="handle_title fontColor11" style="">{$goods.spec_name_1|escape}: </span></dt>
+                <dd style="float:left;overflow:hidden;width:280px;">
+                <ul style="width:280px;">
+                </ul>
+                </dd>
+            </dl>
+
+            <!--{/if}-->
+            <!--{if $goods.spec_qty gt 0}-->
+            <table class="spec2_table" width="100%" cellspacing="0" cellpadding="0">
+             <thead>
+              <tr style="background-color:#e8e8e8;">
+                <th><b>{$goods.spec_name_2|escape}</b></th>
+                <th>{$lang.price}({$lang.yuan})</th>
+                <th>{$lang.stock}</th>
+                <th width="130">{$lang.buy_quantity}</th>
+              </tr>
+              <tr><th colspan="4" style="height:5px;"></th></tr>
+             </thead>
+             <tbody>
+
+             </tbody>
+            </table>
+            <!--{/if}-->
+
+            <!--{if $goods.spec_qty lte 0}-->
+            <ul>
+                <li class="handle_title">{$lang.quantity}: </li>
+                <li>
+                    <input type="text" class="text width1" name="" id="quantity" value="1" />
+                    {$lang.unit}{$lang.left_bracket}{$lang.stock}<span class="stock" ectype="goods_stock">{$goods._specs.0.stock}</span>{$lang.unit}{$lang.right_bracket}
+                </li>
+            </ul>
+            <!--{/if}-->
+        </div>
+
+        <ul class="ware_btn">
+            <div class="ware_cen" style="display:none">
+                <div class="ware_center">
+                    <h1>
+                        <span class="dialog_title">{$lang.add_to_cart_ok}</span>
+                        <span class="close_link" title="{$lang.close}" onmouseover="this.className = 'close_hover'" onmouseout="this.className = 'close_link'" onclick="slideUp_fn();"></span>
+                    </h1>
+                    <div class="ware_cen_btn">
+                        <p class="ware_text_p">{$lang.cart_status}</p>
+                        <p class="ware_text_btn">
+                            <input type="submit" class="btn1" name="" value="{$lang.view_cart}" onclick="location.href='{$site_url}/index.php?app=cart'" />
+                            <input type="submit" class="btn2" name="" value="{$lang.continue_buy}" onclick="$('.ware_cen').css({'display':'none'});" />
+                        </p>
+                    </div>
+                </div>
+                <div class="ware_cen_bottom"></div>
+            </div>
+
+            <!--<li class="btn_c1" title="{$lang.buy_now}"><a href="#"></a></li>-->
+            <li class="btn_c2" title="{$lang.add_to_cart}"><a href="javascript:buy();">{$lang.add_to_cart}</a></li>
+            <!--{if !$favorites.goods_collect}-->
+            <li class="btn_c3" title="{$lang.add_to_favorite}"><a href="javascript:collect_goods({$goods.goods_id});">{$lang.add_to_tiqfavorite}</a></li>
+            <!--{else}-->
+            <li class="btn_c4" ><a href="javascript:;">{$lang.goods_collected}</a></li>
+            <!--{/if}-->
+        </ul>
+        <div style="clear:both;height:10px;"></div>
+        <!-- custom -->
+        <ul class="ware_btn" style="width:420px;">
+           <li style="margin-right:10px;"><a href="{url app=item_upload&dest=Taobao&goods_id=$goods.goods_id}"  class="g_goods_upload_tb" target="_blank"><i>︿</i>上传淘宝</a></li>
+           <li style="margin-right:10px;"><a href="{url app=item_upload&dest=Alibaba&goods_id=$goods.goods_id}" class="g_goods_upload_ali" target="_blank"><i>︿</i>上传阿里</a></li>
+           <li style=""><a href="{url app=item_upload&dest=Paipai&goods_id=$goods.goods_id}" class="g_goods_upload_pp" target="_blank"><i>︿</i>上传拍拍</a></li>
+        </ul>
+
+    </div>
+
+    <div class="clear"></div>
+</div>

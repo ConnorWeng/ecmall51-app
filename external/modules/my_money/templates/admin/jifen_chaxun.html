@@ -1,0 +1,79 @@
+{include file="header.html"}
+<script language="javascript">
+$(function(){
+    $('#sotime,#endtime').datepicker({dateFormat: 'yy-mm-dd'});
+});
+</script>
+
+<div id="rightTop">
+    <p>积分兑换添加</p>
+    <ul class="subnav">
+	    <li><a class="btn3" href="index.php?module=my_money&act=jifen_add">添加物品</a></li>
+		<li><a class="btn3" href="index.php?module=my_money&act=index">{$lang.index_fanhuidaohang}</a></li>
+    </ul>
+</div>
+
+<div class="mrightTop">
+    <div class="fontl">
+        <form method="get">
+            <div class="left">
+              <input name="module" type="hidden" id="module" value="my_money" />
+              <input name="act" type="hidden" id="act" value="jifen_chaxun" />
+              会员名:
+              <input name="soname" type="text" id="soname" value="<?php echo $_GET["soname"];?>" />
+			  积分:
+              <input name="sojifen" type="text" id="sojifen" value="<?php echo $_GET["sojifen"];?>" size="10" maxlength="10" />
+              {$lang.so_zhi}<input name="endjifen" type="text" id="endjifen" value="<?php echo $_GET["endjifen"];?>" size="10" maxlength="10" />
+                
+                <input type="submit" class="formbtn" value="{$lang.query}" />
+          </div>
+            <!--{if $soso}-->
+            <a class="left formbtn1" href="index.php?module=my_money&act=index">{$lang.cancel_query}</a>
+            <!--{/if}-->
+      </form>
+    </div>
+  <div class="fontr">{include file=page.top.html}</div>
+</div>
+
+<div class="tdare">
+    <table width="100%" cellspacing="0">
+
+        <tr class="tatr1">
+            <td width="20" class="firstCell"><input id="checkall_1" type="checkbox" class="checkall"/></td>
+            <td align="left">{$lang.mb_id}</td>
+            <td>会员名</td>
+            <td>剩余积分</td>
+            <td>最高积分</td>
+            <td>余额</td>
+            <td width="120">开通时间</td>
+			<td width="120">操作管理</td>
+        </tr>
+
+        <!--{foreach from=$index item=val}-->
+        <tr class="tatr2">
+            <td width="20" class="firstCell"><input type="checkbox" class="checkitem" value="{$val.id}" /></td>
+            <td align="left"><b>{$val.id}</b></td>
+            <td align="left"><font color="#FF0000">{$val.user_name}</font></td>
+			<td>{$val.jifen}</td>
+			<td>{$val.jifen_z}</td>
+            <td>{$val.money}</td>
+            <td>{$val.add_time|date:y-m-d H:i}</td>
+			<td>修改 删除</td>
+        </tr>
+        <!--{foreachelse}-->
+        <tr class="no_data">
+            <td colspan="8">{$lang.no_data}</td>
+        </tr>
+        <!--{/foreach}-->
+    </table>
+    <!--{if $index}-->
+<div id="dataFuncs">
+    <div id="batchAction" class="left paddingT15"><input type="checkbox" class="checkall" />
+      <input class="formbtn batchButton" type="button" value="{$lang.drop}" name="id" uri="index.php?module=my_money&act=mibao_drop_pi" presubmit="confirm('{$lang.mb_piliangshangchutishi}');" />
+    </div>
+    <div class="pageLinks">{include file=page.bottom.html}</div>
+    <div class="clear"></div>
+  </div>
+  <!--{/if}-->
+</div>
+{include file="footer.html"}

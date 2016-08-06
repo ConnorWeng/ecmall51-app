@@ -1,0 +1,271 @@
+<script type="text/javascript">
+$(function(){
+    $("#update_store_goods_help_ta").click(function(){
+        $(this).attr('disabled','disabled');
+         $.ajax({
+            type:'getJSON',
+            dataType:'jsonp',
+            jsonp:'jsonp_callback',
+            url:"http://121.41.170.236:30005/store/{$smarty.get.id}",
+            success:function(json){
+                //console.log(json);
+                if(json.status == 'ok')
+                {
+                    jBox.info("更新成功！",null);
+                    $("#update_store_goods_help_ta").removeAttr('disabled');
+                    location.reload();
+                }
+
+            },
+            error:function(errors){
+                console.log(errors);
+                jBox.alert("更新失败,等会再试吧！",null);
+                $("#update_store_goods_help_ta").removeAttr('disabled');
+            }
+        });
+    });
+    $("#weixin-box").hover(function(){
+        $(this).find('.weixin-pic').show();
+    },function(){
+        $(this).find('.weixin-pic').hide();
+    });
+});
+</script>
+        <div class="user">
+            <div class="user_photo">
+                <h2>{$store.store_name|escape}</h2>
+                <div class="photo"><a href="{url app=shop&id=$store.store_id}"><img src="{$store.store_logo}" width="100" height="100" /></a></div>
+                <!-- <p><a href="javascript:collect_store({$store.store_id})">{$lang.collect_the_store}</a></p> -->
+            </div>
+
+            <div class="user_data">
+                <p>{$lang.dangkou_address}: {$store.mk_name}-{$store.dangkou_address}</p>
+
+                <p>
+                    <span>{$lang.credit_value}: </span><span class="fontColor1">{$store.credit_value}</span>
+                    <!--{if $store.credit_value ge 0}--><img src="{$store.credit_image}" alt="" /><!--{/if}-->
+                </p>
+                <p>
+                        <span>{$lang.praise_rate}: </span><span class="fontColor6">{$store.praise_rate|default:0.00}</span><em>%</em>
+                </p>
+                <p>
+                        <span>{$lang.lack_rate}: </span><span class="fontColor6">{$store.rates.lack_rate|default:0.00}</span><em>%</em>
+                </p>
+                <p>
+                        <span>{$lang.back_rate}: </span><span class="fontColor6">{$store.rates.back_rate|default:0.00}</span><em>%</em>
+                </p>
+                <p>{$lang.mainbussiness}：{$store.business_scope|escape|default:-}</p>
+                <p>{$lang.goods_count}: {$store.goods_count}</p>
+
+                <!--{if $OEM neq 'nc'}-->
+                <p>{$lang.youhui}: <span style="color:#ff4400;">{$store.see_price}</span></p>
+                <!--{/if}-->
+                <p>{$lang.store_add_time}: {$store.add_time|date}</p>
+                <!--{if $store.tel}-->
+                <p>{$lang.tel}: {$store.tel|escape}</p>
+                <!--{/if}-->
+                <p>
+
+                    <!--{if $store.im_ww}-->
+                     <span style="display:block;margin-bottom:5px;">
+                     {imww touid=$store.im_ww|escape:url&charset=$charset}
+                    {$store.im_ww|escape}</span>
+                    <!--{/if}-->
+                   <!--{if $store.im_qq}-->
+                    <span style="display:block;margin-bottom:5px;">
+                    {imqq uin=$store.im_qq&site=$store.store_name|escape:url}
+                    {$store.im_qq|escape}</span>
+                    <!--{/if}-->
+                    <span style="display:block;">
+                    <a href="javascript:;" id="weixin-box" class="relative inline-block">
+                      <i class="weixin"></i>
+                      <span class="absolute weixin-pic inline-block hidden yahei" style="left:0;top:26px;border:2px solid #9c0;width:140px;height:140px;text-align:center;z-index:993;background:white;color:#f44;font-size:16px;font-weight:400;">
+                         <!--{if $store.img_wx}-->
+                         <img src="{$store.img_wx}" width="130" height="130"/>
+                         <!--{else}-->
+                           {$lang.weixin_not_exist}
+                         <!--{/if}-->
+                      </span>
+                    </a>
+                    {$store.im_wx|default:-}
+                    </span>
+
+                </p>
+
+                <p>{$lang.special_service}:
+                   <!--{if $store.serv_sendgoods }-->
+                   <i class="icon_send" title="{$lang.service_send}"><a href="javascript:;" title="{$lang.service_send}" class="block"></a></i><!--{/if}-->
+                   <!--{if $store.serv_refund }-->
+                   <i class="icon_cash" title="{$lang.service_cash}"><a href="javascript:;" title="{$lang.service_cash}" class="block"></a></i><!--{/if}-->
+                   <!--{if $store.serv_exchgoods }-->
+                   <i class="icon_change" title="{$lang.service_pattern}"><a href="javascript:;" title="{$lang.service_pattern}" class="block"></a></i><!--{/if}--></span>
+                </p>
+                 <p class="collect_btn">
+                <!--{if $store.shop_http }--><a href="{$store.shop_http}" target="_blank">{$lang.taobao_shop}</a><!--{/if}-->
+                <!--{if !$favorite}-->
+                <a href="javascript:collect_store({$store.store_id})"><i class="star5"></i> {$lang.collect_shop}</a>
+                <!--{else}-->
+                <a href="javascript:;"><i class="star5"></i> {$lang.be_collected}</a>
+                <!--{/if}-->
+                </p>
+                <p class="update-store-goods">
+                   <input type="button" id="update_store_goods_help_ta" value="{$lang.update_store_goods}"/>
+                </p>
+                <div class="shareto" style="overflow:hidden;">
+                  <!-- JiaThis Button BEGIN -->
+                    <div class="jiathis_style">
+                        <span class="jiathis_txt" style="margin-right:3px;">{$lang.shareto}:</span>
+                        <a class="jiathis_button_weixin"></a>
+                        <a class="jiathis_button_qzone"></a>
+                        <a class="jiathis_button_tsina"></a>
+                        <a class="jiathis_button_tqq"></a>
+                        <a href="http://www.jiathis.com/share?uid=2030416" class="jiathis jiathis_txt jtico jtico_jiathis" target="_blank"></a>
+                        <a class="jiathis_counter_style"></a>
+                    </div>
+                    <script type="text/javascript">
+                    var jiathis_config = {data_track_clickback:'true'};
+                    </script>
+                    <!-- JiaThis Button END -->
+                </div>
+            </div>
+            <img style="display:none" src="http://121.199.181.165:30004/store/{$smarty.get.id}" alt="capture intime"/>
+            <div class="clear"></div>
+        </div>
+
+        <div class="module_common">
+            <!--{if $store.auto_sync eq 1}-->
+            <a href="javascript:void 0" class="store_asyc_intime">
+                {$lang.store_asyc_intime}
+            </a>
+            <!--{else}-->
+            <a href="{url app=shop&act=permitTaobaoTmc&id=$store.store_id&im_ww=$store.im_ww}" class="store_asyc_intime">
+                {$lang.store_unasyc_intime}
+            </a>
+            <!--{/if}-->
+        </div>
+
+        <!--{if $store.datapack}-->
+        <div class="module_common" style="text-align: center">
+            <a href="{url app=my_datapack&act=download_datapack&store_id=$store.store_id}">
+                下载数据包
+            </a>
+        </div>
+        <!--{/if}-->
+
+        <div class="module_common">
+            <h2 class="common_title veins1">
+                <div class="ornament1"></div>
+                <div class="ornament2"></div>
+                <span class="ico1"><span class="ico2">{$lang.search_in_store}</span></span>
+            </h2>
+            <div class="wrap">
+                <div class="wrap_child">
+                    <div class="web_search">
+                        <form id="" name="" method="get" action="index.php">
+                            <input type="hidden" name="app" value="store" />
+                            <input type="hidden" name="act" value="search" />
+                            <input type="hidden" name="id" value="{$store.store_id}" />
+                            <input class="text width4" type="text" name="keyword" style="vertical-align:middle;"/>
+                            <input class="btn" type="submit" value="" style="vertical-align:middle;"/>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="module_common">
+           <h2 class="common_title veins1">
+                <div class="ornament1"></div>
+                <div class="ornament2"></div>
+                <span class="ico1"><span class="ico2">{$lang.new_and_close_static}</span></span>
+            </h2>
+           <div class="wrap">
+                <div class="wrap_child show_newclose_static">
+
+                     <table cellpadding="0" cellspacing="0" width="100%">
+                        <tr>
+                           <th>{$lang.store_newclose_date}</th>
+                           <th>{$lang.store_newgoods_nums}</th>
+                           <th>{$lang.store_closegoods_nums}</th>
+                        </tr>
+                        <!--{foreach from=$store.newclose_goods_static item=nc_goods}-->
+                         <tr>
+                           <td align="center">{$nc_goods.show_date}</td>
+                           <td align="center"><!--{if !$nc_goods.new_goods_nums }-->{$nc_goods.new_goods_nums}<!--{else}--><a data="{$nc_goods.new_goods_ids}" href="{url app=shop&act=search&id=$store.store_id&gids=$nc_goods.new_goods_ids&flag=n}">{$nc_goods.new_goods_nums}</a><!--{/if}--></td>
+                           <td align="center"><!--{if !$nc_goods.close_goods_nums }-->{$nc_goods.close_goods_nums}<!--{else}--><a data="{$nc_goods.close_goods_ids}" href="{url app=shop&act=search&id=$store.store_id&gids=$nc_goods.close_goods_ids&flag=c}">{$nc_goods.close_goods_nums}</a><!--{/if}--></td>
+                        </tr>
+                        <!--{/foreach}-->
+                     </table>
+                </div>
+                 <div>
+                        <span style="padding-left: 10px;color:red;">{$lang.last_update_date}：{$last_update_date}</span>
+                    </div>
+           </div>
+        </div>
+
+        <div class="module_common">
+            <h2 class="common_title veins1">
+                <div class="ornament1"></div>
+                <div class="ornament2"></div>
+                <span class="ico1"><span class="ico2">{$lang.gcategory}</span></span>
+            </h2>
+            <div class="wrap">
+                <div class="wrap_child">
+                    <ul class="submenu">
+                        <li style="float:none;"><a class="none_ico" href="{url app=shop&id=$store.store_id&act=search}">{$lang.all_goods}</a></li>
+                        <!--{foreach from=$store.store_gcates item=gcategory}-->
+                        <!--{if $gcategory.children}-->
+                        <li style="float:none;">
+                            <a class="block_ico" href="{url app=shop&id=$store.store_id&act=search&cate_id=$gcategory.id}">{$gcategory.value|escape}</a>
+                            <ul>
+                                <!--{foreach from=$gcategory.children item=child_gcategory}-->
+                                <li style="float:none;"><a href="{url app=shop&id=$store.store_id&act=search&cate_id=$child_gcategory.id}">{$child_gcategory.value|escape}</a></li>
+                                <!--{/foreach}-->
+                            </ul>
+                        </li>
+                        <!--{else}-->
+                        <li style="float:none;"><a class="none_ico" href="{url app=shop&id=$store.store_id&act=search&cate_id=$gcategory.id}">{$gcategory.value|escape}</a></li>
+                        <!--{/if}-->
+                        <!--{/foreach}-->
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- {if $smarty.get.app eq "store" and $smarty.get.act eq "index"} -->
+        <div class="module_common">
+            <h2 class="common_title veins1">
+                <div class="ornament1"></div>
+                <div class="ornament2"></div>
+                <span class="ico1"><span class="ico2">{$lang.partner}</span></span>
+            </h2>
+            <div class="wrap">
+                <div class="wrap_child">
+                    <ul class="submenu">
+                        <!--{foreach from=$partners item=partner}-->
+                        <li><a class="link_ico" href="{$partner.link}" target="_blank">{$partner.title|escape}</a></li>
+                        <!--{/foreach}-->
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <!-- {/if} -->
+
+        <!--{if $smarty.get.app eq "goods"}-->
+        <div class="module_common">
+            <h2 class="common_title veins1">
+                <div class="ornament1"></div>
+                <div class="ornament2"></div>
+                <span class="ico1"><span class="ico2">{$lang.goods_history}</span></span>
+            </h2>
+            <div class="wrap">
+                <div class="wrap_child">
+                    <ul class="annals">
+                        <!--{foreach from=$goods_history item=gh_goods}-->
+                        <li><a href="{url app=goods&id=$gh_goods.goods_id}" class="center"><img src="{$gh_goods.default_image}" height="50" alt="{$gh_goods.goods_name|truncate:20|escape}" title="{$gh_goods.goods_name|escape}" /></a></li>
+                        <!--{/foreach}-->
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <!--{/if}-->

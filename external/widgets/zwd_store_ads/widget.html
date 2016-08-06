@@ -1,0 +1,58 @@
+<!-- {if $widget_data.ad_image_url} -->
+<div class="store_adv_widget">
+	<div class="widget_title clearfix">
+		<strong class="float-left"><a href="{$widget_data.ad_link_url}" target="_blank" class="fs18">{$widget_data.ad_name}</a></strong>
+		<span class="float-right mr10"><a href="{$widget_data.ad_link_url}" target="_blank">更多新款</a> / <a href="{$widget_data.ad_link_url}" target="_blank">MORE</a></span>
+	</div>
+	<div class="clr"></div>
+	<div id="sadv{$widget_data.model_id}" class="widget_cont relative ">
+		<a href="{$widget_data.ad_link_url}" class="hrf-img-transparents" target="_blank">
+			<img  width="1200" height="500" data-ks-lazyload="{$widget_data.ad_image_url}" src="data/system/empty.gif" class="lazyload"/>
+		</a>
+		<div class="absolute divul">
+			<div class="bd relative">
+		     <ul>
+			 <!--{foreach from=$widget_data.goods_list item=goods name=fe_goods}-->
+			 <!--{if $smarty.foreach.fe_goods.iteration mod 5 eq 0}--></ul><ul><!--{/if}-->
+			 <li {if $smarty.foreach.fe_goods.iteration mod 2 eq 0}style="margin-right:0px;"{/if}>
+			 <dl>
+			 	<dt class="padding2 relative">
+             		<a href="{url app=goods&id=$goods.goods_id}" class="relative pic" target="_blank" title="{$goods.goods_name|escape|truncate:120}">
+             			<img alt="{$goods.goods_name|escape|truncate:120}" {if $smarty.foreach.fe_goods.iteration lt 3}src="{$goods.default_image}"{else}src="data/system/empty.gif" data-ks-lazyload="{$goods.default_image}"{/if} class="lazyload"/>
+             		</a>
+             		<a class="hidden store yellow-transparent absolute" href="{url app=shop&id=$goods.store_id}" title="{$goods.store_name|escape}" style="top:150px;left:0px;padding:1px 5px;width:162px;height:22px;line-height:22px;">{$goods.store_name|escape} | {$goods.mk_name|default:-}</a>
+            	</dt>
+			    
+			   <!--  <dd class="storeinfo twofloat clearfix" style="height:24px;line-height:24px;">
+            					<em>
+            					   <a href="{url app=store&id=$goods.store_id}" target="_blank">{$goods.mk_name|escape}&nbsp;{$goods.dangkou_address|escape}</a>
+            					</em>
+                            	<span class="">
+                            	    <a href="{url app=store&id=$goods.store_id}" target="_blank">{$goods.store_name}</a>
+                            		
+                            	</span>
+            				</dd> -->
+              				<dd class="three-uploads twofloat clearfix" style="height:24px;line-height:24px;">
+              				   <em class="price"><s>&yen;</s><span class="pri">{$goods.price}</span></em>
+              				   <span>
+              				      <a class="icn-tb mr2" href="{url app=item_upload&dest=Taobao&goods_id=$goods.goods_id}" target="_blank" title="上传淘宝">淘宝</a>
+              				      <a class="icn-al mr2" href="{url app=item_upload&dest=Alibaba&goods_id=$goods.goods_id}" target="_blank" title="上传阿里">阿里</a>
+              				      <a class="icn-pp" href="{url app=item_upload&dest=Paipai&goods_id=$goods.goods_id}" target="_blank" title="上传拍拍">拍拍</a>
+              				   </span>
+              				</dd>
+              				<dd class="desc"><a href="{url app=goods&id=$goods.goods_id}" target="_blank" title="{$goods.goods_name|escape}">{$goods.goods_name|escape|truncate:60}</a></dd>
+              	</dl>
+			 </li>			 
+			 <!--{/foreach}-->
+		    </ul>
+		    </div>
+	   </div>
+	</div>
+</div>
+<script>
+jQuery("#sadv{$widget_data.model_id}").slide({mainCell:".divul .bd",autoPage:true,effect:"topLoop",autoPlay:true});
+</script>
+<div class="clr"></div>
+<!-- {else} -->
+<div style="padding:10px; text-align:center;">请配置</div>
+<!-- {/if} -->

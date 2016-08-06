@@ -1,0 +1,71 @@
+{include file=member.header.html}
+<style>
+.borline td { padding:10px 0px; }
+.ware_list th { text-align:left; }
+</style>
+<script type="text/javascript">
+
+$(function(){
+	jQuery.extend(jQuery.validator.messages, {
+		 number: "请输入合法的数字",
+	});
+    $('#profile_form').validate({
+         errorPlacement: function(error, element){
+            $(element).parent('span').after(error);
+        },
+        rules : {
+        	fees : {
+                number:true,
+            }
+        },
+        messages : {
+        	fees : {
+                number:'{$lang.not_number}',
+            }
+        } 
+    });
+   
+});
+</script>
+<div class="content">
+    {include file=member.menu.html}
+    <div id="right">
+            {include file=member.submenu.html}
+            <div class="wrap">
+                <div class="public">
+                <form method="post" enctype="multipart/form-data" id="profile_form">
+                    <div class="information">                        
+                        <div class="info individual">
+                            <table>
+                                <tr>
+                                  <th>{$lang.goodstype}</th>
+                                  <th>{$lang.behalf_setfee}</th>
+                                </tr>
+                                <!--{foreach  from=$my_gcategories item=g name=g_fee}-->  
+                                   <tr>
+                                     <td>{$g.cate_name}<input type="hidden" name="cids[]" value="{$g.cate_id}"/></td>
+                                     <td><span><input type="text" class="text width_normal mb5 number" name="fees[]" value="{$g.bh_fee}"/>&nbsp;&nbsp;&nbsp;&nbsp;{$lang.jian}</span></td>
+                                   </tr>  
+                                <!--{/foreach}-->   
+                                <tr>
+                                    <th></th>
+                                    <td><input type="submit" class="btn" value="{$lang.save_edit}" /></td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+                </form>
+                </div>
+                <div class="wrap_bottom"></div>
+            </div>
+
+            <div class="clear"></div>
+            <div class="adorn_right1"></div>
+            <div class="adorn_right2"></div>
+            <div class="adorn_right3"></div>
+            <div class="adorn_right4"></div>
+        </div>
+        <div class="clear"></div>
+    </div>
+</div>
+{include file=footer.html}

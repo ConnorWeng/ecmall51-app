@@ -1,0 +1,104 @@
+{include file="header.html"}
+<div id="rightTop">
+  <p>{$lang.behalf}</p>
+  <ul class="subnav">
+    <!--{if $smarty.get.wait_verify}-->
+    <li><a class="btn1" href="index.php?app=behalf">{$lang.manage}</a></li>
+    <!--{else}-->
+    <li><span>{$lang.manage}</span></li>
+    <!--{/if}-->    
+    <!--{if $smarty.get.wait_verify}-->
+    <li><span>{$lang.wait_verify}</span></li>
+    <!--{else}-->
+    <li><a class="btn1" href="index.php?app=behalf&amp;wait_verify=1">{$lang.wait_verify}</a></li>
+    <!--{/if}-->
+  </ul>
+</div>
+<div class="mrightTop">
+  <div class="fontl">
+    <form method="get">
+       <div class="left">
+          <input type="hidden" name="app" value="behalf" />
+          <input type="hidden" name="act" value="index" />
+          <input type="hidden" name="wait_verify" value="{$smarty.get.wait_verify}" />
+          {$lang.owner_name}:
+          <input class="queryInput" type="text" name="owner_name" value="{$smarty.get.owner_name|escape}" />
+          {$lang.bh_name}:
+          <input class="queryInput" type="text" name="bh_name" value="{$smarty.get.bh_name|escape}" />          
+          <input type="submit" class="formbtn" value="{$lang.query}" />
+      </div>
+      <!--{if $filtered}-->
+      <a class="left formbtn1" href="index.php?app=behalf<!--{if $smarty.get.wait_verify}-->&amp;wait_verify={$smarty.get.wait_verify}<!--{/if}-->">{$lang.cancel_query}</a>
+      <!--{/if}-->
+    </form>
+  </div>
+  <div class="fontr">{include file=page.top.html} </div>
+</div>
+<div class="tdare">
+  <table width="100%" cellspacing="0" class="dataTable">
+    <!--{if $behalfs}-->
+    <tr class="tatr1">
+      <td width="20" class="firstCell"><input type="checkbox" class="checkall" /></td>
+      <td>{$lang.owner_user_name} | {$lang.owner_real_name}</td>
+      <td><span ectype="order_by" fieldname="bh_name">{$lang.bh_name}</span></td>
+      <td><span ectype="order_by" fieldname="region_id">{$lang.region}</span></td>
+      <td><span ectype="order_by" fieldname="deliveries">{$lang.bh_shipping}</span></td>
+      <td class="table-center"><span ectype="order_by" fieldname="create_time">{$lang.end_time}</span></td>
+      <td class="table-center"><span ectype="order_by" fieldname="bh_allowed">{$lang.state}</span></td>
+      <!--{if !$smarty.get.wait_verify}-->
+      <td class="table-center"><span ectype="order_by" fieldname="sort_order">{$lang.sort_order}</span></td>
+      <td class="table-center"><span ectype="order_by" fieldname="recommended">{$lang.office_recommend}</td>
+      <!--{/if}-->
+      <td class="handler">{$lang.handler}</td>
+    </tr>
+    <!--{/if}-->
+    <!--{foreach from=$behalfs item=behalf}-->
+    <tr class="tatr2">
+      <td class="firstCell"><input type="checkbox" class="checkitem" value="{$behalf.bh_id}" /></td>
+      <td>{$behalf.user_name|escape} | {$behalf.owner_name|escape}</td>
+      <td>{$behalf.bh_name|escape}</td>
+      <td>{$behalf.region_name|escape}</td>
+      <td>
+        <!--{foreach from=$behalf['deliveries'] item=delivery}-->
+          {$delivery.dl_name}&nbsp;&nbsp;
+        <!--{/foreach}-->
+      </td>
+      <td class="table-center">{$behalf.create_time|date}</td>
+      <td class="table-center">{$behalf.bh_allowed}</td>
+      <!--{if !$smarty.get.wait_verify}-->
+      <td class="table-center"><span ectype="inline_edit" fieldname="sort_order" fieldid="{$behalf.bh_id}" datatype="pint" title="{$lang.editable}" class="editable">{$behalf.sort_order}</span></td>
+      <td class="table-center"><!--{if $behalf.recommended}--><img src="templates/style/images/positive_enabled.gif" ectype="inline_edit" fieldname="recommended" fieldid="{$behalf.bh_id}" fieldvalue="1" title="{$lang.editable}"/><!--{else}--><img src="templates/style/images/positive_disabled.gif" ectype="inline_edit" fieldname="recommended" fieldid="{$behalf.bh_id}" fieldvalue="0" title="{$lang.editable}"/><!--{/if}--></td>
+      <!--{/if}-->
+      <td class="handler">
+        <!--{if !$smarty.get.wait_verify}-->
+         <a href="javascript:drop_confirm('{$lang.drop_confirm}', 'index.php?app=behalf&amp;act=drop&amp;id={$behalf.bh_id}');">{$lang.drop}</a> | <a target="_blank" href="{$site_url}/index.php?app=bhstore&amp;id={$behalf.bh_id}">{$lang.behalf_index}</a>
+        <!--{else}-->
+        <a href="index.php?app=behalf&amp;act=view&amp;id={$behalf.bh_id}">{$lang.view}</a>
+        <!--{/if}--></td>
+    </tr>
+    <!--{foreachelse}-->
+    <tr class="no_data">
+      <td colspan="12">{$lang.no_data}</td>
+    </tr>
+    <!--{/foreach}-->
+  </table>
+  <!--{if $behalfs}-->
+  <div id="dataFuncs">
+    <div class="pageLinks">{include file=page.bottom.html}</div>
+    <div id="batchAction" class="left paddingT15">{if !$smarty.get.wait_verify}
+      &nbsp;&nbsp;
+      <input class="formbtn batchButton" type="button" value="{$lang.audit}" name="id" uri="index.php?app=behalf&act=batch_edit&ret_page={$page_info.curr_page}" />
+      &nbsp;&nbsp;
+      <input class="formbtn batchButton" type="button" value="{$lang.drop}" name="id" uri="index.php?app=behalf&act=drop" presubmit="confirm('{$lang.drop_confirm}');" />
+      <!--&nbsp;&nbsp;
+      <input class="formbtn batchButton" type="button" value="{$lang.update_order}" name="id" presubmit="updateOrder(this);" />-->
+      {else}
+      <input class="formbtn batchButton" type="button" value="{$lang.drop}" name="id" uri="index.php?app=behalf&act=drop" presubmit="confirm('{$lang.reject_confirm}');" />
+      <!--{/if}-->
+    </div>
+  </div>
+  <div class="clear"></div>
+  <!--{/if}-->
+
+</div>
+{include file="footer.html"}

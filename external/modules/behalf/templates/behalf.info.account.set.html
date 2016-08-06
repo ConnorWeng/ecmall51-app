@@ -1,0 +1,115 @@
+{include file=header.whole.html}
+<script type="text/javascript">
+$(function(){    
+	
+	 $('#my_store_form').bootstrapValidator({
+		  feedbackIcons: {
+	            valid: 'glyphicon glyphicon-ok',
+	            invalid: 'glyphicon glyphicon-remove',
+	            validating: 'glyphicon glyphicon-refresh'
+	        }, 
+		  fields:{
+			  yto_account:{
+				  validators:{
+					 /*  callback:{
+						  message:'账号密钥不完整！',
+						  callback:function(value,validator){
+							  var yv = $("input[name='yto_account']").val();
+							  var yp = $("input[name='yto_pass']").val();
+							  var pattern = new RegExp("/^(\S)*$/g");
+							  console.log(pattern.test(yv));
+							  console.log(pattern.test(yp));
+							  if(pattern.test(yv) && pattern.test(yp))
+							  {
+								  return false;
+							  }
+							  
+							  return true;
+						  }
+					  } */
+				  }
+			  },
+			 
+			  zto_account:{
+				  validators:{
+					  //notEmpty:{}
+				  }
+			  }
+			 
+		  }
+	  }).on('success.form.bv', function(e) {
+		   // Prevent form submission
+          e.preventDefault();
+
+          // Get the form instance
+          var $form = $(e.target);
+
+          // Get the BootstrapValidator instance
+          var bv = $form.data('bootstrapValidator');
+
+          // Use Ajax to submit form data
+          $.post($form.attr('action'), $form.serialize(), function(result) {
+              //var json = $.parseJSON(result);
+              bootbox.alert(result.msg);
+              
+          }, 'json');
+         
+          //$form.data('bootstrapValidator').resetForm(true);
+       
+      });
+       
+  
+        
+});
+
+</script>
+<div>
+	<h3 class="text-info">电子面单账号管理</h3>
+    <form method="post" action="{url module=behalf&amp;act=set_mbaccount}" class="form" id="my_store_form">
+    <table class="table table-striped">       
+          <tr>
+             <th>圆通面单账号</th>
+             <td>
+                 <div class="form-group">
+                       <input type="text" class="form-control" name="yto_account" style="width:240px;" placeholder="大小写敏感" value="{$infos.yto_account}"/>
+                 </div>
+             </td>
+          </tr>
+          <tr>
+              <th>圆通密钥</th>
+              <td>
+                  <div class="form-group">
+                  	<input  type="password" class="form-control" style="width:240px;" name="yto_pass" placeholder="" value="{$infos.yto_pass}"/>
+                  </div>
+              </td>
+          </tr>
+         
+           <tr>
+               <th>中通面单账号</th>
+               <td>
+                   <div class="form-group">
+                   		<input type="text" name="zto_account" class="form-control" value="{$infos.zto_account}" placeholder="大小写敏感" style="width:240px;"/>
+                   </div>
+               </td>
+           </tr>
+           <tr>
+                <th>中通密钥</th>
+                <td>
+                	<div class="form-group">
+                		<input name="zto_pass" type="password" class="form-control" style="width:240px;"  value="{$infos.zto_pass}" />
+                	</div>
+               </td>
+          </tr>
+         
+        <tr>
+        	<th></th>
+        	<td>
+        		<div class="form-group">
+        			<input type="submit" class="btn btn-primary" value="{$lang.submit}" />
+        		</div>
+        	</td>
+        </tr>
+    </table>
+ </form>         			
+</div>
+{include file=footer.whole.html}

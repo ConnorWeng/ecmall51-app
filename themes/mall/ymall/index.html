@@ -1,0 +1,39 @@
+{include file=header_index.html}
+<!--{if !$file_exists}-->
+<div id="main" class="w-full">
+	<div id="page-home" class="w-full mb10">
+	<div class="col-1 w-full">
+    	<div class="w clearfix">
+    	<div class="left_side float-left">
+        	<div class="left_side_top_side clearfix">
+            	<div class="left_side_top_side_left_side float-left" area="left_side_top_side_left_side" widget_type="area">
+                <!--{widgets page=index area=left_side_top_side_left_side}-->
+                </div>
+                <div class="left_side_top_side_right_side float-left" area="left_side_top_side_right_side" widget_type="area">
+                <!--{widgets page=index area=left_side_top_side_right_side}-->
+                </div>
+            </div>
+			<div class="left_side_top_side_bottom clearfix" area="left_side_top_side_bottom" widget_type="area">
+			   <!--{widgets page=index area=left_side_top_side_bottom}-->
+			</div>
+        </div>
+        
+        <div class="right_side float-right" area="right_side" widget_type="area">
+        	<!--{widgets page=index area=right_side}-->
+		</div>
+        </div>
+	</div>
+	<div class="midad mt10 w clearfix" area="midad" widget_type="area">
+		<!--{widgets page=index area=midad}-->
+	</div>
+    <div class="col-2 w mt10" area="col-2" widget_type="area">
+    	<!--{widgets page=index area=col-2}-->
+    </div>
+    </div>
+</div>
+<div style="display:none;"><script language="javascript" type="text/javascript" src="http://js.users.51.la/18819414.js"></script>
+<noscript><a href="http://www.51.la/?18819414" target="_blank"><img alt="&#x6211;&#x8981;&#x5566;&#x514D;&#x8D39;&#x7EDF;&#x8BA1;" src="http://img.users.51.la/18819414.asp" style="border:none" /></a></noscript></div>
+{include file=footer.html}
+<!--{else}-->
+{include file="index_makehtml_homepage.html"}
+<!--{/if}-->

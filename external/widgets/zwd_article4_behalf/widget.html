@@ -1,0 +1,87 @@
+﻿<div id="article_recommend">
+	<!--{if !$widget_data.cate_name_1}-->
+    <div style="padding:10px; text-align:center;">请配置</div>
+    <!--{/if}-->
+   <ul class="art_recom hd tab_menu">
+	   <li class="current"><a href="javascript:;">{$widget_data.cate_name_1}</a></li>
+	   <li><a href="javascript:;">{$widget_data.cate_name_2}</a></li>
+	   <li><a href="javascript:;">{$widget_data.cate_name_3}</a></li>
+	   <li class="last_li"><a href="javascript:;">{$widget_data.cate_name_4}</a></li>
+   </ul>
+   <div class="clr"></div>
+  <div class="bd tab_box">
+   <div class="arc_recom">
+       <ul class="clearfix">
+      	<!-- {foreach from=$widget_data.articles1 item=arc} -->      
+         	<li class="dot_ccc float-left"><a href="{url app=article&act=view&article_id=$arc.article_id}" title="{$arc.title|escape}"  {if $arc.add_red}class="f44"{/if}>
+              {$arc.title|escape|truncate:46}
+         	</a></li>      	 
+      <!--{/foreach}-->
+	  </ul>
+   </div>
+
+    <div class="arc_recom">
+      	 <ul class="clearfix">
+      	<!-- {foreach from=$widget_data.articles2 item=arc} -->      
+         	<li class="dot_ccc float-left"><a href="{url app=article&act=view&article_id=$arc.article_id}" title="{$arc.title|escape}" {if $arc.add_red}class="f44"{/if}>
+            	{$arc.title|escape|truncate:46}
+         	</a></li>      	 
+      <!--{/foreach}-->
+	  </ul>
+   </div>
+
+    <div class="arc_recom">
+      	 <ul class="clearfix">
+      	<!-- {foreach from=$widget_data.articles3 item=arc} -->      
+         	<li class="dot_ccc float-left"><a href="{url app=article&act=view&article_id=$arc.article_id}" title="{$arc.title|escape}" {if $arc.add_red}class="f44"{/if}>
+            	{$arc.title|escape|truncate:46}
+         	</a></li>      	 
+      <!--{/foreach}-->
+	  </ul>
+   </div>
+
+    <div class="arc_recom">
+         <div id="txtScroll-top">
+		    <div class="clearfix" style="height:18px;line-height:18px;margin-top:3px;background:#fff;border-bottom:1px dashed #fefefe;color:#aaa;">
+		        <span class="inline-block float-left center" style="width:73px;">会员</span>
+		        <span class="inline-block float-left center" style="width:73px;">合作代发</span>
+		        <span class="inline-block float-left center" style="width:73px;">订单金额</span>
+		        <span class="inline-block float-left center" style="width:73px;">出售商家</span>
+		    </div>
+		    <div class="bd">
+		    <ul style="height:72px;margin:0;padding:0;" class="overflowHidden arc_recom_behalf">	      
+		      <!-- {foreach from=$widget_data.articles4 item=behalf name=fe_behalf} -->
+		      <li class="clearfix f66" style="height:24px;line-height:24px;padding:0;width:100%;">
+		        <span class="inline-block float-left center" style="width:73px;">{$behalf.buyer_name}</span>
+		        <span class="inline-block float-left fblue center" style="width:73px;">{$behalf.bh_id|truncate:8}</span>
+		        <span class="inline-block float-left center" style="width:73px;color:red;">{$behalf.order_amount}</span>
+		        <span class="inline-block float-left center" style="width:73px;">
+		         <!--{if $behalf.seller_id neq 0}-->
+		         <a href="{url app=store&amp;id=$behalf.seller_id}" target="_blank">{$behalf.seller_name|truncate:8}</a>
+		         <!--{else}-->
+		         <a href="{url app=search&amp;act=store&amp;keyword=$behalf.seller_name}" target="_blank">{$behalf.seller_name|truncate:8}</a>
+		         <!--{/if}-->
+		        
+		        </span>
+		      </li>         
+	        <!-- {/foreach} -->		    
+		    </ul>	   
+		    </div> 
+	    </div>   
+      	
+   </div>
+ </div>
+  <script> 
+
+	$('#article_recommend').slide({
+  		effect:'fade',
+  		autoPlay:false,
+  		interTime:3000,
+  		delayTime:1000,
+  	}); 
+	setInterval(function(){
+		   $('.arc_recom_behalf li:last').hide().insertBefore($('.arc_recom_behalf li:first')).slideDown(1000);	   
+	   },2000); 
+   </script>
+</div>
+<div class="clr"></div>

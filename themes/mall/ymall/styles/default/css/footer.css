@@ -1,0 +1,52 @@
+
+#footer{border-top:1px solid #ddd;background:#f5f5f5;}
+#footer a{text-decoration:none;}
+#footer a:hover{color:#990000; text-decoration:underline;}
+
+#footer .foot-service{margin:0 auto;padding-bottom:40px;margin-top:13px;}
+#footer .foot-service dl{float:left;width:13%;padding-left:35px;}
+#footer .foot-service dt{width:108px; height:50px; line-height:50px; font-size:18px; overflow:hidden; font-family:"Microsoft yahei";color:#666;}
+#footer .foot-service dd{width:120px; height:20px; line-height:20px; overflow:hidden}
+#footer .foot-service dd a{color:#999;}
+#footer .foot-service dd a:hover{color:#990000; text-decoration:none}
+#footer .foot-service dd.xinlang{background:url(../images/51icons2.png) no-repeat 0px -237px;padding-left:25px;margin-bottom:3px;}
+#footer .foot-service dd.tengxun{background:url(../images/51icons2.png) no-repeat 0px -270px;padding-left:25px;margin-bottom:3px;}
+#footer .foot-service dd.weixin{background:url(../images/51icons2.png) no-repeat 0px -300px;padding-left:25px;}
+
+#footer .foot-baozhang{width:743px; margin:0 auto 25px;border:1px #ddd solid}
+#footer .foot-baozhang li{float:left; height:45px;}
+#footer .foot-baozhang li a{ display:block;padding:0 0 5px 30px}
+
+#footer .foot-baozhang li em{float:left; display:block; width:34px; height:39px; margin:0 10px 0 0; background:url(../images/header_sprites.png) 0 -230px; font-size:14px; line-height:44px; cursor:pointer; text-align:center;color:#fff;}
+#footer .foot-baozhang li a:hover em{background:url(../images/header_sprites.png) -35px -230px;color:#fff;}
+
+#footer .foot-baozhang li span{float:left; display:block;margin-top:8px;padding-right:30px;border-right:1px #ddd solid; line-height:27px; white-space:nowrap; text-align:center; font-size:18px;font-family:"Microsoft yahei"}
+#footer .foot-baozhang li.last span{border-right:0;}
+
+#footer .foot-group,#footer .foot-copyright,#footer .foot-parter{ text-align:center;color:#666;}
+#footer .foot-group{margin: 5px auto 10px auto;padding-top:15px;padding-bottom:30px;}
+#footer .foot-group a { margin: 0 7px;}
+
+#footer .foot-copyright {margin: 5px auto 0px auto; font-family:Tahoma, Geneva, sans-serif;}
+#footer .foot-parter a{margin-right:15px;}
+
+#footer .footer-fixed{left: 50%;position: fixed;_position: absolute; top:428px; margin-left:610px;}
+#footer .footer-fixed .feeback{display: block;width: 13px;height: 62px;padding: 18px 6px 0;background:url(../images/indexhead_sprite.png) -160px -520px no-repeat;color: #F60;font-size: 12px;text-decoration: none;}
+#footer .footer-fixed .feeback:hover{background:url(../images/indexhead_sprite.png) -185px -520px no-repeat;color:#fff;}
+#footer .footer-fixed .toTop {display:none;background:url(../images/gotop.gif) no-repeat;}
+#footer .footer-fixed .toTop em{ display:none; }
+#footer .footer-fixed .toTop:hover{background-position:0 -60px;}
+#footer .footer-fixed .placeholder{width:56px;height:60px;}
+#footer .footer-fixed .placeholder li{width:36px;height:50px;}
+
+#footer .footer-fixed li{position:relative;z-index:98;width:27px;height:37px;cursor:pointer;background:#dadada;border-radius:5px;color:#666;padding:5px 10px;margin-bottom:10px;}
+#footer .footer-fixed li:hover{background-color:#ffe8cf;color:#f60;}
+#footer .footer-fixed li em{text-align:center;line-height:18px;display:block;}
+#footer .footer-fixed li .tips{background:#f60;border-radius:9px;color:white;font-family:Tahoma,Verdana,Arial;font-weight:700;left:35px;top:-5px;position:absolute;z-index:991;padding:2px 6px;}
+#footer .footer-fixed li div.right_arrow{width:13px;height:14px;position:absolute;top:16px;right:47px;background:url(../images/right_bar.png) no-repeat #fff;z-index:992;}
+#footer .footer-fixed .nav-content{border:3px solid #9c0;width:210px;height:260px;background-color:white;z-index:99;top:0px;right:57px;}
+#footer .footer-fixed .qrcode{background:url(../images/right_bar.png) no-repeat 6px -24px #dadada;}
+#footer .footer-fixed .webclient .nav-content{width:160px;height:230px;}
+
+#footer .footer-fixed .webclient li{padding-left:23px;margin-left:28px;width:90px;height:24px;line-height:24px;border-bottom:1px dashed #eee;background:url(../images/login_icon.png) no-repeat 0px -50px #fff;}
+#footer .footer-fixed .webclient a{font-size:16px;font-weight:400;color:#9c0;font-family:microsoft yahei;}

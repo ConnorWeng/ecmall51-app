@@ -1,0 +1,28 @@
+{include file=header.html}
+{include file=header.nav.html}
+<div id="all-brand">
+   <div class="main-brand">
+      <div class="title"><span>{$lang.recommended_brands}</span></div>
+	  <div class="content">
+	     <!--{foreach from=$recommended_brands item=brand}-->
+	     <div class="each"><a href="{url app=search&brand=$brand.brand_name|escape:url}" target="_blank"><img src="{$brand.brand_logo}" width="86" height="48" alt="{$brand.brand_name}" title="{$brand.brand_name}" /></a>
+	     </div>
+	     <!--{/foreach}-->
+		 <div class="clr"></div>
+	  </div>
+   </div>
+   <div class="main-brand">
+      <div class="title"><span>{$lang.all_brands}</span></div>
+	  <div class="content">
+	     <!--{foreach from=$brands item=brand}-->
+         <!--<div><!--{if $brand.tag}--><!--{$brand.tag}<!--{else}--><!--{$lang.other}<!--{/if}--> <!--({$brand.count})</div>-->
+         <!--{foreach from=$brand.brands item=b}-->
+         <div class="each"><a href="{url app=search&brand=$b.brand_name|escape:url}" target="_blank"><img src="{$b.brand_logo}" width="86" height="48" alt="{$brand.brand_name}" title="{$b.brand_name}" /></a>
+		 </div>
+         <!--{/foreach}-->
+         <!--{/foreach}-->
+		 <div class="clr"></div>
+	   </div>
+   </div>
+</div>
+{include file=footer.html}

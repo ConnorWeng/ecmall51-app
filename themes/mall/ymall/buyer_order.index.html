@@ -1,0 +1,278 @@
+{include file=member.header.html}
+<script type="text/javascript">
+$(function(){
+    $('#add_time_from').datepicker({dateFormat: 'yy-mm-dd'});
+    $('#add_time_to').datepicker({dateFormat: 'yy-mm-dd'});
+    $('.oos_msg_box').hover(function(){
+    	$(this).find('.oos_msg_cont').show();
+    },function(){
+    	$(this).find('.oos_msg_cont').hide();
+    });
+});
+</script>
+<style type="text/css">
+.float_right {float: right;}
+</style>
+<div class="content">
+    {include file=member.menu.html}
+    <div id="right">
+        {include file=member.submenu.html}
+        <div class="wrap">
+            <div class="public">
+                <div class="user_search">
+                <form method="get">
+                     <span>{$lang.order_sn1}: </span>
+                    <input type="text" class="text1 width_normal" style="width:120px;" name="order_sn" value="{$query.order_sn|escape}">   
+                    <span>{$lang.add_time}: </span>
+                    <input type="text" class="text1 width2" name="add_time_from" id="add_time_from" value="{$query.add_time_from}"/> &#8211;
+                    <input type="text" class="text1 width2" name="add_time_to" id="add_time_to" value="{$query.add_time_to}"/>
+                           
+                    <span>{$lang.seller_name}:</span>
+                    <input type="text" class="text1 width_normal" style="width:120px;" name="seller_name" value="{$query.seller_name|escape}">  
+                    <div style="height:5px;padding:0;margin:0;"></div>
+                   
+	                <span class="title">{$lang.goods_seller_bm}:</span>
+	                <input class="text1 width_normal" style="width:120px;" type="text" name="goods_seller_bm" value="{$query_goods_seller_bm|escape}" /> 
+	                <span class="title">{$lang.goods_name}:</span>
+	                <input class="text1 width_normal" style="width:180px;" type="text" name="goods_name" value="{$query_goods_name|escape}" /> 
+                    
+	                <span class="title">{$lang.consignee1}:</span>
+	                <input class="text1 width_normal" style="width:120px;" type="text" name="consignee" value="{$cosignee_query|escape}" /> 
+                    
+                    <input type="hidden" name="app" value="buyer_order" />
+                    <input type="hidden" name="act" value="index" />
+                    <input type="submit" class="btn" value="{$lang.soso}" />
+                    <!--{if $query.seller_name or $query.add_time_from or $query.add_time_to or $query.order_sn or $query_goods_name or $query_goods_seller_bm or $cosignee_query}-->
+                     <a class="detlink" href="{url app=buyer_order}" style="float:none;display:inline-block;">{$lang.cancel_query}</a>
+                    <!--{/if}-->
+                </form>
+                </div>
+                
+                <div class="public_index table" style="padding:0;">
+                <table>
+                    <!--{if $orders}-->
+                    <tr class="line tr_bgcolor">
+                        <th width="20"></th>
+                        <th width="460" colspan="4">{$lang.goods_info}</th>
+                        <th width="88"></th>
+                        <th width="80">{$lang.logistics_method}</th>
+                        <th width="60">{$lang.order_amount}</th>
+                        <th width="60">{$lang.order_status}</th>
+                    </tr>
+                    <!--{/if}-->
+                    <!-- 循环开始 -->
+                    <!--{foreach from=$orders item=order}-->
+                    <tr><td colspan="20" style="height:5px;padding:0;"></td></tr>
+                    <tr style="background-color:#f3f3f3;">
+                       <td width="10" class="align2" style="padding:5px;"><input type="checkbox" value="{$order.order_id}" class="checkitem" <!--{if $order.status eq ORDER_FINISHED || $order.status eq ORDER_CANCELED}--> disabled="disabled" <!--{/if}-->/></td>
+                       <td colspan="7" style="color:#404040;padding:5px;">
+                          {$lang.order_sn}: {$order.order_sn}&nbsp;&nbsp;&nbsp;&nbsp;
+                          <span>
+                            <!--{if $order.finished_time}-->
+                              {$lang.finished_time}: {$order.finished_time|date:Y-m-d H:i}
+                            <!--{elseif $order.pay_time}-->
+                              {$lang.pay_time}: {$order.pay_time|date:Y-m-d H:i}
+                            <!--{else}-->
+                              {$lang.add_time}: {$order.add_time|date:Y-m-d H:i}
+                            <!--{/if}-->
+                          </span>
+                          <!--{if $order.taobao_order_sn}-->&nbsp;&nbsp;&nbsp;&nbsp;
+                          <span class="aaa">
+                        	{$lang.taobao_order_sn}:{$order.taobao_order_sn}</span>
+                        	<!--{/if}-->
+                        </td>                       
+                        <td width="50" style="padding:5px;" align="right">
+                        <!--{if $order.seller_message}-->
+                              	<div style="height:24px;" class="relative oos_msg_box">
+		                         <i class="seller_message_{$order.seller_message_flag|default:0}"></i>
+		                         <div class="absolute hidden oos_msg_cont" 
+		                         style="width:200px;min-height:40px;color:#3c763d;background-color: #dff0d8;border:1px solid #d6e9c6;border-radius:5px;padding:10px;left:-230px;top:-0px;z-index:99;">
+		                         <h2 style="">卖家留言</h2>
+		                         {$order.seller_message|escape|default:未填写}</div>
+		                        </div>
+                        <!--{/if}-->	 
+                        </td>
+                    </tr>
+                    <tr class="color2">
+                        <td width="20"></td>                              
+                        <td width="460" colspan="4" style="line-height:20px;color:#808080;">
+                         <table width="460" cellpadding="0" cellspacing="0">
+                         	<!--{if $order.gwh}-->
+	                            <!--{foreach from=$order['gwh'] item=goods}-->
+	                            <tr>
+	                              <td width="50" style="vertical-align:top !important"><img src="{$goods.goods_image}" style="max-width:50px;max-height:50px;"></td> 
+	                              <td width="340" style="padding-left:5px;padding-right:5px;">
+	                              	<p><a href="{url app=goods&id=$goods.goods_id}" class="color9 align1" target="_blank">{$goods.goods_name}</a></p>
+	                              	<p>{$goods.goods_specification}</p>
+	                              	<p>商品编码: {$goods.goods_no|default:-}</p>
+	                              	<p>{$lang.goods_seller_bm}: {$goods.goods_seller_bm|default:-}</p>
+	                              	
+	                              	<p>{$lang.store_name}：<a href="{url app=shop&id=$goods.store_id}" target="_blank">{$goods.store_name|escape}</a></p>
+	                              	<p><span class="color9">Tel:</span> {$goods.tel|escape}&nbsp;&nbsp;
+	                              	<!--{if $goods.im_qq}-->
+				                     <span style="display:inline-block;">
+				                     {imqq uin=$goods.im_qq&site=$store.store_name|escape:url}  
+				                     {$goods.im_qq|escape}</span>
+				                    <!--{/if}-->
+				                    <!--{if $goods.im_ww}-->
+				                    <span style="display:inline-block;">
+	                                {imww touid=$goods.im_ww|escape:url&charset=$charset}
+				                    {$goods.im_ww|escape}</span>
+				                    <!--{/if}-->
+	                              	</p>
+	                              </td>
+	                              <td width="50" class="color2" style="vertical-align:top !important">{$goods.goods_price|price}
+	                              	<!--{if $goods.bh_id}-->
+	                              		{include file=buyer_order.goods_status.html}
+	                              	<!--{/if}-->
+	                              </td>
+	                              <td width="10" class="align2 strong color2" style="vertical-align:top !important">{$goods.quantity}</td>
+	                            </tr>
+	                            <!--{/foreach}-->
+	                         <!--{/if}-->
+	                         <!--{if !$order.gwh and $order.order_goods}-->
+	                         <!--{foreach from=$order['order_goods'] item=goods}-->
+	                            <tr>
+	                              <td width="50" style="vertical-align:top !important"><img src="{$goods.goods_image}" style="max-width:50px;max-height:50px;"></td> 
+	                              <td width="340" style="padding-left:5px;padding-right:5px;">
+	                              	<p><a href="{url app=goods&id=$goods.goods_id}" class="color9 align1" target="_blank">{$goods.goods_name}</a></p>
+	                              	<p>{$goods.specification}</p>
+	                              	<p>{$lang.goods_seller_bm}: {$goods.goods_seller_bm|default:-}</p>
+	                              	<p>{$lang.store_name}：<a href="{url app=shop&id=$goods.store_id}" target="_blank">{$goods.store_name|escape}</a></p>
+	                              	<p><span class="color9">Tel:</span> {$goods.tel|escape}&nbsp;&nbsp;
+	                              	<!--{if $goods.im_qq}-->
+				                     <span style="display:inline-block;">
+				                     {imqq uin=$goods.im_qq&site=$store.store_name|escape:url}  
+				                     {$goods.im_qq|escape}</span>
+				                    <!--{/if}-->
+				                    <!--{if $goods.im_ww}-->
+				                    <span style="display:inline-block;">
+	                                {imww touid=$goods.im_ww|escape:url&charset=$charset}
+				                    {$goods.im_ww|escape}</span>
+				                    <!--{/if}-->
+	                              	</p>
+	                              </td>
+	                              <td width="30" class="color2" style="vertical-align:top !important">{$goods.price|price}
+	                              	<!--{if !$goods.oos_value}-->
+	                              	<div style="height:24px;" class="relative oos_msg_box">
+			                         <i class="outofstock"></i>
+			                         <div class="absolute hidden oos_msg_cont" 
+			                         style="width:100px;min-height:40px;background:#fff;border:1px solid #ccc;border-radius:5px;padding:10px;left:-130px;top:-0px;z-index:99;">
+			                         {$goods.oos_reason|escape|default:未填写}</div>
+			                        </div>
+	                              	<!--{/if}-->
+	                              </td>
+	                              <td width="30" class="align2 strong color2" style="vertical-align:top !important">{$goods.quantity}</td>
+	                            </tr>
+	                         <!--{/foreach}-->
+	                         <!--{/if}-->
+                         </table>                          
+                        </td>        
+                        <td width="78" style="vertical-align:top !important;padding:10px 5px;">
+                          <!--{if $order.bh_id and $order.refund}-->
+                                <span class="color4">
+                                <!--{if $order.refund.status eq 0}-->
+                        		  {$lang.applied_refund}
+                        		<!--{elseif $order.refund.status eq 1}-->
+                        		  {$lang.applied_refund_agree}
+                        		<!--{elseif $order.refund.status eq 2}-->
+                        		  {$lang.applied_refund_disagree}
+                        		<!--{/if }-->
+                        		</span><br>
+                          <!--{/if}-->
+                          
+                          <!--{if !$order.bh_id and $order.storerefund}-->
+                          	 <span class="color4">
+                                  <!--{if $order.storerefund.refund_status eq $smarty.const.REFUND_APPLYING or $order.storerefund.refund_status eq $smarty.const.REFUND_PENDING or $order.storerefund.refund_status eq $smarty.const.REFUND_SHIPPED or $order.storerefund.refund_status eq $smarty.const.REFUND_MODIFIED}-->
+                        		  	<a href="{url app=buyer_order&amp;act=refund_view&amp;order_id=$order.order_id}" class="color4" style="text-decoration:underline;" target="_blank">{$lang.refund_appling}</a>
+                        		<!--{elseif $order.storerefund.refund_status eq $smarty.const.REFUND_FINISHED}-->
+                        		  <a href="{url app=buyer_order&amp;act=refund_view&amp;order_id=$order.order_id}" class="color3" style="text-decoration:underline;" target="_blank">{$lang.refund_finished}</a>
+                        		<!--{elseif $order.storerefund.refund_status eq $smarty.const.REFUND_CLOSED}-->
+                        		  {$lang.refund_closed}
+                        		<!--{/if }-->
+                        		</span><br>
+                          <!--{/if}-->
+                          
+                          <!--{if $order.apply_fee.status eq 0 and $order.apply_fee.type eq 2 }-->
+                          	<!--{if $order.status eq ORDER_SHIPPED or $order.status eq ORDER_ACCEPTED or $order.status eq ORDER_FINISHED}-->
+	                             <input type="button" value="{$lang.apply_fee_1}" style="background:#f44;border:1px solid #f44;color:white;border-radius:2px;cursor:pointer;" ectype="dialog" dialog_id="buyer_order_applied_fee" dialog_width="400" uri="index.php?app=buyer_order&amp;act=applied_fee&amp;order_id={$order.order_id}&ajax" dialog_title="{$lang.applied_fee}" id="order{$order.order_id}_action_applied_fee" />
+	                         <!--{/if}--> 
+	                       <!--{elseif $order.apply_fee.status eq 1 and $order.apply_fee.type eq 2}-->
+	                           <span class="color4">{$lang.apply_fee_success}</span>
+	                       <!--{elseif $order.apply_fee.status eq 2 and $order.apply_fee.type eq 2}-->
+	                          <span class="color4">{$lang.apply_fee_fail}</span>
+	                       <!--{/if}-->
+                        </td>               
+                        <td width="80" class="align2" style="vertical-align:top !important">                        
+                         <!--{if $order.bh_id}-->
+                            <span class="color9">{$order.behalf.bh_name|escape}</span><br><br>
+	                        <a target="_blank" href="{url app=message&act=send&to_id=$order.bh_id}" class="email" title="{$lang.to_behalf}" style="display:inline-block;"></a><br><br>
+	                        <!--{if $order.behalf.bh_qq}-->
+	                        {imqq uin=$order.behalf.bh_qq&site=$order.behalf.bh_name|escape:url}  
+		                    <!--{/if}-->
+		                    <!--{if $order.behalf.bh_ww}-->
+		                    {imww touid=$order.behalf.bh_ww|escape:url&charset=$charset}
+		                    <!--{/if}-->
+	                  	 <!--{else}-->
+	                  	    <span><a href="{url app=store&id=$order.seller_id}" target="_blank" class="color9">{$order.seller_name|escape}</a></span>
+	                  	 <!--{/if}-->
+                        <br><br>
+                        
+                        
+                        </td>
+                        
+                        <td width="60" class="align2" style="vertical-align:top !important">
+                        	<p><strong>{$order.order_amount|price}</strong></p>
+                        	<p style="color:#808080;margin-top:4px;background-color:#f5f5f5;">{$lang.include_delivery_fee}:<br>{$order.shipping_fee|default:0.00}</p>
+                        </td>
+                        <td width="60" class="align2" style="vertical-align:top !important">
+                            <span class="color4">{$order.status|modifier:order_status}<!--{if $order.evaluation_status}--><br>{$lang.already_evaluate}<!--{/if}--></span>
+                            <!--{if $order.invoice_no and $order.status neq ORDER_CANCELED}-->
+                            <p style="margin-top:10px;"><a href="http://www.kuaidi100.com/chaxun?com={$order.delivery_bm|escape}&nu={$order.invoice_no|escape}" class="show-pop-async color9 border9" data-invoice="{$order.invoice_no|escape}" data-delivery-bm="{$order.delivery_bm|escape}" style="padding:2px;" target="_blank;">{$lang.see_logistics}</a></p>
+                            <!--{/if}-->
+                        </td>
+                    </tr>
+                    <tr class="line_bottom">
+                        <td colspan="9" align="right" class="order_form1"><div class="button_wrap">
+                            <a class="btn1" href="{url app=buyer_order&act=evaluate&order_id=$order.order_id}" target="_blank" id="order{$order.order_id}_evaluate"{if $order.status neq ORDER_FINISHED or $order.evaluation_status neq 0} style="display:none"{/if}>{$lang.evaluate}</a>
+                            <a href="{url app=cashier&order_id=$order.order_id}" target="_blank" id="order{$order.order_id}_action_pay"{if $order.status neq ORDER_PENDING} style="display:none"{/if} class="btn">{$lang.pay}</a>
+                            <input type="button" value="{$lang.confirm_order}" class="btn1" ectype="dialog" dialog_id="buyer_order_confirm_order" dialog_width="400" dialog_title="{$lang.confirm_order}" uri="index.php?app=buyer_order&amp;act=confirm_order&order_id={$order.order_id}&ajax"  id="order{$order.order_id}_action_confirm"{if $order.status neq ORDER_SHIPPED} style="display:none"{/if} />
+                             <!--{if $order.bh_id and !$order.refund}-->
+                             	<!--{if $order.status eq ORDER_FINISHED or $order.status eq ORDER_ACCEPTED or $order.status eq ORDER_SHIPPED}-->
+                        	 		<input type="button" value="{$lang.apply_refund}" class="btn1" ectype="dialog" dialog_width="400" dialog_title="{$lang.apply_refund}" dialog_id="buyer_order_apply_refund" uri="index.php?app=buyer_order&amp;act=apply_refund&order_id={$order.order_id}&ajax"  id="order{$order.order_id}_action_apply_refund" />
+                           		<!--{/if}-->
+                            <!--{/if}-->
+                            <!--{if (!$order.bh_id and !$order.storerefund ) and $order.status neq $smarty.const.ORDER_PENDING}-->
+                                <a href="{url app=buyer_order&act=refund_apply&order_id=$order.order_id}" class="btn1" target="_blank">{$lang.refund_apply}</a>
+                            <!--{/if}-->
+                            <input type="button" value="{$lang.cancel_order}" class="btn1" ectype="dialog" dialog_width="400" dialog_title="{$lang.cancel_order}" dialog_id="buyer_order_cancel_order" uri="index.php?app=buyer_order&amp;act=cancel_order&order_id={$order.order_id}&ajax"  id="order{$order.order_id}_action_cancel"{if $order.status neq ORDER_PENDING and $order.status neq ORDER_SUBMITTED} style="display:none"{/if} />
+                            <a href="{url app=buyer_order&act=view&order_id=$order.order_id}" target="_blank" class="btn1">{$lang.view_order}</a>
+                       </div> </td>
+                    </tr>
+                    <!--{foreachelse}-->
+                    <tr><td class="member_no_records" colspan="8">{$lang.no_records}</td></tr>
+                    <!--{/foreach}-->
+                    </table>
+                </div>
+                
+                
+                
+                <div class="order_form_page">
+                    <div class="page">
+                        {include file=member.page.bottom.html}
+                    </div>
+                </div>
+                <div class="clear"></div>
+            </div>
+            <div class="wrap_bottom"></div>
+        </div>
+        <div class="clear"></div>
+        <div class="adorn_right1"></div>
+        <div class="adorn_right2"></div>
+        <div class="adorn_right3"></div>
+        <div class="adorn_right4"></div>
+    </div>
+    <div class="clear"></div>
+</div>
+<iframe id='iframe_post' name="iframe_post" src="about:blank" frameborder="0" width="0" height="0"></iframe>
+{include file=footer.html}

@@ -1,0 +1,85 @@
+{include file=header.html}
+
+{include file=top.html}
+<div class="gheader_content">
+   <div class="goods_left">
+      {include file=goodsinfo.html}
+   </div>
+   <div class="goods_right">
+      {include file=goods_right.html}
+   </div>
+
+
+</div>
+<div class="clear"></div>
+
+<div class="ad-left" style="position:fixed; top:200px; left: 0px; z-index: 999;">
+    <div style="height:20px;cursor:pointer" onclick="$('.ad-left').remove()">关闭</div>
+    <a href="http://www.51zwd.com/shop/5808" target="_blank"><img style="width:150px" src="data/files/mall/template/shu.jpg"></img></a>
+</div>
+
+<!-- <div class="ad-right" style="position:fixed; top:200px; right: 0px; z-index: 999;">
+     <div style="height:20px;cursor:pointer;text-align:right" onclick="$('.ad-right').remove()">关闭</div>
+     <a href="http://www.51zwd.com/shop/12858" target="_blank"><img style="width:150px" src="data/files/mall/template/fenni.jpg"></img></a>
+     </div> -->
+
+{include file=goods.adv.html}
+
+<div id="content">
+    <div id="left">
+        {include file=goods_left.html}
+    </div>
+
+    <div id="right">
+
+
+        <a name="module"></a>
+        <ul class="user_menu" style="width:980px;">
+            <div class="ornament1"></div>
+            <div class="ornament2"></div>
+            <li><a class="active" href="{url app=goods&id=$goods.goods_id}#module"><span>{$lang.goods_detail}</span></a></li>
+            <li><a class="normal" href="{url app=goods&act=comments&id=$goods.goods_id}#module"><span>{$lang.goods_comment}</span></a></li>
+            <li><a class="normal" href="{url app=goods&act=saleslog&id=$goods.goods_id}#module"><span>{$lang.sales_log}</span></a></li>
+            <li><a class="normal" href="{url app=goods&act=qa&id=$goods.goods_id}#module"><span>{$lang.qa}</span></a></li>
+        </ul>
+        <style>
+           .option_box{width:940px;}
+           .option_box .attr ul{overflow:hidden;border-bottom:1px solid #ddd;padding:10px 0;clear:both;}
+           .option_box .attr ul li{float:left;width:150px;color:#666;height:24px;line-height:24px;white-space:nowrap;}
+        </style>
+        <div class="option_box">
+            <div class="attr">
+              <ul>
+                <!-- {foreach from=$attrs item=attr} -->
+                <li>{$attr.attr_name}:{$attr.attr_value}<li>
+                <!-- {/foreach} -->
+              </ul>
+            </div>
+            <div id="goods51_description" class="default">{$goods.description|escape:editor}</div>
+        </div>
+        <!--{if $goods.related_info.count gt 0}-->
+        <div class="module_currency">
+            <h2 class="common_title veins1">
+                <div class="ornament1"></div>
+                <div class="ornament2"></div>
+                <span class="ico1"><span class="ico2">{$lang.related_info}</span></span>
+            </h2>
+            <dl class="related_list">
+                <!--{foreach from=$goods.related_info.list item=app_data}-->
+                <!--{if $app_data.data and $app_data.app_type neq 'ECMALL'}-->
+                <dt><a href="{$app_data.app_url}">{$app_data.app_name}</a></dt>
+                <!--{foreach from=$app_data.data item=item}-->
+                <dd>{$item}</dd>
+                <!--{/foreach}-->
+                <!--{/if}-->
+                <!--{/foreach}-->
+            </dl>
+        </div>
+        <!--{/if}-->
+        <div class="clear"></div>
+    </div>
+
+    <div class="clear"></div>
+</div>
+
+{include file=footer.html}

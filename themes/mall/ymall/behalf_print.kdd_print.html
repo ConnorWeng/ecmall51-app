@@ -1,0 +1,188 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<base href="{$site_url}/" />
+<!-- Use IE7 mode -->
+<!-- <meta http-equiv="X-UA-Compatible" content="IE=EmulateIE7 charset=$charset" /> -->
+<meta http-equiv="Content-Type" content="text/html; charset={$charset}" />
+{$page_seo}
+
+<meta name="author" content="51zwd.com" />
+<meta name="copyright" content="51zwd.com. All Rights Reserved" />
+<link href="{res file=css/global.css}" rel="stylesheet" type="text/css" />
+<link href="{lib file=easyui/themes/bootstrap/easyui.css}" rel="stylesheet" type="text/css" />
+<link href="{lib file=easyui/themes/icon.css}" rel="stylesheet" type="text/css" />
+<link href="{res file=css/print.css}" rel="stylesheet" type="text/css" />
+<script type="text/javascript" src="{lib file=easyui/jquery.min.js}" charset="utf-8"></script>
+<script type="text/javascript" src="{lib file=easyui/jquery.easyui.min.js}" charset="utf-8"></script>
+<script type="text/javascript" src="{lib file=easyui/locale/easyui-lang-zh_CN.js}" charset="utf-8"></script>
+<script language="javascript" src="{lib file=lodop/LodopFuncs.js}"></script>
+
+<script type="text/javascript">
+var SITE_URL = "{$site_url}";
+var REAL_SITE_URL = "{$real_site_url}";
+var PRICE_FORMAT = '{$price_format}';
+var jjname="{$behalf.owner_name}";
+var jjtel="{$behalf.bh_tel}";
+var jjadr="{$behalf.region_name}";
+var LODOP=getLodop(document.getElementById('LODOP_OB'),document.getElementById('LODOP_EM'));
+
+function createYtoPage(FJName,GoodsInfo,FJTel,Order_sn,SJName,SJAdr,SJTel,SJRemark,Paytime)
+{	
+	<!--{if $print_templates['yto']}-->
+      {$print_templates.yto}
+	<!--{else}-->	
+		LODOP.ADD_PRINT_TEXT(93,123,102,24,FJName);
+		LODOP.SET_PRINT_STYLEA(0,"FontSize",12);
+		LODOP.ADD_PRINT_TEXT(117,73,331,104,GoodsInfo);
+		LODOP.SET_PRINT_STYLEA(0,"FontSize",11);
+		LODOP.ADD_PRINT_TEXT(221,158,107,20,FJTel);
+		LODOP.SET_PRINT_STYLEA(0,"FontSize",10);
+		LODOP.ADD_PRINT_TEXT(371,70,321,28,Order_sn);
+		LODOP.SET_PRINT_STYLEA(0,"FontSize",12);
+		LODOP.ADD_PRINT_TEXT(106,487,87,26,SJName);
+		LODOP.SET_PRINT_STYLEA(0,"FontSize",12);
+		LODOP.ADD_PRINT_TEXT(136,485,282,90,SJAdr);
+		LODOP.SET_PRINT_STYLEA(0,"FontSize",12);
+		LODOP.ADD_PRINT_TEXT(225,483,246,24,SJTel);
+		LODOP.SET_PRINT_STYLEA(0,"FontSize",12);
+		LODOP.ADD_PRINT_TEXT(299,421,367,161,SJRemark);
+		LODOP.SET_PRINT_STYLEA(0,"FontSize",15);
+		LODOP.SET_PRINT_STYLEA(0,"Bold",1);
+		LODOP.ADD_PRINT_TEXT(235,158,105,20,Paytime);
+   <!--{/if}-->
+}
+
+   function createZtoPage(FJName,GoodsInfo,FJTel,Order_sn,SJName,SJAdr,SJTel,SJRemark,Paytime)
+   {
+	   <!--{if $print_templates['zto']}-->
+	      {$print_templates.zto}
+	   <!--{else}-->
+		   	LODOP.ADD_PRINT_TEXT(108,127,112,24,FJName);
+		   	LODOP.SET_PRINT_STYLEA(0,"FontSize",12);
+		   	LODOP.ADD_PRINT_TEXT(135,72,331,114,GoodsInfo);
+		   	LODOP.SET_PRINT_STYLEA(0,"FontSize",11);
+		   	LODOP.ADD_PRINT_TEXT(252,81,107,20,FJTel);
+		   	LODOP.SET_PRINT_STYLEA(0,"FontSize",10);
+		   	LODOP.ADD_PRINT_TEXT(381,77,180,28,Order_sn);
+		   	LODOP.SET_PRINT_STYLEA(0,"FontSize",12);
+		   	LODOP.ADD_PRINT_TEXT(105,478,112,26,SJName);
+		   	LODOP.SET_PRINT_STYLEA(0,"FontSize",12);
+		   	LODOP.ADD_PRINT_TEXT(140,476,282,75,SJAdr);
+		   	LODOP.SET_PRINT_STYLEA(0,"FontSize",12);
+		   	LODOP.ADD_PRINT_TEXT(221,480,180,24,SJTel);
+		   	LODOP.SET_PRINT_STYLEA(0,"FontSize",12);
+		   	LODOP.ADD_PRINT_TEXT(268,438,307,146,SJRemark);
+		   	LODOP.SET_PRINT_STYLEA(0,"FontSize",15);
+		   	LODOP.SET_PRINT_STYLEA(0,"Bold",1);
+		   	LODOP.ADD_PRINT_TEXT(271,95,105,20,Paytime);
+		   	LODOP.ADD_PRINT_TEXT(302,297,100,35,"已验视");
+		   	LODOP.SET_PRINT_STYLEA(0,"FontSize",18);
+		   	LODOP.SET_PRINT_STYLEA(0,"Bold",1);
+   		<!--{/if}-->
+   }
+
+   function createStoPage(FJName,GoodsInfo,FJTel,Order_sn,SJName,SJAdr,SJTel,SJRemark,Paytime)
+   {	   
+	   <!--{if $print_templates['sto']}-->
+	      {$print_templates.sto}
+	   <!--{else}-->
+		   	LODOP.ADD_PRINT_TEXT(105,126,112,24,FJName);
+		   	LODOP.SET_PRINT_STYLEA(0,"FontSize",12);
+		   	LODOP.ADD_PRINT_TEXT(130,74,331,109,GoodsInfo);
+		   	LODOP.SET_PRINT_STYLEA(0,"FontSize",11);
+		   	LODOP.ADD_PRINT_TEXT(241,156,107,20,FJTel);
+		   	LODOP.SET_PRINT_STYLEA(0,"FontSize",10);
+		   	LODOP.ADD_PRINT_TEXT(364,78,201,28,Order_sn);
+		   	LODOP.SET_PRINT_STYLEA(0,"FontSize",12);
+		   	LODOP.ADD_PRINT_TEXT(105,493,112,26,SJName);
+		   	LODOP.SET_PRINT_STYLEA(0,"FontSize",12);
+		   	LODOP.ADD_PRINT_TEXT(140,484,282,95,SJAdr);
+		   	LODOP.SET_PRINT_STYLEA(0,"FontSize",12);
+		   	LODOP.ADD_PRINT_TEXT(245,517,246,24,SJTel);
+		   	LODOP.SET_PRINT_STYLEA(0,"FontSize",12);
+		   	LODOP.ADD_PRINT_TEXT(272,418,342,141,SJRemark);
+		   	LODOP.SET_PRINT_STYLEA(0,"FontSize",15);
+		   	LODOP.SET_PRINT_STYLEA(0,"Bold",1);
+		   	LODOP.ADD_PRINT_TEXT(256,158,105,20,Paytime);
+		   	LODOP.ADD_PRINT_TEXT(330,283,110,55,"已验视\n2059");
+		   	LODOP.SET_PRINT_STYLEA(0,"FontSize",18);
+		   	LODOP.SET_PRINT_STYLEA(0,"Bold",1);
+		   	LODOP.ADD_PRINT_TEXT(410,699,100,35,"4.6");
+		   	LODOP.SET_PRINT_STYLEA(0,"FontSize",17);
+	   <!--{/if}-->
+
+   }
+</script>
+<script type="text/javascript" src="{lib file=print/kdd_print.js}" charset="utf-8"></script>
+</head>
+<body class="easyui-layout" >
+<div style="display:none;">
+<object  id="LODOP_OB" classid="clsid:2105C259-1E0C-4534-8141-A753534CB4CA" width="0" height="0" > 
+       <embed id="LODOP_EM" type="application/x-print-lodop" width="0" height="0"></embed>
+</object>
+</div>
+<table id="dg"></table>
+<div id="query">
+	<div style="padding:5px;">		
+		<a href="javascript:save_invoice();" class="easyui-linkbutton" data-options="iconCls:'icon-save'" id="save_invoice">{$lang.save_invoice}</a>
+		<a href="javascript:print_all();" class="easyui-linkbutton" data-options="iconCls:'icon-print'" id="printall">{$lang.printall}</a>
+		<a href="javascript:async_ship();" class="easyui-linkbutton" data-options="iconCls:'icon-script-go'" id="async_shipped">{$lang.async_shipped}</a>
+		<span>当前模板：
+		<select id="select_template_setup" name="template" class="easyui-combobox" style="line-height:22px;">
+			<option value="yto">圆通快递</option>
+			<option value="zto">中通快递</option>
+			<option value="sto">申通快递</option>
+		</select>
+		</span>
+		<!-- <a href="javascript:template_setup()" class="easyui-linkbutton" data-options="iconCls:'icon-print-add'" id="template_setup">{$lang.template_setup}</a> -->
+		<div class="float-right">
+		<span>前缀</span>
+		<input id="prefix_invoice" style="height:18px;line-height:18px;border:1px solid #ccc">
+		<span>起始单号</span>
+		<input id="first_invoice" style="height:18px;line-height:18px;border:1px solid #ccc">
+		<span>步长</span>
+		<input id="add_step" class="easyui-numberspinner" name="add_step" data-options="min:1,max:9,editable:false" value="1" style="width:40px;line-height:22px;border:1px solid #ccc">
+		<a href="javascript:add_inslist()" class="easyui-linkbutton" data-options="iconCls:'icon-add'" id="first_invoice_btn">顺序递增</a>
+	    </div>
+	</div>
+	<div style="clear:both;"></div>
+	<div style="padding:5px;">
+	  <form id="query_form">
+		<span>{$lang.order_sn}</span>
+		<input id="order_sn" style="width:120px;height:18px;line-height:18px;border:1px solid #ccc">
+		<span>{$lang.seller_bm}</span>
+		<input id="seller_bm" style="width:120px;height:18px;line-height:18px;border:1px solid #ccc">
+		<span>{$lang.buyer_name}</span>
+		<input id="buyer_name" style="width:120px;height:18px;line-height:18px;border:1px solid #ccc">
+		<span>{$lang.pay_time}</span>
+		<input id="from_timeto" name="from_timeto" class="easyui-datetimebox" style="width:145px;">
+		<span>-</span>
+		<input id="to_timeto" name="to_timeto" class="easyui-datetimebox" style="width:145px;">
+		<span>{$lang.order_status}</span>
+		<select id="order_status" class="easyui-combobox" name="type" style="line-height:22px;border:1px solid #ccc">
+			<option value="">所有状态</option>
+			<option value="accepted">待发货</option>
+			<option value="shipped">已发货</option>
+		</select>
+		<span>{$lang.deliverys}</span>
+		<select id="exp_delivery" class="easyui-combobox" name="delivery" style="line-height:22px;border:1px solid #ccc">
+			<option value="">所有快递</option>
+			<!--{foreach from=$deliverys item=delivery}-->
+			<option value="{$delivery.dl_id}">{$delivery.dl_name}</option>
+			<!--{/foreach}-->
+		</select>
+		<a href="javascript:;" class="easyui-linkbutton" data-options="iconCls:'icon-search'" id="btnSearch">{$lang.search}</a>
+		<a href="javascript:clearForm();" class="easyui-linkbutton" data-options="iconCls:'icon-clear'" id="btnClear">{$lang.clear}</a>
+	  </form>
+	</div>
+</div>	
+
+<div id="dlg_template_setup" class="easyui-dialog" data-options="closed:true" title="{$lang.template_setup}" style="width:400px;height:200px;padding:10px;">
+	
+</div>
+
+
+
+</body>
+</html>
