@@ -266,7 +266,6 @@ class BaseModel extends Object {
         }
         $insert_info = $this->_getInsertInfo($data);
         $mode = $compatible ? 'REPLACE' : 'INSERT';
-
         $ret_value = $this->db->query("{$mode} INTO {$this->table}{$insert_info['fields']} VALUES{$insert_info['values']}");
         $insert_id = $this->db->insert_id();
         if ($insert_id) {

@@ -16,12 +16,12 @@ class MemberModel extends BaseModel
             'foreign_key' => 'store_id',    //外键名
             'dependent'   => true           //依赖
         ),
-    	//一个会员拥有一个代发，id相同
-    	'has_behalf'=>array(
-    		'model' =>'behalf',
-    		'type' =>HAS_ONE,
-    		'foreign_key' => 'bh_id',
-    		'dependent' => true	
+        //一个会员拥有一个代发，id相同
+        'has_behalf'=>array(
+            'model' =>'behalf',
+            'type' =>HAS_ONE,
+            'foreign_key' => 'bh_id',
+            'dependent' => true
         ),
         'manage_mall'   =>  array(
             'model'       => 'userpriv',
@@ -76,24 +76,24 @@ class MemberModel extends BaseModel
             'ext_limit'    => array('type' => 'store'),
             'reverse'      => 'be_collect',
         ),
-    	// 会员和代发是多对多的关系（会员收藏代发）
-    	'collect_behalf' => array(
-    		 'model'        => 'behalf',
-    		 'type'         => HAS_AND_BELONGS_TO_MANY,
-    		 'middle_table' => 'collect',
-    		 'foreign_key'  => 'user_id',
-    		 'ext_limit'    => array('type' => 'behalf'),
-    		 'reverse'      => 'be_collect',
-    	),
-    	// 会员和代发是多对多的关系（会员签约代发）
-    	'collect_sbehalf' => array(
-    			'model'        => 'behalf',
-    			'type'         => HAS_AND_BELONGS_TO_MANY,
-    			'middle_table' => 'collect',
-    			'foreign_key'  => 'user_id',
-    			'ext_limit'    => array('type' => 'sbehalf'),
-    			'reverse'      => 'be_collect',
-    	),
+        // 会员和代发是多对多的关系（会员收藏代发）
+        'collect_behalf' => array(
+             'model'        => 'behalf',
+             'type'         => HAS_AND_BELONGS_TO_MANY,
+             'middle_table' => 'collect',
+             'foreign_key'  => 'user_id',
+             'ext_limit'    => array('type' => 'behalf'),
+             'reverse'      => 'be_collect',
+        ),
+        // 会员和代发是多对多的关系（会员签约代发）
+        'collect_sbehalf' => array(
+                'model'        => 'behalf',
+                'type'         => HAS_AND_BELONGS_TO_MANY,
+                'middle_table' => 'collect',
+                'foreign_key'  => 'user_id',
+                'ext_limit'    => array('type' => 'sbehalf'),
+                'reverse'      => 'be_collect',
+        ),
         // 会员和店铺是多对多的关系（会员拥有店铺权限）
         'manage_store' => array(
             'model'        => 'store',
@@ -147,28 +147,34 @@ class MemberModel extends BaseModel
             'foreign_key'   => 'store_id',
             'dependent'   => true
         ),
-    	//一个会员属于一个代发的拿货员
-    	'belongs_to_behalf_goodstaker' => array(
-    				'model'         => 'behalf',
-    				'type'          => BELONGS_TO,
-    				'foreign_key'   => 'behalf_goods_taker',
-    				'reverse'       => 'has_membertaker',
-    	),
+        //一个会员属于一个代发的拿货员
+        'belongs_to_behalf_goodstaker' => array(
+                    'model'         => 'behalf',
+                    'type'          => BELONGS_TO,
+                    'foreign_key'   => 'behalf_goods_taker',
+                    'reverse'       => 'has_membertaker',
+        ),
         //一个会员有多个拿货市场
-    	'has_markettakers' => array(
-    				'model'        => 'markettaker',
-    				'type'         => HAS_AND_BELONGS_TO_MANY,
-    				'middle_table' => 'markettaker_member',    //中间表名称
-    				'foreign_key'  => 'user_id',
-    				'reverse'      => 'belongsto_members', //反向关系名称
-    	),
-    	//一个会员有多个拿货单
-    	'has_goodstakerinventory'=>array(
-    			'model'         => 'goodstakerinventory',
-    			'type'          => HAS_MANY,
-    			'foreign_key'   => 'taker_id',
-    			'dependent' => true
-    	)
+        'has_markettakers' => array(
+                    'model'        => 'markettaker',
+                    'type'         => HAS_AND_BELONGS_TO_MANY,
+                    'middle_table' => 'markettaker_member',    //中间表名称
+                    'foreign_key'  => 'user_id',
+                    'reverse'      => 'belongsto_members', //反向关系名称
+        ),
+        //一个会员有多个拿货单
+        'has_goodstakerinventory'=>array(
+                'model'         => 'goodstakerinventory',
+                'type'          => HAS_MANY,
+                'foreign_key'   => 'taker_id',
+                'dependent' => true
+        ),
+        'has_access_token' => array(
+            'model'       => 'access_token',       //模型的名称
+            'type'        => HAS_ONE,       //关系类型
+            'foreign_key' => 'user_id',    //外键名
+            'dependent'   => true           //依赖
+        ),
     );
 
     var $_autov = array(

@@ -78,7 +78,7 @@ class cls_mysql
     {
         if ($pconnect)
         {
-            if (!($this->_link_id = @mysql_pconnect($dbhost, $dbuser, $dbpw)))
+            if (!($this->_link_id = @mysqli_pconnect($dbhost, $dbuser, $dbpw)))
             {
                 if (!$quiet)
                 {
@@ -96,7 +96,7 @@ class cls_mysql
             }
             else
             {
-                $this->_link_id = @mysql_connect($dbhost, $dbuser, $dbpw);
+                $this->_link_id = @mysqli_connect($dbhost, $dbuser, $dbpw);
 
                 mt_srand((double)microtime() * 1000000); // 对 PHP 4.2 以下的版本进行随机数函数的初始化工作
             }
@@ -250,7 +250,7 @@ class cls_mysql
         /* 当当前的时间大于类初始化时间的时候，自动执行 ping 这个自动重新连接操作 */
         if (PHP_VERSION >= '4.3' && time() > $this->starttime + 1)
         {
-            mysql_ping($this->_link_id);
+            mysqli_ping($this->_link_id);
         }
 
         $sql = $this->prefix($sql); // 处理表名前缀
@@ -354,27 +354,33 @@ class cls_mysql
 
     function result($query, $row)
     {
-        return @mysql_result($query, $row);
+        for ($i = 0; $i <= $row; $i++) {
+            $query = mysqli_fetch_row($query);
+        }
+        if (count($query) == 1) {
+            $query = $query[0];
+        }
+        return $query;
     }
 
     function num_rows($query)
     {
-        return mysql_num_rows($query);
+        return mysqli_num_rows($query);
     }
 
     function num_fields($query)
     {
-        return mysql_num_fields($query);
+        return mysqli_num_fields($query);
     }
 
     function free_result($query)
     {
-        return mysql_free_result($query);
+        return mysqli_free_result($query);
     }
 
     function insert_id()
     {
-        return mysql_insert_id($this->_link_id);
+        return mysqli_insert_id($this->_link_id);
     }
 
     function fetchRow($query)
@@ -384,7 +390,7 @@ class cls_mysql
 
     function fetch_fields($query)
     {
-        return mysql_fetch_field($query);
+        return mysqli_fetch_field($query);
     }
 
     function version()
@@ -396,7 +402,7 @@ class cls_mysql
     {
         if (PHP_VERSION >= '4.3')
         {
-            return mysql_ping($this->_link_id);
+            return mysqli_ping($this->_link_id);
         }
         else
         {
@@ -408,17 +414,17 @@ class cls_mysql
     {
         if (PHP_VERSION >= '4.3')
         {
-            return mysql_real_escape_string($unescaped_string);
+            return mysqli_real_escape_string($unescaped_string);
         }
         else
         {
-            return mysql_escape_string($unescaped_string);
+            return mysqli_escape_string($unescaped_string);
         }
     }
 
     function close()
     {
-        return mysql_close($this->_link_id);
+        return mysqli_close($this->_link_id);
     }
 
     function ErrorMsg($message = '', $sql = '')
@@ -1006,7 +1012,7 @@ class cls_mysql
     function sp_connect($dbhost, $dbuser, $dbpw, $dbname = '')
     {
         //$this->close();
-        $this->_link_id = @mysql_connect($dbhost, $dbuser, $dbpw, true,131072);//add 131072 by tanaiquan in order to call procedure 201507030146
+        $this->_link_id = @mysqli_connect($dbhost, $dbuser, $dbpw, true,131072);//add 131072 by tanaiquan in order to call procedure 201507030146
         /* 选择数据库 */
         if ($dbname)
         {
