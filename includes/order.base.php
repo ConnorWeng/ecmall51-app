@@ -62,7 +62,7 @@ class BaseOrder extends Object
      *    @author    Garbin
      *    @return    array
      */
-    function get_order_form()
+    function get_order_form($store_id)
     {
         return array();
     }
@@ -232,35 +232,35 @@ class BaseOrder extends Object
             return false;
         }
 
-        
+
         if((isset($consignee['shipping_choice'])) && (intval($consignee['shipping_choice']) == 1))
         {
-        	if (!$consignee['logist_fees'])
-        	{
-        		$this->_error('shipping_required');        	
-        		return false;
-        	}
+            if (!$consignee['logist_fees'])
+            {
+                $this->_error('shipping_required');
+                return false;
+            }
         }
-        else 
+        else
         {
-        	if(!isset($consignee['shipping_choice']) || (intval($consignee['shipping_choice']) != 2))
-        	{
-        		/*hack*/
-        		$this->_error('behalf_required');
-        		return false;
-        	}
-        	if (!$consignee['behalf'])
-        	{
-        		$this->_error('behalf_required');        		 
-        		return false;
-        	}
-        	if (!$consignee['delivery'])
-        	{
-        		$this->_error('delivery_required');        		 
-        		return false;
-        	}
-        }       
-        
+            if(!isset($consignee['shipping_choice']) || (intval($consignee['shipping_choice']) != 2))
+            {
+                /*hack*/
+                $this->_error('behalf_required');
+                return false;
+            }
+            if (!$consignee['behalf'])
+            {
+                $this->_error('behalf_required');
+                return false;
+            }
+            if (!$consignee['delivery'])
+            {
+                $this->_error('delivery_required');
+                return false;
+            }
+        }
+
         return $consignee;
     }
 
@@ -352,7 +352,7 @@ class BaseOrder extends Object
             'add_time'      =>  gmtime(),
             'goods_amount'  =>  $goods_info['amount'],
             'discount'      =>  isset($goods_info['discount']) ? $goods_info['discount'] : 0,
-            'anonymous'     =>  intval($post['anonymous']),
+            'anonymous'     =>  intval(@$post['anonymous']),
             'postscript'    =>  trim($post['postscript']),
         );
     }
@@ -373,74 +373,74 @@ class BaseOrder extends Object
         {
             return false;
         }
-        
+
         if(isset($consignee_info['shipping_choice']) && (intval($consignee_info['shipping_choice']) == 1))
         {
-        	/* 计算配送费用 */
-        	/* $shipping_model =& m('shipping');
-        	$shipping_info  = $shipping_model->get("shipping_id={$consignee_info['shipping_id']} AND store_id={$goods_info['store_id']} AND enabled=1");
-        	if (empty($shipping_info))
-        	{
-        		$this->_error('no_such_shipping');
-        	
-        		return false;
-        	} */
-        	
-        	/* 配送费用=首件费用＋超出的件数*续件费用 */
-        	//$shipping_fee = $shipping_info['first_price'] + ($goods_info['quantity'] - 1) * $shipping_info['step_price'];
-        	$shipping_info = explode(':',$consignee_info['logist_fees']);
-        	$shipping_name = LANG::get($shipping_info[0]);
-        	$shipping_fee = abs(floatval($shipping_info[1]));
-        	
-        	
+            /* 计算配送费用 */
+            /* $shipping_model =& m('shipping');
+            $shipping_info  = $shipping_model->get("shipping_id={$consignee_info['shipping_id']} AND store_id={$goods_info['store_id']} AND enabled=1");
+            if (empty($shipping_info))
+            {
+                $this->_error('no_such_shipping');
+
+                return false;
+            } */
+
+            /* 配送费用=首件费用＋超出的件数*续件费用 */
+            //$shipping_fee = $shipping_info['first_price'] + ($goods_info['quantity'] - 1) * $shipping_info['step_price'];
+            $shipping_info = explode(':',$consignee_info['logist_fees']);
+            $shipping_name = LANG::get($shipping_info[0]);
+            $shipping_fee = abs(floatval($shipping_info[1]));
+
+
         }
         elseif(isset($consignee_info['shipping_choice']) && (intval($consignee_info['shipping_choice']) == 2))
         {
-        	/*采用代发，目前代发免费，快递费从数据库查找*/
-        	//$shipping_fee = 12;      	
-        	$behalf_mod =& m('behalf');
-        	/* $deliveries = $behalf_mod->getRelatedData('has_delivery',$consignee_info['behalf']);
-        	foreach($deliveries as $delivery)
-        	{
-        	    
-        		if(intval($delivery['dl_id']) == intval($consignee_info['delivery']))
-        		{
-        			$shipping_fee = intval($delivery['dl_fee']);
-        		}
-        	} 
-        	if(empty($shipping_fee))
-        	{
-        		$this->_error('hack attemp;no shipping fee');
-        		return false;
-        	}       	 */ 
-        	if(empty($goods_info['quantity']))
-        	{
-        		$this->_error('hack attemp;');
-        		return false;
-        	}
-        	$shipping_fee = $behalf_mod->calculate_behalf_delivery_fee($consignee_info['behalf'],$consignee_info['delivery'],$goods_info['quantity']);        	
+            /*采用代发，目前代发免费，快递费从数据库查找*/
+            //$shipping_fee = 12;
+            $behalf_mod =& m('behalf');
+            /* $deliveries = $behalf_mod->getRelatedData('has_delivery',$consignee_info['behalf']);
+            foreach($deliveries as $delivery)
+            {
+
+                if(intval($delivery['dl_id']) == intval($consignee_info['delivery']))
+                {
+                    $shipping_fee = intval($delivery['dl_fee']);
+                }
+            }
+            if(empty($shipping_fee))
+            {
+                $this->_error('hack attemp;no shipping fee');
+                return false;
+            }            */
+            if(empty($goods_info['quantity']))
+            {
+                $this->_error('hack attemp;');
+                return false;
+            }
+            $shipping_fee = $behalf_mod->calculate_behalf_delivery_fee($consignee_info['behalf'],$consignee_info['delivery'],$goods_info['quantity']);
         }
         else
         {
-        	return false;
+            return false;
         }
-        
-        return array(
-        		'consignee'     =>  $consignee_info['consignee'],
-        		'region_id'     =>  $consignee_info['region_id'],
-        		'region_name'   =>  $consignee_info['region_name'],
-        		'address'       =>  $consignee_info['address'],
-        		'zipcode'       =>  $consignee_info['zipcode'],
-        		'phone_tel'     =>  $consignee_info['phone_tel'],
-        		'phone_mob'     =>  $consignee_info['phone_mob'],
-        		'shipping_id'   =>  (isset($consignee_info['shipping_choice']) && (intval($consignee_info['shipping_choice']) == 1))?$consignee_info['shipping_id']:0,
-        		'shipping_name' =>  (isset($consignee_info['shipping_choice']) && (intval($consignee_info['shipping_choice']) == 1))?addslashes($shipping_name):"",
-        		'shipping_fee'  =>  $shipping_fee,
-        		'bh_id' => (isset($consignee_info['shipping_choice']) && (intval($consignee_info['shipping_choice']) == 2))?$consignee_info['behalf']:0,
-        		'dl_id' => (isset($consignee_info['shipping_choice']) && (intval($consignee_info['shipping_choice']) == 2))?$consignee_info['delivery']:0,
-        );  
 
-        
+        return array(
+                'consignee'     =>  $consignee_info['consignee'],
+                'region_id'     =>  $consignee_info['region_id'],
+                'region_name'   =>  $consignee_info['region_name'],
+                'address'       =>  $consignee_info['address'],
+                'zipcode'       =>  $consignee_info['zipcode'],
+                'phone_tel'     =>  $consignee_info['phone_tel'],
+                'phone_mob'     =>  $consignee_info['phone_mob'],
+                'shipping_id'   =>  (isset($consignee_info['shipping_choice']) && (intval($consignee_info['shipping_choice']) == 1))?$consignee_info['shipping_id']:0,
+                'shipping_name' =>  (isset($consignee_info['shipping_choice']) && (intval($consignee_info['shipping_choice']) == 1))?addslashes($shipping_name):"",
+                'shipping_fee'  =>  $shipping_fee,
+                'bh_id' => (isset($consignee_info['shipping_choice']) && (intval($consignee_info['shipping_choice']) == 2))?$consignee_info['behalf']:0,
+                'dl_id' => (isset($consignee_info['shipping_choice']) && (intval($consignee_info['shipping_choice']) == 2))?$consignee_info['delivery']:0,
+        );
+
+
     }
 
     /**

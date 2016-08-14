@@ -414,11 +414,11 @@ class cls_mysql
     {
         if (PHP_VERSION >= '4.3')
         {
-            return mysqli_real_escape_string($unescaped_string);
+            return mysqli_real_escape_string($this->_link_id, $unescaped_string);
         }
         else
         {
-            return mysqli_escape_string($unescaped_string);
+            return mysqli_escape_string($this->_link_id, $unescaped_string);
         }
     }
 
