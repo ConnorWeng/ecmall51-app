@@ -77,4 +77,9 @@ function ecm_json_encode($value)
     }
 }
 
+function &m($model_name, $params = array(), $is_new = false) {
+    $model_class = ucfirst($model_name).'Model';
+    return new $model_class();
+}
+
 ?>

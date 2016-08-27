@@ -1,0 +1,7 @@
+<?
+
+class AddressModel {
+    function get() {}
+}
+
+?>

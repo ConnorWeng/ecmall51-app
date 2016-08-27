@@ -8,10 +8,37 @@ define('NOT_LOGIN', 510007);
 define('ACCESS_TOKEN_ERROR', 510008);
 
 class Mobile_orderApp extends FrontendApp {
+    private $_address_mod = null;
+    private $_order_mod = null;
+    private $_goodsstatistics_mod = null;
+    private $_store_mod = null;
+    private $_goodsspec_mod = null;
 
-    function __construct() {
-        header("Content-type: application/json");
+    function __construct($address_mod = null, $order_mod = null,
+                         $goodsstatistics_mod = null, $store_mod = null,
+                         $goodsspec_mod = null) {
+        @header("Content-type: application/json");
         parent::__construct();
+        $this->_address_mod = $address_mod;
+        if ($this->_address_mod === null) {
+            $this->_address_mod =& m('address');
+        }
+        $this->_order_mod = $order_mod;
+        if ($this->_order_mod === null) {
+            $this->_order_mod =& m('order');
+        }
+        $this->_goodsstatistics_mod = $goodsstatistics_mod;
+        if ($this->_goodsstatistics_mod === null) {
+            $this->_goodsstatistics_mod =& m('goodsstatistics');
+        }
+        $this->_store_mod = $store_mod;
+        if ($this->_store_mod === null) {
+            $this->_store_mod =& m('store');
+        }
+        $this->_goodsspec_mod = $goodsspec_mod;
+        if ($this->_goodsspec_mod === null) {
+            $this->_goodsspec_mod =& m('goodsspec');
+        }
     }
 
     function _init_visitor() {
@@ -80,8 +107,7 @@ class Mobile_orderApp extends FrontendApp {
             return;
         }
 
-        $address_mod =& m('address');
-        $address_info = $address_mod->get($address_id);
+        $address_info = $this->_address_mod->get($address_id);
         $region_id = $address_info['region_id'];
         $region_name = $address_info['region_name'];
         $receiver_name = $address_info['consignee'];
@@ -146,27 +172,18 @@ class Mobile_orderApp extends FrontendApp {
             return;
         }
 
-        $model_order =& m('order');
         /* 减去商品库存 */
-        $model_order->change_stock('-', $order_id);
-        $order_info = $model_order->get($order_id);
+        $this->_order_mod->change_stock('-', $order_id);
+        $order_info = $this->_order_mod->get($order_id);
 
-        $model_behalf = &m('behalf');
-        /*发送给代发下单通知*/
-        $model_member =& m('member');
-
-        $behalf_info = $model_member->get($behalf_id);
-        $behalf_address = $behalf_info['email'];
-
-        $model_goodsstatistics =& m('goodsstatistics');
         $goods_ids = array();
         foreach ($goods_info['items'] as $goods)
         {
             $goods_ids[] = $goods['goods_id'];
             //更新销售量
-            $model_goodsstatistics->edit($goods['goods_id'], "sales=sales+{$goods['quantity']}");
+            $this->_goodsstatistics_mod->edit($goods['goods_id'], "sales=sales+{$goods['quantity']}");
         }
-        $model_goodsstatistics->edit($goods_ids, 'orders=orders+1');
+        $this->_goodsstatistics_mod->edit($goods_ids, 'orders=orders+1');
 
         // TODO: 更新vendor订单状态
 
@@ -177,11 +194,10 @@ class Mobile_orderApp extends FrontendApp {
 
     function _get_order_goods($spec_ids, $spec_nums) {
         $result = array();
-        $goodsspec_mod = &m('goodsspec');
         for ($i = 0; $i < count($spec_ids); $i++) {
             $spec_id = $spec_ids[$i];
             $num = $spec_nums[$i];
-            $goods = $goodsspec_mod->find(array(
+            $goods = $this->_goodsspec_mod->find(array(
                 'conditions' => "spec_id={$spec_id}",
                 'fields' => 'gs.spec_id,gs.goods_id,gs.spec_1,gs.spec_2,gs.color_rgb,gs.price,gs.stock,gs.sku,gs.spec_vid_1,gs.spec_vid_2,g.store_id,g.type,g.goods_name,g.description,g.cate_id,g.cate_name,g.brand,g.spec_qty,g.spec_name_1,g.spec_name_2,g.if_show,g.closed,g.close_reason,g.add_time,g.last_update,g.default_spec,g.default_image,g.searchcode,g.recommended,g.cate_id_1,g.cate_id_2,g.cate_id_3,g.cate_id_4,g.service_shipa,g.tags,g.sort_order,g.good_http,g.moods,g.cids,g.realpic,g.spec_pid_1,g.spec_pid_2,g.delivery_template_id,g.delivery_weight',
                 'join' => 'belongs_to_goods',
@@ -211,8 +227,7 @@ class Mobile_orderApp extends FrontendApp {
                 'allow_coupon'  => true,    //是否允许使用优惠券
                 'rec_ids' => array(),
                 'behalf_fee' => 0);
-            $store_model =& m('store');
-            $store_info = $store_model->get($store_id);
+            $store_info = $this->_store_mod->get($store_id);
             $items = $this->_get_items($goods, $store_id);
             $data['items'] = $items;
             $data['quantity'] += $this->_get_quantity($items);
