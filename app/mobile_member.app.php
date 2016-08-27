@@ -1,9 +1,5 @@
 <?php
 
-define('NOT_POST_ACTION', 510001);
-define('LOGIN_FAILED', 510002);
-define('ADD_ACCESS_TOKEN_FAILED', 510003);
-
 class Mobile_memberApp extends FrontendApp {
     function __construct() {
         $this->Mobile_memberApp();

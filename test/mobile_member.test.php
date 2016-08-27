@@ -1,24 +1,14 @@
 <?php
 
-define('ROOT_PATH', dirname(__FILE__).'/..');
+require_once(ROOT_PATH.'/test/fake/ecmall.php');
+require_once(ROOT_PATH.'/test/fake/frontend.base.php');
+require_once(ROOT_PATH.'/test/fake/uc.passport.php');
+require_once(ROOT_PATH.'/test/fake/member.model.php');
+require_once(ROOT_PATH.'/test/fake/access_token.model.php');
 
-require(ROOT_PATH.'/test/fake/ecmall.php');
-require(ROOT_PATH.'/test/fake/frontend.base.php');
-require(ROOT_PATH.'/test/fake/uc.passport.php');
-require(ROOT_PATH.'/test/fake/member.model.php');
-require(ROOT_PATH.'/test/fake/access_token.model.php');
+require_once(ROOT_PATH.'/app/mobile_member.app.php');
 
-require(ROOT_PATH.'/app/mobile_member.app.php');
-
-function ajaxFunctionReturnJson($function, ...$params) {
-    ob_start();
-    $function(...$params);
-    $json = ob_get_contents();
-    ob_end_clean();
-    return $json;
-}
-
-class Mobile_memberTest extends PHPUnit_Framework_TestCase {
+class Mobile_memberTest extends TestCase {
 
     private $mobile_member;
 
@@ -95,13 +85,6 @@ class Mobile_memberTest extends PHPUnit_Framework_TestCase {
         $this->assertTrue($elapsed_time < 1);
     }
 
-    function stub($class_name, ...$configs) {
-        $stub = $this->getMockBuilder($class_name)->getMock();
-        for ($i = 0; $i < count($configs); $i += 2) {
-            $stub->method($configs[$i])->willReturn($configs[$i+1]);
-        }
-        return $stub;
-    }
 }
 
 ?>

@@ -1,6 +1,6 @@
 <?php
 
-class FrontendApp {
+class FrontendApp extends ECBaseApp {
     function __construct() {}
 }
 

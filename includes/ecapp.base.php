@@ -92,6 +92,16 @@ define('GROUP_CANCEL_INTERVAL', 5);     // 团购结束后自动取消的间隔�
 define('NOTICE_MAIL', 1); // 邮件通知
 define('NOTICE_MSG', 2); // 站内短消息
 
+// mobile app
+define('NOT_POST_ACTION', 510001);
+define('LOGIN_FAILED', 510002);
+define('ADD_ACCESS_TOKEN_FAILED', 510003);
+define('SUBMIT_ORDER_PRARMS_ERROR', 510004);
+define('ORDER_GOODS_NOT_FOUND', 510005);
+define('SUBMIT_ORDER_FAILED', 510006);
+define('NOT_LOGIN', 510007);
+define('ACCESS_TOKEN_ERROR', 510008);
+
 /**
  *    ECBaseApp
  *
