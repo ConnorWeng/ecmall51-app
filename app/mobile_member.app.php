@@ -6,7 +6,7 @@ class Mobile_memberApp extends FrontendApp {
     }
 
     function Mobile_memberApp() {
-        header("Content-type: application/json");
+        @header("Content-type: application/json");
     }
 
     function login() {

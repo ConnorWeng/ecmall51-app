@@ -4,3 +4,5 @@
 .settings
 temp/
 config.inc.php
+.idea/
+.DS_Store
