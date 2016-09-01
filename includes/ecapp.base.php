@@ -75,7 +75,7 @@ define('BELONG_STORE', 3);
 
 /* 环境 */
 define('CHARSET', substr(LANG, 3));
-define('IS_AJAX', isset($_REQUEST['ajax']));
+define('IS_AJAX', isset($_REQUEST['ajax']) || (strpos($_GET['app'], 'mobile') !== false));
 /* 短消息的标志 */
 define('MSG_SYSTEM', 0); //系统消息
 
@@ -618,7 +618,10 @@ EOT;
         if (!empty($msg)) {
             $msg = Lang::get($msg);
         }
-        $result = array('done' => false, 'msg' => $msg);
+        $result = array('done' => false,
+                        'msg' => $msg,
+                        'error' => true,
+                        'message' => $msg);
         if (isset($retval))
             $result['retval'] = $retval;
 

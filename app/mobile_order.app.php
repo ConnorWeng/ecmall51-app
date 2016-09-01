@@ -180,9 +180,40 @@ class Mobile_orderApp extends FrontendApp {
 
         // TODO: 更新vendor订单状态
 
+        // 构建支付宝订单信息
+        // $order_info['order_sn'], $order_info['order_amount']是string
+        // $order_id是int
+        $alipay_order_info = $this->_build_alipay_order_info($order_info['order_sn'], $order_info['order_amount'], '51zwd订单-'.$order_info['order_sn'], local_date('Y-m-d H:i:s'));
+
         echo ecm_json_encode(array(
             'order_id' => $order_id,
+            'order_sn' => $order_info['order_sn'],
+            'order_info' => $alipay_order_info,
             'total_amount' => $order_info['order_amount']));
+    }
+
+    function _build_alipay_order_info($order_sn, $total_amount, $subject, $timestamp) {
+        import('alipay-sdk/AopSdk');
+        // 需按照key排序
+        $keyVals = array(
+            'app_id' => MOBILE_ALIPAY_APP_ID,
+            'biz_content' => ecm_json_encode(array(
+                'timeout_express' => '24h',
+                'product_code' => 'QUICK_MSECURITY_PAY',
+                'total_amount' => $total_amount,
+                'subject' => $subject,
+                'out_trade_no' => $order_sn)),
+            'charset' => 'utf-8',
+            'method' => 'alipay.trade.app.pay',
+            'sign_type' => 'RSA',
+            'timestamp' => $timestamp,
+            'version' => '1.0');
+        $params = http_build_query($keyVals);
+        $c = new AopClient;
+        $c->rsaPrivateKeyFilePath = MOBILE_ALIPAY_PRIVATE_KEY_PATH;
+        $sign = $c->rsaSign($keyVals);
+        $order_info = $params.'&sign='.urlencode($sign);
+        return $order_info;
     }
 
     function _get_order_goods($spec_ids, $spec_nums) {

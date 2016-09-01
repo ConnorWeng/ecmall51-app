@@ -1,5 +1,6 @@
 <?php
 
+require_once(ROOT_PATH.'/test/fake/config.inc.php');
 require_once(ROOT_PATH.'/test/fake/frontend.base.php');
 require_once(ROOT_PATH.'/test/fake/address.model.php');
 require_once(ROOT_PATH.'/test/fake/order.model.php');
@@ -13,7 +14,9 @@ require_once(ROOT_PATH.'/app/mobile_order.app.php');
 
 class Mobile_orderTest extends TestCase {
 
-    function test_validate_submit_order_params() {
+    private $mobile_order;
+
+    function __construct() {
         $address_stub = $this->stub('AddressModel', 'get', array(
             'region_id' => '1',
             'region_name' => '中国 上海 松江',
@@ -45,31 +48,41 @@ class Mobile_orderTest extends TestCase {
                   'price' => 22,
                   'num' => 2,
                   'default_image' => 'http://www.example.com/other.jpg')));
-        $mobile_order = new Mobile_orderApp($address_stub, $order_stub,
-                                                  $goodsstatistics_stub,
-                                                  $store_stub, $goodsspec_stub);
+        $this->mobile_order = new Mobile_orderApp($address_stub, $order_stub,
+                                            $goodsstatistics_stub,
+                                            $store_stub, $goodsspec_stub);
+    }
 
+    function test_validate_submit_order_params() {
         $this->assertTrue(
-            $mobile_order->_validate_submit_order_params(
+            $this->mobile_order->_validate_submit_order_params(
                 array(1001, 1002), array(1, 1), 1, 1, 1));
         $this->assertTrue(
-            $mobile_order->_validate_submit_order_params(
+            $this->mobile_order->_validate_submit_order_params(
                 array('1001', '1002'), array('1', '1'), '1', '1', '1'));
         $this->assertFalse(
-            $mobile_order->_validate_submit_order_params(
+            $this->mobile_order->_validate_submit_order_params(
                 array(1001, 1002), array(1), 1, 1, 1));
         $this->assertFalse(
-            $mobile_order->_validate_submit_order_params(
+            $this->mobile_order->_validate_submit_order_params(
                 array(123, 456, 'abc'), array(1, 2, 3), 1, 1, 1));
         $this->assertFalse(
-            $mobile_order->_validate_submit_order_params(
+            $this->mobile_order->_validate_submit_order_params(
                 array(1001, 1002), array(1, 1), 'abc', 1, 1));
         $this->assertFalse(
-            $mobile_order->_validate_submit_order_params(
+            $this->mobile_order->_validate_submit_order_params(
                 array(1001, 1002), array(1, 1), 1, 'abc', 1));
         $this->assertFalse(
-            $mobile_order->_validate_submit_order_params(
+            $this->mobile_order->_validate_submit_order_params(
                 array(1001, 1002), array(1, 1), 1, 1, 'abc'));
+    }
+
+    function test_build_alipay_order_info() {
+        import('time.lib');
+        $order_info = $this->mobile_order->_build_alipay_order_info('12345', '0.01', '1', '2016-07-29 16:55:53');
+        $parts = explode('&sign=', $order_info);
+        $this->assertEquals('app_id=99999&biz_content=%7B%22timeout_express%22%3A%2224h%22%2C%22product_code%22%3A%22QUICK_MSECURITY_PAY%22%2C%22total_amount%22%3A%220.01%22%2C%22subject%22%3A%221%22%2C%22out_trade_no%22%3A%2212345%22%7D&charset=utf-8&method=alipay.trade.app.pay&sign_type=RSA&timestamp=2016-07-29+16%3A55%3A53&version=1.0', $parts[0]);
+        $this->assertEquals('Ge5M4DR7rbrqb9WEzaZ264hCfVpalKFRKfs2j9pcG3SHT6Y9czwD7vhg%2FLSsSPTUyCyomJfsAp1LqXkJ4pYBAuOwTbbz3qWFJEhU%2FamCVCzBMUTSKrwU0%2B80iU9ixmT3Q4BA%2BoKKdi5sXJ8qqKVReBrhe439ZvUNUM4TMFiH0LM%3D', $parts[1]);
     }
 
 }
