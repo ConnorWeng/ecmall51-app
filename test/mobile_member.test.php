@@ -17,10 +17,7 @@ class Mobile_memberTest extends TestCase {
     }
 
     function test_ajax_error_should_return_error_code_and_message() {
-        $json = ajaxFunctionReturnJson(
-            function ($mobile_member) {
-                $mobile_member->_ajax_error(400, 510001, 'error!');
-            }, $this->mobile_member);
+        $json = ajax_method_return_json($this->mobile_member, '_ajax_error', 400, 510001, 'error!');
         $error = json_decode($json);
 
         $this->assertEquals(true, $error->error);
@@ -35,10 +32,9 @@ class Mobile_memberTest extends TestCase {
                                          'add_time' => 1470580460));
         $access_token_stub = $this->stub('Access_tokenModel', 'add', true);
 
-        $json = ajaxFunctionReturnJson(
-            function ($mobile_member, ...$params) {
-                $mobile_member->_login('fakeuser', 'fakepassword', ...$params);
-            }, $this->mobile_member, $user_stub, $member_stub, $access_token_stub);
+        $json = ajax_method_return_json($this->mobile_member, '_login',
+                                     'fakeuser', 'fakepassword', $user_stub,
+                                     $member_stub, $access_token_stub);
         $user_info = json_decode($json);
 
         $this->assertEquals(1, $user_info->user_id);
@@ -49,10 +45,9 @@ class Mobile_memberTest extends TestCase {
     function test_login_should_return_error_code() {
         $user_stub = $this->stub('UcPassportUser', 'auth', false);
 
-        $json = ajaxFunctionReturnJson(
-            function ($mobile_member, ...$params) {
-                $mobile_member->_login('fakeuser', 'fakepassword', ...$params);
-            }, $this->mobile_member, $user_stub, new MemberModel(), new Access_tokenModel());
+        $json = ajax_method_return_json($this->mobile_member, '_login',
+                                     'fakeuser', 'fakepassword', $user_stub,
+                                     new MemberModel(), new Access_tokenModel());
 
         $this->assertEquals(510002, json_decode($json)->code);
 
@@ -62,10 +57,9 @@ class Mobile_memberTest extends TestCase {
                                          'add_time' => 1470580460));
         $access_token_stub = $this->stub('Access_tokenModel', 'add', false);
 
-        $json = ajaxFunctionReturnJson(
-            function ($mobile_member, ...$params) {
-                $mobile_member->_login('fakeuser', 'fakepassword', ...$params);
-            }, $this->mobile_member, $user_stub, $member_stub, $access_token_stub);
+        $json = ajax_method_return_json($this->mobile_member, '_login', 'fakeuser',
+                                     'fakepassword', $user_stub, $member_stub,
+                                     $access_token_stub);
 
         $this->assertEquals(510003, json_decode($json)->code);
     }

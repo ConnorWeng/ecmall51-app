@@ -4,9 +4,9 @@ define('ROOT_PATH', dirname(__FILE__).'/..');
 
 require_once(ROOT_PATH.'/test/fake/ecapp.base.php');
 
-function ajaxFunctionReturnJson($function, ...$params) {
+function ajax_method_return_json($instance, $method, ...$params) {
     ob_start();
-    $function(...$params);
+    call_user_func(array($instance, $method), ...$params);
     $json = ob_get_contents();
     ob_end_clean();
     return $json;
