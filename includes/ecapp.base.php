@@ -93,6 +93,7 @@ define('NOTICE_MAIL', 1); // 邮件通知
 define('NOTICE_MSG', 2); // 站内短消息
 
 // mobile app
+define('NOT_GET_ACTION', 510000);
 define('NOT_POST_ACTION', 510001);
 define('LOGIN_FAILED', 510002);
 define('ADD_ACCESS_TOKEN_FAILED', 510003);
@@ -101,6 +102,7 @@ define('ORDER_GOODS_NOT_FOUND', 510005);
 define('SUBMIT_ORDER_FAILED', 510006);
 define('NOT_LOGIN', 510007);
 define('ACCESS_TOKEN_ERROR', 510008);
+define('ORDER_ID_PARAM_ERROR', 510009);
 
 /**
  *    ECBaseApp
