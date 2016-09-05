@@ -75,7 +75,7 @@ define('BELONG_STORE', 3);
 
 /* 环境 */
 define('CHARSET', substr(LANG, 3));
-define('IS_AJAX', isset($_REQUEST['ajax']) || (strpos($_GET['app'], 'mobile') !== false));
+define('IS_AJAX', isset($_REQUEST['ajax']) || (isset($_GET['app']) && strpos($_GET['app'], 'mobile') !== false));
 /* 短消息的标志 */
 define('MSG_SYSTEM', 0); //系统消息
 
