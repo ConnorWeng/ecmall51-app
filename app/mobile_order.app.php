@@ -52,12 +52,16 @@ class Mobile_orderApp extends FrontendApp {
         if (!IS_POST) {
             if (is_numeric($_GET['order_id'])) {
                 $order_info = $this->_order_mod->get($_GET['order_id']);
-                echo ecm_json_encode(array(
-                    'order_info' => $this->_build_alipay_order_info(
-                        $order_info['order_sn'],
-                        $order_info['order_amount'],
-                        '51zwd订单-'.$order_info['order_sn'],
-                        local_date('Y-m-d H:i:s'))));
+                if ($order_info) {
+                    echo ecm_json_encode(array(
+                        'order_info' => $this->_build_alipay_order_info(
+                            $order_info['order_sn'],
+                            $order_info['order_amount'],
+                            '51zwd订单-'.$order_info['order_sn'],
+                            local_date('Y-m-d H:i:s'))));
+                } else {
+                    $this->_ajax_error(400, ORDER_NOT_EXISTS, 'order not exists');
+                }
             } else {
                 $this->_ajax_error(400, ORDER_ID_PARAM_ERROR, 'error in order id');
             }

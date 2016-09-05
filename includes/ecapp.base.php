@@ -103,6 +103,7 @@ define('SUBMIT_ORDER_FAILED', 510006);
 define('NOT_LOGIN', 510007);
 define('ACCESS_TOKEN_ERROR', 510008);
 define('ORDER_ID_PARAM_ERROR', 510009);
+define('ORDER_NOT_EXISTS', 510010);
 
 /**
  *    ECBaseApp
