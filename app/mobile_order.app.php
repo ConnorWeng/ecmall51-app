@@ -81,7 +81,7 @@ class Mobile_orderApp extends FrontendApp {
             $postscript = $this->_escape_string($_POST['postscript']);
             $this->_submit_order($spec_ids, $spec_nums, $address_id, $behalf_id, $delivery_id, $postscript);
         } else {
-            $this->_ajax_error(400, SUBMIT_ORDER_PRARMS_ERROR, 'error in order params');
+            $this->_ajax_error(400, SUBMIT_ORDER_PARAMS_ERROR, 'error in order params');
         }
     }
 
