@@ -212,7 +212,7 @@ class Mobile_orderApp extends FrontendApp {
             'order_id' => $order_id,
             'order_sn' => $order_info['order_sn'],
             'order_info' => $alipay_order_info,
-            'total_amount' => $order_info['order_amount']));
+            'order_amount' => $order_info['order_amount']));
     }
 
     function _build_alipay_order_info($order_sn, $total_amount, $subject, $timestamp) {
