@@ -48,6 +48,21 @@ class Mobile_orderApp extends FrontendApp {
         }
     }
 
+    function index() {
+        if (!IS_POST) {
+            $user_id = $this->visitor->get('user_id');
+            $orders = $this->_order_mod->findAll(array(
+                'include' => array('has_ordergoods'),
+                'index_key' => false,
+                'conditions' => "buyer_id = {$user_id}",
+                'fields' => 'order_id, order_sn, order_amount, status'));
+            echo ecm_json_encode($orders);
+        } else {
+            $this->_ajax_error(400, NOT_GET_ACTION, 'not a get action');
+            return;
+        }
+    }
+
     function get_alipay_order_info() {
         if (!IS_POST) {
             if (is_numeric($_GET['order_id'])) {
