@@ -1,6 +1,6 @@
 <?php
 
-class Mobile_memberApp extends FrontendApp {
+class Mobile_memberApp extends Mobile_frontendApp {
     function __construct() {
         $this->Mobile_memberApp();
     }
@@ -55,15 +55,6 @@ class Mobile_memberApp extends FrontendApp {
     function _generate_access_token() {
         return md5(uniqid()).md5(uniqid());
     }
-
-    function _ajax_error($http_code, $user_code, $message) {
-        http_response_code($http_code);
-        echo ecm_json_encode(array(
-            'error' => true,
-            'code' => $user_code,
-            'message' => $message));
-    }
-
 }
 
 ?>

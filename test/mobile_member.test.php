@@ -2,6 +2,7 @@
 
 require_once(ROOT_PATH.'/test/fake/ecmall.php');
 require_once(ROOT_PATH.'/test/fake/frontend.base.php');
+require_once(ROOT_PATH.'/test/fake/mobile_frontend.app.php');
 require_once(ROOT_PATH.'/test/fake/uc.passport.php');
 require_once(ROOT_PATH.'/test/fake/member.model.php');
 require_once(ROOT_PATH.'/test/fake/access_token.model.php');

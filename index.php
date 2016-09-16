@@ -6,8 +6,8 @@ define('ROOT_PATH', dirname(__FILE__));
  * 安装判断
  */
 if (!file_exists(ROOT_PATH . "/data/install.lock") && is_dir(ROOT_PATH . "/install")){
-	@header("location: install");
-	exit;
+    @header("location: install");
+    exit;
 }
 
 include(ROOT_PATH . '/eccore/ecmall.php');
@@ -26,6 +26,7 @@ ECMall::startup(array(
         ROOT_PATH . '/includes/ecapp.base.php',
         ROOT_PATH . '/includes/plugin.base.php',
         ROOT_PATH . '/app/frontend.base.php',
+        ROOT_PATH . '/app/mobile_frontend.app.php',
         ROOT_PATH . '/includes/subdomain.inc.php',
         ROOT_PATH . '/includes/sphinxapi.php',
     ),

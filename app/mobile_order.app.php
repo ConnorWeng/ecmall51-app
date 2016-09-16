@@ -1,6 +1,6 @@
 <?php
 
-class Mobile_orderApp extends FrontendApp {
+class Mobile_orderApp extends Mobile_frontendApp {
     private $_address_mod = null;
     private $_order_mod = null;
     private $_goodsstatistics_mod = null;
@@ -34,20 +34,6 @@ class Mobile_orderApp extends FrontendApp {
         }
     }
 
-    function _init_visitor() {
-        if (!empty($_REQUEST['access_token'])) {
-            try {
-                $this->visitor = env('visitor', new MobileVisitor($_REQUEST['access_token']));
-            } catch (Exception $e) {
-                $this->_ajax_error(400, ACCESS_TOKEN_ERROR, $e->getMessage());
-                exit;
-            }
-        } else {
-            $this->_ajax_error(400, NOT_LOGIN, 'please login first');
-            exit;
-        }
-    }
-
     function index() {
         if (!IS_POST) {
             $user_id = $this->visitor->get('user_id');
@@ -65,7 +51,7 @@ class Mobile_orderApp extends FrontendApp {
 
     function get_alipay_order_info() {
         if (!IS_POST) {
-            if (is_numeric($_GET['order_id'])) {
+            if (isset($_GET['order_id']) && is_numeric($_GET['order_id'])) {
                 $order_info = $this->_order_mod->get($_GET['order_id']);
                 if ($order_info) {
                     echo ecm_json_encode(array(
@@ -356,36 +342,8 @@ class Mobile_orderApp extends FrontendApp {
         return $amount;
     }
 
-    function _ajax_error($http_code, $user_code, $message) {
-        http_response_code($http_code);
-        echo ecm_json_encode(array(
-            'error' => true,
-            'code' => $user_code,
-            'message' => $message));
-    }
-
     function _escape_string($unescaped_string) {
         return empty($unescaped_string) ? '' : db()->escape_string($unescaped_string);
-    }
-}
-
-class MobileVisitor {
-    var $_access_token;
-    var $_user_info;
-
-    function __construct($access_token) {
-        $this->_access_token = db()->escape_string($access_token);
-        $access_token_mod =& m('access_token');
-        $this->_user_info = $access_token_mod->get(array(
-            'conditions' => "access_token='{$this->_access_token}'",
-            'join' => 'belongs_to_member'));
-        if (empty($this->_user_info['user_id'])) {
-            throw new RuntimeException('access token invalid');
-        }
-    }
-
-    function get($key) {
-        return $this->_user_info[$key];
     }
 }
 

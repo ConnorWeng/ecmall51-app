@@ -2,6 +2,7 @@
 
 require_once(ROOT_PATH.'/test/fake/config.inc.php');
 require_once(ROOT_PATH.'/test/fake/frontend.base.php');
+require_once(ROOT_PATH.'/test/fake/mobile_frontend.app.php');
 require_once(ROOT_PATH.'/test/fake/address.model.php');
 require_once(ROOT_PATH.'/test/fake/order.model.php');
 require_once(ROOT_PATH.'/test/fake/behalf.model.php');
