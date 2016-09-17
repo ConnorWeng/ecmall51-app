@@ -31,13 +31,18 @@ class Mobile_cartApp extends Mobile_frontendApp {
             @$carts[$item['store_id']]['amount'] += $item['subtotal'];   //各店铺的总金额
             @$carts[$item['store_id']]['quantity'] += $item['quantity'];   //各店铺的总数量
             @$carts[$item['store_id']]['goods'][] = $item;
+            @$carts[$item['store_id']]['store_id'] = $item['store_id'];
         }
+
+        // 转成app需要的数组格式
+        $mobileCarts = array();
 
         foreach ($carts as $_store_id => $cart) {
-            $carts[$_store_id]['kinds'] = count(array_keys($kinds[$_store_id]));  //各店铺的商品种类数
+            $cart['kinds'] = count(array_keys($kinds[$_store_id]));
+            array_push($mobileCarts, $cart);
         }
 
-        echo ecm_json_encode($carts);
+        echo ecm_json_encode($mobileCarts);
     }
 }
 
