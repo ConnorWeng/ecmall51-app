@@ -90,7 +90,7 @@ function show_warning ($msg)
 function _message($msg, $type)
 {
     $msg = new Message($msg, $type);
-    $msg->display();
+    $msg->display(null);
 }
 /**
  * Exception Handler
