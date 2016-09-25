@@ -27,6 +27,19 @@ class Mobile_frontendApp extends FrontendApp {
             'code' => $user_code,
             'message' => $message));
     }
+
+    function _make_sure_numeric($param, $default) {
+        if (isset($_REQUEST[$param])) {
+            if (is_numeric($_REQUEST[$param])) {
+                return $_REQUEST[$param];
+            } else {
+                $this->_ajax_error(400, PARAMS_ERROR, 'parameters error');
+                exit;
+            }
+        } else {
+            return $default;
+        }
+    }
 }
 
 class MobileVisitor {

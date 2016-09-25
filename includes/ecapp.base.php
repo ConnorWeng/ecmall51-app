@@ -104,6 +104,7 @@ define('NOT_LOGIN', 510007);
 define('ACCESS_TOKEN_ERROR', 510008);
 define('ORDER_ID_PARAM_ERROR', 510009);
 define('ORDER_NOT_EXISTS', 510010);
+define('PARAMS_ERROR', 510011);
 
 /**
  *    ECBaseApp
