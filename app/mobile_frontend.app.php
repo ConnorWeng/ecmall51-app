@@ -1,6 +1,11 @@
 <?php
 
 class Mobile_frontendApp extends FrontendApp {
+    function __construct() {
+        parent::__construct();
+        @header("Content-type: application/json");
+    }
+
     function _init_visitor() {
         if (!empty($_REQUEST['access_token'])) {
             try {

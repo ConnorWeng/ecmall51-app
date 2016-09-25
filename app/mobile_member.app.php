@@ -2,11 +2,6 @@
 
 class Mobile_memberApp extends Mobile_frontendApp {
     function __construct() {
-        $this->Mobile_memberApp();
-    }
-
-    function Mobile_memberApp() {
-        @header("Content-type: application/json");
     }
 
     function login() {

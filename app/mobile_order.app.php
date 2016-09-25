@@ -10,7 +10,6 @@ class Mobile_orderApp extends Mobile_frontendApp {
     function __construct($address_mod = null, $order_mod = null,
                          $goodsstatistics_mod = null, $store_mod = null,
                          $goodsspec_mod = null) {
-        @header("Content-type: application/json");
         parent::__construct();
         $this->_address_mod = $address_mod;
         if ($this->_address_mod === null) {
