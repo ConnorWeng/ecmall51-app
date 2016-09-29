@@ -15,10 +15,10 @@ class Mobile_shopApp extends Mobile_frontendApp {
         $order_by = 'mk_id, floor, address';
         $page_per = 25;
         $page = $this->_get_page($page_per);
-        $conditions = $mk_id == 0 ? '' : "mk_id = {$mk_id}";
+        $conditions = $mk_id == 0 ? '' : "mk_id in (select mk_id from ecm_market where parent_id = {$mk_id}) or mk_id = {$mk_id}";
         $shop_mod =& m('store');
         $shop_list = $shop_mod->find(array(
-            'fields' => 'mk_id, store_id, floor, address, store_name, see_price, business_scope',
+            'fields' => 'mk_id, mk_name, store_id, floor, address, store_name, see_price, business_scope',
             'index_key' => false,
             'conditions' => $conditions,
             'order' => $order_by,
