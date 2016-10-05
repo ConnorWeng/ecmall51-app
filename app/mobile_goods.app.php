@@ -23,6 +23,42 @@ class Mobile_goodsApp extends Mobile_frontendApp {
             'limit' => $page['limit']));
         echo ecm_json_encode($goods_list);
     }
+
+    function describe() {
+        $goods_id = $this->_make_sure_numeric('goods_id', -1);
+        if ($goods_id === -1) {
+            $this->_ajax_error(400, PARAMS_NOT_PROVIDED, 'goods id must be provided');
+        } else {
+            $this->_describe($goods_id);
+        }
+    }
+
+    function _describe($goods_id) {
+        $conditions = "goods_id = {$goods_id}";
+        $goods_mod =& m('goods');
+        $good = $goods_mod->get(array(
+            'fields' => 'description',
+            'conditions' => $conditions));
+        echo ecm_json_encode($good);
+    }
+
+    function specs() {
+        $goods_id = $this->_make_sure_numeric('goods_id', -1);
+        if ($goods_id === -1) {
+            $this->_ajax_error(400, PARAMS_NOT_PROVIDED, 'goods id must be provided');
+        } else {
+            $this->_specs($goods_id);
+        }
+    }
+
+    function _specs($goods_id) {
+        $goods_mod =& m('goods');
+        $goods_info = $goods_mod->get_info($goods_id);
+        $result = array(
+            'specs' => $goods_info['_specs'],
+        );
+        echo ecm_json_encode($result);
+    }
 }
 
 ?>
