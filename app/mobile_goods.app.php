@@ -56,6 +56,11 @@ class Mobile_goodsApp extends Mobile_frontendApp {
         $goods_info = $goods_mod->get_info($goods_id);
         $result = array(
             'specs' => $goods_info['_specs'],
+            'spec_qty' => $goods_info['spec_qty'],
+            'spec_name_1' => $goods_info['spec_name_1'],
+            'spec_pid_1' => $goods_info['spec_pid_1'],
+            'spec_name_2' => $goods_info['spec_name_2'],
+            'spec_pid_2' => $goods_info['spec_pid_2'],
         );
         echo ecm_json_encode($result);
     }
