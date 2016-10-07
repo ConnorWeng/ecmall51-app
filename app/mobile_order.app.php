@@ -72,6 +72,55 @@ class Mobile_orderApp extends Mobile_frontendApp {
         }
     }
 
+    function get_order_goods_info() {
+        $spec_ids = $this->_make_sure_all_numeric('spec_ids', array());
+        $spec_nums = $this->_make_sure_all_numeric('spec_nums', array());
+        if (empty($spec_ids) || empty($spec_nums) || count($spec_ids) !== count($spec_nums)) {
+            $this->_ajax_error(400, PARAMS_ERROR, 'parameters error');
+        } else {
+            $this->_get_order_goods_info($spec_ids, $spec_nums);
+        }
+    }
+
+    function _get_order_goods_info($spec_ids, $spec_nums) {
+        $goods = $this->_get_order_goods($spec_ids, $spec_nums);
+        $merge_goods_info = $this->_get_goods_info($goods);
+        if ($merge_goods_info === false) {
+            $this->_ajax_error(500, ORDER_GOODS_NOT_FOUND, 'goods not found');
+            return;
+        }
+        $goods_info = array(
+            'items'     =>  array(),    //商品列表
+            'quantity'  =>  0,          //商品总量
+            'amount'    =>  0,          //商品总价
+            'store_id'  =>  0,          //所属店铺
+            'store_name'=>  '',         //店铺名称
+            'type'      =>  null,       //商品类型
+            'otype'     =>  'behalf',   //订单类型
+            'allow_coupon'  => false,   //是否允许使用优惠券
+            'rec_ids' => array(),
+            'behalf_fee' => 0);
+        $store_ids = array();
+        foreach ($merge_goods_info as $key=>$value) {
+            if(!empty($value['items'])) {
+                foreach ($value['items'] as $goods_id=>$goods_value) {
+                    $goods_info['items'][] = $goods_value;
+                }
+            }
+            $goods_info['quantity'] = intval($goods_info['quantity']) + $value['quantity'];
+            $goods_info['amount'] = floatval($goods_info['amount']) + $value['amount'];//2015-06-05 by tanaiquan,intval($goods_info['amount'])变为floatval($goods_info['amount'])
+            $goods_info['store_name'] = $goods_info['store_name']." ".$value['store_name'];
+            $goods_info['type'] = $value['type'];
+            $goods_info['behalf_fee'] = floatval($goods_info['behalf_fee']) + floatval($value['behalf_fee']);
+            $store_ids[] = $key;
+        }
+
+        $address_info = $this->_address_mod->get(array('conditions' => 'user_id='.$this->visitor->get('user_id')));
+        $goods_info['default_address'] = $address_info;
+
+        echo ecm_json_encode($goods_info);
+    }
+
     function submit_order() {
         if (!IS_POST) {
             $this->_ajax_error(400, NOT_POST_ACTION, 'not a post action');

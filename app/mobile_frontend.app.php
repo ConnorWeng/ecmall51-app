@@ -40,6 +40,24 @@ class Mobile_frontendApp extends FrontendApp {
             return $default;
         }
     }
+
+    function _make_sure_all_numeric($param, $default) {
+        if (isset($_REQUEST[$param])) {
+            $result = array();
+            $parts = explode(',', $_REQUEST[$param]);
+            foreach ($parts as $part) {
+                if (is_numeric($part)) {
+                    array_push($result, $part);
+                } else {
+                    $this->_ajax_error(400, PARAMS_ERROR, 'parameters error');
+                    exit;
+                }
+            }
+            return $result;
+        } else {
+            return $default;
+        }
+    }
 }
 
 class MobileVisitor {
