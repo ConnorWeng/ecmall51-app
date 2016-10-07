@@ -55,6 +55,7 @@ class Mobile_orderApp extends Mobile_frontendApp {
                 if ($order_info) {
                     echo ecm_json_encode(array(
                         'order_id' => $_GET['order_id'],
+                        'order_amount' => $order_info['order_amount'],
                         'order_info' => $this->_build_alipay_order_info(
                             $order_info['order_sn'],
                             $order_info['order_amount'],
