@@ -24,6 +24,25 @@ class Mobile_goodsApp extends Mobile_frontendApp {
         echo ecm_json_encode($goods_list);
     }
 
+    function search() {
+        $keywords = explode(' ', $_REQUEST['keywords']);
+        $page_per = 25;
+        $page = $this->_get_page($page_per);
+        $goods_mod =& m('goods');
+        $goods = $goods_mod->get_Mem_list(array(
+            'order' => 'views desc',
+            'fields' => 'g.goods_id,',
+            'limit' => $page['limit'],
+            'conditions_tt' => $keywords), null, false, true, $total_found);
+        $goodsspec_mod =& m('goodsspec');
+        $result = array();
+        foreach ($goods as $key => $good) {
+            $goodsspec = $goodsspec_mod->get_spec_list($good['goods_id']);
+            $result = array_merge($result, $goodsspec);
+        }
+        echo ecm_json_encode($result);
+    }
+
     function describe() {
         $goods_id = $this->_make_sure_numeric('goods_id', -1);
         if ($goods_id === -1) {

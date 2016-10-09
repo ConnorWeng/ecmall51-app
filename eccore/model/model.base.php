@@ -924,6 +924,7 @@ class BaseModel extends Object {
             $fields = preg_split("/,/", $orgSorts);
             if (!$fields)
                 return "";
+            $reOrder = '';
             foreach ($fields as $field) {
                 if (!$this->isValidSort($field))
                     continue;
