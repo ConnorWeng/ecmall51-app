@@ -39,7 +39,7 @@ class Mobile_frontendApp extends FrontendApp {
 
     function _make_sure_numeric_impl($param, $default) {
         if (isset($_REQUEST[$param])) {
-            if (is_numeric($_REQUEST[$param]) && $_REQUEST[$param] > 0) {
+            if (is_numeric($_REQUEST[$param]) && $_REQUEST[$param] >= 0) {
                 return $_REQUEST[$param];
             } else {
                 $this->_ajax_error(400, PARAMS_ERROR, 'parameters error');
