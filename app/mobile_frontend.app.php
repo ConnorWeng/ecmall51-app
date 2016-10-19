@@ -67,6 +67,19 @@ class Mobile_frontendApp extends FrontendApp {
             return $default;
         }
     }
+
+    function _make_sure_string($param, $length_limit, $default) {
+        if (isset($_REQUEST[$param])) {
+            if (is_string($_REQUEST[$param]) && mb_strlen($_REQUEST[$param], 'utf-8') <= $length_limit) {
+                return $_REQUEST[$param];
+            } else {
+                $this->_ajax_error(400, PARAMS_ERROR, '参数错误');
+                exit;
+            }
+        } else {
+            return $default;
+        }
+    }
 }
 
 class MobileVisitor {
