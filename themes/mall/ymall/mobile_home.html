@@ -1,0 +1,144 @@
+<html>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <script type="text/javascript" src="{lib file=jquery.js}" charset="utf-8"></script>
+    <style>
+    html, body {
+      margin: 0;
+      padding: 0;
+      background: #E7E7E7;
+      font-weight: normal;
+    }
+    .container {
+      display: flex;
+      flex-direction: column;
+    }
+    .separator {
+      text-align: center;
+    }
+    .separator > h1 {
+      color: gray;
+      font-size: 14pt;
+      margin: 5px 0 5px 0;
+    }
+    .banner-container {
+      background: url('http://www.51zwd.com/data/files/mall/template/201607090053056375.jpg') no-repeat;
+      background-size: cover;
+      height: 150px;
+    }
+    .trendygoods-container {
+    }
+    .trendygoods-list {
+      list-style-type: none;
+      margin: 0;
+      padding: 0;
+    }
+    .trendygood {
+      height: 150px;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+      margin-bottom: 5px;
+    }
+    .trendygood-title-container {
+      background: rgba(255,255,255,0.4);
+    }
+    .trendygood-title {
+      margin-top: 5px;
+      margin-bottom: 5px;
+      font-size: 12pt;
+    }
+    .hotgoods-container {
+    }
+    .hotgoods-list {
+      list-style-type: none;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      flex-direction: row;
+      flex-wrap: wrap;
+      justify-content: space-between;
+    }
+    .hotgood {
+      width: 49%;
+      background: #ffffff;
+      margin-bottom: 5px;
+    }
+    .hotgood-image {
+      width: 100%;
+    }
+    .hotgood h2, .hotgood h3 {
+      margin: 0;
+      padding: 0;
+    }
+    .hotgood h2 {
+      font-size: 10pt;
+    }
+    .price-container {
+      display: flex;
+      flex-direction: row;
+    }
+    .price {
+      color: #f40;
+      font-size: 10pt;
+    }
+    .origin-price {
+      color: gray;
+      font-size: 8pt;
+      margin-left: 5px;
+      text-decoration: line-through;
+    }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <div class="banner-container">
+      </div>
+      <div class="separator">
+        <h1> — 热卖精品 — </h1>
+      </div>
+      <div class="trendygoods-container">
+        <ul class="trendygoods-list">
+          <li class="trendygood" style="background: url('https://img.alicdn.com/bao/uploaded/i4/TB1kTZSHFXXXXaDapXXXXXXXXXX_!!0-item_pic.jpg') no-repeat; background-size: cover;">
+            <div class="trendygood-title-container">
+              <h1 class="trendygood-title">实拍9671#欧美潮T短袖女装T恤洗水怀旧女上衣</h1>
+            </div>
+          </li>
+          <li class="trendygood" style="background: url('https://img.alicdn.com/bao/uploaded/i1/TB1aMZ.JFXXXXb8XFXXXXXXXXXX_!!0-item_pic.jpg') no-repeat; background-size: cover;">
+            <div class="trendygood-title-container">
+              <h1 class="trendygood-title">8736#2016年夏季新款女装民族风印花短袖盘扣文艺棉麻连衣裙</h1>
+            </div>
+          </li>
+        </ul>
+      </div>
+      <div class="separator">
+        <h1> — 人气爆款 — </h1>
+      </div>
+      <div class="hotgoods-container">
+        <ul class="hotgoods-list">
+          <!--{foreach from=$goods_list item=good}-->
+          <li class="hotgood" goods_name="{$good.goods_name}" default_image="{$good.default_image}"" price="{$good.price}">
+            <image class="hotgood-image" src="{$good.default_image}"/>
+            <h2>{$good.goods_name}</h2>
+            <div class="price-container">
+              <h3 class="price">¥ {$good.price}</h3>
+              <h3 class="origin-price">¥ {$good.price}</h3>
+            </div>
+          </li>
+          <!--{/foreach}-->
+        </ul>
+      </div>
+    </div>
+    <script>
+    $(function () {
+      if (!WebViewBridge) {
+        return;
+      }
+      $('.container').on('click', '.hotgood', function () {
+        const $good = $(this);
+        WebViewBridge.send($good.attr('goods_name') + '|,|' + $good.attr('default_image') + '|,|' + $good.attr('price'));
+      });
+    });
+    </script>
+  </body>
+</html>
