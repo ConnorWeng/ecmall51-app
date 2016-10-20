@@ -124,12 +124,12 @@ class Mobile_cartApp extends Mobile_frontendApp {
         }
 
         /* 如果是自己店铺的商品，则不能购买 */
-        if ($this->visitor->get('manage_store')) {
-            if ($spec_info['store_id'] == $this->visitor->get('manage_store')) {
-                $this->_ajax_error(400, CAN_NOT_BUY_YOURSELF, '不能购买自己店铺的宝贝');
-                return;
-            }
-        }
+        // if ($this->visitor->get('manage_store')) {
+        //     if ($spec_info['store_id'] == $this->visitor->get('manage_store')) {
+        //         $this->_ajax_error(400, CAN_NOT_BUY_YOURSELF, '不能购买自己店铺的宝贝');
+        //         return;
+        //     }
+        // }
 
         /* 是否添加过 */
         $item_info = $model_cart->get("spec_id={$spec_id} AND session_id='" . SESS_ID . "'");
