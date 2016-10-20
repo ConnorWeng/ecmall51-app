@@ -25,7 +25,7 @@ class Mobile_shopApp extends Mobile_frontendApp {
         $shop_list = $shop_mod->find(array(
             'fields' => 'mk_id, mk_name, store_id, floor, address, store_name, see_price, business_scope',
             'index_key' => false,
-            'conditions' => $conditions,
+            'conditions' => 'state = 1'.$conditions,
             'order' => $order_by,
             'limit' => $page['limit']));
         echo ecm_json_encode($shop_list);
