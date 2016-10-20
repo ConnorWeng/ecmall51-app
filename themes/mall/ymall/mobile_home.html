@@ -117,7 +117,11 @@
       <div class="hotgoods-container">
         <ul class="hotgoods-list">
           <!--{foreach from=$goods_list item=good}-->
-          <li class="hotgood" goods_name="{$good.goods_name}" default_image="{$good.default_image}"" price="{$good.price}">
+          <li class="hotgood"
+              goods_id="{$good.goods_id}"
+              goods_name="{$good.goods_name}"
+              default_image="{$good.default_image}""
+              price="{$good.price}">
             <image class="hotgood-image" src="{$good.default_image}"/>
             <h2>{$good.goods_name}</h2>
             <div class="price-container">
@@ -136,7 +140,11 @@
       }
       $('.container').on('click', '.hotgood', function () {
         const $good = $(this);
-        WebViewBridge.send($good.attr('goods_name') + '|,|' + $good.attr('default_image') + '|,|' + $good.attr('price'));
+        WebViewBridge.send(
+          $good.attr('goods_id') + '|,|' +
+          $good.attr('goods_name') + '|,|' +
+          $good.attr('default_image') + '|,|' +
+          $good.attr('price'));
       });
     });
     </script>
