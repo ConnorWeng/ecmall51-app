@@ -1,5 +1,16 @@
 <?php
 
+/* 定义like语句转换为in语句的条件 */
+define('MAX_ID_NUM_OF_IN', 10000); // IN语句的最大ID数
+define('MAX_HIT_RATE', 0.05);      // 最大命中率（满足条件的记录数除以总记录数）
+define('MAX_STAT_PRICE', 10000);   // 最大统计价格
+define('PRICE_INTERVAL_NUM', 5);   // 价格区间个数
+define('MIN_STAT_STEP', 50);       // 价格区间最小间隔
+define('NUM_PER_PAGE', 40);        // 每页显示数量
+define('ENABLE_SEARCH_CACHE', true); // 启用商品搜索缓存
+//define('DISABLE_SEARCH_CACHE', false); //不 启用商品搜索缓存
+define('SEARCH_CACHE_TTL', 3600);  // 商品搜索缓存时间
+
 class Mobile_goodsApp extends Mobile_frontendApp {
     function __construct() {
     }
@@ -32,7 +43,8 @@ class Mobile_goodsApp extends Mobile_frontendApp {
         $goods = $goods_mod->get_Mem_list(array(
             'order' => 'views desc',
             'fields' => 'g.goods_id,',
-            'limit' => $page['limit'],
+            // 'limit' => $page['limit'],
+            'limit' => $page_per,
             'conditions_tt' => $keywords), null, false, true, $total_found);
         $goodsspec_mod =& m('goodsspec');
         $result = array();
