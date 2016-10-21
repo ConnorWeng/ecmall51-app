@@ -132,7 +132,7 @@ class Mobile_cartApp extends Mobile_frontendApp {
         // }
 
         /* 是否添加过 */
-        $item_info = $model_cart->get("spec_id={$spec_id} AND session_id='" . SESS_ID . "'");
+        $item_info = $model_cart->get("spec_id={$spec_id} AND user_id='" . $this->visitor->get('user_id') . "'");
         if (!empty($item_info)) {
             $this->_ajax_error(400, GOODS_ALREADY_IN_CART, '该宝贝已在购物车中');
             return;
@@ -171,7 +171,28 @@ class Mobile_cartApp extends Mobile_frontendApp {
         $model_goodsstatistics->edit($spec_info['goods_id'], 'carts=carts+1');
 
         echo ecm_json_encode(array(
-            'sucess' => true));
+            'success' => true));
+    }
+
+    function drop() {
+        if (!IS_POST) {
+            $this->_ajax_error(400, NOT_POST_ACTION, 'not a post action');
+            return;
+        }
+        $rec_id = $this->_make_sure_numeric('rec_id', 0);
+        if ($rec_id === 0) {
+            $this->_ajax_error(400, PARAMS_ERROR, 'parameters error');
+            return;
+        }
+        /* 从购物车中删除 */
+        $model_cart = & m('cart');
+        $droped_rows = $model_cart->drop('rec_id=' . $rec_id . ' AND user_id=\'' . $this->visitor->get('user_id') . '\'', 'store_id');
+        if (!$droped_rows) {
+            $this->_ajax_error(400, DROP_FROM_CART_ERROR, '删除失败');
+            return;
+        }
+        echo ecm_json_encode(array(
+            'success' => true));
     }
 }
 
