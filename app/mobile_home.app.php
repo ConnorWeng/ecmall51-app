@@ -8,7 +8,7 @@ class Mobile_homeApp extends MallbaseApp {
             'fields' => 'goods_id, goods_name, default_image, price, store_id',
             'index_key' => false,
             'order' => $order_by,
-            'limit' => '1000, 20'));
+            'limit' => '5000, 20'));
         $this->assign('goods_list', $goods_list);
         $this->display('mobile_home.html');
     }
