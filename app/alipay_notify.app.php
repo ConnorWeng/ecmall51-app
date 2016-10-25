@@ -1,10 +1,9 @@
 <?php
 
-class Alipay_notifyApp extends FrontendApp {
+class Alipay_notifyApp extends Mobile_frontendApp {
     private $_order_mod = null;
 
     function __construct($order_mod = null) {
-        parent::__construct();
         $this->_order_mod = $order_mod;
         if ($this->_order_mod === null) {
             $this->_order_mod =& m('order');
@@ -16,12 +15,12 @@ class Alipay_notifyApp extends FrontendApp {
         $params = $_POST;
         $c = new AopClient;
         $sign_verified = @$c->rsaCheckV2($params, MOBILE_ALIPAY_PUBLIC_KEY);
-        $order_sn = $_POST['out_trade_no'];
-        $total_amount = $_POST['total_amount'];
-        $seller_email = $_POST['seller_email'];
-        $app_id = $_POST['app_id'];
-        $trade_status = $_POST['trade_status'];
-        $gmt_payment = $_POST['gmt_payment'];
+        $order_sn = $this->_make_sure_string('out_trade_no', 64, '');
+        $total_amount = $this->_make_sure_numeric('total_amount', 0);
+        $seller_email = $this->_make_sure_string('seller_email', 100, '');
+        $app_id = $this->_make_sure_string('app_id', 32, '');
+        $trade_status = $this->_make_sure_string('trade_status', 32, '');
+        $gmt_payment = $this->_make_sure_string('gmt_payment', 32, '');
         if ($sign_verified) {
             $this->_accept($order_sn, $total_amount, $seller_email,
                            $app_id, $trade_status, $gmt_payment);
