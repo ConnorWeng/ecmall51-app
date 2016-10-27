@@ -35,11 +35,16 @@ class Mobile_orderApp extends Mobile_frontendApp {
 
     function index() {
         if (!IS_POST) {
+            $order_by = 'add_time DESC';
+            $page_per = 25;
+            $page = $this->_get_page($page_per);
             $user_id = $this->visitor->get('user_id');
             $orders = $this->_order_mod->findAll(array(
                 'include' => array('has_ordergoods'),
                 'index_key' => false,
                 'conditions' => "buyer_id = {$user_id}",
+                'order' => $order_by,
+                'limit' => $page['limit'],
                 'fields' => 'order_id, order_sn, order_amount, status'));
             echo ecm_json_encode($orders);
         } else {
