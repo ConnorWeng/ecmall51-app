@@ -280,12 +280,13 @@ class Mobile_orderApp extends Mobile_frontendApp {
                 'out_trade_no' => $order_sn)),
             'charset' => 'utf-8',
             'method' => 'alipay.trade.app.pay',
+            'notify_url' => 'http://app.51zwd.com/ecmall51-app/gateway.php',
             'sign_type' => 'RSA',
             'timestamp' => $timestamp,
             'version' => '1.0');
         $params = http_build_query($keyVals);
         $c = new AopClient;
-        $c->rsaPrivateKeyFilePath = MOBILE_ALIPAY_PRIVATE_KEY_PATH;
+        $c->rsaPrivateKeyFilePath = MOBILE_ALIPAY_APP_PRIVATE_KEY_PATH;
         $sign = $c->rsaSign($keyVals);
         $order_info = $params.'&sign='.urlencode($sign);
         return $order_info;

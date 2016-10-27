@@ -11,28 +11,14 @@ class Alipay_notifyApp extends Mobile_frontendApp {
     }
 
     function accept() {
-        import('alipay-sdk/AopSdk');
-        $params = $_POST;
-        $c = new AopClient;
-        $sign_verified = @$c->rsaCheckV2($params, MOBILE_ALIPAY_PUBLIC_KEY);
         $order_sn = $this->_make_sure_string('out_trade_no', 64, '');
         $total_amount = $this->_make_sure_numeric('total_amount', 0);
         $seller_email = $this->_make_sure_string('seller_email', 100, '');
         $app_id = $this->_make_sure_string('app_id', 32, '');
         $trade_status = $this->_make_sure_string('trade_status', 32, '');
         $gmt_payment = $this->_make_sure_string('gmt_payment', 32, '');
-        if ($sign_verified) {
-            $this->_accept($order_sn, $total_amount, $seller_email,
-                           $app_id, $trade_status, $gmt_payment);
-        } else {
-            Log::write(
-                "fail to verify sign, order_sn:{$order_sn} ".
-                       "total_amount:{$total_amount} ".
-                       "seller_email:{$seller_email} ".
-                       "app_id:{$app_id} ".
-                       "trade_status:{$trade_status}");
-            echo('fail to verify sign');
-        }
+        $this->_accept($order_sn, $total_amount, $seller_email,
+                       $app_id, $trade_status, $gmt_payment);
     }
 
     function _accept($order_sn, $total_amount, $seller_email,
