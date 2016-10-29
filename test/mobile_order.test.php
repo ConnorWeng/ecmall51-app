@@ -82,8 +82,8 @@ class Mobile_orderTest extends TestCase {
         import('time.lib');
         $order_info = $this->mobile_order->_build_alipay_order_info('12345', '0.01', '1', '2016-07-29 16:55:53');
         $parts = explode('&sign=', $order_info);
-        $this->assertEquals('app_id=99999&biz_content=%7B%22timeout_express%22%3A%2224h%22%2C%22product_code%22%3A%22QUICK_MSECURITY_PAY%22%2C%22total_amount%22%3A%220.01%22%2C%22subject%22%3A%221%22%2C%22out_trade_no%22%3A%2212345%22%7D&charset=utf-8&method=alipay.trade.app.pay&sign_type=RSA&timestamp=2016-07-29+16%3A55%3A53&version=1.0', $parts[0]);
-        $this->assertEquals('Ge5M4DR7rbrqb9WEzaZ264hCfVpalKFRKfs2j9pcG3SHT6Y9czwD7vhg%2FLSsSPTUyCyomJfsAp1LqXkJ4pYBAuOwTbbz3qWFJEhU%2FamCVCzBMUTSKrwU0%2B80iU9ixmT3Q4BA%2BoKKdi5sXJ8qqKVReBrhe439ZvUNUM4TMFiH0LM%3D', $parts[1]);
+        $this->assertEquals('app_id=99999&biz_content=%7B%22timeout_express%22%3A%2224h%22%2C%22product_code%22%3A%22QUICK_MSECURITY_PAY%22%2C%22total_amount%22%3A%220.01%22%2C%22subject%22%3A%221%22%2C%22out_trade_no%22%3A%2212345%22%7D&charset=utf-8&method=alipay.trade.app.pay&notify_url=http%3A%2F%2Fapp.51zwd.com%2Fecmall51-app%2Fgateway.php&sign_type=RSA&timestamp=2016-07-29+16%3A55%3A53&version=1.0', $parts[0]);
+        $this->assertEquals('RpHXkvxnSA%2Byv%2BUpV7yBW85C8BkjslKDfOg5gKqXAdf1DyexIs5GbsWQXVyCkXcXs9t6jQwUUXR4wZEM1BbzOzZknrm9v0SdqA0%2B0jh5RXniuyryeQc9BgeOQItS4TKv2ws1%2Bcbo4%2BUsSPmfu2TPKZ9hxjEnVK1fPuPLH21%2B0LA%3D', $parts[1]);
     }
 
 }
