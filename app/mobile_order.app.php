@@ -124,6 +124,11 @@ class Mobile_orderApp extends Mobile_frontendApp {
         $address_info = $this->_address_mod->get(array('conditions' => 'user_id='.$this->visitor->get('user_id')));
         $goods_info['default_address'] = $address_info;
 
+        // behalfs
+        $behalf_mod =& m('behalf');
+        $behalfs = $behalf_mod->get_behalfs_deliverys();
+        $goods_info['behalfs'] = $behalfs;
+
         echo ecm_json_encode($goods_info);
     }
 
