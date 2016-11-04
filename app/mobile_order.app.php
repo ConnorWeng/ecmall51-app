@@ -53,6 +53,94 @@ class Mobile_orderApp extends Mobile_frontendApp {
         }
     }
 
+    function get_order_info() {
+        $order_id = $this->_make_sure_numeric('order_id', -1);
+        if ($order_id === -1) {
+            $this->_ajax_error(400, PARAMS_ERROR, '参数错误');
+            return ;
+        }
+
+        $model_order =& m('order');
+        $order_info = $model_order->get(array(
+            'fields'        => "*, order.add_time as order_add_time",
+            'conditions'    => "order_id={$order_id} AND buyer_id=" . $this->visitor->get('user_id')));
+        if (!$order_info) {
+            $this->_ajax_error(400, ORDER_NOT_EXISTS, '该订单不存在');
+        }
+        $order_type =& ot($order_info['extension']);
+        $order_detail = $order_type->get_order_detail($order_id, $order_info);
+
+        $spec_ids = array();
+        foreach ($order_detail['data']['goods_list'] as $key => $goods)
+        {
+            empty($goods['goods_image']) && $order_detail['data']['goods_list'][$key]['goods_image'] = Conf::get('default_goods_image');
+            $spec_ids[] = $goods['spec_id'];
+        }
+
+        /* 查出最新的相应的货号 */
+        $model_spec =& m('goodsspec');
+        $spec_info = $model_spec->find(array(
+            'conditions'    => $spec_ids,
+            'fields'        => 'sku'));
+        ////商家编码
+        $model_goodsattr =& m('goodsattr');
+        foreach ($order_detail['data']['goods_list'] as $key => $goods) {
+            $order_detail['data']['goods_list'][$key]['sku'] = $spec_info[$goods['spec_id']]['sku'];
+            if(!$order_detail['data']['goods_list'][$key]['sku']) {
+                $order_detail['data']['goods_list'][$key]['sku'] = getHuoHao($goods['goods_name']);
+                if(!$order_detail['data']['goods_list'][$key]['sku']) {
+                    $goods_AttrModel = &m('goodsattr');
+                    $attrs = $goods_AttrModel->get(array(
+                        'conditions' => "goods_id = ".$goods['goods_id']." AND attr_id = 13021751"));
+                    $order_detail['data']['goods_list'][$key]['sku'] = $attrs['attr_value'];
+                }
+            }
+            $goods_seller_bm = $model_goodsattr->getOne("SELECT attr_value FROM {$model_goodsattr->table} WHERE goods_id={$goods['goods_id']} AND attr_id=1");
+            $order_detail['data']['goods_list'][$key]['goods_seller_bm'] = $goods_seller_bm;
+        }
+
+        //tiq
+        /*store,goods infos*/
+        $data = $stores = array();
+        $goods_model = & m('goods');
+        $store_model = & m('store');
+        foreach ($order_detail['data']['goods_list'] as $key => $goods) {
+            if(!empty($goods['goods_id'])) {
+                $result = $goods_model->get(array(
+                    'fields'=>'store_id',
+                    'conditions'=>'goods_id='.$goods['goods_id']));
+                if($result['store_id'] &&!in_array($result['store_id'], $stores)) {
+                    $stores[] = $result['store_id'];
+                    $data[$result['store_id']]['store_info'] = $store_model->get(array(
+                        'conditions' => 'store_id = '.$result['store_id'],
+                        'fields' => 'store_id, store_name, im_ww, tel, mk_name, dangkou_address'));
+                    $data[$result['store_id']]['goods_list'][] = $goods;
+                } else {
+                    $data[$result['store_id']]['goods_list'][] = $goods;
+                }
+            }
+        }
+
+        //
+        $model_orderrefund = & m('orderrefund');
+        $refunds=$model_orderrefund->get(array(
+            'conditions'=>'order_id='.$order_info['order_id'].' AND receiver_id='.$order_info['bh_id'].' AND closed=0 AND type=1'));
+        if($refunds) {
+            $model_behalf = & m('behalf');
+            $refunds_behalf = $model_behalf->get($refunds['receiver_id']);
+            $refunds['receiver_name'] = $refunds_behalf['bh_name'];
+        }
+        $apply_fees=$model_orderrefund->get(array(
+            'conditions'=>'order_id='.$order_info['order_id'].' AND receiver_id='.$order_info['buyer_id'].' AND closed=0 AND type=2'));
+
+        echo ecm_json_encode(array(
+            'merge_sgoods' => $data,
+            'order' => $order_info,
+            'refunds' => $refunds,
+            'apply_fees' => $apply_fees,
+            'order_detail' => $order_detail['data']));
+    }
+
     function get_alipay_order_info() {
         if (!IS_POST) {
             if (isset($_GET['order_id']) && is_numeric($_GET['order_id'])) {
