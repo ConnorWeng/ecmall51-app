@@ -43,16 +43,10 @@ class Mobile_goodsApp extends Mobile_frontendApp {
         $goods = $goods_mod->get_Mem_list(array(
             'order' => 'views desc',
             'fields' => 'g.goods_id,',
-            // 'limit' => $page['limit'],
+            'index_key' => false,
             'limit' => $page_per,
             'conditions_tt' => $keywords), null, false, true, $total_found);
-        $goodsspec_mod =& m('goodsspec');
-        $result = array();
-        foreach ($goods as $key => $good) {
-            $goodsspec = $goodsspec_mod->get_spec_list($good['goods_id']);
-            $result = array_merge($result, $goodsspec);
-        }
-        echo ecm_json_encode($result);
+        echo ecm_json_encode($goods);
     }
 
     function describe() {
