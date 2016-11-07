@@ -5,6 +5,7 @@ class Mobile_homeApp extends MallbaseApp {
         $order_by = 'goods_id DESC';
         $goods_mod =& m('goods');
         $goods_list = $goods_mod->find(array(
+            'conditions' => 'default_spec != 0 and description is not null',
             'fields' => 'goods_id, goods_name, default_image, price, store_id',
             'index_key' => false,
             'order' => $order_by,
