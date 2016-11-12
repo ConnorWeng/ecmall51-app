@@ -85,7 +85,7 @@ class Mobile_orderApp extends Mobile_frontendApp {
         ////商家编码
         $model_goodsattr =& m('goodsattr');
         foreach ($order_detail['data']['goods_list'] as $key => $goods) {
-            $order_detail['data']['goods_list'][$key]['sku'] = $spec_info[$goods['spec_id']]['sku'];
+            $order_detail['data']['goods_list'][$key]['sku'] = @$spec_info[$goods['spec_id']]['sku']; // goods被删引起这里报错，所以加上@
             if(!$order_detail['data']['goods_list'][$key]['sku']) {
                 $order_detail['data']['goods_list'][$key]['sku'] = getHuoHao($goods['goods_name']);
                 if(!$order_detail['data']['goods_list'][$key]['sku']) {
@@ -109,6 +109,9 @@ class Mobile_orderApp extends Mobile_frontendApp {
                 $result = $goods_model->get(array(
                     'fields'=>'store_id',
                     'conditions'=>'goods_id='.$goods['goods_id']));
+                if (!$result['store_id']) { // goods被删，所以goods表里查不到store_id了，只能直接从goods对象里拿store_id
+                    $result = array('store_id' => $goods['store_id']); // 为什么要从goods表里查，而不直接改成从goods对象里读取store_id？不清楚...
+                }
                 if($result['store_id'] &&!in_array($result['store_id'], $stores)) {
                     $stores[] = $result['store_id'];
                     $data[$result['store_id']]['store_info'] = $store_model->get(array(
