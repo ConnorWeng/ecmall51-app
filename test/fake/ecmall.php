@@ -9,4 +9,17 @@ if (!function_exists('m')) {
     }
 }
 
+if (!function_exists('db')) {
+    class FakeDB {
+        function query() {
+
+        }
+    }
+
+    function &db() {
+        $db = new FakeDB();
+        return $db;
+    }
+}
+
 ?>
