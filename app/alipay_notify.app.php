@@ -66,7 +66,11 @@ class Alipay_notifyApp extends Mobile_frontendApp {
                 }
 
                 // 冻结资金
-                $seller_id = $order_info['seller_id'];
+                if(empty($order_info["bh_id"])) {
+                    $seller_id = $order_info['seller_id'];
+                } else {
+                    $seller_id = $order_info['bh_id'];
+                }
                 $seller_name = $order_info['seller_name'];
                 $order_id = $order_info['order_id'];
                 $this->_payment($user_id, $user_name, $seller_id, $seller_name, $total_amount, $order_id, $order_sn);
