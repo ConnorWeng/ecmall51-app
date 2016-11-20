@@ -53,6 +53,85 @@ class Mobile_orderApp extends Mobile_frontendApp {
         }
     }
 
+    function confirm_order() {
+        if (IS_POST) {
+            $order_id = $this->_make_sure_numeric('order_id', -1);
+            if ($order_id === -1) {
+                $this->_ajax_error(400, PARAMS_ERROR, '参数错误');
+                return ;
+            }
+            $this->_confirm_order($order_id);
+        } else {
+            $this->_ajax_error(400, NOT_POST_ACTION, 'not a post action');
+            return;
+        }
+    }
+
+    function _confirm_order($order_id) {
+        $order_info = $this->_order_mod->get("order_id = {$order_id} and buyer_id = ".$this->visitor->get('user_id')." and status = ".ORDER_SHIPPED);
+        if (empty($order_info)) {
+            $this->_ajax_error(400, ORDER_NOT_EXISTS, '订单不存在');
+            return ;
+        }
+        // start transaction
+        $db_transaction_begin = db()->query('START TRANSACTION');
+        if ($db_transaction_begin === false) {
+            $this->_ajax_error(500, START_TRANSACTION_FAILED, '开启事务失败');
+            return ;
+        }
+        $this->_order_mod->edit($order_id, array('status' => ORDER_FINISHED, 'finished_time' => gmtime()));
+        if ($model_order->has_error()) {
+            db()->query('ROLLBACK');
+            $this->_ajax_error(500, DB_ERROR, $model_order->get_error());
+            return;
+        }
+        // 记录订单操作日志
+        $order_log =& m('orderlog');
+        $order_log->add(array(
+            'order_id'  => $order_id,
+            'operator'  => addslashes($this->visitor->get('user_name')),
+            'order_status' => order_status($order_info['status']),
+            'changed_status' => order_status(ORDER_FINISHED),
+            'remark'    => Lang::get('buyer_confirm'),
+            'log_time'  => gmtime()));
+
+        /*商付通v2.2.1  更新商付通定单状态 确认收货 开始*/
+        $my_money_mod =& m('my_money');
+        $my_moneylog_mod =& m('my_moneylog');
+        $my_moneylog_row=$my_moneylog_mod->getrow("select * from ".DB_PREFIX."my_moneylog where order_id='$order_id' and s_and_z=2 and caozuo=20");
+        //$money=$my_moneylog_row['money'];//定单价格
+        $money = $order_info['order_amount'];
+        $sell_user_id=$my_moneylog_row['seller_id'];//卖家ID
+        if($my_moneylog_row['order_id']==$order_id) {
+            $buy_user_id = $this->visitor->get('user_id');
+            $sell_money_row=$my_money_mod->getrow("select * from ".DB_PREFIX."my_money where user_id='$sell_user_id'");
+            $buy_money_row=$my_money_mod->getrow("select * from ".DB_PREFIX."my_money where user_id='$buy_user_id'");
+            $buy_money = $buy_money_row['money'];  //买家资金
+            $sell_money=$sell_money_row['money'];//卖家的资金
+            $sell_money_dj=$sell_money_row['money_dj'];//卖家的冻结资金
+            $new_money = $sell_money+$money;
+            $new_money_dj = $sell_money_dj-$money;
+            $new_buy_money = $buy_money;
+            //更新数据
+            $new_money_array=array(
+                'money' => $new_money,
+                'money_dj' => $new_money_dj);
+            $new_buy_money_array = array(
+                'money' => $new_buy_money);
+            if($new_money_dj > 0 ) {
+                $my_money_mod->edit('user_id='.$sell_user_id, $new_money_array);
+            }
+
+            //        $my_money_mod->edit('user_id='.$this->visitor->get('user_id'),$new_buy_money_array);
+            //更新商付通log为 定单已完成
+            $my_moneylog_mod->edit('order_id='.$order_id , array('caozuo'=>40));
+        }
+
+        db()->query('COMMIT');
+        echo ecm_json_encode(array(
+            'success' => true));
+    }
+
     function get_order_info() {
         $order_id = $this->_make_sure_numeric('order_id', -1);
         if ($order_id === -1) {
