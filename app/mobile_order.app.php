@@ -53,6 +53,82 @@ class Mobile_orderApp extends Mobile_frontendApp {
         }
     }
 
+    function apply_refund() {
+        if (IS_POST) {
+            $order_id = $this->_make_sure_numeric('order_id', -1);
+            $refund_amount = $this->_make_sure_numeric('refund_amount', -1);
+            $refund_reason = $this->_escape_string($_POST['refund_reason']);
+            $refund_intro = $this->_escape_string($_POST['refund_intro']);
+            if ($order_id === -1 || $refund_amount === -1 || empty($refund_reason)) {
+                $this->_ajax_error(400, PARAMS_ERROR, '参数错误');
+                return ;
+            }
+            $this->_apply_refund($order_id, $refund_amount, $refund_reason, $refund_intro);
+        } else {
+            $this->_ajax_error(400, NOT_POST_ACTION, 'not a post action');
+            return;
+        }
+    }
+
+    function _apply_refund($order_id, $refund_amount, $refund_reason, $refund_intro) {
+        $order_info = $this->_order_mod->get("order_id = {$order_id} and buyer_id = ".$this->visitor->get('user_id'));
+        if (empty($order_info)) {
+            $this->_ajax_error(400, ORDER_NOT_EXISTS, '订单不存在');
+            return ;
+        }
+        $model_orderrefund =& m('orderrefund');
+        $refund_result = $model_orderrefund->find(array(
+            'conditions' => 'order_id='.$order_info['order_id'].' AND receiver_id='.$order_info['bh_id'].''));
+        if (!empty($refund_result)) {
+            if (count($refund_result) > 1) {
+                $this->_ajax_error(400, APPLY_ILLEAGE, '该订单申请已经超过两次，如有疑问请直接联系代发解决!');
+                return;
+            }
+            $exist_refund = current($refund_result);
+            //status 0:申请，1：已同意，2：已拒绝  closed 0:未关闭 1：已关闭
+            if ($exist_refund['status'] != 2 && $exist_refund['closed'] != 1) {
+                $this->_ajax_error(400, APPLY_ILLEAGE, '非法申请！如已申请过，请前往网页端查看申请进度。');
+                return;
+            }
+        }
+        if ($order_info['status'] != ORDER_ACCEPTED && $refund_amount > $order_info['goods_amount']) {
+            $this->_ajax_error(400, HACK_ATTEMPTED, '发现恶意行为');
+            return ;
+        }
+        $goods_ids = '';
+        $data = array(
+            'order_id' => $order_info['order_id'],
+            'order_sn' => $order_info['order_sn'],
+            'sender_id' => $this->visitor->get('user_id'),
+            'sender_name' => $this->visitor->get('user_name'),
+            'receiver_id' => $order_info['bh_id'],
+            'refund_reason' => $refund_reason,
+            'refund_intro' => $refund_intro,
+            'goods_ids' => $goods_ids,
+            'goods_ids_flag' => $goods_ids ? 1 : 0,
+            'apply_amount' => $refund_amount,
+            'invoice_no' => null,
+            'dl_id' => 0,
+            'dl_name' => null,
+            'dl_code' => null,
+            'refund_amount' => 0,
+            'create_time' => gmtime(),
+            'pay_time' => 0,
+            'status' => 0,
+            'closed' => 0,
+            //1:代表申请退款退货 2：代表代发申请补邮
+            'type' => 1);
+        $model_orderrefund=& m('orderrefund');
+        $affect_id = $model_orderrefund->add($data);
+        if (empty($affect_id) || $model_orderrefund->has_error()) {
+            $this->_ajax_error(500, 'DB_ERROR', $model_orderrefund->get_error());
+            return;
+        }
+
+        echo ecm_json_encode(array(
+            'success' => true));
+    }
+
     function confirm_order() {
         if (IS_POST) {
             $order_id = $this->_make_sure_numeric('order_id', -1);
