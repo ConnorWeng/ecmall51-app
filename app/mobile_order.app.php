@@ -156,9 +156,9 @@ class Mobile_orderApp extends Mobile_frontendApp {
             return ;
         }
         $this->_order_mod->edit($order_id, array('status' => ORDER_FINISHED, 'finished_time' => gmtime()));
-        if ($model_order->has_error()) {
+        if ($this->_order_mod->has_error()) {
             db()->query('ROLLBACK');
-            $this->_ajax_error(500, DB_ERROR, $model_order->get_error());
+            $this->_ajax_error(500, DB_ERROR, $this->_order_mod->get_error());
             return;
         }
         // 记录订单操作日志
