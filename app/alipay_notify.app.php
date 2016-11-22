@@ -105,7 +105,8 @@ class Alipay_notifyApp extends Mobile_frontendApp {
     }
 
     function _top_up($user_id, $user_name, $trade_no, $total_amount, $gmt_payment) {
-        $exist_pay = $this->_paylog_mod->get($trade_no);
+        $exist_pay = $this->_paylog_mod->get(array(
+            'conditions' => "out_trade_no='$trade_no'"));
         if (empty($exist_pay)) {
             $pay = array(
                 'out_trade_no' => $trade_no,

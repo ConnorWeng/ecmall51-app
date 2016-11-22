@@ -44,7 +44,7 @@ class Alipay_notifyTest extends TestCase {
                                       'status' => ORDER_PENDING),
                                   'edit', true);
         $this->paylog_stub = $this->stub('PaylogModel',
-                                   'get', array(),
+                                   'get_info', array(),
                                    'add', true);
         $this->my_money_stub = $this->stub('My_moneyModel',
                                      'get', array(
