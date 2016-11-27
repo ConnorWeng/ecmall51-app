@@ -53,6 +53,49 @@ class Mobile_orderApp extends Mobile_frontendApp {
         }
     }
 
+    function get_order_info_for_refund() {
+        $order_id = $this->_make_sure_numeric('order_id', -1);
+        if ($order_id === -1) {
+            $this->_ajax_error(400, PARAMS_ERROR, '参数错误');
+            return ;
+        }
+        $order_info = $this->_order_mod->findAll(array(
+            'conditions' => "order_id={$order_id} AND buyer_id=" . $this->visitor->get('user_id') . " AND status " . db_create_in(array(ORDER_ACCEPTED, ORDER_SHIPPED,ORDER_FINISHED)),
+            'include' => array('has_goodswarehouse')));
+        if (empty($order_info)) {
+            $this->_ajax_error(400, ORDER_NOT_EXISTS, '订单不存在');
+            return ;
+        }
+
+        $order_info = current($order_info);
+        if ($order_info['bh_id'] == '10919') {
+            $this->_ajax_error(400, BEHALF_REFUSED, '抱歉，代发已停止运营，不再接受退货服务！<br>如有无法解决的售后问题，请投诉至QQ:800029051！');
+            return ;
+        }
+        $model_orderrefund =& m('orderrefund');
+        $refund_result=$model_orderrefund->find(array(
+            'conditions' => 'order_id='.$order_info['order_id'].' AND receiver_id='.$order_info['bh_id'].''));
+        $model_delivery =& m('delivery');
+        $q_deliverys = $model_delivery->find(array('conditions' => "dl_desc IS NOT NULL and dl_desc != ''",
+                                                   'order' => 'sort_order ASC',
+                                                   'index_key' => false));
+        //计算是否应该收取退货代发费
+        $levy_reback_goods_fee = false;
+        if (isset($order_info['gwh'])) {
+            $query_gwh_ids = array();
+            foreach ($order_info['gwh'] as $order_gwh)
+            {
+                $query_gwh_ids[] = $order_gwh['id'];
+            }
+            $levy_reback_goods_fee = after_goods_taker_inventory($order_info['pay_time'], $query_gwh_ids);
+        }
+
+        echo ecm_json_encode(array(
+            'order' => $order_info,
+            'deliverys' => $q_deliverys,
+            'levy_reback_goods_fee' => $levy_reback_goods_fee));
+    }
+
     function apply_refund() {
         if (IS_POST) {
             $order_id = $this->_make_sure_numeric('order_id', -1);

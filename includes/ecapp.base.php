@@ -124,6 +124,7 @@ define('START_TRANSACTION_FAILED', 510027);
 define('DB_ERROR', 510028);
 define('HACK_ATTEMPTED', 510029);
 define('APPLY_ILLEAGE', 510030);
+define('BEHALF_REFUSED', 510031);
 
 /**
  *    ECBaseApp
