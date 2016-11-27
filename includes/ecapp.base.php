@@ -125,6 +125,8 @@ define('DB_ERROR', 510028);
 define('HACK_ATTEMPTED', 510029);
 define('APPLY_ILLEAGE', 510030);
 define('BEHALF_REFUSED', 510031);
+define('INVOICE_NO_EXIST', 510032);
+define('APPLY_BACK_FEE_TOO_BIG', 510033);
 
 /**
  *    ECBaseApp

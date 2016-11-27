@@ -102,23 +102,42 @@ class Mobile_orderApp extends Mobile_frontendApp {
             $refund_amount = $this->_make_sure_numeric('refund_amount', -1);
             $refund_reason = $this->_escape_string($_POST['refund_reason']);
             $refund_intro = $this->_escape_string($_POST['refund_intro']);
+            $invoice_no = $this->_make_sure_numeric('invoice_no', '');
+            $goods_ids_array = array();
+            $delivery_name = '';
+            if ($invoice_no) {
+                $goods_ids_array = $this->_make_sure_all_numeric('goods_ids', array());
+                $delivery_name = $this->_make_sure_string('delivery_name', 100, '');
+            }
             if ($order_id === -1 || $refund_amount === -1 || empty($refund_reason)) {
                 $this->_ajax_error(400, PARAMS_ERROR, '参数错误');
                 return ;
             }
-            $this->_apply_refund($order_id, $refund_amount, $refund_reason, $refund_intro);
+            $this->_apply_refund($order_id, $refund_amount, $refund_reason, $refund_intro, $goods_ids_array, $invoice_no, $delivery_name);
         } else {
             $this->_ajax_error(400, NOT_POST_ACTION, 'not a post action');
             return;
         }
     }
 
-    function _apply_refund($order_id, $refund_amount, $refund_reason, $refund_intro) {
+    function _apply_refund($order_id, $refund_amount, $refund_reason, $refund_intro, $goods_ids_array, $invoice_no, $delivery_name) {
         $order_info = $this->_order_mod->get("order_id = {$order_id} and buyer_id = ".$this->visitor->get('user_id'));
         if (empty($order_info)) {
             $this->_ajax_error(400, ORDER_NOT_EXISTS, '订单不存在');
             return ;
         }
+
+        //计算是否应该收取退货代发费
+        $levy_reback_goods_fee = false;
+        if (isset($order_info['gwh'])) {
+            $query_gwh_ids = array();
+            foreach ($order_info['gwh'] as $order_gwh)
+            {
+                $query_gwh_ids[] = $order_gwh['id'];
+            }
+            $levy_reback_goods_fee = after_goods_taker_inventory($order_info['pay_time'], $query_gwh_ids);
+        }
+
         $model_orderrefund =& m('orderrefund');
         $refund_result = $model_orderrefund->find(array(
             'conditions' => 'order_id='.$order_info['order_id'].' AND receiver_id='.$order_info['bh_id'].''));
@@ -135,10 +154,54 @@ class Mobile_orderApp extends Mobile_frontendApp {
             }
         }
         if ($order_info['status'] != ORDER_ACCEPTED && $refund_amount > $order_info['goods_amount']) {
-            $this->_ajax_error(400, HACK_ATTEMPTED, '发现恶意行为');
+            $this->_ajax_error(400, HACK_ATTEMPTED, '发现恶意行为1');
             return ;
         }
-        $goods_ids = '';
+
+        if ($invoice_no) {
+            if(exist_invoiceno($invoice_no)) {
+                $this->_ajax_error(400, INVOICE_NO_EXIST, '物流单号已存在');
+                return ;
+            }
+
+            $rec_ids = $goods_ids_array;
+
+            //判断退货申请金额
+            if ($order_info['status'] == ORDER_ACCEPTED && $levy_reback_goods_fee) {
+                if ($refund_amount > ($order_info['order_amount'] - 2*count($rec_ids))) {
+                    $this->_ajax_error(400, APPLY_BACK_FEE_TOO_BIG, '每件收取2元服务费，您最多可申请'.($order_info['order_amount'] - 2*count($rec_ids)).'元');
+                    return;
+                }
+            } else if (in_array($order_info['status'], array(ORDER_SHIPPED,ORDER_FINISHED)) && $levy_reback_goods_fee) {
+                if ($refund_amount > ($order_info['goods_amount'] - 2*count($rec_ids))) {
+                    $this->_ajax_error(400, APPLY_BACK_FEE_TOO_BIG, '每件收取2元服务费，您最多可申请'.($order_info['goods_amount'] - 2*count($rec_ids)).'元');
+                    return;
+                }
+            }
+
+            $refund_intro = $goods_ids = '';
+            $refund_total = 0;
+            $goodswarehouse_mod =& m('goodswarehouse');
+            $rec_goods = $goodswarehouse_mod->find(array(
+                'conditions' => 'order_id='.$order_id." AND ".db_create_in($rec_ids, 'id')));
+            if ($rec_goods) {
+                foreach ($rec_goods as $goods) {
+                    $goods_ids .= $goods['id'].',';
+                    $refund_intro .= $goods['goods_name'].' '.$goods['goods_specification'].'  &yen;'.$goods['goods_price'].';';
+                    $refund_total += floatval($goods['goods_price']);
+                }
+            }
+            $goods_ids && $goods_ids = rtrim($goods_ids,',');
+            $refund_intro && $refund_intro = rtrim($refund_intro,';');
+            //快递参数有冒号隔开
+            if ($delivery_name) {
+                $delivery_name = explode(':', $delivery_name);
+            } else {
+                $this->_ajax_error(400, HACK_ATTEMPTED, '发现恶意行为2');
+                return ;
+            }
+        }
+
         $data = array(
             'order_id' => $order_info['order_id'],
             'order_sn' => $order_info['order_sn'],
@@ -150,10 +213,10 @@ class Mobile_orderApp extends Mobile_frontendApp {
             'goods_ids' => $goods_ids,
             'goods_ids_flag' => $goods_ids ? 1 : 0,
             'apply_amount' => $refund_amount,
-            'invoice_no' => null,
-            'dl_id' => 0,
-            'dl_name' => null,
-            'dl_code' => null,
+            'invoice_no' => $invoice_no,
+            'dl_id' => intval($delivery_name[0]),
+            'dl_name' => $delivery_name ? trim($delivery_name[1]) : null,
+            'dl_code' => $delivery_name ? trim($delivery_name[2]) : null,
             'refund_amount' => 0,
             'create_time' => gmtime(),
             'pay_time' => 0,
