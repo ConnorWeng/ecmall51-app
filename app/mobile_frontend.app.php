@@ -15,7 +15,7 @@ class Mobile_frontendApp extends FrontendApp {
                 exit;
             }
         } else {
-            $this->_ajax_error(400, NOT_LOGIN, 'please login first');
+            $this->_ajax_error(400, NOT_LOGIN, '请先登录');
             exit;
         }
     }
