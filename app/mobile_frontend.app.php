@@ -21,6 +21,11 @@ class Mobile_frontendApp extends FrontendApp {
     }
 
     function _ajax_error($http_code, $user_code, $message) {
+        if (defined('MOBILE_DEBUG')) {
+            $request_info = print_r($_REQUEST, true);
+            Log::write('request: '.$request_info, Log::DEBUG);
+        }
+
         http_response_code($http_code);
         echo ecm_json_encode(array(
             'error' => true,

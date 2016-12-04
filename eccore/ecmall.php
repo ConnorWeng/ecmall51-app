@@ -1609,6 +1609,11 @@ function ecm_geoip($ip)
 
 function ecm_json_encode($value)
 {
+    if (defined('MOBILE_DEBUG')) {
+        $value_info = print_r($value, true);
+        Log::write('json_result: '.$value_info, Log::DEBUG);
+    }
+
     if (CHARSET == 'utf-8' && function_exists('json_encode'))
     {
         return json_encode($value);
