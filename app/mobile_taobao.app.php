@@ -1,6 +1,7 @@
 <?php
 
 class Mobile_taobaoApp extends Mobile_frontendApp {
+    private $_API_PREFIX = "http://yjsc.51zwd.com/taobao-upload-multi-store/index.php";
     private $_session_key = null;
 
     function __construct() {
@@ -29,11 +30,21 @@ class Mobile_taobaoApp extends Mobile_frontendApp {
     }
 
     function _add_item($goods_id) {
-        $result = file_get_contents("http://yjsc.51zwd.com/taobao-upload-multi-store/index.php?g=Taobao&m=Upload&a=uploadItemFromAndroid&taobaoItemId=".$goods_id.'&access_token='.$this->_session_key);
+        $result = file_get_contents($this->_API_PREFIX."?g=Taobao&m=Upload&a=uploadItemFromAndroid&taobaoItemId=".$goods_id.'&access_token='.$this->_session_key);
         if ($result === 'true') {
             echo ecm_json_encode(array('success' => true));
         } else {
             $this->_ajax_error(500, TAOBAO_API_ERROR, '宝贝上传失败: '.$result);
+        }
+    }
+
+    function make_picture_category() {
+        $pcid = file_get_contents($this->_API_PREFIX."?g=Taobao&m=Upload&a=make51PictureCategoryFromAndroid&access_token=".$this->_session_key);
+        $pcid = str_replace('"', '', $pcid);
+        if (is_numeric($pcid)) {
+            echo ecm_json_encode(array('pcid' => $pcid));
+        } else {
+            $this->_ajax_error(500, TAOBAO_API_ERROR, '获取相册失败, id:'.$pcid);
         }
     }
 }
