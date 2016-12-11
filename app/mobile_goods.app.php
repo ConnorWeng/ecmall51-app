@@ -12,7 +12,13 @@ define('ENABLE_SEARCH_CACHE', true); // 启用商品搜索缓存
 define('SEARCH_CACHE_TTL', 3600);  // 商品搜索缓存时间
 
 class Mobile_goodsApp extends Mobile_frontendApp {
-    function __construct() {
+    private $_goods_mod = null;
+
+    function __construct($goods_mod = null) {
+        $this->_goods_mod = $goods_mod;
+        if ($this->_goods_mod === null) {
+            $this->_goods_mod =& m('goods');
+        }
     }
 
     function index() {
@@ -64,11 +70,33 @@ class Mobile_goodsApp extends Mobile_frontendApp {
 
     function _describe($goods_id) {
         $conditions = "goods_id = {$goods_id}";
-        $goods_mod =& m('goods');
-        $good = $goods_mod->get(array(
+        $good = $this->_goods_mod->get(array(
             'fields' => 'description',
             'conditions' => $conditions));
+        $good['imgs_in_desc'] = $this->_parse_desc_images($good['description']);
+        $good['need_move_pics'] = $this->_need_move_pics($good['description']);
         echo ecm_json_encode($good);
+    }
+
+    function _parse_desc_images($desc) {
+        $pattern = "/(https?:\/\/\w+\.\w+\.com[-\w!\/.]+\.(jpg|png|gif|bmp|webp|jpeg))/Ui";
+        preg_match_all($pattern, $desc, $matches);
+        return $matches[1];
+    }
+
+    function _need_move_pics($desc) {
+        $pattern = "/(https?:\/\/\w+\.\w+\.com[-\w!\/.]+\.(jpg|png|gif|bmp|webp|jpeg))/Ui";
+        preg_match_all($pattern, $desc, $matches);
+        $picNum = count($matches[1]);
+        $check = false;
+        for ($i=0; $i< $picNum; $i++) {
+            $picUrl = $matches[1][$i];
+            if (strpos($picUrl, "!!") !== false || strpos($picUrl, "taobaocdn") == false) {
+                $check = true;
+                break;
+            }
+        }
+        return $check;
     }
 
     function specs() {
