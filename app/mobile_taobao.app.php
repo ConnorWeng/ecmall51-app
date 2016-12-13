@@ -10,7 +10,7 @@ class Mobile_taobaoApp extends Mobile_frontendApp {
         $auth_info = $auth_mod->get(array('conditions' => 'vendor = 0 and user_id = '.$this->visitor->get('user_id')));
         if (empty($auth_info)) {
             $this->_ajax_error(400, CHECK_TAOBAO_FAILED, '系统中不存在该淘宝用户，请前往www.51zwd.com使用一次淘登录');
-            return ;
+            exit ;
         }
         $this->_session_key = $auth_info['access_token'];
     }
