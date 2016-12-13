@@ -9,6 +9,11 @@
       background: #f5f5f5;
       font-weight: normal;
     }
+    ul {
+      list-style-type: none;
+      margin: 0;
+      padding: 0;
+    }
     .container {
       display: flex;
       flex-direction: column;
@@ -18,20 +23,18 @@
     }
     .separator > h1 {
       color: gray;
-      font-size: 14pt;
+      font-size: 12pt;
+      font-weight: normal;
       margin: 5px 0 5px 0;
     }
     .banner-container {
-      background: url('http://www.51zwd.com/data/files/mall/template/201607090053056375.jpg') no-repeat;
+      background: url('http://www.51zwd.com/data/files/mall/template/201604112108567160.jpg') no-repeat;
       background-size: cover;
       height: 150px;
     }
     .trendygoods-container {
     }
     .trendygoods-list {
-      list-style-type: none;
-      margin: 0;
-      padding: 0;
     }
     .trendygood {
       height: 150px;
@@ -51,9 +54,6 @@
     .hotgoods-container {
     }
     .hotgoods-list {
-      list-style-type: none;
-      margin: 0;
-      padding: 0;
       display: flex;
       flex-direction: row;
       flex-wrap: wrap;
@@ -88,25 +88,124 @@
       margin-left: 5px;
       text-decoration: line-through;
     }
+
+    .categories {
+      background: #ffffff;
+    }
+    .categories-list {
+      display: flex;
+      flex-direction: row;
+      justify-content: space-between;
+    }
+    .category {
+      padding: 5px;
+    }
+    .category-logo {
+      background: url('http://www.51zwd.com/data/files/mall/template/48x48-m.png') no-repeat;
+      width: 48px;
+      height: 48px;
+      border-radius: 20px;
+    }
+    .category-name {
+      font-size: 10pt;
+      text-align: center;
+    }
+    .ads {
+      margin-top: 10px;
+      background: #ffffff;
+    }
+    .ads-list {
+      display: flex;
+      flex-direction: row;
+      flex-wrap: wrap;
+    }
+    .ad {
+      width: 50%;
+    }
+    .ad img {
+      width: 100%;
+    }
     </style>
   </head>
   <body>
     <div class="container">
       <div class="banner-container">
       </div>
+      <div class="categories">
+        <ul class="categories-list">
+          <li class="category">
+            <div class="category-logo"></div>
+            <div class="category-name">半身裙</div>
+          </li>
+          <li class="category">
+            <div class="category-logo"></div>
+            <div class="category-name">T恤</div>
+          </li>
+          <li class="category">
+            <div class="category-logo"></div>
+            <div class="category-name">牛仔裤</div>
+          </li>
+          <li class="category">
+            <div class="category-logo"></div>
+            <div class="category-name">休闲裤</div>
+          </li>
+          <li class="category">
+            <div class="category-logo"></div>
+            <div class="category-name">Polo衫</div>
+          </li>
+        </ul>
+        <ul class="categories-list">
+          <li class="category">
+            <div class="category-logo"></div>
+            <div class="category-name">高邦鞋</div>
+          </li>
+          <li class="category">
+            <div class="category-logo"></div>
+            <div class="category-name">靴子</div>
+          </li>
+          <li class="category">
+            <div class="category-logo"></div>
+            <div class="category-name">低邦鞋</div>
+          </li>
+          <li class="category">
+            <div class="category-logo"></div>
+            <div class="category-name">文胸</div>
+          </li>
+          <li class="category">
+            <div class="category-logo"></div>
+            <div class="category-name">配件</div>
+          </li>
+        </ul>
+      </div>
+      <div class="ads">
+        <ul class="ads-list">
+          <li class="ad">
+            <img src="http://www.51zwd.com/data/files/mall/template/201608131542182360.jpg"/>
+          </li>
+          <li class="ad">
+            <img src="http://www.51zwd.com/data/files/mall/template/201608131542189398.jpg"/>
+          </li>
+          <li class="ad">
+            <img src="http://www.51zwd.com/data/files/mall/template/201608192247014709.jpg"/>
+          </li>
+          <li class="ad">
+            <img src="http://www.51zwd.com/data/files/mall/template/201608141125574987.jpg"/>
+          </li>
+        </ul>
+      </div>
       <div class="separator">
         <h1> — 热卖精品 — </h1>
       </div>
       <div class="trendygoods-container">
         <ul class="trendygoods-list">
-          <li class="trendygood" style="background: url('https://img.alicdn.com/bao/uploaded/i4/TB1kTZSHFXXXXaDapXXXXXXXXXX_!!0-item_pic.jpg') no-repeat; background-size: cover;">
+          <li class="trendygood" style="background: url('http://gd2.alicdn.com/imgextra/i2/739690901/TB2gf_lXUdnpuFjSZPhXXbChpXa_!!739690901.jpg_460x460.jpg') no-repeat center; background-size: cover;">
             <div class="trendygood-title-container">
-              <h1 class="trendygood-title">实拍9671#欧美潮T短袖女装T恤洗水怀旧女上衣</h1>
+              <h1 class="trendygood-title">7817#2017春季新款韩版女装宽松显瘦开叉下摆字母刺绣卫衣女学生</h1>
             </div>
           </li>
-          <li class="trendygood" style="background: url('https://img.alicdn.com/bao/uploaded/i1/TB1aMZ.JFXXXXb8XFXXXXXXXXXX_!!0-item_pic.jpg') no-repeat; background-size: cover;">
+          <li class="trendygood" style="background: url('https://img.alicdn.com/imgextra/i3/828343458/TB23zDFX9tkpuFjy0FhXXXQzFXa_!!828343458.jpg') no-repeat center; background-size: cover;">
             <div class="trendygood-title-container">
-              <h1 class="trendygood-title">8736#2016年夏季新款女装民族风印花短袖盘扣文艺棉麻连衣裙</h1>
+              <h1 class="trendygood-title">秋冬打底裙夜店深V领系带性感套装低胸女气质长袖包臀连衣裙1898</h1>
             </div>
           </li>
         </ul>
@@ -135,7 +234,7 @@
     </div>
     <script>
     $(function () {
-      if (!WebViewBridge) {
+      if (typeof(WebViewBridge) === 'undefined') {
         return;
       }
       $('.container').on('click', '.hotgood', function () {
