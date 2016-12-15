@@ -4,10 +4,15 @@ class Mobile_taobaoApp extends Mobile_frontendApp {
     private $_API_PREFIX = "http://yjsc.51zwd.com/taobao-upload-multi-store/index.php";
     private $_session_key = null;
 
-    function __construct() {
+    private $_auth_mod = null;
+
+    function __construct($auth_mod = null, $user_id = null) {
         parent::__construct();
-        $auth_mod =& m('memberauth');
-        $auth_info = $auth_mod->get(array('conditions' => 'vendor = 0 and user_id = '.$this->visitor->get('user_id')));
+        $this->_auth_mod = $auth_mod;
+        if ($this->_auth_mod === null) {
+            $this->_auth_mod =& m('memberauth');
+        }
+        $auth_info = $this->_auth_mod->get(array('conditions' => 'vendor = 0 and user_id = '.($user_id === null ? $this->visitor->get('user_id') : $user_id)));
         if (empty($auth_info)) {
             $this->_ajax_error(400, CHECK_TAOBAO_FAILED, '系统中不存在该淘宝用户，请前往www.51zwd.com使用一次淘登录');
             exit ;
@@ -46,6 +51,31 @@ class Mobile_taobaoApp extends Mobile_frontendApp {
         } else {
             $this->_ajax_error(500, TAOBAO_API_ERROR, '获取相册失败, id:'.$pcid);
         }
+    }
+
+    function upload_pictures() {
+        $this->_post(
+            function () {
+                $img_urls_param = $this->_make_sure_string('img_urls', 65536, '');
+                $pcid = $this->_make_sure_string('pcid', 30, '');
+                if (empty($img_urls_param) || empty($pcid)) {
+                    $this->_ajax_error(400, PARAMS_ERROR, '参数错误');
+                    return ;
+                }
+
+                $img_urls = explode(',', $img_urls_param);
+                $new_urls = array();
+                foreach ($img_urls as $url) {
+                    $upload_result = json_decode($this->_request_url($this->_API_PREFIX."?g=Taobao&m=Upload&a=uploadTaobaoPictureFromAndroid&imgUrl=".urlencode($url)."&pictureCategoryId=".$pcid."&access_token=".$this->_session_key));
+                    if (isset($upload_result->error)) {
+                        $this->_ajax_error(500, TAOBAO_API_ERROR, '图片搬家失败');
+                        goto end;
+                    }
+                    array_push($new_urls, $upload_result);
+                }
+                echo ecm_json_encode($new_urls);
+          end:
+            });
     }
 }
 

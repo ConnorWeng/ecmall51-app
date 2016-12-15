@@ -10,6 +10,7 @@ define('SUBMIT_ORDER_FAILED', 510006);
 define('NOT_LOGIN', 510007);
 define('ACCESS_TOKEN_ERROR', 510008);
 define('PARAMS_ERROR', 510011);
+define('TAOBAO_API_ERROR', 510035);
 
 define('ORDER_SUBMITTED', 10);   // 针对货到付款而言，他的下一个状态是卖家已发货
 define('ORDER_PENDING', 11);     // 等待买家付款

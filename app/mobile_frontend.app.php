@@ -20,6 +20,19 @@ class Mobile_frontendApp extends FrontendApp {
         }
     }
 
+    function _request_url($url) {
+        return file_get_contents($url);
+    }
+
+    function _post($func) {
+        if (IS_POST) {
+            $func();
+        } else {
+            $this->_ajax_error(400, NOT_POST_ACTION, 'not a post action');
+            return;
+        }
+    }
+
     function _ajax_error($http_code, $user_code, $message) {
         http_response_code($http_code);
         echo ecm_json_encode(array(
