@@ -24,20 +24,27 @@ class Mobile_taobaoApp extends Mobile_frontendApp {
         $this->_post(
             function () {
                 $goods_id = $this->_make_sure_numeric('goods_id', -1);
+                $title = $this->_make_sure_string('title', 255, '');
+                $price = $this->_make_sure_string('price', 10, '');
                 $desc = $this->_make_sure_string('desc', 65536, '');
-                if ($goods_id === -1 || empty($desc)) {
+                Log::write('title'.$title);
+                Log::write('price'.$price);
+                Log::write('desc'.$desc);
+                if ($goods_id === -1 || empty($title)  || empty($price)|| empty($desc)) {
                     $this->_ajax_error(400, PARAMS_ERROR, '参数错误');
                     return ;
                 }
-                $this->_add_item($goods_id, $desc);
+                $this->_add_item($goods_id, $title, $price, $desc);
             });
     }
 
-    function _add_item($goods_id, $desc) {
+    function _add_item($goods_id, $title, $price, $desc) {
         $url = $this->_API_PREFIX."?g=Taobao&m=Upload&a=uploadItemFromAndroid";
         $data = array(
             'taobaoItemId' => $goods_id,
             'access_token' => $this->_session_key,
+            'title' => $title,
+            'price' => $price,
             'desc' => $desc);
         $result = $this->_post_url($url, $data);
         if ($result === 'true') {
