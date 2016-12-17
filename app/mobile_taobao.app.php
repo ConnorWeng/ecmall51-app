@@ -21,21 +21,25 @@ class Mobile_taobaoApp extends Mobile_frontendApp {
     }
 
     function add_item() {
-        if (IS_POST) {
-            $goods_id = $this->_make_sure_numeric('goods_id', -1);
-            if ($goods_id === -1) {
-                $this->_ajax_error(400, PARAMS_ERROR, '参数错误');
-                return ;
-            }
-            $this->_add_item($goods_id);
-        } else {
-            $this->_ajax_error(400, NOT_POST_ACTION, 'not a post action');
-            return;
-        }
+        $this->_post(
+            function () {
+                $goods_id = $this->_make_sure_numeric('goods_id', -1);
+                $desc = $this->_make_sure_string('desc', 65536, '');
+                if ($goods_id === -1 || empty($desc)) {
+                    $this->_ajax_error(400, PARAMS_ERROR, '参数错误');
+                    return ;
+                }
+                $this->_add_item($goods_id, $desc);
+            });
     }
 
-    function _add_item($goods_id) {
-        $result = file_get_contents($this->_API_PREFIX."?g=Taobao&m=Upload&a=uploadItemFromAndroid&taobaoItemId=".$goods_id.'&access_token='.$this->_session_key);
+    function _add_item($goods_id, $desc) {
+        $url = $this->_API_PREFIX."?g=Taobao&m=Upload&a=uploadItemFromAndroid";
+        $data = array(
+            'taobaoItemId' => $goods_id,
+            'access_token' => $this->_session_key,
+            'desc' => $desc);
+        $result = $this->_post_url($url, $data);
         if ($result === 'true') {
             echo ecm_json_encode(array('success' => true));
         } else {
@@ -65,16 +69,23 @@ class Mobile_taobaoApp extends Mobile_frontendApp {
 
                 $img_urls = explode(',', $img_urls_param);
                 $new_urls = array();
+                $error_count = 0;
                 foreach ($img_urls as $url) {
-                    $upload_result = json_decode($this->_request_url($this->_API_PREFIX."?g=Taobao&m=Upload&a=uploadTaobaoPictureFromAndroid&imgUrl=".urlencode($url)."&pictureCategoryId=".$pcid."&access_token=".$this->_session_key));
+                    $upload_result = json_decode($this->_get_url($this->_API_PREFIX."?g=Taobao&m=Upload&a=uploadTaobaoPictureFromAndroid&imgUrl=".urlencode($url)."&pictureCategoryId=".$pcid."&access_token=".$this->_session_key));
                     if (isset($upload_result->error)) {
-                        $this->_ajax_error(500, TAOBAO_API_ERROR, '图片搬家失败');
-                        goto end;
+                        array_push($new_urls, array(
+                            'newImgUrl' => '',
+                            'oldImgUrl' => $url));
+                        $error_count++;
+                    } else {
+                        array_push($new_urls, $upload_result);
                     }
-                    array_push($new_urls, $upload_result);
                 }
-                echo ecm_json_encode($new_urls);
-          end:
+                if ($error_count > 3) { // 图片搬家失败3张才算整个请求失败，否则直接忽略失败的图片
+                    $this->_ajax_error(500, TAOBAO_API_ERROR, '图片搬家失败');
+                } else {
+                    echo ecm_json_encode($new_urls);
+                }
             });
     }
 }

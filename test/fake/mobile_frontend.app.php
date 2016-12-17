@@ -35,7 +35,7 @@ class Mobile_frontendApp extends FrontendApp {
         }
     }
 
-    function _request_url($url) {
+    function _get_url($url) {
         return $this->_request_result;
     }
 
