@@ -129,7 +129,13 @@
   </head>
   <body>
     <div class="container">
-      <div class="banner-container">
+      <div class="banner-container"
+           store_id="11925"
+           store_name="衣客牛仔服饰"
+           see_price="减20"
+           mk_name="国投-1F"
+           address="104-A"
+           business_scope="">
       </div>
       <div class="categories">
         <ul class="categories-list">
@@ -179,16 +185,40 @@
       </div>
       <div class="ads">
         <ul class="ads-list">
-          <li class="ad">
+          <li class="ad"
+              store_id="7241"
+              store_name="魅致佳丽"
+              see_price="减半"
+              mk_name="佰润-1F"
+              address="A1030-A"
+              business_scope="女装上衣，连衣裙，T恤，毛衣，针织衫，牛仔衣，雪纺衫，休闲裤，打底裤，牛仔裤，哈伦裤等">
             <img src="http://www.51zwd.com/data/files/mall/template/201608131542182360.jpg"/>
           </li>
-          <li class="ad">
+          <li class="ad"
+              store_id="6036"
+              store_name="粉嘉儿"
+              see_price="减20"
+              mk_name="非凡 东街1F"
+              address="B01-C"
+              business_scope="">
             <img src="http://www.51zwd.com/data/files/mall/template/201608131542189398.jpg"/>
           </li>
-          <li class="ad">
+          <li class="ad"
+              store_id="7243"
+              store_name="MOMO服饰"
+              see_price="减20"
+              mk_name="佰润-2F"
+              address="B2017"
+              business_scope="">
             <img src="http://www.51zwd.com/data/files/mall/template/201608192247014709.jpg"/>
           </li>
-          <li class="ad">
+          <li class="ad"
+              store_id="5808"
+              store_name="舒雪儿服饰"
+              see_price="减半"
+              mk_name="女人街 6F"
+              address="612"
+              business_scope="">
             <img src="http://www.51zwd.com/data/files/mall/template/201608141125574987.jpg"/>
           </li>
         </ul>
@@ -198,12 +228,20 @@
       </div>
       <div class="trendygoods-container">
         <ul class="trendygoods-list">
-          <li class="trendygood" style="background: url('http://gd2.alicdn.com/imgextra/i2/739690901/TB2gf_lXUdnpuFjSZPhXXbChpXa_!!739690901.jpg_460x460.jpg') no-repeat center; background-size: cover;">
+          <li class="trendygood" style="background: url('http://gd2.alicdn.com/imgextra/i2/739690901/TB2gf_lXUdnpuFjSZPhXXbChpXa_!!739690901.jpg_460x460.jpg') no-repeat center; background-size: cover;"
+              goods_id="6862647"
+              goods_name="7817#2017春季新款韩版女装宽松显瘦开叉下摆字母刺绣卫衣女学生"
+              default_image="http://gd2.alicdn.com/imgextra/i2/739690901/TB2gf_lXUdnpuFjSZPhXXbChpXa_!!739690901.jpg_460x460.jpg"
+              price="33.00">
             <div class="trendygood-title-container">
               <h1 class="trendygood-title">7817#2017春季新款韩版女装宽松显瘦开叉下摆字母刺绣卫衣女学生</h1>
             </div>
           </li>
-          <li class="trendygood" style="background: url('https://img.alicdn.com/imgextra/i3/828343458/TB23zDFX9tkpuFjy0FhXXXQzFXa_!!828343458.jpg') no-repeat center; background-size: cover;">
+          <li class="trendygood" style="background: url('https://img.alicdn.com/imgextra/i3/828343458/TB23zDFX9tkpuFjy0FhXXXQzFXa_!!828343458.jpg') no-repeat center; background-size: cover;"
+              goods_id="6950171"
+              goods_name="秋冬打底裙夜店深V领系带性感套装低胸女气质长袖包臀连衣裙1898"
+              default_image="https://img.alicdn.com/bao/uploaded/i4/TB1TN9TNpXXXXcoaXXXXXXXXXXX_!!0-item_pic.jpg"
+              price="19.00">
             <div class="trendygood-title-container">
               <h1 class="trendygood-title">秋冬打底裙夜店深V领系带性感套装低胸女气质长袖包臀连衣裙1898</h1>
             </div>
@@ -237,7 +275,10 @@
       if (typeof(WebViewBridge) === 'undefined') {
         return;
       }
-      $('.container').on('click', '.hotgood', function () {
+      $('.container').on('click', '.hotgood, .trendygood', viewItem);
+      $('.container').on('click', '.ad, .banner-container', viewShop);
+
+      function viewItem() {
         const $good = $(this);
         const good = {
           goods_id: $good.attr('goods_id'),
@@ -245,9 +286,26 @@
           default_image: $good.attr('default_image'),
           price: $good.attr('price'),
         };
-        const message = JSON.stringify({type: 'viewItem', data: good});
+        sendMessage('viewItem', good);
+      }
+
+      function viewShop() {
+        const $shop = $(this);
+        const shop = {
+          store_id: $shop.attr('store_id'),
+          store_name: $shop.attr('store_name'),
+          see_price: $shop.attr('see_price'),
+          mk_name: $shop.attr('mk_name'),
+          address: $shop.attr('address'),
+          business_scope: $shop.attr('business_scope'),
+        }
+        sendMessage('viewShop', shop);
+      }
+
+      function sendMessage(type, data) {
+        const message = JSON.stringify({type: type, data: data});
         WebViewBridge.send(message);
-      });
+      }
     });
     </script>
   </body>
