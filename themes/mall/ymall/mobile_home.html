@@ -239,11 +239,14 @@
       }
       $('.container').on('click', '.hotgood', function () {
         const $good = $(this);
-        WebViewBridge.send(
-          $good.attr('goods_id') + '|,|' +
-          $good.attr('goods_name') + '|,|' +
-          $good.attr('default_image') + '|,|' +
-          $good.attr('price'));
+        const good = {
+          goods_id: $good.attr('goods_id'),
+          goods_name: $good.attr('goods_name'),
+          default_image: $good.attr('default_image'),
+          price: $good.attr('price'),
+        };
+        const message = JSON.stringify({type: 'viewItem', data: good});
+        WebViewBridge.send(message);
       });
     });
     </script>
