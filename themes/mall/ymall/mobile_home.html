@@ -139,46 +139,46 @@
       </div>
       <div class="categories">
         <ul class="categories-list">
-          <li class="category">
-            <div class="category-logo"></div>
+          <li class="category" cate_id="1623">
+            <div class="category-logo" style="background: url('http://www.51zwd.com/data/files/mall/template/category-icon/半身裙.png')"></div>
             <div class="category-name">半身裙</div>
           </li>
-          <li class="category">
-            <div class="category-logo"></div>
+          <li class="category" cate_id="50000671">
+            <div class="category-logo" style="background: url('http://www.51zwd.com/data/files/mall/template/category-icon/T恤.png')"></div>
             <div class="category-name">T恤</div>
           </li>
-          <li class="category">
-            <div class="category-logo"></div>
+          <li class="category" cate_id="162205">
+            <div class="category-logo" style="background: url('http://www.51zwd.com/data/files/mall/template/category-icon/牛仔裤.png')"></div>
             <div class="category-name">牛仔裤</div>
           </li>
-          <li class="category">
-            <div class="category-logo"></div>
+          <li class="category" cate_id="3035">
+            <div class="category-logo" style="background: url('http://www.51zwd.com/data/files/mall/template/category-icon/休闲裤.png')"></div>
             <div class="category-name">休闲裤</div>
           </li>
-          <li class="category">
-            <div class="category-logo"></div>
+          <li class="category" cate_id="50010402">
+            <div class="category-logo" style="background: url('http://www.51zwd.com/data/files/mall/template/category-icon/polo衫.png')"></div>
             <div class="category-name">Polo衫</div>
           </li>
         </ul>
         <ul class="categories-list">
-          <li class="category">
-            <div class="category-logo"></div>
+          <li class="category" cate_id="50012825">
+            <div class="category-logo" style="background: url('http://www.51zwd.com/data/files/mall/template/category-icon/高邦鞋.png')"></div>
             <div class="category-name">高邦鞋</div>
           </li>
-          <li class="category">
-            <div class="category-logo"></div>
+          <li class="category" cate_id="50012028">
+            <div class="category-logo" style="background: url('http://www.51zwd.com/data/files/mall/template/category-icon/靴子.png')"></div>
             <div class="category-name">靴子</div>
           </li>
-          <li class="category">
-            <div class="category-logo"></div>
+          <li class="category" cate_id="50012027">
+            <div class="category-logo" style="background: url('http://www.51zwd.com/data/files/mall/template/category-icon/低邦鞋.png')"></div>
             <div class="category-name">低邦鞋</div>
           </li>
-          <li class="category">
-            <div class="category-logo"></div>
+          <li class="category" cate_id="50008881">
+            <div class="category-logo" style="background: url('http://www.51zwd.com/data/files/mall/template/category-icon/文胸.png')"></div>
             <div class="category-name">文胸</div>
           </li>
-          <li class="category">
-            <div class="category-logo"></div>
+          <li class="category" cate_id="50026617">
+            <div class="category-logo" style="background: url('http://www.51zwd.com/data/files/mall/template/category-icon/配件.png')"></div>
             <div class="category-name">配件</div>
           </li>
         </ul>
@@ -275,8 +275,10 @@
       if (typeof(WebViewBridge) === 'undefined') {
         return;
       }
-      $('.container').on('click', '.hotgood, .trendygood', viewItem);
-      $('.container').on('click', '.ad, .banner-container', viewShop);
+      $('.container')
+        .on('click', '.hotgood, .trendygood', viewItem)
+        .on('click', '.ad, .banner-container', viewShop)
+        .on('click', '.category', viewCategory);
 
       function viewItem() {
         const $good = $(this);
@@ -300,6 +302,14 @@
           business_scope: $shop.attr('business_scope'),
         }
         sendMessage('viewShop', shop);
+      }
+
+      function viewCategory() {
+        const $category = $(this);
+        const category = {
+          cate_id: $category.attr('cate_id'),
+        };
+        sendMessage('viewCategory', category);
       }
 
       function sendMessage(type, data) {
