@@ -27,9 +27,6 @@ class Mobile_taobaoApp extends Mobile_frontendApp {
                 $title = $this->_make_sure_string('title', 255, '');
                 $price = $this->_make_sure_string('price', 10, '');
                 $desc = $this->_make_sure_string('desc', 65536, '');
-                Log::write('title'.$title);
-                Log::write('price'.$price);
-                Log::write('desc'.$desc);
                 if ($goods_id === -1 || empty($title)  || empty($price)|| empty($desc)) {
                     $this->_ajax_error(400, PARAMS_ERROR, '参数错误');
                     return ;
@@ -47,6 +44,7 @@ class Mobile_taobaoApp extends Mobile_frontendApp {
             'price' => $price,
             'desc' => $desc);
         $result = $this->_post_url($url, $data);
+        $result = str_replace('"', '', $result);
         if ($result === 'true') {
             echo ecm_json_encode(array('success' => true));
         } else {
@@ -88,7 +86,7 @@ class Mobile_taobaoApp extends Mobile_frontendApp {
                         array_push($new_urls, $upload_result);
                     }
                 }
-                if ($error_count > 3) { // 图片搬家失败3张才算整个请求失败，否则直接忽略失败的图片
+                if ($error_count > 10) { // 图片搬家失败10张才算整个请求失败，否则直接忽略失败的图片
                     $this->_ajax_error(500, TAOBAO_API_ERROR, '图片搬家失败');
                 } else {
                     echo ecm_json_encode($new_urls);

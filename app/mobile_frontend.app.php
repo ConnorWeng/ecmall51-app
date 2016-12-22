@@ -94,6 +94,10 @@ class Mobile_frontendApp extends FrontendApp {
     }
 
     function _make_sure_string($param, $length_limit, $default) {
+        if (defined('MOBILE_DEBUG')) {
+            $param_info = print_r($_REQUEST[$param], true);
+            Log::write('request string '.$param.': '.$param_info, Log::DEBUG);
+        }
         if (isset($_REQUEST[$param])) {
             if (is_string($_REQUEST[$param]) && mb_strlen($_REQUEST[$param], 'utf-8') <= $length_limit) {
                 return $_REQUEST[$param];
