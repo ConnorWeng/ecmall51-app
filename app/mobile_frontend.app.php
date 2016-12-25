@@ -109,6 +109,14 @@ class Mobile_frontendApp extends FrontendApp {
             return $default;
         }
     }
+
+    function _remove_index_key($obj) {
+        $ret = array();
+        foreach ($obj as $key => $val) {
+            array_push($ret, $val);
+        }
+        return $ret;
+    }
 }
 
 class MobileVisitor {
