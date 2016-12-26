@@ -13,11 +13,16 @@ define('SEARCH_CACHE_TTL', 3600);  // 商品搜索缓存时间
 
 class Mobile_goodsApp extends Mobile_frontendApp {
     private $_goods_mod = null;
+    private $_gcategory_mod = null;
 
-    function __construct($goods_mod = null) {
+    function __construct($goods_mod = null, $gcategory_mod = null) {
         $this->_goods_mod = $goods_mod;
         if ($this->_goods_mod === null) {
             $this->_goods_mod =& m('goods');
+        }
+        $this->_gcategory_mod = $gcategory_mod;
+        if ($this->_gcategory_mod === null) {
+            $this->_gcategory_mod =& bm('gcategory');
         }
     }
 
@@ -120,6 +125,37 @@ class Mobile_goodsApp extends Mobile_frontendApp {
             'spec_pid_2' => $goods_info['spec_pid_2'],
         );
         echo ecm_json_encode($result);
+    }
+
+    function goods_in_cate() {
+        $cate_id = $this->_make_sure_numeric('cate_id', -1);
+        if ($cate_id === -1) {
+            $this->_ajax_error(400, PARAMS_ERROR, '参数错误');
+            return ;
+        }
+        $this->_goods_in_cate($cate_id);
+    }
+
+    function _goods_in_cate($cate_id) {
+        $layer = $this->_gcategory_mod->get_layer($cate_id, true);
+        if ($layer === false) {
+            $this->_ajax_error(400, CATEGORY_NOT_FOUND, '分类不存在');
+            return ;
+        }
+        $order_by = 'add_time DESC';
+        $page_per = 25;
+        $page = $this->_get_page($page_per);
+        $goods_list = $this->_goods_mod->findAll(array(
+            'fields' => 'goods_id, goods_name, default_image, price, store_id',
+            'index_key' => false,
+            'include' => array(
+                'has_goodsattr' => array(
+                    'fields' => 'attr_value',
+                    'conditions' => 'attr_id = 1')),
+            'conditions' => 'cate_id_'.$layer.' = '.$cate_id,
+            'order' => $order_by,
+            'limit' => $page['limit']));
+        echo ecm_json_encode($goods_list);
     }
 }
 
