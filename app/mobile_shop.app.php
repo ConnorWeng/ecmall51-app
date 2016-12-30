@@ -14,7 +14,7 @@ class Mobile_shopApp extends Mobile_frontendApp {
     // 根据市场、排序方式、页面大小、页面号进行店铺查询
     function _index($mk_id, $page, $keywords) {
         $order_by = 'mk_id, floor, address';
-        $page_per = 25;
+        $page_per = MOBILE_PAGE_SIZE;
         $page = $this->_get_page($page_per);
         $conditions = '';
         if ($keywords) {

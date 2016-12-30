@@ -36,7 +36,7 @@ class Mobile_orderApp extends Mobile_frontendApp {
     function index() {
         if (!IS_POST) {
             $order_by = 'add_time DESC';
-            $page_per = 25;
+            $page_per = MOBILE_PAGE_SIZE;
             $page = $this->_get_page($page_per);
             $user_id = $this->visitor->get('user_id');
             $orders = $this->_order_mod->findAll(array(
