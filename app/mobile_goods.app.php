@@ -145,17 +145,18 @@ class Mobile_goodsApp extends Mobile_frontendApp {
         $order_by = 'add_time DESC';
         $page_per = MOBILE_PAGE_SIZE;
         $page = $this->_get_page($page_per);
-        $goods_list = $this->_goods_mod->findAll(array(
-            'fields' => 'goods_id, goods_name, default_image, price, store_id',
-            'index_key' => false,
+
+        $goods_list = $this->_goods_mod->get_list2(array(
+            'fields' => 'g.goods_id, g.goods_name, g.default_image, g.price, g.store_id, ',
             'include' => array(
                 'has_goodsattr' => array(
                     'fields' => 'attr_value',
                     'conditions' => 'attr_id = 1')),
-            'conditions' => 'cate_id_'.$layer.' = '.$cate_id,
+            'conditions' => 'g.cate_id_'.$layer.' = '.$cate_id.' AND g.if_show = 1 AND g.closed = 0 AND g.default_spec > 0 AND s.state = 1',
             'order' => $order_by,
-            'limit' => $page['limit']));
-        echo ecm_json_encode($goods_list);
+            'limit' => $page['limit']), null, false, true, $total_found, $backkey);
+
+        echo ecm_json_encode($this->_remove_index_key($goods_list));
     }
 }
 

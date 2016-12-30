@@ -210,7 +210,7 @@ class GoodsModel extends BaseModel {
                 $keyword = "";
             }
         }
-        
+
         return $conditions;
     }
 
@@ -328,7 +328,7 @@ class GoodsModel extends BaseModel {
 //        echo $order.'-'.$mysort;
 //        echo 'g_f:'.$g_f.'<br>'.'s_f:'.$s_f.'<br>'.$gs_f.'<br>'.$gst_f.'<br>';
 //        echo 'order:'.$g_s.'-'.$s_s.'-'.$gs_s.'-'.$gss_s;
-        $tables = "(select g.* from {$this->table} g $g_con and g.store_id in (select s.store_id from {$store_mod->table} s $s_con) $g_s Limit $limit) g " .
+        $tables = "(select g.* from {$this->table} g $g_con and g.store_id in (select s.store_id from {$store_mod->table} s $s_con) Limit $limit) g " .
 //                "LEFT JOIN (select gs.* from {$gs_mod->table} gs $gs_con )gs ON g.default_spec = gs.spec_id " .
                 "LEFT JOIN (select s.* from {$store_mod->table} s $s_con) s ON g.store_id = s.store_id " .
                 "LEFT JOIN (select gst.* from {$gstat_mod->table} gst $gst_con) gst ON g.goods_id = gst.goods_id ";
@@ -866,12 +866,12 @@ class GoodsModel extends BaseModel {
      */
     function get_latestGoods_fromStore($storenums) {
         //为扩展用，默认15个店铺的1个新品
-//    	empty($storenums) && $storenums = 15;
-//    	$day_start = gmmktime(0, 0, 0, date('m'), date('d'), date('Y'));
-//    	$day_end = gmmktime(0, 0, 0, date('m'), date('d') + 1, date('Y')) - 1;
-//    	//子查询  找出今日 每个店铺中商品 add_time 的最大值
-//    	$sql="SELECT goods_id,store_id,add_time FROM {$this->table} g WHERE add_time=(SELECT max(add_time) FROM {$this->table} WHERE store_id=g.store_id AND add_time >= $day_start AND add_time <= $day_end ) order by g.add_time DESC limit $storenums";
-//    	 $data = array();
+//      empty($storenums) && $storenums = 15;
+//      $day_start = gmmktime(0, 0, 0, date('m'), date('d'), date('Y'));
+//      $day_end = gmmktime(0, 0, 0, date('m'), date('d') + 1, date('Y')) - 1;
+//      //子查询  找出今日 每个店铺中商品 add_time 的最大值
+//      $sql="SELECT goods_id,store_id,add_time FROM {$this->table} g WHERE add_time=(SELECT max(add_time) FROM {$this->table} WHERE store_id=g.store_id AND add_time >= $day_start AND add_time <= $day_end ) order by g.add_time DESC limit $storenums";
+//       $data = array();
 //         $res = $this->db->query($sql);
 //         while ($row = $this->db->fetchRow($res)) {
 //                $data[] = $row['goods_id'];
@@ -879,12 +879,12 @@ class GoodsModel extends BaseModel {
 //         $goodslist = array();
 //         if($data)
 //         {
-//         	$condition= array(
-//         			'conditions'=>db_create_in($data,'g.goods_id'),
-//         	);
-//         	$goodslist = $this->get_list2($condition);
+//          $condition= array(
+//                  'conditions'=>db_create_in($data,'g.goods_id'),
+//          );
+//          $goodslist = $this->get_list2($condition);
 //         }
-//    	return $goodslist;
+//      return $goodslist;
 
         $num = 0;
         $page = 1;
@@ -978,7 +978,7 @@ class GoodsBModel extends GoodsModel {
 
         return $this->db->getOne($sql);
     }
-    
+
     /**
      * 获取商品订单缺货率、退货率
      * 缺货率=缺货次数/总购买次数
@@ -999,19 +999,19 @@ class GoodsBModel extends GoodsModel {
         {
             $result['lack_rate'] = round($goods_stat['oos']/$goods_stat['sales'],4) * 100;
             $result['back_rate'] = round($goods_stat['backs']/$goods_stat['sales'],4) * 100;
-            
+
             $goods_stat['oos'] > $goods_stat['sales'] && $result['lack_rate'] = 100.00;
             $goods_stat['backs'] > $goods_stat['sales'] && $result['back_rate'] = 100.00;
         }
-        
+
         return $result;
     }
-    
+
     function recount_praise_rate($goods_id)
     {
         $praise_rate = 0.00;
         $model_ordergoods =& m('ordergoods');
-    
+
         /* 找出所有is_valid为1的商品中的商品评价记录总数 */
         $info  = $model_ordergoods->get(array(
             'join'          => 'belongs_to_order',
@@ -1024,7 +1024,7 @@ class GoodsBModel extends GoodsModel {
         {
             return $praise_count;
         }
-    
+
         /* 找出所有的evaluation为3的记录总数 */
         $info = $model_ordergoods->get(array(
             'join'          => 'belongs_to_order',
@@ -1035,7 +1035,7 @@ class GoodsBModel extends GoodsModel {
         $praise_count = $info['praise_count'];
         /* 计算好评数占总数的百分比 */
         $praise_rate = round(($praise_count / $evaluation_count), 4) * 100;
-    
+
         return $praise_rate;
     }
 
