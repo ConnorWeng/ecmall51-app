@@ -232,7 +232,12 @@
               goods_id="6862647"
               goods_name="7817#2017春季新款韩版女装宽松显瘦开叉下摆字母刺绣卫衣女学生"
               default_image="http://gd2.alicdn.com/imgextra/i2/739690901/TB2gf_lXUdnpuFjSZPhXXbChpXa_!!739690901.jpg_460x460.jpg"
-              price="33.00">
+              price="33.00"
+              store_id="5808"
+              store_name="舒雪儿服饰"
+              mk_name="女人街 6F"
+              address="612"
+              business_scope="">
             <div class="trendygood-title-container">
               <h1 class="trendygood-title">7817#2017春季新款韩版女装宽松显瘦开叉下摆字母刺绣卫衣女学生</h1>
             </div>
@@ -241,7 +246,12 @@
               goods_id="6950171"
               goods_name="秋冬打底裙夜店深V领系带性感套装低胸女气质长袖包臀连衣裙1898"
               default_image="https://img.alicdn.com/bao/uploaded/i4/TB1TN9TNpXXXXcoaXXXXXXXXXXX_!!0-item_pic.jpg"
-              price="19.00">
+              price="19.00"
+              store_id="89373"
+              store_name="乐锶 连衣裙"
+              mk_name="富丽-3F"
+              address="C3130"
+              business_scope="">
             <div class="trendygood-title-container">
               <h1 class="trendygood-title">秋冬打底裙夜店深V领系带性感套装低胸女气质长袖包臀连衣裙1898</h1>
             </div>
@@ -258,7 +268,13 @@
               goods_id="{$good.goods_id}"
               goods_name="{$good.goods_name}"
               default_image="{$good.default_image}""
-              price="{$good.price}">
+              price="{$good.price}"
+              store_id="{$good.store_id}"
+              store_name="{$good.store_name}"
+              see_price="{$good.see_price}"
+              mk_name="{$good.mk_name}"
+              address="{$good.address}"
+              business_scope="{$good.business_scope}">
             <image class="hotgood-image" src="{$good.default_image}"/>
             <h2>{$good.goods_name}</h2>
             <div class="price-container">
@@ -287,6 +303,14 @@
           goods_name: $good.attr('goods_name'),
           default_image: $good.attr('default_image'),
           price: $good.attr('price'),
+          shop: {
+            store_id: $good.attr('store_id'),
+            store_name: $good.attr('store_name'),
+            see_price: $good.attr('see_price'),
+            mk_name: $good.attr('mk_name'),
+            address: $good.attr('address'),
+            business_scope: $good.attr('business_scope'),
+          }
         };
         sendMessage('viewItem', good);
       }
