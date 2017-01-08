@@ -2,12 +2,14 @@
 
 class Mobile_categoryApp extends Mobile_frontendApp {
     private $_gcategory_mod = null;
+    private $_cache_server = null;
 
     function __construct($gcategory_mod = null) {
         $this->_gcategory_mod = $gcategory_mod;
         if ($this->_gcategory_mod === null) {
             $this->_gcategory_mod =& bm('gcategory');
         }
+        $this->_cache_server =& cache_server();
     }
 
     function next_layer() {
@@ -20,8 +22,16 @@ class Mobile_categoryApp extends Mobile_frontendApp {
     }
 
     function _next_layer($cate_id) {
-        $categories = $this->_remove_index_key($this->_gcategory_mod->get_children($cate_id, true));
-        echo ecm_json_encode($categories);
+        $cache_key = 'mobile_category_next_layer_cate_id_'.$cate_id;
+        $cached_data = $this->_cache_server->get($cache_key);
+        if (!empty($cached_data)) {
+            echo $cached_data;
+        } else {
+            $categories = $this->_remove_index_key($this->_gcategory_mod->get_children($cate_id, true));
+            $json = ecm_json_encode($categories);
+            $this->_cache_server->set($cache_key, $json, 7200);
+            echo $json;
+        }
     }
 }
 

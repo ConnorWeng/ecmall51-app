@@ -14,6 +14,7 @@ define('SEARCH_CACHE_TTL', 3600);  // 商品搜索缓存时间
 class Mobile_goodsApp extends Mobile_frontendApp {
     private $_goods_mod = null;
     private $_gcategory_mod = null;
+    private $_cache_server = null;
 
     function __construct($goods_mod = null, $gcategory_mod = null) {
         $this->_goods_mod = $goods_mod;
@@ -24,6 +25,7 @@ class Mobile_goodsApp extends Mobile_frontendApp {
         if ($this->_gcategory_mod === null) {
             $this->_gcategory_mod =& bm('gcategory');
         }
+        $this->_cache_server =& cache_server();
     }
 
     function index() {
@@ -137,26 +139,33 @@ class Mobile_goodsApp extends Mobile_frontendApp {
     }
 
     function _goods_in_cate($cate_id) {
-        $layer = $this->_gcategory_mod->get_layer($cate_id, true);
-        if ($layer === false) {
-            $this->_ajax_error(400, CATEGORY_NOT_FOUND, '分类不存在');
-            return ;
-        }
-        $order_by = 'add_time DESC';
         $page_per = MOBILE_PAGE_SIZE;
         $page = $this->_get_page($page_per);
+        $cache_key = 'mobile_goods_goods_in_cate_cate_id_'.$cate_id.'_page_'.$page['curr_page'];
+        $cached_data = $this->_cache_server->get($cache_key);
+        if (!empty($cached_data)) {
+            echo $cached_data;
+        } else {
+            $layer = $this->_gcategory_mod->get_layer($cate_id, true);
+            if ($layer === false) {
+                $this->_ajax_error(400, CATEGORY_NOT_FOUND, '分类不存在');
+                return ;
+            }
+            $order_by = 'add_time DESC';
+            $goods_list = $this->_goods_mod->get_list2(array(
+                'fields' => 'g.goods_id, g.goods_name, g.default_image, g.price, g.store_id, ',
+                'include' => array(
+                    'has_goodsattr' => array(
+                        'fields' => 'attr_value',
+                        'conditions' => 'attr_id = 1')),
+                'conditions' => 'g.cate_id_'.$layer.' = '.$cate_id.' AND g.if_show = 1 AND g.closed = 0 AND g.default_spec > 0 AND s.state = 1',
+                'order' => $order_by,
+                'limit' => $page['limit']), null, false, true, $total_found, $backkey);
 
-        $goods_list = $this->_goods_mod->get_list2(array(
-            'fields' => 'g.goods_id, g.goods_name, g.default_image, g.price, g.store_id, ',
-            'include' => array(
-                'has_goodsattr' => array(
-                    'fields' => 'attr_value',
-                    'conditions' => 'attr_id = 1')),
-            'conditions' => 'g.cate_id_'.$layer.' = '.$cate_id.' AND g.if_show = 1 AND g.closed = 0 AND g.default_spec > 0 AND s.state = 1',
-            'order' => $order_by,
-            'limit' => $page['limit']), null, false, true, $total_found, $backkey);
-
-        echo ecm_json_encode($this->_remove_index_key($goods_list));
+            $json = ecm_json_encode($this->_remove_index_key($goods_list));
+            $this->_cache_server->set($cache_key, $json, 7200);
+            echo $json;
+        }
     }
 }
 
