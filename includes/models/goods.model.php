@@ -262,6 +262,55 @@ class GoodsModel extends BaseModel {
         return $conditions;
     }
 
+    function get_Mem_Goods_for_mobile($keyword = "", $reCondition = null, $orderStr, $limit = 1, &$total_found) {
+        $start = 0;
+        if (USESPHINX == 1) {
+            $goods_name = '';
+            if ($keyword) {
+                foreach ($keyword as $word) {
+                    $goods_name .= '#' . $word;
+                }
+            }
+            $cl = new SphinxClient ();
+            $cl->SetServer($this->getSphinxAddress(), SPHINXPORT);
+            $cl->SetArrayResult(true);
+            $cl->SetMatchMode(SPH_MATCH_ALL);
+            if (!empty($reCondition)) {
+                foreach ($reCondition as $key => $value) {
+                    if ($value['type'] == "equal") {
+                        $cl->SetFilter($key, array($value['value']));
+                    } else if ($value['type'] == 'range') {
+                        $cl->SetFilterRange($key, $value['min'], $value['max'], $value['exclude']);
+                    } else if ($value['type'] == "in") {
+                        $cl->SetFilter($key, $value['value']);
+                    } else if ($value['type'] == "keywords") {
+                        $goods_name .= '#' . $value['value'];
+                    }
+                }
+            }
+            $cl->SetSortMode(SPH_SORT_EXTENDED, $orderStr);
+            $limitParts = explode(',', $limit);
+            $cl->SetLimits(intval($limitParts[0]), intval($limitParts[1]));
+            if (defined('OEM')) {
+                $res = $cl->Query($goods_name, "goods_" . OEM);
+            } else {
+                $res = $cl->Query($goods_name, "goods");
+            }
+            if ($res && $res['total'] > 0) {
+                foreach ($res['matches'] as $record) {
+                    $ids[] = $record['id'];
+                }
+
+                $conditions = 'g.goods_id' . db_create_in($ids);
+                $total_found = $res['total_found'];
+            } else {
+                $conditions = '0=1';
+                $total_found = 0;
+            }
+        }
+        return $conditions;
+    }
+
     function getMillisecond() {
         list($t1, $t2) = explode(' ', microtime());
         return (float) sprintf('%.0f', (floatval($t1) + floatval($t2)) * 1000);
@@ -665,7 +714,7 @@ class GoodsModel extends BaseModel {
         $mysort = $this->_getOneSort($order, $g_f, $s_f, $gs_f, $gst_f);
 
 
-        $sqlg = "select " . $g_f . " from ecm_goods g where " . $this->get_Mem_Goods($conditions_tt, $reCondition, $mysort, $limit, $total_found);
+        $sqlg = "select " . $g_f . " from ecm_goods g where " . $this->get_Mem_Goods_for_mobile($conditions_tt, $reCondition, $mysort, $limit, $total_found);
         $goods_list = $index_key ? $this->db->getAllWithIndex($sqlg, $index_key) : $this->db->getAll($sqlg);
 
         return $goods_list;

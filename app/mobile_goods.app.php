@@ -84,7 +84,7 @@ class Mobile_goodsApp extends Mobile_frontendApp {
             'order' => 'views desc',
             'fields' => 'g.goods_id,',
             'index_key' => false,
-            'limit' => $page_per,
+            'limit' => $page['limit'],
             'conditions_tt' => $keywords), null, false, true, $total_found);
         echo ecm_json_encode($goods);
     }
