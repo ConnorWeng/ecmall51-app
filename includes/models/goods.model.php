@@ -431,6 +431,95 @@ class GoodsModel extends BaseModel {
         return $new_goods_list;
     }
 
+    function get_list2_for_mobile($params = array(), $scate_ids = array(), $desc = false, $no_picture = true, &$total_found,&$backkey) {
+        if (!defined('USESPHINX') || USESPHINX != 1) {
+            return $this->get_list($params, $scate_ids, $desc, $no_picture);
+        }
+        is_int($scate_ids) && $scate_ids > 0 && $scate_ids = array($scate_ids);
+
+        extract($this->_initFindParams($params));
+
+        $gs_mod = & m('goodsspec');
+        $store_mod = & m('store');
+        $gstat_mod = & m('goodsstatistics');
+        $goods_attr_mod = & m('goodsattr');
+        $cg_table = DB_PREFIX . 'category_goods';
+
+        /* tyioocom */
+        $fields .= "g.default_spec,g.goods_id, g.store_id, g.type, g.goods_name, g.cate_id, g.cate_name, g.brand, g.spec_qty, g.spec_name_1, g.spec_name_2, g.if_show, g.closed, g.add_time, g.recommended, g.default_image,g.sort_order,g.realpic, " .
+                "gs.spec_id, gs.spec_1, gs.spec_2, gs.color_rgb, g.price, gs.stock, " .
+                "s.store_name, s.region_id, s.region_name, s.credit_value, s.sgrade, s.serv_sendgoods, s.serv_refund, s.serv_exchgoods,s.mk_name,s.dangkou_address,s.serv_realpic, " .
+                "gst.views, gst.sales, gst.comments";
+        $desc && $fields .= ", g.description";
+
+        /* 条件(WHERE) */
+        $conditions = $this->_getConditions($conditions, true);
+        $pos = strpos($conditions, "WHERE");
+        $conditions = substr($conditions, $pos + 6);
+        $conditions .= "  AND s.store_id IS NOT NULL ";
+//        echo 'condi::'.$conditions.'<br>';
+        $this->_getMyConditions($conditions, $g_con, $s_con, $gs_con, $gst_con);
+        $reCondition = $this->_getOneCondition($conditions);
+//        print_r($reCondition);
+        $conditions = ' where ' . $conditions;
+//         echo '<br>ori fields: '.$fields.'<br>';
+
+        if ($scate_ids) {
+            $sql = "SELECT DISTINCT goods_id FROM {$cg_table} WHERE cate_id " . db_create_in($scate_ids);
+            $goods_ids = $gs_mod->getCol($sql);
+            $conditions .= " AND g.goods_id " . db_create_in($goods_ids);
+        }
+
+        /* 排序(ORDER BY) */
+        if ($order) {
+            $order = ' ORDER BY ' . $this->getRealFields($order) . ', g.add_time desc ';
+        }
+        if ($limit == false) {
+            $limit = '1';
+        }
+        $this->_getMyFields($fields, $g_f, $s_f, $gs_f, $gst_f);
+//        $this->_getMySorts($order, $g_s, $s_s, $gs_s, $gst_s, $g_f, $s_f, $gs_f, $gst_f);
+        $mysort = $this->_getOneSort($order, $g_f, $s_f, $gs_f, $gst_f);
+//        echo $order.'-'.$mysort;
+//        echo 'g_f:'.$g_f.'<br>'.'s_f:'.$s_f.'<br>'.$gs_f.'<br>'.$gst_f.'<br>';
+//        echo 'order:'.$g_s.'-'.$s_s.'-'.$gs_s.'-'.$gss_s;
+        $tables = "(select g.* from {$this->table} g $g_con and g.store_id in (select s.store_id from {$store_mod->table} s $s_con) Limit $limit) g " .
+//                "LEFT JOIN (select gs.* from {$gs_mod->table} gs $gs_con )gs ON g.default_spec = gs.spec_id " .
+                "LEFT JOIN (select s.* from {$store_mod->table} s $s_con) s ON g.store_id = s.store_id " .
+                "LEFT JOIN (select gst.* from {$gstat_mod->table} gst $gst_con) gst ON g.goods_id = gst.goods_id ";
+
+
+
+
+        /* 分页(LIMIT) */
+        $limit && $limit = ' LIMIT ' . $limit;
+        if ($count) {
+//            $this->_updateLastQueryCount("SELECT COUNT(*) as c FROM {$tables}{$conditions}");
+        }
+        $fields = $g_f . ',' . $s_f . ',' . $gst_f;
+//       echo '<br>My fields: '.$fields.'<br>';
+        /* 完整的SQL */
+        $this->temp = $tables . $conditions;
+        $sql = "SELECT {$fields} FROM {$tables}{$conditions}{$order} ";
+//        echo $sql;
+//             $goods_list = $index_key ? $this->db->getAllWithIndex($sql, $index_key) : $this->db->getAll($sql);
+
+        $sqlg = "select " . $g_f . " from ecm_goods g where " . $this->getGoods($conditions_tt, $reCondition, $mysort, 0, $total_found, $ids);
+//        echo "sqlg".$sqlg;
+        $backkey = $conditions_tt;
+        $t0 = time();
+        $goods_list = $index_key ? $this->db->getAllWithIndex($sqlg, $index_key) : $this->db->getAll($sqlg);
+        $t1 = time();
+//        echo 't1-t0=:'. ($t1-$t0). '<br>';
+        $new_goods_list = array();
+        if ($ids) {
+            foreach ($ids as $id) {
+               $goods_list[$id] && $new_goods_list[$id] = $goods_list[$id];
+            }
+        }
+        return $new_goods_list;
+    }
+
     function get_Mem_list($params = array(), $scate_ids = array(), $desc = false, $no_picture = true, &$total_found) {
         if (!defined('USESPHINX') || USESPHINX != 1) {
             return $this->get_list($params, $scate_ids, $desc, $no_picture);
@@ -535,6 +624,49 @@ class GoodsModel extends BaseModel {
                 }
             }
         }
+
+        return $goods_list;
+    }
+
+    function get_Mem_list_for_mobile($params = array(), $scate_ids = array(), $desc = false, $no_picture = true, &$total_found) {
+        if (!defined('USESPHINX') || USESPHINX != 1) {
+            return $this->get_list($params, $scate_ids, $desc, $no_picture);
+        }
+        is_int($scate_ids) && $scate_ids > 0 && $scate_ids = array($scate_ids);
+
+        extract($this->_initFindParams($params));
+
+        $gs_mod = & m('goodsspec');
+        $store_mod = & m('store');
+        $gstat_mod = & m('goodsstatistics');
+        $cg_table = DB_PREFIX . 'category_goods';
+        $goods_attr_mod = & m('goodsattr');
+        /* tyioocom */
+        $fields .= "g.default_spec,g.goods_id, g.store_id, g.type, g.goods_name, g.cate_id, g.cate_name, g.brand, g.spec_qty, g.spec_name_1, g.spec_name_2, g.if_show, g.closed, g.add_time, g.recommended, g.default_image,g.sort_order,g.realpic, " .
+                "gs.spec_id, gs.spec_1, gs.spec_2, gs.color_rgb, g.price, gs.stock, " .
+                "s.store_name, s.region_id, s.region_name, s.credit_value, s.sgrade, s.serv_sendgoods, s.serv_refund, s.serv_exchgoods,s.serv_realpic, " .
+                "gst.views, gst.sales, gst.comments";
+        $desc && $fields .= ", g.description";
+
+        /* 条件(WHERE) */
+        $conditions = $this->_getConditions($conditions, true);
+        $pos = strpos($conditions, "WHERE");
+        $conditions = substr($conditions, $pos + 6);
+        $conditions .= "  AND s.store_id IS NOT NULL ";
+
+        $reCondition = $this->_getOneCondition($conditions);
+
+        $conditions = ' where ' . $conditions;
+
+        if ($limit == false) {
+            $limit = 1;
+        }
+        $this->_getMyFields($fields, $g_f, $s_f, $gs_f, $gst_f);
+        $mysort = $this->_getOneSort($order, $g_f, $s_f, $gs_f, $gst_f);
+
+
+        $sqlg = "select " . $g_f . " from ecm_goods g where " . $this->get_Mem_Goods($conditions_tt, $reCondition, $mysort, $limit, $total_found);
+        $goods_list = $index_key ? $this->db->getAllWithIndex($sqlg, $index_key) : $this->db->getAll($sqlg);
 
         return $goods_list;
     }

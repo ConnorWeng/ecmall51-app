@@ -80,7 +80,7 @@ class Mobile_goodsApp extends Mobile_frontendApp {
         $page_per = MOBILE_PAGE_SIZE;
         $page = $this->_get_page($page_per);
         $goods_mod =& m('goods');
-        $goods = $goods_mod->get_Mem_list(array(
+        $goods = $goods_mod->get_Mem_list_for_mobile(array(
             'order' => 'views desc',
             'fields' => 'g.goods_id,',
             'index_key' => false,
@@ -175,7 +175,7 @@ class Mobile_goodsApp extends Mobile_frontendApp {
                 return ;
             }
             $order_by = 'add_time DESC';
-            $goods_list = $this->_goods_mod->get_list2(array(
+            $goods_list = $this->_goods_mod->get_list2_for_mobile(array(
                 'fields' => 'g.goods_id, g.goods_name, g.default_image, g.price, g.store_id, ',
                 'include' => array(
                     'has_goodsattr' => array(
