@@ -2,7 +2,7 @@
 
 class Mobile_homeApp extends MallbaseApp {
     function index() {
-        $order_by = 'goods_id';
+        $order_by = 'goods_id DESC';
         $goods_mod =& m('goods');
         $goods_list = $goods_mod->find(array(
             'conditions' => 'g.default_spec != 0 and s.state = 1 and g.description is not null',
