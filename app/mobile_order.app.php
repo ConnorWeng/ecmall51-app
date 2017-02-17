@@ -53,6 +53,51 @@ class Mobile_orderApp extends Mobile_frontendApp {
         }
     }
 
+    function get_vip_discount() {
+        $behalf_id = $this->_make_sure_numeric('behalf_id', -1);
+        if ($behalf_id === -1) {
+            $this->_ajax_error(400, PARAMS_ERROR, '参数错误');
+            return ;
+        }
+        $user_id = $this->visitor->get('user_id');
+        $this->_get_vip_discount($user_id, $behalf_id);
+    }
+
+    function _get_vip_discount($buyer_id, $bh_id) {
+        // 检测代发是否开启优惠
+        $mod_behalf = & m('behalf');
+        $behalf_info = $mod_behalf->get($bh_id);
+        if (empty($behalf_info['vip_clients_discount'])) {
+            echo ecm_json_encode('0.00');
+            return ;
+        }
+        // 检测买家是否是vip level > 0
+        $mod_membervip = & m('membervip');
+        $membervip_info = $mod_membervip->get($buyer_id);
+        if (empty($membervip_info['level'])) {
+            echo ecm_json_encode('0.00');
+            return ;
+        }
+        // 没有设置优惠值
+        if (empty($behalf_info['vip_clients_conf'])) {
+            echo ecm_json_encode('0.00');
+            return ;
+        }
+
+        // 计算出优惠
+        $confs = explode('|', $behalf_info['vip_clients_conf']);
+
+        $discount_arr = array();
+
+        foreach ($confs as $conf) {
+            $tmp_conf = explode(":", $conf);
+            $discount_arr[$tmp_conf[0]] = $tmp_conf[1];
+        }
+
+        $vip_discount = empty($discount_arr['vip' . $membervip_info['level']]) ? false : $discount_arr['vip' . $membervip_info['level']];
+        echo ecm_json_encode($vip_discount);
+    }
+
     function get_order_info_for_refund() {
         $order_id = $this->_make_sure_numeric('order_id', -1);
         if ($order_id === -1) {
