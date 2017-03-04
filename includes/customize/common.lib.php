@@ -1,10 +1,10 @@
 <?php
 /**
- * 
+ *
  * 通用的自定义函数库，今后不要写在global.lib.php ,这样便于升级维护
  * 作用同global.lib.php
  * 在global.lib.php  include_once();
- * 
+ *
  * author:tanaiquan
  * date:2015-11-23
  */
@@ -35,7 +35,7 @@ function exist_invoiceno($invoice_no)
     {
         file_put_contents($lock_file, 1);
     }
-    
+
     //对文件加锁
     $fp = fopen($lock_file, 'a+');
     if(!$fp)
@@ -48,14 +48,14 @@ function exist_invoiceno($invoice_no)
     $is_exist = false;
     $model_order = & m('order');
     $model_orderrefund = & m('orderrefund');
-    
+
     $model_order->getOne("SELECT count(order_id) as c FROM ".$model_order->table." WHERE invoice_no='".trim($invoice_no)."'") > 0 && $is_exist = true;
     $model_orderrefund->getOne("SELECT count(order_id) as c FROM ".$model_orderrefund->table." WHERE invoice_no='".trim($invoice_no)."' AND status <> 2 ") > 0 && $is_exist = true;
-    
+
     /*文件解锁*/
     flock($fp, LOCK_UN);
     fclose($fp);
-    
+
     return $is_exist;
 }
 /**
@@ -71,30 +71,91 @@ function belong_behalfarea($store_id)
     if (!$data || empty($data)) {
         $mod_behalfarea = & m('storebehalfarea');
         $b_stores = $mod_behalfarea->getCol("SELECT store_id FROM ".$mod_behalfarea->table." WHERE state='1'");
-        
+
         $mod_realityzone = & m('storerealityzone');
         $r_stores = $mod_realityzone->getCol("SELECT store_id FROM ".$mod_realityzone->table." WHERE state='1'");
-        
+
         $mod_brandarea = & m('storebrandarea');
         $d_stores = $mod_brandarea->getCol("SELECT store_id FROM ".$mod_brandarea->table." WHERE state='1'");
-        
+
         $stores = array_merge($b_stores,$r_stores,$d_stores);
         $stores = array_unique($stores);
-        
+
         $cache_server->set($indexkey, $stores, 7200);
     }
-    else 
+    else
     {
         $stores = $data;
     }
-    
-    
+
+
     if(empty($stores))
     {
         return false;
     }
-    
+
     return in_array($store_id, $stores);
+}
+
+/**每年开年都会面临档口调整，代发无法拿货的问题。
+ * 故每年年初都会先整理部分档口，先将代发区档口全删除，
+ * 整理一些后加入代发区，让客户只代发这个区的商品。
+ * 等档口地址整理好后，可开放所有档口。
+ * 允许 代发区 ，精品区，DH精选区，实拍区，全部，在后台配置
+ */
+function behalf_open_stores() {
+    $behalf_open = Conf::get('behalf_open');
+
+    $cache_server = & cache_server();
+    $indexkey = 'store_belong_open_';
+    $data = $cache_server->get($indexkey);
+    if (!$data || empty($data)) {
+        $b_stores = $c_stores =$r_stores = $d_stores = array();
+
+        if(in_array('bba', $behalf_open)){
+            $mod_behalfarea = & m('storebehalfarea');
+            $b_stores = $mod_behalfarea->getCol("SELECT store_id FROM ".$mod_behalfarea->table." WHERE state='1'");
+        }
+        if(in_array('brz', $behalf_open)){
+            $mod_realityzone = & m('storerealityzone');
+            $r_stores = $mod_realityzone->getCol("SELECT store_id FROM ".$mod_realityzone->table." WHERE state='1'");
+        }
+        if(in_array('bbr', $behalf_open)){
+            $mod_brandarea = & m('storebrandarea');
+            $d_stores = $mod_brandarea->getCol("SELECT store_id FROM ".$mod_brandarea->table." WHERE state='1'");
+        }
+        if(in_array('bbc', $behalf_open)){
+             $mod_behalfchoice = & m('storebehalfchoice');
+             $c_stores = $mod_behalfchoice->getCol("SELECT store_id FROM ".$mod_behalfchoice->table." WHERE state='1'");
+        }
+        $stores = array_merge($b_stores,$r_stores,$d_stores,$c_stores);
+        $stores = array_unique($stores);
+
+
+        $cache_server->set($indexkey, $stores, 7200);
+    }
+    else
+    {
+        $stores = $data;
+    }
+
+    return $stores;
+}
+
+function filter_behalf_open_stores($stores, $limit = 0) {
+    $store_ids = behalf_open_stores();
+    $filtered = array();
+    $count = 0;
+    foreach ($stores as $store) {
+        if (in_array($store['store_id'], $store_ids)) {
+            array_push($filtered, $store);
+            $count += 1;
+            if ($limit !== 0 && $count >= $limit) {
+                break;
+            }
+        }
+    }
+    return $filtered;
 }
 
 /**
@@ -112,7 +173,7 @@ function after_goods_taker_inventory($inp_time,$goods_warehouse_ids=array())
         $query_goods_ids = array_merge($query_goods_ids,explode(',', $g['content']));
     }
     if(empty($query_goods_ids)) return false;
-    
+
     foreach ($goods_warehouse_ids as $gid)
     {
         if(in_array($gid, $query_goods_ids))
@@ -141,7 +202,7 @@ function exist_brandarea($store_id)
     if($store_id <= 0 || !is_numeric($store_id)){ return false; }
     $store = $mod_sba->get(array('conditions'=>"store_id = '{$store_id}' AND state = 1"));
     if($store){ return true; }else{ return  false;}
-    
+
 }
 /**
  * php文件处理并发
@@ -153,11 +214,11 @@ function zwd51_handle_concurrence_with_file_open($filename)
     if(!file_exists($lock_file))
     {
         file_put_contents($lock_file, 1);
-    }     
+    }
     //对文件加锁
     $fp = fopen($lock_file, 'a+');
-    
-    return $fp;   
+
+    return $fp;
 }
 
 function zwd51_handle_concurrence_with_file_close($fp)
@@ -180,9 +241,9 @@ function change_taobao_imgsize($goods_image)
     {
         return $goods_image.'_240x240.jpg';
     }
-    
+
     return $goods_image;
 }
- 
+
 
 ?>
