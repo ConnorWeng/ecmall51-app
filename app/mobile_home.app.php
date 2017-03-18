@@ -5,7 +5,7 @@ class Mobile_homeApp extends MallbaseApp {
         $order_by = 'goods_id DESC';
         $goods_mod =& m('goods');
         $goods_list = $goods_mod->find(array(
-            'conditions' => 'g.default_spec != 0 and s.state = 1 and g.description is not null and s.store_id in ('.implode(',', behalf_open_stores()).')',
+            'conditions' => 'g.default_spec != 0 and s.state = 1 and g.description is not null and '.behalf_open_stores_condition(),
             'fields' => 'g.goods_id, g.goods_name, g.default_image, g.price, s.store_id, s.store_name, s.see_price, s.mk_name, s.address, s.business_scope',
             'join' => 'belongs_to_store',
             'index_key' => false,

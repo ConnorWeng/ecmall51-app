@@ -17,6 +17,10 @@ class Mobile_goodsApp extends Mobile_frontendApp {
     private $_cache_server = null;
 
     function __construct($goods_mod = null, $gcategory_mod = null) {
+        /* 载入配置项 */
+        $setting = & af('settings');
+        Conf::load($setting->getAll());
+
         $this->_goods_mod = $goods_mod;
         if ($this->_goods_mod === null) {
             $this->_goods_mod =& m('goods');
@@ -37,7 +41,7 @@ class Mobile_goodsApp extends Mobile_frontendApp {
         $order_by = 'g.add_time DESC';
         $page_per = MOBILE_PAGE_SIZE;
         $page = $this->_get_page($page_per);
-        $conditions = $store_id == 0 ? 's.store_id in ('.implode(',', behalf_open_stores()).')' : "s.store_id = {$store_id}";
+        $conditions = $store_id == 0 ? behalf_open_stores_condition() : "s.store_id = {$store_id}";
         $goods_mod =& m('goods');
         $goods_list = $goods_mod->findAll(array(
             'fields' => 'g.goods_id, g.goods_name, g.default_image, g.price, s.store_id, s.store_name, s.see_price, s.mk_name, s.address, s.business_scope',

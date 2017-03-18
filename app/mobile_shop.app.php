@@ -2,6 +2,9 @@
 
 class Mobile_shopApp extends Mobile_frontendApp {
     function __construct() {
+        /* 载入配置项 */
+        $setting = & af('settings');
+        Conf::load($setting->getAll());
     }
 
     function index() {
@@ -25,7 +28,7 @@ class Mobile_shopApp extends Mobile_frontendApp {
         $shop_list = $shop_mod->find(array(
             'fields' => 'mk_id, mk_name, store_id, floor, address, store_name, see_price, business_scope',
             'index_key' => false,
-            'conditions' => 'state = 1'.$conditions.' and store_id in ('.implode(',', behalf_open_stores()).')',
+            'conditions' => 'state = 1'.$conditions.' and '.behalf_open_stores_condition(),
             'order' => $order_by,
             'limit' => $page['limit']));
         echo ecm_json_encode($shop_list);

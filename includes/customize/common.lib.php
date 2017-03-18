@@ -105,6 +105,8 @@ function belong_behalfarea($store_id)
  */
 function behalf_open_stores() {
     $behalf_open = Conf::get('behalf_open');
+    if(!is_array($behalf_open)) return false;
+    if(in_array('all', $behalf_open)) return true;
 
     $cache_server = & cache_server();
     $indexkey = 'store_belong_open_';
@@ -142,20 +144,15 @@ function behalf_open_stores() {
     return $stores;
 }
 
-function filter_behalf_open_stores($stores, $limit = 0) {
+function behalf_open_stores_condition() {
     $store_ids = behalf_open_stores();
-    $filtered = array();
-    $count = 0;
-    foreach ($stores as $store) {
-        if (in_array($store['store_id'], $store_ids)) {
-            array_push($filtered, $store);
-            $count += 1;
-            if ($limit !== 0 && $count >= $limit) {
-                break;
-            }
-        }
+    if ($store_ids === true) {
+        return '1 = 1';
+    } else if ($store_ids === false) {
+        return 's.store_id = -1';
+    } else if (is_array($store_ids)) {
+        return 's.store_id in ('.implode(',', $store_ids).')';
     }
-    return $filtered;
 }
 
 /**
