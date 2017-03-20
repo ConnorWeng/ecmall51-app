@@ -67,6 +67,13 @@ class GoodsModel extends BaseModel {
             'foreign_key' => 'store_id',
             'reverse' => 'has_goods',
         ),
+        // app专用，过滤出支持代发的店铺
+        'belongs_to_store_open' => array(
+            'model' => 'storeopen',
+            'type' => BELONGS_TO,
+            'foreign_key' => 'store_id',
+            'reverse' => 'has_goods',
+        ),
         // 商品和分类是多对多的关系
         'belongs_to_gcategory' => array(
             'model' => 'gcategory',
@@ -334,7 +341,7 @@ class GoodsModel extends BaseModel {
         extract($this->_initFindParams($params));
 
         $gs_mod = & m('goodsspec');
-        $store_mod = & m('store');
+        $store_mod = & m('storeopen');
         $gstat_mod = & m('goodsstatistics');
         $goods_attr_mod = & m('goodsattr');
         $cg_table = DB_PREFIX . 'category_goods';
@@ -489,7 +496,7 @@ class GoodsModel extends BaseModel {
         extract($this->_initFindParams($params));
 
         $gs_mod = & m('goodsspec');
-        $store_mod = & m('store');
+        $store_mod = & m('storeopen');
         $gstat_mod = & m('goodsstatistics');
         $goods_attr_mod = & m('goodsattr');
         $cg_table = DB_PREFIX . 'category_goods';
@@ -578,7 +585,7 @@ class GoodsModel extends BaseModel {
         extract($this->_initFindParams($params));
 
         $gs_mod = & m('goodsspec');
-        $store_mod = & m('store');
+        $store_mod = & m('storeopen');
         $gstat_mod = & m('goodsstatistics');
         $cg_table = DB_PREFIX . 'category_goods';
         $goods_attr_mod = & m('goodsattr');
@@ -686,7 +693,7 @@ class GoodsModel extends BaseModel {
         extract($this->_initFindParams($params));
 
         $gs_mod = & m('goodsspec');
-        $store_mod = & m('store');
+        $store_mod = & m('storeopen');
         $gstat_mod = & m('goodsstatistics');
         $cg_table = DB_PREFIX . 'category_goods';
         $goods_attr_mod = & m('goodsattr');
@@ -735,7 +742,7 @@ class GoodsModel extends BaseModel {
         extract($this->_initFindParams($params));
 
         $gs_mod = & m('goodsspec');
-        $store_mod = & m('store');
+        $store_mod = & m('storeopen');
         $gstat_mod = & m('goodsstatistics');
         $cg_table = DB_PREFIX . 'category_goods';
 

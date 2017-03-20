@@ -24,7 +24,7 @@ class Mobile_shopApp extends Mobile_frontendApp {
             $conditions .= " and (store_name like '%".trim($keywords)."%' OR dangkou_address like '%".trim($keywords)."%' OR address like '%".trim($keywords)."%')";
         }
         $conditions .= $mk_id == 0 ? '' : " and (mk_id in (select mk_id from ecm_market where parent_id = {$mk_id}) or mk_id = {$mk_id})";
-        $shop_mod =& m('store');
+        $shop_mod =& m('storeopen');
         $shop_list = $shop_mod->find(array(
             'fields' => 'mk_id, mk_name, store_id, floor, address, store_name, see_price, business_scope',
             'index_key' => false,

@@ -46,7 +46,7 @@ class Mobile_goodsApp extends Mobile_frontendApp {
         $goods_list = $goods_mod->findAll(array(
             'fields' => 'g.goods_id, g.goods_name, g.default_image, g.price, s.store_id, s.store_name, s.see_price, s.mk_name, s.address, s.business_scope',
             'index_key' => false,
-            'join' => 'belongs_to_store',
+            'join' => 'belongs_to_store_open',
             'include' => array(
                 'has_goodsattr' => array(
                     'fields' => 'attr_value',
@@ -185,7 +185,7 @@ class Mobile_goodsApp extends Mobile_frontendApp {
                     'has_goodsattr' => array(
                         'fields' => 'attr_value',
                         'conditions' => 'attr_id = 1')),
-                'conditions' => 'g.cate_id_'.$layer.' = '.$cate_id.' AND g.if_show = 1 AND g.closed = 0 AND g.default_spec > 0 AND s.state = 1',
+                'conditions' => 'g.cate_id_'.$layer.' = '.$cate_id.' AND g.if_show = 1 AND g.closed = 0 AND g.default_spec > 0',
                 'order' => $order_by,
                 'limit' => $page['limit']), null, false, true, $total_found, $backkey);
 
