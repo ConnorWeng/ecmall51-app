@@ -14,6 +14,30 @@ class Mobile_homeApp extends MallbaseApp {
         $this->assign('goods_list', $goods_list);
         $this->display('mobile_home.html');
     }
+
+    function mobile_shop() {
+        $user_id = $_GET['user_id'];
+        $goods_id = $_GET['goods_id'];
+        $title = $_GET['title'];
+        $price = $_GET['price'];
+        $mobileshop_mod =& m('mobileshop');
+        $settings = $mobileshop_mod->get_info($user_id);
+        if ($settings) {
+            $this->assign('settings', $settings);
+        }
+        $this->assign('goods_id', $goods_id);
+        $this->assign('title', $title);
+        $this->assign('price', $price);
+        $this->display('mobile_shop.html');
+    }
+
+    function mobile_good_detail() {
+        $goods_id = $_GET['goods_id'];
+        $goods_mod =& m('goods');
+        $good = $goods_mod->get_info($goods_id);
+        $this->assign('description', $good['description']);
+        $this->display('mobile_good_detail.html');
+    }
 }
 
 ?>

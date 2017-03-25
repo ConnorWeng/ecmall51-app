@@ -1,0 +1,99 @@
+<html>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <script type="text/javascript" src="{lib file=jquery.js}" charset="utf-8"></script>
+    <style>
+    html, body {
+      margin: 0;
+      padding: 0;
+      background: #f5f5f5;
+      font-weight: normal;
+      width: 100%;
+      font: 12pt tahoma, Arial, microsoft yahei, sans-serif;
+    }
+    a {
+      text-decoration:none;
+      color:#f40;
+    }
+    p {
+      margin: 0;
+      padding: 0;
+    }
+    h1 {
+      font-size: 12pt;
+      margin: 0;
+      padding: 0;
+    }
+    ul {
+      list-style-type: none;
+      margin: 0;
+      padding: 0;
+    }
+    .clear-both {
+      clear: both;
+    }
+    .float-left {
+      float: left;
+    }
+    .container {
+      display: flex;
+      width: 100%;
+      align-items: center;
+      justify-content: center;
+    }
+    .layer {
+      margin: 5px;
+      width: 98%;
+      border-bottom: 1px solid #eaeaea;
+      border-right: 1px solid #eaeaea;
+      background: #fff;
+    }
+    .align-left {
+      justify-content: flex-start;
+    }
+    .shop-label {
+      width: 80px;
+    }
+    .shop-value {
+      width: 80px;
+    }
+    </style>
+  </head>
+  <body>
+    <div class="container" style="flex-direction: column;">
+      <div class="item-container container layer" style="flex-direction: column;">
+        <div class="picture-container container" style="height: 60%; background: url('http://gd1.alicdn.com/imgextra/i3/0/TB13w0_PXXXXXa9XXXXXXXXXXXX_!!0-item_pic.jpg_460x460.jpg') no-repeat center; background-size: cover;">
+        </div>
+        <div class="title-container container align-left">
+          <h1>{$title}</h1>
+        </div>
+        <div class="price-container container align-left">
+          <p style="color: #f40;">¥ {$price}</p>
+        </div>
+      </div>
+      <div class="nick-container container layer">
+        <div class="shop-logo">
+          <img alt="" src="http://www.51zwd.com/data/files/mall/settings/default_store_logo.gif"/ style="height: 48px; width: 48px;">
+        </div>
+        <div class="nick" style="margin-left: 20px;">
+          <h2>{$settings.shop_nick}</h2>
+        </div>
+      </div>
+      <div class="shop-info-container container layer">
+        <ul class="shop-info">
+          <li><div class="shop-label float-left">手机</div><div class="shop-value float-left">{$settings.mobile}</div><div class="clear-both"></div></li>
+          <li><div class="shop-label float-left">QQ</div><div class="shop-value float-left">{$settings.im_qq}</div><div class="clear-both"></div></li>
+          <li><div class="shop-label float-left">微信</div><div class="shop-value float-left">{$settings.im_wx}</div><div class="clear-both"></div></li>
+          <li><div class="shop-label float-left">旺旺</div><div class="shop-value float-left">{$settings.im_ww}</div><div class="clear-both"></div></li>
+        </ul>
+      </div>
+      <div class="shop-announcement-container container layer">
+        <p>{$settings.announcement}</p>
+      </div>
+      <div class="detail-container container layer" style="height: 40px;">
+        <a class="view-detail" style="heigth: 40px;" href="{url app=mobile_home&act=mobile_good_detail&goods_id=$goods_id}">查看宝贝详情</a>
+      </div>
+    </div>
+  </body>
+</html>
