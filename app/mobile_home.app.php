@@ -20,14 +20,17 @@ class Mobile_homeApp extends MallbaseApp {
         $goods_id = $_GET['goods_id'];
         $title = $_GET['title'];
         $price = $_GET['price'];
+        $pic_url = $_GET['pic_url'];
         $mobileshop_mod =& m('mobileshop');
         $settings = $mobileshop_mod->get_info($user_id);
         if ($settings) {
             $this->assign('settings', $settings);
+            $price = number_format(floatval($price) + floatval($settings['profit']), 2, '.', '');
         }
         $this->assign('goods_id', $goods_id);
         $this->assign('title', $title);
         $this->assign('price', $price);
+        $this->assign('pic_url', $pic_url);
         $this->display('mobile_shop.html');
     }
 
