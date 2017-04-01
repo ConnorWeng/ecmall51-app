@@ -3,6 +3,8 @@
 require_once(ROOT_PATH.'/test/fake/frontend.base.php');
 require_once(ROOT_PATH.'/test/fake/mobile_frontend.app.php');
 require_once(ROOT_PATH.'/test/fake/goods.model.php');
+require_once(ROOT_PATH.'/test/fake/gcategory.model.php');
+require_once(ROOT_PATH.'/test/fake/global.lib.php');
 
 require_once(ROOT_PATH.'/app/mobile_goods.app.php');
 
@@ -14,7 +16,8 @@ class Mobile_goodsTest extends TestCase {
         $goods_stub = $this->stub('GoodsModel', 'get', array(
             'description' => '这是宝贝描述，里面嵌了一张图片：<p><img style="max-width: 750.0px;" src="https://img.alicdn.com/imgextra/i3/752015177/TB2RTBFXZIa61Bjy0FbXXbWXpXa_!!752015177.png" align="absmiddle"></p>，能识别吗？',
         ));
-        $this->mobile_goods = new Mobile_goodsApp($goods_stub);
+        $gcategory_stub = $this->stub('GcategoryModel');
+        $this->mobile_goods = new Mobile_goodsApp($goods_stub, $gcategory_stub);
     }
 
     function test_describe() {

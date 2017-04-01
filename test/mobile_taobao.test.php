@@ -36,7 +36,7 @@ class Mobile_taobaoTest extends TestCase {
     }
 
     function test_upload_pictures_taobao_api_error() {
-        $_REQUEST['img_urls'] = 'http://old.com/old.jpg,http://old.com/old.jpg';
+        $_REQUEST['img_urls'] = 'http://old.com/old.jpg,http://old.com/old.jpg,http://old.com/old.jpg,http://old.com/old.jpg,http://old.com/old.jpg,http://old.com/old.jpg,http://old.com/old.jpg,http://old.com/old.jpg,http://old.com/old.jpg,http://old.com/old.jpg,http://old.com/old.jpg';
         $_REQUEST['pcid'] = '12345';
         $this->mobile_taobao->set_request_result('{"error": true}');
 
