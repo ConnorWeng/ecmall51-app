@@ -37,10 +37,25 @@ class Mobile_memberApp extends Mobile_frontendApp {
             }
             $res = $mod_access_token->add($data, true);
             if ($res) {
+                $profit = 0;
+                $profit0 = 100;
+                if (strpos($username, '51t_') === 0) {
+                    $userdata_mod =& m('userdataconfig');
+                    $userdata = $userdata_mod->get(array(
+                        'conditions' => "nick = '".str_replace('51t_', '', $username)."'",
+                        'fields' => 'profit, profit0'));
+                    if ($userdata) {
+                        $profit = $userdata['profit'];
+                        $profit0 = $userdata['profit0'];
+                    }
+                }
+
                 echo ecm_json_encode(array(
                     'user_id' => $user_id,
                     'user_name' => $user_info['user_name'],
-                        'access_token' => $access_token));
+                    'profit' => $profit,
+                    'profit0' => $profit0,
+                    'access_token' => $access_token));
             } else {
                 $this->_ajax_error(500, ADD_ACCESS_TOKEN_FAILED, 'failed to add access token');
             }
