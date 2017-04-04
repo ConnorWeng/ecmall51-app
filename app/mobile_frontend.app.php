@@ -63,6 +63,10 @@ class Mobile_frontendApp extends FrontendApp {
     }
 
     function _make_sure_numeric_impl($param, $default) {
+        if (defined('MOBILE_DEBUG')) {
+            $param_info = print_r($_REQUEST[$param], true);
+            Log::write('request numeric '.$param.': '.$param_info, Log::DEBUG);
+        }
         if (isset($_REQUEST[$param])) {
             if (is_numeric($_REQUEST[$param]) && $_REQUEST[$param] >= 0) {
                 return $_REQUEST[$param];
