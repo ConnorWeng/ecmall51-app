@@ -26,10 +26,15 @@ class Mobile_taobaoApp extends Mobile_frontendApp {
                 $goods_id = $this->_make_sure_numeric('goods_id', -1);
                 $title = $this->_make_sure_string('title', 255, '');
                 $price = $this->_make_sure_string('price', 10, '');
+                $profit = $this->_make_sure_numeric('profit', -1);
+                $profit0 = $this->_make_sure_numeric('profit0', -1);
                 $desc = $this->_make_sure_string('desc', 65536, '');
                 if ($goods_id === -1 || empty($title)  || empty($price)|| empty($desc)) {
                     $this->_ajax_error(400, PARAMS_ERROR, '参数错误');
                     return ;
+                }
+                if ($profit >= 0 && $profit0 >= 0) {
+                    $this->_set_profit($profit, $profit0);
                 }
                 $this->_add_item($goods_id, $title, $price, $desc);
             });
@@ -49,6 +54,20 @@ class Mobile_taobaoApp extends Mobile_frontendApp {
             echo ecm_json_encode(array('success' => true));
         } else {
             $this->_ajax_error(500, TAOBAO_API_ERROR, '宝贝上传失败: '.$result);
+        }
+    }
+
+    function _set_profit($profit, $profit0) {
+        $nick = str_replace('51t_', '', $this->visitor->get('user_name'));
+        $userdata_mod =& m('userdataconfig');
+        $result = $userdata_mod->edit("nick='".$nick."'", array(
+            'profit' => $profit,
+            'profit0' => $profit0));
+        if (!$result) {
+            $userdata_mod->add(array(
+                'nick' => $nick,
+                'profit' => $profit,
+                'profit0' => $profit0));
         }
     }
 
