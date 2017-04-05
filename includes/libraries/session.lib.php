@@ -210,7 +210,7 @@ class SessionProcessor
             $sessvalue = '';
         }
 
-        return $this->db->query('UPDATE ' . $this->session_table . " SET expiry = '" . $expiry . "', ip = '" . $this->_ip . "', userid = '" . $userid . "', adminid = '" . $adminid . "', data = '" . $sessvalue ."', is_overflow='" . $is_overflow . "' WHERE sesskey = '" . $this->session_id . "' LIMIT 1");
+        return @$this->db->query('UPDATE ' . $this->session_table . " SET expiry = '" . $expiry . "', ip = '" . $this->_ip . "', userid = '" . $userid . "', adminid = '" . $adminid . "', data = '" . $sessvalue ."', is_overflow='" . $is_overflow . "' WHERE sesskey = '" . $this->session_id . "' LIMIT 1");
     }
 
     /**

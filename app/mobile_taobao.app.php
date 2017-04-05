@@ -95,14 +95,21 @@ class Mobile_taobaoApp extends Mobile_frontendApp {
                 $new_urls = array();
                 $error_count = 0;
                 foreach ($img_urls as $url) {
-                    $upload_result = json_decode($this->_get_url($this->_API_PREFIX."?g=Taobao&m=Upload&a=uploadTaobaoPictureFromAndroid&imgUrl=".urlencode($url)."&pictureCategoryId=".$pcid."&access_token=".$this->_session_key));
-                    if (isset($upload_result->error)) {
+                    try {
+                        $upload_result = json_decode($this->_get_url($this->_API_PREFIX."?g=Taobao&m=Upload&a=uploadTaobaoPictureFromAndroid&imgUrl=".urlencode($url)."&pictureCategoryId=".$pcid."&access_token=".$this->_session_key));
+                        if (isset($upload_result->error)) {
+                            array_push($new_urls, array(
+                                'newImgUrl' => '',
+                                'oldImgUrl' => $url));
+                            $error_count++;
+                        } else {
+                            array_push($new_urls, $upload_result);
+                        }
+                    } catch (Exception $e) {
                         array_push($new_urls, array(
                             'newImgUrl' => '',
                             'oldImgUrl' => $url));
                         $error_count++;
-                    } else {
-                        array_push($new_urls, $upload_result);
                     }
                 }
                 if ($error_count > 10) { // 图片搬家失败10张才算整个请求失败，否则直接忽略失败的图片
