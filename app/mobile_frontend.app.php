@@ -134,7 +134,7 @@ class MobileVisitor {
             'conditions' => "access_token='{$this->_access_token}'",
             'join' => 'belongs_to_member'));
         if (empty($this->_user_info['user_id'])) {
-            throw new RuntimeException('access token invalid');
+            throw new RuntimeException('登录信息已失效，请重新登录');
         }
     }
 
