@@ -161,13 +161,18 @@ class Alipay_notifyApp extends Mobile_frontendApp {
     }
 
     function _payment($user_id, $buyer_name, $seller_id, $seller_name, $total_amount, $order_id, $order_sn) {
-        $this->_my_money_mod->edit('user_id=' . $user_id, 'money = money -'.$total_amount);
-        $this->_my_money_mod->edit('user_id=' . $seller_id, 'money_dj = money_dj +'.$total_amount);
-
         $buyer_row = $this->_my_money_mod->get(array(
             'conditions' => "user_id='$user_id'"));
         $buyer_money = $buyer_row['money'];
         $buyer_money_dj = $buyer_row['money_dj'];
+
+        $seller_row = $this->_my_money_mod->get(array(
+            'conditions' => "user_id='$seller_id'"));
+        $seller_money = $seller_row['money'];
+        $seller_money_dj = $seller_row['money_dj'];
+
+        $this->_my_money_mod->edit('user_id=' . $user_id, 'money = money -'.$total_amount);
+        $this->_my_money_mod->edit('user_id=' . $seller_id, 'money_dj = money_dj +'.$total_amount);
 
         $buyer_add_array = array(
             'user_id' => $user_id,
@@ -188,11 +193,6 @@ class Alipay_notifyApp extends Mobile_frontendApp {
             's_and_z' => 2,
             'moneyleft' => $buyer_money - $total_amount + $buyer_money_dj);
         $this->_my_moneylog_mod->add($buyer_add_array);
-
-        $seller_row = $this->_my_money_mod->get(array(
-            'conditions' => "user_id='$seller_id'"));
-        $seller_money = $seller_row['money'];
-        $seller_money_dj = $seller_row['money_dj'];
 
         $seller_add_array = array(
             'user_id' => $seller_id,
