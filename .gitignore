@@ -7,3 +7,6 @@ config.inc.php
 *.pem
 .idea/
 .DS_Store
+/GPATH
+/GRTAGS
+/GTAGS
