@@ -349,7 +349,7 @@ class BaseOrder extends Object
             'buyer_name'    =>  addslashes($user_name),
             'buyer_email'   =>  $visitor->get('email'),
             'status'        =>  $order_status,
-            'add_time'      =>  gmtime(),
+            'add_time'      =>  gmtime() - 8*60*60, // // 由于ecmall记录的是格林威治时间再减去8小时，所以做减去8小时的特殊处理
             'goods_amount'  =>  $goods_info['amount'],
             'discount'      =>  isset($goods_info['discount']) ? $goods_info['discount'] : 0,
             'anonymous'     =>  intval(@$post['anonymous']),

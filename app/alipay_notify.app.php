@@ -78,7 +78,7 @@ class Alipay_notifyApp extends Mobile_frontendApp {
                 $order_edit_array = array(
                     'payment_name' => '支付宝手机端',
                     'payment_code' => 'alipay-mobile',
-                    'pay_time' => @local_strtotime($gmt_payment) - 8*60*60, // 由于ecmall记录的是格林威治时间，所以做减去8小时的特殊处理，应该与gmtime函数的返回结果基本相同
+                    'pay_time' => @local_strtotime($gmt_payment) - 16*60*60, // 由于ecmall记录的是格林威治时间再减去8小时，所以做减去16小时的特殊处理
                     'status' => ORDER_ACCEPTED);
                 $this->_order_mod->edit($order_info['order_id'], $order_edit_array);
                 Log::write("accept alipay notify, order_sn:{$order_sn} paid",
