@@ -539,7 +539,7 @@ class BaseModel extends Object {
             /* 如果是多对多关系，则只解除关联表中的数据 */
             if ($relation_info['type'] === HAS_AND_BELONGS_TO_MANY) {
                 $this->unlinkRelation($relation_name, $keys);
-            } elseif ($relation_info['dependent'] && $relation_info['type'] !== BELONGS_TO) {
+            } elseif (@$relation_info['dependent'] && @$relation_info['type'] !== BELONGS_TO) {
                 /* 如果是指定了dependent依赖性，则调用drop删除之 */
                 if ($relation_info['model'] != $this->_name) {
                     /* 若关联的模型不是本身，则直接使用m取得模型对象 */
