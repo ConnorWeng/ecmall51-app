@@ -288,7 +288,7 @@
     </div>
     <script>
     $(function () {
-      if (typeof(WebViewBridge) === 'undefined') {
+      if (typeof(WebViewBridge) === 'undefined' && typeof(postMessage) === 'undefined') {
         return;
       }
       $('.container')
@@ -338,7 +338,11 @@
 
       function sendMessage(type, data) {
         const message = JSON.stringify({type: type, data: data});
-        WebViewBridge.send(message);
+        if (typeof(WebViewBridge) !== 'undefined') {
+          WebViewBridge.send(message);
+        } else {
+          postMessage(message);
+        }
       }
     });
     </script>
