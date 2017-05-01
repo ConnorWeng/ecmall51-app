@@ -1,6 +1,6 @@
 <?php
 
-class Alipay_notifyApp extends Mobile_frontendApp {
+class Pay_notifyApp extends Mobile_frontendApp {
     private $_order_mod = null;
     private $_paylog_mod = null;
     private $_my_money_mod = null;
@@ -30,23 +30,33 @@ class Alipay_notifyApp extends Mobile_frontendApp {
         $trade_no = $this->_make_sure_string('trade_no', 64, '');
         $order_sn = $this->_make_sure_string('out_trade_no', 64, '');
         $total_amount = $this->_make_sure_numeric('total_amount', 0);
-        $seller_email = $this->_make_sure_string('seller_email', 100, '');
         $app_id = $this->_make_sure_string('app_id', 32, '');
         $trade_status = $this->_make_sure_string('trade_status', 32, '');
         $gmt_payment = $this->_make_sure_string('gmt_payment', 32, '');
-        $this->_accept($trade_no, $order_sn, $total_amount, $seller_email,
-                       $app_id, $trade_status, $gmt_payment);
+        $this->_accept($trade_no, $order_sn, $total_amount,
+                       $app_id, $trade_status, $gmt_payment, '支付宝');
     }
 
-    function _accept($trade_no, $order_sn, $total_amount, $seller_email,
-                     $app_id, $trade_status, $gmt_payment) {
+    function accept_wechat() {
+        $trade_no = $this->_make_sure_string('transaction_id', 64, '');
+        $order_sn = $this->_make_sure_string('out_trade_no', 64, '');
+        $total_amount = $this->_make_sure_numeric('total_fee', 0);
+        $app_id = $this->_make_sure_string('appid', 32, '');
+        $trade_status = 'TRADE_SUCCESS';
+        $time_end = $this->_make_sure_string('time_end', 14, '');
+        $gmt_payment = date('Y-m-d H:i:s', strtotime($time_end));
+        $this->_accept($trade_no, $order_sn, $total_amount,
+                       $app_id, $trade_status, $gmt_payment, '微信');
+    }
+
+    function _accept($trade_no, $order_sn, $total_amount,
+                     $app_id, $trade_status, $gmt_payment, $pay_type) {
         $order_info = $this->_order_mod->get(array(
             'conditions' => "order_sn = '{$order_sn}'"));
         if ($order_info &&
             isset($order_info['order_id']) &&
             isset($order_info['order_amount']) &&
             $order_info['order_amount'] == $total_amount &&
-            $seller_email == MOBILE_ALIPAY_EMAIL &&
             $app_id == MOBILE_ALIPAY_APP_ID &&
             $trade_status == 'TRADE_SUCCESS') {
             if ($order_info['status'] == ORDER_PENDING) {
@@ -59,7 +69,7 @@ class Alipay_notifyApp extends Mobile_frontendApp {
 
                 $user_id = $order_info['buyer_id'];
                 $user_name = $order_info['buyer_name'];
-                $top_up_result = $this->_top_up($user_id, $user_name, $trade_no, $total_amount, $gmt_payment); // 充值
+                $top_up_result = $this->_top_up($user_id, $user_name, $trade_no, $total_amount, $gmt_payment, $pay_type); // 充值
                 if ($top_up_result === false) {
                     Log::write("fail to top up");
                     exit("fail to top up");
@@ -73,18 +83,24 @@ class Alipay_notifyApp extends Mobile_frontendApp {
                 }
                 $seller_name = $order_info['seller_name'];
                 $order_id = $order_info['order_id'];
-                $this->_payment($user_id, $user_name, $seller_id, $seller_name, $total_amount, $order_id, $order_sn);
+                $this->_payment($user_id, $user_name, $seller_id, $seller_name, $total_amount, $order_id, $order_sn, $pay_type);
+
+                if ($pay_type == '支付宝') {
+                    $payment_code = 'alipay-mobile';
+                } else {
+                    $payment_code = 'wechat-mobile';
+                }
 
                 $order_edit_array = array(
-                    'payment_name' => '支付宝手机端',
-                    'payment_code' => 'alipay-mobile',
+                    'payment_name' => "{$pay_type}手机端",
+                    'payment_code' => $payment_code,
                     'pay_time' => @local_strtotime($gmt_payment) - 16*60*60, // 由于ecmall记录的是格林威治时间再减去8小时，所以做减去16小时的特殊处理
                     'status' => ORDER_ACCEPTED);
                 $this->_order_mod->edit($order_info['order_id'], $order_edit_array);
-                Log::write("accept alipay notify, order_sn:{$order_sn} paid",
+                Log::write("accept notify, order_sn:{$order_sn} paid",
                            Log::INFO);
             } else {
-                Log::write("accept alipay notify, order_sn:{$order_sn} not paid, ".
+                Log::write("accept notify, order_sn:{$order_sn} not paid, ".
                            "status:{$order_info['status']}",
                            Log::INFO);
             }
@@ -96,15 +112,15 @@ class Alipay_notifyApp extends Mobile_frontendApp {
             db()->query("ROLLBACK");
             Log::write(
                 "fail to verify notify params, order_sn:{$order_sn} ".
+                       "pay_type:{$pay_type} ".
                        "total_amount:{$total_amount} ".
-                       "seller_email:{$seller_email} ".
                        "app_id:{$app_id} ".
                        "trade_status:{$trade_status}");
             echo('fail to verify notify params');
         }
     }
 
-    function _top_up($user_id, $user_name, $trade_no, $total_amount, $gmt_payment) {
+    function _top_up($user_id, $user_name, $trade_no, $total_amount, $gmt_payment, $pay_type) {
         $exist_pay = $this->_paylog_mod->get(array(
             'conditions' => "out_trade_no='$trade_no'"));
         if (empty($exist_pay)) {
@@ -139,7 +155,7 @@ class Alipay_notifyApp extends Mobile_frontendApp {
             $add_mymoneylog = array(
                 'user_id' => $user_id,
                 'user_name' => $user_name,
-                'buyer_name' => '支付宝',
+                'buyer_name' => $pay_type,
                 'seller_id' => $user_id,
                 'seller_name' => $user_name,
                 'order_sn ' => $trade_no,
@@ -148,7 +164,7 @@ class Alipay_notifyApp extends Mobile_frontendApp {
                 'leixing' => 30,
                 'money_zs' => $total_amount,
                 'money' => $total_amount,
-                'log_text' => '支付宝手机端充值',
+                'log_text' => "{$pay_type}手机端充值",
                 'caozuo' => 4,
                 's_and_z' => 1,
                 'moneyleft' => $new_money + $my_money_dj);
@@ -160,7 +176,7 @@ class Alipay_notifyApp extends Mobile_frontendApp {
         }
     }
 
-    function _payment($user_id, $buyer_name, $seller_id, $seller_name, $total_amount, $order_id, $order_sn) {
+    function _payment($user_id, $buyer_name, $seller_id, $seller_name, $total_amount, $order_id, $order_sn, $pay_type) {
         $buyer_row = $this->_my_money_mod->get(array(
             'conditions' => "user_id='$user_id'"));
         $buyer_money = $buyer_row['money'];
@@ -188,7 +204,7 @@ class Alipay_notifyApp extends Mobile_frontendApp {
             'leixing' => 20,
             'money_zs' => "-" . $total_amount,
             'money' => $total_amount,
-            'log_text' => '支付宝手机端购买商品',
+            'log_text' => "{$pay_type}手机端购买商品",
             'caozuo' => 10,
             's_and_z' => 2,
             'moneyleft' => $buyer_money - $total_amount + $buyer_money_dj);
@@ -208,7 +224,7 @@ class Alipay_notifyApp extends Mobile_frontendApp {
             'leixing' => 10,
             'money_zs' => $total_amount,
             'money' => $total_amount,
-            'log_text' => '支付宝手机端卖家收入',
+            'log_text' => "{$pay_type}手机端卖家收入",
             'caozuo' => 10,
             's_and_z' => 1,
             'moneyleft' => $seller_money_dj + $total_amount + $seller_money);

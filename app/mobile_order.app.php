@@ -802,6 +802,39 @@ class Mobile_orderApp extends Mobile_frontendApp {
     function _escape_string($unescaped_string) {
         return empty($unescaped_string) ? '' : db()->escape_string($unescaped_string);
     }
+
+    function wechat_prepay() {
+        $this->_post(
+            function () {
+                $order_id = $this->_make_sure_numeric('order_id', -1);
+                if ($order_id === -1) {
+                    $this->_ajax_error(400, PARAMS_ERROR, '参数错误');
+                    return ;
+                }
+                $order_info = $this->_order_mod->get($order_id);
+                if (empty($order_info)) {
+                    $this->_ajax_error(400, ORDER_NOT_EXISTS, '订单不存在');
+                    return ;
+                }
+                import('wechat.lib');
+                $wechat_pay = new WechatPay(MOBILE_WECHAT_APP_ID, MOBILE_WECHAT_MCH_ID, MOBILE_WECHAT_NOTIFY_URL, MOBILE_WECHAT_KEY);
+                $params['body'] = '51zwd订单-'.$order_info['order_sn'];
+                $params['out_trade_no'] = $order_info['order_sn'];
+                $params['total_fee'] = $order_info['order_amount'];
+                $params['trade_type'] = 'APP';
+                $result = $wechat_pay->unifiedOrder($params);
+                if ($result) {
+                    if (!empty($result['err_code'])) {
+                        $this->_ajax_error(500, WECHAT_PAY_ERROR, $result['err_msg']);
+                        return;
+                    }
+                    $prepay_params = $wechat_pay->getAppPayParams($result['prepay_id']);
+                    echo ecm_json_encode($prepay_params);
+                } else {
+                    $this->_ajax_error(500, WECHAT_PAY_ERROR, '微信支付发生未知错误');
+                }
+            });
+    }
 }
 
 ?>

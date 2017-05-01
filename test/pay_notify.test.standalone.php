@@ -12,7 +12,7 @@ require_once(ROOT_PATH.'/test/fake/my_moneylog.model.php');
 require_once(ROOT_PATH.'/test/fake/ecmall.php');
 require_once(ROOT_PATH.'/includes/libraries/time.lib.php');
 
-require_once(ROOT_PATH.'/app/alipay_notify.app.php');
+require_once(ROOT_PATH.'/app/pay_notify.app.php');
 
 class Log {
     const INFO = 'INFO';
@@ -22,8 +22,8 @@ class Log {
     }
 }
 
-class Alipay_notifyTest extends TestCase {
-    private $alipay_notify;
+class Pay_notifyTest extends TestCase {
+    private $pay_notify;
 
     private $paylog_stub;
     private $my_money_stub;
@@ -57,15 +57,15 @@ class Alipay_notifyTest extends TestCase {
         $this->my_moneylog_stub = $this->stub('My_moneylogModel',
                                         'get', array(),
                                         'add', true);
-        $this->alipay_notify = new Alipay_notifyApp($order_stub, $this->paylog_stub,
+        $this->pay_notify = new Pay_notifyApp($order_stub, $this->paylog_stub,
                                                     $this->my_money_stub, $this->my_moneylog_stub);
     }
 
     function test_accept_should_return_success() {
-        $result = ajax_method_return_json($this->alipay_notify, '_accept',
-                                          '54321', '12345', '0.01', 'ep51@163.com',
+        $result = ajax_method_return_json($this->pay_notify, '_accept',
+                                          '54321', '12345', '0.01',
                                           '99999', 'TRADE_SUCCESS',
-                                          '2015-04-27 15:45:57');
+                                          '2015-04-27 15:45:57', '支付宝');
         $this->assertEquals('success', $result);
     }
 
@@ -104,7 +104,7 @@ class Alipay_notifyTest extends TestCase {
                         'caozuo' => 4,
                         's_and_z' => 1,
                         'moneyleft' => '34.9')));
-        $this->assertTrue($this->alipay_notify->_top_up('12345', 'testuser', '99999', '19.9', '1479577913'));
+        $this->assertTrue($this->pay_notify->_top_up('12345', 'testuser', '99999', '19.9', '1479577913', '支付宝'));
     }
 
     function test_payment() {
@@ -114,7 +114,7 @@ class Alipay_notifyTest extends TestCase {
                 withConsecutive(
                     ['user_id=12345', 'money = money -19.9'],
                     ['user_id=54321', 'money_dj = money_dj +19.9']);
-        $this->alipay_notify->_payment('12345', 'testuser', '54321', 'testseller', '19.9', '88888', '99999');
+        $this->pay_notify->_payment('12345', 'testuser', '54321', 'testseller', '19.9', '88888', '99999', '支付宝');
     }
 }
 
