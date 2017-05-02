@@ -820,12 +820,16 @@ class Mobile_orderApp extends Mobile_frontendApp {
                 $wechat_pay = new WechatPay(MOBILE_WECHAT_APP_ID, MOBILE_WECHAT_MCH_ID, MOBILE_WECHAT_NOTIFY_URL, MOBILE_WECHAT_KEY);
                 $params['body'] = '51zwd订单-'.$order_info['order_sn'];
                 $params['out_trade_no'] = $order_info['order_sn'];
-                $params['total_fee'] = $order_info['order_amount'];
+                $params['total_fee'] = intval($order_info['order_amount'] * 100);
                 $params['trade_type'] = 'APP';
                 $result = $wechat_pay->unifiedOrder($params);
                 if ($result) {
                     if (!empty($result['err_code'])) {
                         $this->_ajax_error(500, WECHAT_PAY_ERROR, $result['err_msg']);
+                        return;
+                    }
+                    if ($result['return_code'] === 'FAIL') {
+                        $this->_ajax_error(500, WECHAT_PAY_ERROR, $result['return_msg']);
                         return;
                     }
                     $prepay_params = $wechat_pay->getAppPayParams($result['prepay_id']);

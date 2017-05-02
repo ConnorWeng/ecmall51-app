@@ -40,7 +40,7 @@ class Pay_notifyApp extends Mobile_frontendApp {
     function accept_wechat() {
         $trade_no = $this->_make_sure_string('transaction_id', 64, '');
         $order_sn = $this->_make_sure_string('out_trade_no', 64, '');
-        $total_amount = $this->_make_sure_numeric('total_fee', 0);
+        $total_amount = ($this->_make_sure_numeric('total_fee', 0))/100;
         $app_id = $this->_make_sure_string('appid', 32, '');
         $trade_status = 'TRADE_SUCCESS';
         $time_end = $this->_make_sure_string('time_end', 14, '');
