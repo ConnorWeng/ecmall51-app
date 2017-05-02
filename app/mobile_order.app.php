@@ -524,7 +524,13 @@ class Mobile_orderApp extends Mobile_frontendApp {
         // behalfs
         $behalf_mod =& m('behalf');
         $behalfs = $behalf_mod->get_behalfs_deliverys();
-        $goods_info['behalfs'] = $behalfs;
+        $goods_info['behalfs'] = [];
+
+        foreach ($behalfs as $behalf) {
+            if (!empty($behalf['deliveries'])) {
+                $goods_info['behalfs'][] = $behalf;
+            }
+        }
 
         echo ecm_json_encode($goods_info);
     }
