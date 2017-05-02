@@ -63,7 +63,12 @@ class Pay_notifyApp extends Mobile_frontendApp {
                 // start transaction
                 $db_transaction_begin = db()->query('START TRANSACTION');
                 if ($db_transaction_begin === false) {
-                    Log::write("fail to start transaction");
+                    Log::write("fail to start transaction, ".
+                       "pay_type:{$pay_type} ".
+                       "order_sn:{$order_sn} ".
+                       "total_amount:{$total_amount} ".
+                       "app_id:{$app_id} ".
+                       "trade_status:{$trade_status}");
                     exit('fail to start transaction');
                 }
 
@@ -71,7 +76,12 @@ class Pay_notifyApp extends Mobile_frontendApp {
                 $user_name = $order_info['buyer_name'];
                 $top_up_result = $this->_top_up($user_id, $user_name, $trade_no, $total_amount, $gmt_payment, $pay_type); // 充值
                 if ($top_up_result === false) {
-                    Log::write("fail to top up");
+                    Log::write("fail to top up, ".
+                       "pay_type:{$pay_type} ".
+                       "order_sn:{$order_sn} ".
+                       "total_amount:{$total_amount} ".
+                       "app_id:{$app_id} ".
+                       "trade_status:{$trade_status}");
                     exit("fail to top up");
                 }
 
@@ -97,10 +107,10 @@ class Pay_notifyApp extends Mobile_frontendApp {
                     'pay_time' => @local_strtotime($gmt_payment) - 16*60*60, // 由于ecmall记录的是格林威治时间再减去8小时，所以做减去16小时的特殊处理
                     'status' => ORDER_ACCEPTED);
                 $this->_order_mod->edit($order_info['order_id'], $order_edit_array);
-                Log::write("accept notify, order_sn:{$order_sn} paid",
+                Log::write("accept {$pay_type} notify, order_sn:{$order_sn} paid",
                            Log::INFO);
             } else {
-                Log::write("accept notify, order_sn:{$order_sn} not paid, ".
+                Log::write("accept {$pay_type} notify, order_sn:{$order_sn} not paid, ".
                            "status:{$order_info['status']}",
                            Log::INFO);
             }
@@ -110,9 +120,9 @@ class Pay_notifyApp extends Mobile_frontendApp {
         } else {
             // rollback
             db()->query("ROLLBACK");
-            Log::write(
-                "fail to verify notify params, order_sn:{$order_sn} ".
+            Log::write("fail to verify notify params, ".
                        "pay_type:{$pay_type} ".
+                       "order_sn:{$order_sn} ".
                        "total_amount:{$total_amount} ".
                        "app_id:{$app_id} ".
                        "trade_status:{$trade_status}");
@@ -171,7 +181,10 @@ class Pay_notifyApp extends Mobile_frontendApp {
             $this->_my_moneylog_mod->add($add_mymoneylog);
             return true;
         } else {
-            Log::write("fail to top up 51fa, there is a duplicated one. trade_no:{$trade_no}");
+            Log::write("fail to top up 51fa, there is a duplicated one. ".
+                       "pay_type:{$pay_type} ".
+                       "trade_no:{$trade_no} ".
+                       "total_amount:{$total_amount}");
             return false;
         }
     }
