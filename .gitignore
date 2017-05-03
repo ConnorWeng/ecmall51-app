@@ -4,7 +4,6 @@
 .settings
 temp/
 config.inc.php
-settings.inc.php
 *.pem
 .idea/
 .DS_Store
