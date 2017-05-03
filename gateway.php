@@ -18,7 +18,7 @@ if ($sign_verified) {
             "Content-Length: ".strlen($params)."\r\n",
             'content' => $params));
     $context = stream_context_create($context_options);
-    $result = file_get_contents('http://app.51zwd.com/ecmall51-app/index.php?app=pay_notify&act=accept', false, $context);
+    $result = file_get_contents(SITE_URL.'/index.php?app=pay_notify&act=accept', false, $context);
     echo $result;
 } else {
     Log::write(

@@ -57,7 +57,7 @@ class Pay_notifyApp extends Mobile_frontendApp {
             isset($order_info['order_id']) &&
             isset($order_info['order_amount']) &&
             $order_info['order_amount'] == $total_amount &&
-            $app_id == MOBILE_ALIPAY_APP_ID &&
+            ($app_id == MOBILE_ALIPAY_APP_ID || $app_id == MOBILE_WECHAT_APP_ID) &&
             $trade_status == 'TRADE_SUCCESS') {
             if ($order_info['status'] == ORDER_PENDING) {
                 // start transaction
@@ -76,6 +76,7 @@ class Pay_notifyApp extends Mobile_frontendApp {
                 $user_name = $order_info['buyer_name'];
                 $top_up_result = $this->_top_up($user_id, $user_name, $trade_no, $total_amount, $gmt_payment, $pay_type); // 充值
                 if ($top_up_result === false) {
+                    db()->query("ROLLBACK");
                     Log::write("fail to top up, ".
                        "pay_type:{$pay_type} ".
                        "order_sn:{$order_sn} ".
@@ -107,6 +108,10 @@ class Pay_notifyApp extends Mobile_frontendApp {
                     'pay_time' => @local_strtotime($gmt_payment) - 16*60*60, // 由于ecmall记录的是格林威治时间再减去8小时，所以做减去16小时的特殊处理
                     'status' => ORDER_ACCEPTED);
                 $this->_order_mod->edit($order_info['order_id'], $order_edit_array);
+
+                //  commit
+                db()->query('COMMIT');
+
                 Log::write("accept {$pay_type} notify, order_sn:{$order_sn} paid",
                            Log::INFO);
             } else {
@@ -114,12 +119,8 @@ class Pay_notifyApp extends Mobile_frontendApp {
                            "status:{$order_info['status']}",
                            Log::INFO);
             }
-            //  commit
-            db()->query('COMMIT');
             echo('success');
         } else {
-            // rollback
-            db()->query("ROLLBACK");
             Log::write("fail to verify notify params, ".
                        "pay_type:{$pay_type} ".
                        "order_sn:{$order_sn} ".

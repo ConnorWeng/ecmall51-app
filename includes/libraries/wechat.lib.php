@@ -147,7 +147,7 @@ class WechatPay
      */
     public function getNotifyData(){
         //获取通知的数据
-        $xml = $GLOBALS['HTTP_RAW_POST_DATA'];
+        $xml = file_get_contents("php://input");
         $data = array();
         if( empty($xml) ){
             return false;

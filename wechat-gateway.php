@@ -6,8 +6,8 @@ ecm_define(ROOT_PATH . '/data/config.inc.php');
 import('log.lib');
 import('wechat.lib');
 
-function log_wechat_error($message) {
-    Log::write("wechat pay {$message}: ".print_r($GLOBALS['HTTP_RAW_POST_DATA'], true));
+function log_wechat_error($message, $data) {
+    Log::write("wechat pay {$message}: ".print_r($data, true));
 }
 
 $wechat_pay = new WechatPay(MOBILE_WECHAT_APP_ID, MOBILE_WECHAT_MCH_ID, MOBILE_WECHAT_NOTIFY_URL, MOBILE_WECHAT_KEY);
@@ -24,18 +24,18 @@ if ($data) {
                     "Content-Length: ".strlen($params)."\r\n",
                     'content' => $params));
             $context = stream_context_create($context_options);
-            $result = file_get_contents('http://app.51zwd.com/ecmall51-app/index.php?app=pay_notify&act=accept_wechat', false, $context);
+            $result = file_get_contents(SITE_URL.'/index.php?app=pay_notify&act=accept_wechat', false, $context);
             if ($result == 'success') {
                 $wechat_pay->replyNotify();
             } else {
-                log_wechat_error('handle order error');
+                log_wechat_error('handle order error', $data);
             }
         } else {
-            log_wechat_error('return code is FAIL');
+            log_wechat_error('return code is FAIL', $data);
         }
     } else {
-        log_wechat_error('sign error');
+        log_wechat_error('sign error', $data);
     }
 } else {
-    log_wechat_error('data error');
+    log_wechat_error('data error', $data);
 }
