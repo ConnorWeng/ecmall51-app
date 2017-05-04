@@ -821,6 +821,7 @@ function make_price($price, $seePrice, $title = null)
  * @return unknown
  */
 function getHuoHao($title, $propsName = null) {
+    $huoHao = '';
     $kuanHaoRegex='/[A-Z]?\d+/';
     preg_match_all($kuanHaoRegex,$title,$kuanHao);
     $pKhnum=count($kuanHao[0]);
