@@ -92,9 +92,8 @@ class Pay_notifyApp extends Mobile_frontendApp {
                 } else {
                     $seller_id = $order_info['bh_id'];
                 }
-                $seller_name = $order_info['seller_name'];
                 $order_id = $order_info['order_id'];
-                $this->_payment($user_id, $user_name, $seller_id, $seller_name, $total_amount, $order_id, $order_sn, $pay_type);
+                $this->_payment($user_id, $seller_id, $total_amount, $order_id, $order_sn, $pay_type);
 
                 if ($pay_type == '支付宝') {
                     $payment_code = 'alipay-mobile';
@@ -190,14 +189,16 @@ class Pay_notifyApp extends Mobile_frontendApp {
         }
     }
 
-    function _payment($user_id, $buyer_name, $seller_id, $seller_name, $total_amount, $order_id, $order_sn, $pay_type) {
+    function _payment($user_id, $seller_id, $total_amount, $order_id, $order_sn, $pay_type) {
         $buyer_row = $this->_my_money_mod->get(array(
             'conditions' => "user_id='$user_id'"));
+        $buyer_name = $buyer_row['user_name'];
         $buyer_money = $buyer_row['money'];
         $buyer_money_dj = $buyer_row['money_dj'];
 
         $seller_row = $this->_my_money_mod->get(array(
             'conditions' => "user_id='$seller_id'"));
+        $seller_name = $seller_row['user_name'];
         $seller_money = $seller_row['money'];
         $seller_money_dj = $seller_row['money_dj'];
 
