@@ -4,6 +4,7 @@
 .settings
 temp/
 config.inc.php
+config.alipay.php
 *.pem
 .idea/
 .DS_Store
