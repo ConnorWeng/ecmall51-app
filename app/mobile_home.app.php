@@ -10,7 +10,7 @@ class Mobile_homeApp extends MallbaseApp {
             'join' => 'belongs_to_store_open',
             'index_key' => false,
             'order' => $order_by,
-            'limit' => '5000, 20'));
+            'limit' => '1000, 20'));
         $this->assign('goods_list', $goods_list);
         $this->display('mobile_home.html');
     }
