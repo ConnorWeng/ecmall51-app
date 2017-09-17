@@ -284,6 +284,11 @@ class BehalfModel extends BaseModel
                 {
                     unset($behalfs[$key]);
                 }
+
+                // FIXME: 临时过滤，只留下“官方代发”，后续应该想办法和PC端做成通用的逻辑
+                if ($behalf['bh_id'] != '165663') {
+                    unset($behalfs[$key]);
+                }
             }
             //随机排列代发
             shuffle($behalfs);
