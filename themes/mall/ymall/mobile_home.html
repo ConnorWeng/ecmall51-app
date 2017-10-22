@@ -1,299 +1,213 @@
 <html>
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <link rel="stylesheet" type="text/css" href="{res file=mobile/css/reset.css}">
+    <link rel="stylesheet" type="text/css" href="{res file=mobile/css/homepage.css}">
+    <link rel="stylesheet" type="text/css" href="{lib file=swiper/swiper.min.css}">
     <script type="text/javascript" src="{lib file=jquery.js}" charset="utf-8"></script>
-    <style>
-    html, body {
-      margin: 0;
-      padding: 0;
-      background: #f5f5f5;
-      font-weight: normal;
-    }
-    ul {
-      list-style-type: none;
-      margin: 0;
-      padding: 0;
-    }
-    .container {
-      display: flex;
-      flex-direction: column;
-    }
-    .separator {
-      text-align: center;
-    }
-    .separator > h1 {
-      color: gray;
-      font-size: 12pt;
-      font-weight: normal;
-      margin: 5px 0 5px 0;
-    }
-    .banner-container {
-      background: url('http://www.51zwd.com/data/files/mall/template/201604112108567160.jpg') no-repeat;
-      background-size: cover;
-      height: 150px;
-    }
-    .trendygoods-container {
-    }
-    .trendygoods-list {
-    }
-    .trendygood {
-      height: 150px;
-      display: flex;
-      flex-direction: column;
-      justify-content: flex-end;
-      margin-bottom: 5px;
-    }
-    .trendygood-title-container {
-      background: rgba(255,255,255,0.4);
-    }
-    .trendygood-title {
-      margin-top: 5px;
-      margin-bottom: 5px;
-      font-size: 12pt;
-    }
-    .hotgoods-container {
-    }
-    .hotgoods-list {
-      display: flex;
-      flex-direction: row;
-      flex-wrap: wrap;
-      justify-content: space-between;
-    }
-    .hotgood {
-      width: 49%;
-      background: #ffffff;
-      margin-bottom: 5px;
-    }
-    .hotgood-image {
-      width: 100%;
-    }
-    .hotgood h2, .hotgood h3 {
-      margin: 0;
-      padding: 0;
-    }
-    .hotgood h2 {
-      font-size: 10pt;
-    }
-    .price-container {
-      display: flex;
-      flex-direction: row;
-    }
-    .price {
-      color: #f40;
-      font-size: 10pt;
-    }
-    .origin-price {
-      color: gray;
-      font-size: 8pt;
-      margin-left: 5px;
-      text-decoration: line-through;
-    }
-
-    .categories {
-      background: #ffffff;
-    }
-    .categories-list {
-      display: flex;
-      flex-direction: row;
-      justify-content: space-between;
-    }
-    .category {
-      padding: 3px;
-    }
-    .category-logo {
-      background: url('http://www.51zwd.com/data/files/mall/template/48x48-m.png') no-repeat;
-      width: 36px;
-      height: 36px;
-      border-radius: 5px;
-    }
-    .category-name {
-      font-size: 10pt;
-      text-align: center;
-    }
-    .ads {
-      margin-top: 10px;
-      background: #ffffff;
-    }
-    .ads-list {
-      display: flex;
-      flex-direction: row;
-      flex-wrap: wrap;
-    }
-    .ad {
-      width: 50%;
-    }
-    .ad img {
-      width: 100%;
-    }
-    </style>
   </head>
   <body>
-    <div class="container">
-      <div class="banner-container"
-           store_id="11925"
-           store_name="衣客牛仔服饰"
-           see_price="减20"
-           mk_name="国投-1F"
-           address="104-A"
-           business_scope="">
-      </div>
-      <div class="categories">
-        <ul class="categories-list">
-          <li class="category" cate_id="1623">
-            <div class="category-logo" style="background: url('http://www.51zwd.com/data/files/mall/template/category-icon/半身裙.png'); background-size: 36px 36px;"></div>
-            <div class="category-name">半身裙</div>
-          </li>
-          <li class="category" cate_id="50000671">
-            <div class="category-logo" style="background: url('http://www.51zwd.com/data/files/mall/template/category-icon/T恤.png'); background-size: 36px 36px;"></div>
-            <div class="category-name">T恤</div>
-          </li>
-          <li class="category" cate_id="162205">
-            <div class="category-logo" style="background: url('http://www.51zwd.com/data/files/mall/template/category-icon/牛仔裤.png'); background-size: 36px 36px;"></div>
-            <div class="category-name">牛仔裤</div>
-          </li>
-          <li class="category" cate_id="3035">
-            <div class="category-logo" style="background: url('http://www.51zwd.com/data/files/mall/template/category-icon/休闲裤.png'); background-size: 36px 36px;"></div>
-            <div class="category-name">休闲裤</div>
-          </li>
-          <li class="category" cate_id="50010402">
-            <div class="category-logo" style="background: url('http://www.51zwd.com/data/files/mall/template/category-icon/polo衫.png'); background-size: 36px 36px;"></div>
-            <div class="category-name">Polo衫</div>
-          </li>
-        </ul>
-        <ul class="categories-list">
-          <li class="category" cate_id="50012825">
-            <div class="category-logo" style="background: url('http://www.51zwd.com/data/files/mall/template/category-icon/高邦鞋.png'); background-size: 36px 36px;"></div>
-            <div class="category-name">高邦鞋</div>
-          </li>
-          <li class="category" cate_id="50012028">
-            <div class="category-logo" style="background: url('http://www.51zwd.com/data/files/mall/template/category-icon/靴子.png'); background-size: 36px 36px;"></div>
-            <div class="category-name">靴子</div>
-          </li>
-          <li class="category" cate_id="50012027">
-            <div class="category-logo" style="background: url('http://www.51zwd.com/data/files/mall/template/category-icon/低邦鞋.png'); background-size: 36px 36px;"></div>
-            <div class="category-name">低邦鞋</div>
-          </li>
-          <li class="category" cate_id="50008881">
-            <div class="category-logo" style="background: url('http://www.51zwd.com/data/files/mall/template/category-icon/文胸.png'); background-size: 36px 36px;"></div>
-            <div class="category-name">文胸</div>
-          </li>
-          <li class="category" cate_id="50026617">
-            <div class="category-logo" style="background: url('http://www.51zwd.com/data/files/mall/template/category-icon/配件.png'); background-size: 36px 36px;"></div>
-            <div class="category-name">配件</div>
-          </li>
-        </ul>
-      </div>
-      <div class="ads">
-        <ul class="ads-list">
-          <li class="ad"
-              store_id="7241"
-              store_name="魅致佳丽"
-              see_price="减半"
-              mk_name="佰润-1F"
-              address="A1030-A"
-              business_scope="女装上衣，连衣裙，T恤，毛衣，针织衫，牛仔衣，雪纺衫，休闲裤，打底裤，牛仔裤，哈伦裤等">
-            <img src="http://www.51zwd.com/data/files/mall/template/201608131542182360.jpg"/>
-          </li>
-          <li class="ad"
-              store_id="6036"
-              store_name="粉嘉儿"
-              see_price="减20"
-              mk_name="非凡 东街1F"
-              address="B01-C"
-              business_scope="">
-            <img src="http://www.51zwd.com/data/files/mall/template/201608131542189398.jpg"/>
-          </li>
-          <li class="ad"
-              store_id="7243"
-              store_name="MOMO服饰"
-              see_price="减20"
-              mk_name="佰润-2F"
-              address="B2017"
-              business_scope="">
-            <img src="http://www.51zwd.com/data/files/mall/template/201608192247014709.jpg"/>
-          </li>
-          <li class="ad"
-              store_id="5808"
-              store_name="舒雪儿服饰"
-              see_price="减半"
-              mk_name="女人街 6F"
-              address="612"
-              business_scope="">
-            <img src="http://www.51zwd.com/data/files/mall/template/201608141125574987.jpg"/>
-          </li>
-        </ul>
-      </div>
-      <div class="separator">
-        <h1> — 热卖精品 — </h1>
-      </div>
-      <div class="trendygoods-container">
-        <ul class="trendygoods-list">
-          <li class="trendygood" style="background: url('http://gd2.alicdn.com/imgextra/i2/739690901/TB2gf_lXUdnpuFjSZPhXXbChpXa_!!739690901.jpg_460x460.jpg') no-repeat center; background-size: cover;"
-              goods_id="6862647"
-              goods_name="7817#2017春季新款韩版女装宽松显瘦开叉下摆字母刺绣卫衣女学生"
-              default_image="http://gd2.alicdn.com/imgextra/i2/739690901/TB2gf_lXUdnpuFjSZPhXXbChpXa_!!739690901.jpg_460x460.jpg"
-              price="33.00"
-              store_id="5808"
-              store_name="舒雪儿服饰"
-              mk_name="女人街 6F"
-              address="612"
-              business_scope="">
-            <div class="trendygood-title-container">
-              <h1 class="trendygood-title">7817#2017春季新款韩版女装宽松显瘦开叉下摆字母刺绣卫衣女学生</h1>
+    <div class="overal">
+      <!--  header -->
+      <header class="header">
+        <div class="header_search container-fluid">
+          <div class="search_left">
+            <i class="img_s"><img src="{res file=mobile/images/search.png}" alt=""></i>
+            <input type="text" class="form-control" placeholder="全部商品">
+          </div>
+          <span class="search_right">
+            <img src="{res file=mobile/images/kefu.png}" alt="">
+            <p>客服</p>
+          </span>
+        </div>
+        <div class="header_carousel">
+
+          <div class="swiper-container swiper-container-horizontal">
+            <ul class="swiper-wrapper" style="transform: translate3d(0px, 0px, 0px); transition-duration: 0ms;">
+              <li class="swiper-slide swiper-slide-active">
+                <!-- Required swiper-lazy class and image source specified in data-src attribute -->
+                <img class="swiper-lazy swiper-lazy-loaded" src="{res file=mobile/images/jindu.png}">
+                <!-- Preloader image -->
+              </li>
+              <li class="swiper-slide swiper-slide-active">
+                <!-- Required swiper-lazy class and image source specified in data-src attribute -->
+                <img class="swiper-lazy swiper-lazy-loaded" src="{res file=mobile/images/jindu.png}">
+                <!-- Preloader image -->
+              </li>
+              <li class="swiper-slide swiper-slide-active">
+                <!-- Required swiper-lazy class and image source specified in data-src attribute -->
+                <img class="swiper-lazy swiper-lazy-loaded" src="{res file=mobile/images/jindu.png}">
+                <!-- Preloader image -->
+              </li>
+              <li class="swiper-slide swiper-slide-active">
+                <!-- Required swiper-lazy class and image source specified in data-src attribute -->
+                <img class="swiper-lazy swiper-lazy-loaded" src="{res file=mobile/images/jindu.png}">
+                <!-- Preloader image -->
+              </li>
+              <li class="swiper-slide swiper-slide-active">
+                <!-- Required swiper-lazy class and image source specified in data-src attribute -->
+                <img class="swiper-lazy swiper-lazy-loaded" src="{res file=mobile/images/jindu.png}">
+                <!-- Preloader image -->
+              </li>
+              <li class="swiper-slide swiper-slide-active">
+                <!-- Required swiper-lazy class and image source specified in data-src attribute -->
+                <img class="swiper-lazy swiper-lazy-loaded" src="{res file=mobile/images/jindu.png}">
+                <!-- Preloader image -->
+              </li>
+              <li class="swiper-slide swiper-slide-active">
+                <!-- Required swiper-lazy class and image source specified in data-src attribute -->
+                <img class="swiper-lazy swiper-lazy-loaded" src="{res file=mobile/images/jindu.png}">
+                <!-- Preloader image -->
+              </li>
+            </ul>
+            <!-- Add Pagination -->
+            <div class="swiper-pagination swiper-pagination-white swiper-pagination-clickable swiper-pagination-bullets">
+              <span class="swiper-pagination-bullet swiper-pagination-bullet-active"></span>
             </div>
-          </li>
-          <li class="trendygood" style="background: url('https://img.alicdn.com/imgextra/i3/828343458/TB23zDFX9tkpuFjy0FhXXXQzFXa_!!828343458.jpg') no-repeat center; background-size: cover;"
-              goods_id="6950171"
-              goods_name="秋冬打底裙夜店深V领系带性感套装低胸女气质长袖包臀连衣裙1898"
-              default_image="https://img.alicdn.com/bao/uploaded/i4/TB1TN9TNpXXXXcoaXXXXXXXXXXX_!!0-item_pic.jpg"
-              price="19.00"
-              store_id="89373"
-              store_name="乐锶 连衣裙"
-              mk_name="富丽-3F"
-              address="C3130"
-              business_scope="">
-            <div class="trendygood-title-container">
-              <h1 class="trendygood-title">秋冬打底裙夜店深V领系带性感套装低胸女气质长袖包臀连衣裙1898</h1>
-            </div>
-          </li>
-        </ul>
-      </div>
-      <div class="separator">
-        <h1> — 人气爆款 — </h1>
-      </div>
-      <div class="hotgoods-container">
-        <ul class="hotgoods-list">
-          <!--{foreach from=$goods_list item=good}-->
-          <li class="hotgood"
-              goods_id="{$good.goods_id}"
-              goods_name="{$good.goods_name}"
-              default_image="{$good.default_image}""
-              price="{$good.price}"
-              store_id="{$good.store_id}"
-              store_name="{$good.store_name}"
-              see_price="{$good.see_price}"
-              mk_name="{$good.mk_name}"
-              address="{$good.address}"
-              business_scope="{$good.business_scope}">
-            <image class="hotgood-image" src="{$good.default_image}"/>
-            <h2>{$good.goods_name}</h2>
-            <div class="price-container">
-              <h3 class="price">¥ {$good.price}</h3>
-              <h3 class="origin-price">¥ {$good.price}</h3>
-            </div>
-          </li>
-          <!--{/foreach}-->
-        </ul>
+            <!-- Navigation -->
+          </div>
+
+        </div>
+      </header>
+
+      <!--  middle -->
+      <div class="middle">
+
+        <!-- 分类 -->
+        <div class="middle-channel">
+          <ul>
+            <li class="channel category" cate_id="1623">
+              <i class="fuut-b"></i>
+              <p class="fonts">半身裙</p>
+            </li>
+            <li class="channel category" cate_id="50000671">
+              <i class="fuut-t"></i>
+              <p class="fonts">T恤</p>
+            </li>
+            <li class="channel category" cate_id="162205">
+              <i class="fuut-n"></i>
+              <p class="fonts">牛仔裤</p>
+            </li>
+            <li class="channel category" cate_id="3035">
+              <i class="fuut-x"></i>
+              <p class="fonts">休闲裤</p>
+            </li>
+            <li class="channel category" cate_id="50010402">
+              <i class="fuut-p"></i>
+              <p class="fonts">POLO衫</p>
+            </li>
+            <li class="channel category" cate_id="50012825">
+              <i class="fuut-g"></i>
+              <p class="fonts">高帮鞋</p>
+            </li>
+            <li class="channel category" cate_id="50012028">
+              <i class="fuut-z"></i>
+              <p class="fonts">靴子</p>
+            </li>
+            <li class="channel category" cate_id="50012027">
+              <i class="fuut-d"></i>
+              <p class="fonts">低帮鞋</p>
+            </li>
+            <li class="channel category" cate_id="50008881">
+              <i class="fuut-w"></i>
+              <p class="fonts">文胸</p>
+            </li>
+            <li class="channel category" cate_id="50026617">
+              <i class="fuut-j"></i>
+              <p class="fonts">配件</p>
+            </li>
+
+          </ul>
+        </div>
+
+        <!-- 推荐 -->
+        <div class="middle-selected">
+
+          <!-- 精选店铺 -->
+          <dl class="selected">
+            <dt class="selected-font">
+              <i></i>
+              <h3>精选店铺</h3>
+              <i></i>
+            </dt>
+            <dd class="shop"><a href="javascript:void(0)"><img src="{res file=mobile/images/tu1.png}" alt=""></a></dd>
+            <dd class="shop"><a href="javascript:void(0)"><img src="{res file=mobile/images/tu2.png}" alt=""></a></dd>
+            <dd class="shop"><a href="javascript:void(0)"><img src="{res file=mobile/images/tu3.png}" alt=""></a></dd>
+            <dd class="shop" store_id="7241" store_name="魅致佳丽" see_price="减半" mk_name="佰润-1F" address="A1030-A"
+                business_scope="女装上衣，连衣裙，T恤，毛衣，针织衫，牛仔衣，雪纺衫，休闲裤，打底裤，牛仔裤，哈伦裤等">
+              <a href="javascript:void(0)"><img src="{res file=mobile/images/tu4.png}" alt=""></a>
+            </dd>
+          </dl>
+
+          <!-- 热卖精品 -->
+          <dl class="sellers">
+            <dt class="selected-font">
+              <i></i>
+              <h3>热卖精品</h3>
+              <i></i>
+            </dt>
+            <dd><a href="javascript:void(0)"><img src="{res file=mobile/images/ad.png}" alt=""></a></dd>
+            <dd><a href="javascript:void(0)"><img src="{res file=mobile/images/ad1.png}" alt=""></a></dd>
+            <dd><a href="javascript:void(0)"><img src="{res file=mobile/images/ad2.png}" alt=""></a></dd>
+          </dl>
+
+          <!-- 人气爆款 -->
+          <dl class="explosion">
+            <dt class="selected-font">
+              <i></i>
+              <h3>人气爆款</h3>
+              <i></i>
+            </dt>
+
+            <!--{foreach from=$goods_list item=good}-->
+            <dd class="good"
+                goods_id="{$good.goods_id}"
+                goods_name="{$good.goods_name}"
+                default_image="{$good.default_image}"
+                price="{$good.price}"
+                store_id="{$good.store_id}"
+                store_name="{$good.store_name}"
+                see_price="{$good.see_price}"
+                mk_name="{$good.mk_name}"
+                address="{$good.address}"
+                business_scope="{$good.business_scope}">
+              <a href="javascript:void(0)">
+                <img src="{$good.default_image}" alt="">
+                <p class="fonto">{$good.goods_name}</p>
+                <p class="fontc">¥ {$good.price}</p>
+              </a>
+            </dd>
+            <!--{/foreach}-->
+          </dl>
+
+
+        </div>
+
       </div>
     </div>
+    <script type="text/javascript" src="{lib file=swiper/swiper.min.js}"></script>
+    <script>
+    var swiper = new Swiper('.swiper-container', {
+      autoplay: 1500,
+      pagination: '.swiper-pagination',
+      paginationClickable: false,
+      preloadImages: false,
+      lazyLoading: true,
+      loop: true,
+      speed:1000,
+      grabCursor : true,
+      parallax:true,
+      autoplayDisableOnInteraction : false
+    });
+    </script>
     <script>
     $(function () {
       if (typeof(WebViewBridge) === 'undefined' && typeof(postMessage) === 'undefined') {
         return;
       }
-      $('.container')
-        .on('click', '.hotgood, .trendygood', viewItem)
-        .on('click', '.ad, .banner-container', viewShop)
+      $('.overal')
+        .on('click', '.good', viewItem)
+        .on('click', '.shop', viewShop)
         .on('click', '.category', viewCategory);
 
       function viewItem() {
