@@ -11,9 +11,9 @@
       <!--  header -->
       <header class="header">
         <div class="header_search container-fluid">
-          <div class="search_left">
+          <div class="search_left search">
             <i class="img_s"><img src="{res file=mobile/images/search.png}" alt=""></i>
-            <input type="text" class="form-control" placeholder="全部商品">
+            <input type="text" class="form-control" placeholder="全部商品" disabled>
           </div>
           <span class="search_right">
             <img src="{res file=mobile/images/kefu.png}" alt="">
@@ -206,9 +206,14 @@
         return;
       }
       $('.overal')
+        .on('click', '.search', search)
         .on('click', '.good', viewItem)
         .on('click', '.shop', viewShop)
         .on('click', '.category', viewCategory);
+
+      function search() {
+        sendMessage('search');
+      }
 
       function viewItem() {
         const $good = $(this);
