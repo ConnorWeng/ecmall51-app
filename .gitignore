@@ -11,3 +11,4 @@ config.alipay.php
 /GPATH
 /GRTAGS
 /GTAGS
+/node_modules

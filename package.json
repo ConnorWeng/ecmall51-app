@@ -1,0 +1,27 @@
+{
+  "name": "ecmall51-app",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "directories": {
+    "test": "test"
+  },
+  "dependencies": {},
+  "devDependencies": {
+    "gulp": "^3.9.1",
+    "gulp-livereload": "^3.8.1"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ConnorWeng/ecmall51-app.git"
+  },
+  "author": "Connor Weng",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/ConnorWeng/ecmall51-app/issues"
+  },
+  "homepage": "https://github.com/ConnorWeng/ecmall51-app#readme"
+}
