@@ -25,9 +25,13 @@ class Mobile_shopApp extends Mobile_frontendApp {
         }
         $conditions .= $mk_id == 0 ? '' : " and (mk_id in (select mk_id from ecm_market where parent_id = {$mk_id}) or mk_id = {$mk_id})";
         $shop_mod =& m('storeopen');
-        $shop_list = $shop_mod->find(array(
+        $shop_list = $shop_mod->findAll(array(
             'fields' => 'mk_id, mk_name, store_id, floor, address, store_name, see_price, business_scope',
             'index_key' => false,
+            'include' => array(
+                'has_goods' => array(
+                    'fields' => 'g.goods_id, g.goods_name, g.default_image, g.price',
+                    'index_key' => false)),
             'conditions' => 'state = 1'.$conditions.' and '.behalf_open_stores_condition(),
             'order' => $order_by,
             'limit' => $page['limit']));
