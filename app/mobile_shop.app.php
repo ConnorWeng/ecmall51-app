@@ -37,6 +37,16 @@ class Mobile_shopApp extends Mobile_frontendApp {
             'limit' => $page['limit']));
         echo ecm_json_encode($shop_list);
     }
+
+    function markets() {
+        $market_mod =& m('market');
+        $market_list = $market_mod->find(array(
+            'fields' => 'mk_id, mk_name',
+            'conditions' => 'parent_id = 1',
+            'order' => 'sort_order',
+            'index_key' => false));
+        echo ecm_json_encode($market_list);
+    }
 }
 
 ?>
