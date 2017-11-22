@@ -285,8 +285,8 @@ class BehalfModel extends BaseModel
                     unset($behalfs[$key]);
                 }
 
-                // FIXME: 临时过滤，只留下“官方代发”，后续应该想办法和PC端做成通用的逻辑
-                if ($behalf['bh_id'] != '165663') {
+                // FIXME: 临时过滤，只留下“51代发”，后续应该想办法和PC端做成通用的逻辑
+                if ($behalf['bh_id'] != '175809') {
                     unset($behalfs[$key]);
                 }
             }
