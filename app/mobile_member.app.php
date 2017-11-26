@@ -28,8 +28,10 @@ class Mobile_memberApp extends Mobile_frontendApp {
                 'fields'        => 'member.user_id, user_name, reg_time, '.
                                    'last_login, last_ip, add_time, access_token'));
             $access_token = $this->_generate_access_token();
+            $secret_key = $this->_generate_secret_key();
             $data = array('user_id' => $user_id,
                           'access_token' => $access_token,
+                          'secret_key' => $secret_key,
                           'add_time' => $user_info['add_time'],
                           'last_update' => time());
             if (empty($user_info['add_time'])) {
@@ -55,7 +57,8 @@ class Mobile_memberApp extends Mobile_frontendApp {
                     'user_name' => $user_info['user_name'],
                     'profit' => $profit,
                     'profit0' => $profit0,
-                    'access_token' => $access_token));
+                    'access_token' => $access_token,
+                    'secret_key' => $secret_key));
             } else {
                 $this->_ajax_error(500, ADD_ACCESS_TOKEN_FAILED, 'failed to add access token');
             }
@@ -64,6 +67,10 @@ class Mobile_memberApp extends Mobile_frontendApp {
 
     function _generate_access_token() {
         return md5(uniqid()).md5(uniqid());
+    }
+
+    function _generate_secret_key() {
+        return uniqid();
     }
 
     function check() {
