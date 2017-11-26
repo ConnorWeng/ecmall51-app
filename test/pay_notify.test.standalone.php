@@ -95,8 +95,8 @@ class Pay_notifyTest extends TestCase {
                         'seller_id' => '12345',
                         'seller_name' => 'testuser',
                         'order_sn ' => '99999',
-                        'add_time' => gmtime(),
-                        'admin_time' => gmtime(),
+                        'add_time' => gmtime() - 8*60*60,
+                        'admin_time' => gmtime() - 8*60*60,
                         'leixing' => 30,
                         'money_zs' => '19.9',
                         'money' => '19.9',
@@ -114,7 +114,7 @@ class Pay_notifyTest extends TestCase {
                 withConsecutive(
                     ['user_id=12345', 'money = money -19.9'],
                     ['user_id=54321', 'money_dj = money_dj +19.9']);
-        $this->pay_notify->_payment('12345', 'testuser', '54321', 'testseller', '19.9', '88888', '99999', '支付宝');
+        $this->pay_notify->_payment('12345', '54321', '19.9', '88888', '99999', '支付宝');
     }
 }
 
