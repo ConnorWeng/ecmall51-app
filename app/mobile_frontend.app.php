@@ -7,9 +7,16 @@ class Mobile_frontendApp extends FrontendApp {
     }
 
     function _init_visitor() {
-        if (!empty($_REQUEST['access_token'])) {
+        $accessToken = null;
+        $headers = getallheaders();
+        if (!empty($headers['x-access-token'])) {
+            $accessToken = $headers['x-access-token'];
+        } else if (!empty($_REQUEST['access_token'])) {
+            $accessToken = $_REQUEST['access_token'];
+        }
+        if (!empty($accessToken)) {
             try {
-                $this->visitor = env('visitor', new MobileVisitor($_REQUEST['access_token']));
+                $this->visitor = env('visitor', new MobileVisitor($accessToken));
             } catch (Exception $e) {
                 $this->_ajax_error(400, ACCESS_TOKEN_ERROR, $e->getMessage());
                 exit;
