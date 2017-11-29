@@ -6,6 +6,31 @@ class Mobile_frontendApp extends FrontendApp {
         @header("Content-type: application/json");
     }
 
+    function _verify_sign($params, $secret_key, $current_timestamp) {
+        $signature = $params['signature'];
+        if ($signature) {
+            ksort($params);
+            $content = '';
+            foreach ($params as $key => $val) {
+                if ($key === 'app' || $key === 'act' || $key === 'signature') continue; // 不参与签名
+                $content .= $key . $val;
+            }
+            $actual = base64_encode(hash_hmac('sha256', $content, $secret_key, true));
+            if ($actual !== $signature) {
+                $this->_ajax_error(400, SIGNATURE_ERROR, '参数签名错误，请尝试重新登录');
+                exit;
+            }
+            $timestamp = intval($params['timestamp']);
+            if ($current_timestamp - $timestamp > 600000) { // 10分钟有效时间
+                $this->_ajax_error(400, SIGNATURE_ERROR, '请求超过有效期，请尝试重新登录');
+                exit;
+            }
+        } else {
+            $this->_ajax_error(400, SIGNATURE_ERROR, '缺少参数签名，请尝试重新登录');
+            exit;
+        }
+    }
+
     function _init_visitor() {
         $accessToken = null;
         $headers = getallheaders();
@@ -21,6 +46,7 @@ class Mobile_frontendApp extends FrontendApp {
                 $this->_ajax_error(400, ACCESS_TOKEN_ERROR, $e->getMessage());
                 exit;
             }
+            $this->_verify_sign($_REQUEST, $this->visitor->get('secret_key'), time() * 1000);
         } else {
             $this->_ajax_error(400, NOT_LOGIN, '请先登录');
             exit;
