@@ -76,43 +76,43 @@
         <!-- 分类 -->
         <div class="middle-channel">
           <ul>
-            <li class="channel category" cate_id="1623">
+            <li class="channel category" cate_id="1623" cate_name="半身裙">
               <i class="fuut-b"></i>
               <p class="fonts">半身裙</p>
             </li>
-            <li class="channel category" cate_id="50000671">
+            <li class="channel category" cate_id="50000671" cate_name="T恤">
               <i class="fuut-t"></i>
               <p class="fonts">T恤</p>
             </li>
-            <li class="channel category" cate_id="162205">
+            <li class="channel category" cate_id="162205" cate_name="牛仔裤">
               <i class="fuut-n"></i>
               <p class="fonts">牛仔裤</p>
             </li>
-            <li class="channel category" cate_id="3035">
+            <li class="channel category" cate_id="3035" cate_name="休闲裤">
               <i class="fuut-x"></i>
               <p class="fonts">休闲裤</p>
             </li>
-            <li class="channel category" cate_id="50010402">
+            <li class="channel category" cate_id="50010402" cate_name="POLO衫">
               <i class="fuut-p"></i>
               <p class="fonts">POLO衫</p>
             </li>
-            <li class="channel category" cate_id="50012825">
+            <li class="channel category" cate_id="50012825" cate_name="高帮鞋">
               <i class="fuut-g"></i>
               <p class="fonts">高帮鞋</p>
             </li>
-            <li class="channel category" cate_id="50012028">
+            <li class="channel category" cate_id="50012028" cate_name="靴子">
               <i class="fuut-z"></i>
               <p class="fonts">靴子</p>
             </li>
-            <li class="channel category" cate_id="50012027">
+            <li class="channel category" cate_id="50012027" cate_name="低帮鞋">
               <i class="fuut-d"></i>
               <p class="fonts">低帮鞋</p>
             </li>
-            <li class="channel category" cate_id="50008881">
+            <li class="channel category" cate_id="50008881" cate_name="文胸">
               <i class="fuut-w"></i>
               <p class="fonts">文胸</p>
             </li>
-            <li class="channel category" cate_id="50026617">
+            <li class="channel category" cate_id="50026617" cate_name="配件">
               <i class="fuut-j"></i>
               <p class="fonts">配件</p>
             </li>
@@ -269,6 +269,7 @@
         const $category = $(this);
         const category = {
           cate_id: $category.attr('cate_id'),
+          cate_name: $category.attr('cate_name'),
         };
         sendMessage('viewCategory', category);
       }
