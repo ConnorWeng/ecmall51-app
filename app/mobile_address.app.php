@@ -73,7 +73,6 @@ class Mobile_addressApp extends Mobile_frontendApp {
             $region_name .= $region['region_name'].' ';
         }
         if(!preg_match('/^1[34578][0-9]{9}$/',$data['phone_mob'])) {
-            var_dump($data['phone_mob']);
             $this->_ajax_error(400, PHONE_ILLEAGE, '手机号无效');
             return;
         }
