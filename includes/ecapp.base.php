@@ -522,6 +522,53 @@ EOT;
         return $html;
     }
 
+     //返回user_id token
+    protected function  getNoreply(){
+        $username = 'noreply';
+        $password = 'SJloCA3WCtf9His0B18TsRtFI0E=';
+     //  $password = '123456';
+        $ms =& ms();
+        $user_id = $ms->user->auth($username, $password);
+log::write("noreply user_id:{$user_id}" , log::INFO);
+
+        if (!$user_id)
+        {
+            /* 未通过验证，提示错误信息 */
+          //  $data['msg'] = $ms->user->get_error();
+
+            return false;
+        }
+        else
+        {
+            $member_model = & m('membertoken');
+            $token_info = $member_model->find(array(
+                'conditions' => 'user_id='.$user_id,
+            ));
+            $token_info = reset($token_info);
+
+            if($token_info['expires_in'] > time()){
+                 $data['token'] = $token_info['token'];
+                return $data;
+            }
+            $data = array(
+                'user_id' => $user_id,
+                'expires_in' => time() +  30 * 3600 * 24,
+            );
+
+
+            $data['token' ] = md5(implode('&',$data));
+            if(empty($token_info)){
+
+                $member_model->add( $data);
+            }else{
+                $member_model->edit('id='.$token_info['id'],$data);
+            }
+            
+            return $data;
+        }
+
+    }
+
     /**
      *    获取真实的资源路径
      *

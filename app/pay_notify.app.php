@@ -111,6 +111,12 @@ class Pay_notifyApp extends Mobile_frontendApp {
                 //  commit
                 db()->query('COMMIT');
 
+                //zjh 2017/12/13
+                $noreply_info = $this->getNoreply();
+                //滴滴代发订单推送
+                $didi_data = array('uri'=>'pushorder','bh_id'=>$seller_id,'order_id'=>$order_id);
+                didiOrder($noreply_info['token'],$didi_data);
+
                 Log::write("accept {$pay_type} notify, order_sn:{$order_sn} paid",
                            Log::INFO);
             } else {
@@ -128,6 +134,19 @@ class Pay_notifyApp extends Mobile_frontendApp {
                        "trade_status:{$trade_status}");
             echo('fail to verify notify params');
         }
+    }
+
+    function test()
+    {
+        $seller_id = 167256;
+        $order_id = 11;
+        //zjh 2017/12/13
+        $noreply_info = $this->getNoreply();
+
+        //滴滴代发订单推送
+        $didi_data = array('uri'=>'pushorder','bh_id'=>$seller_id,'order_id'=>$order_id);
+        $result = didiOrder($noreply_info['token'],$didi_data);
+        echo $result;
     }
 
     function _top_up($user_id, $user_name, $trade_no, $total_amount, $gmt_payment, $pay_type) {

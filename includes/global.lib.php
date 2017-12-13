@@ -930,5 +930,68 @@ function GetPinyin($str, $ishead=0, $isclose=1)
         }
     }
 
+    // 滴滴对接
+    function didiOrder($token,$data)
+    {
+        //根据服务器的不同，分流对接的域名
+        if(stripos($_SERVER['HTTP_HOST'], "app.com:84") !== false){  // 本地测试
+            
+            $url = "http://api.com:82/api/queue/didi/";
+
+        }else if(stripos($_SERVER['HTTP_HOST'], "51zwd.com") !== false){  // 正式服务器
+
+            $url = "http://121.199.182.35:30005/api/queue/didi/";
+
+        }else{  //其他
+
+            $url = "http://121.199.182.35:30005/api/queue/didi/";
+        }
+
+        $params = $data;
+        $params['token'] = $token;
+        $params['url'] = $url.$data['uri'];
+        unset($params['uri']);
+
+        $result = curl_post($params) ;
+
+        return $result;
+    }
+
+    function curl_post( $params ,$post = 1 ){
+
+
+        $secret = 'nahuo_api_secret';
+        $data = $params;
+        $url = $data['url'];
+        $data = array_merge($data,array('timestamp'=>time(),'apiVersion'=>'queue'));
+        $data =array_filter($data);
+        ksort($data);
+        unset($data['url']);
+        $post_data = http_build_query($data);
+
+        $headers = array('timestamp:'.time(),'signature:'.md5($post_data.'&secret='.$secret),'token:'.$data['token']);
+    //print_r($post_data);exit;
+
+
+        //    print_r(md5('apiVersion=queue&timestamp=1496897600&secret=nahuo_api_secret'));
+        //   print_r(md5(urlencode($post_data.'&secret='.$secret)));
+        $ch = curl_init();
+        $res = curl_setopt($ch , CURLOPT_URL , $url);
+        curl_setopt( $ch, CURLOPT_SSL_VERIFYHOST, FALSE );
+        curl_setopt( $ch, CURLOPT_SSL_VERIFYPEER, FALSE );
+        curl_setopt( $ch, CURLOPT_HEADER, 0 );
+        curl_setopt( $ch, CURLOPT_POST, $post );
+        if ( $post ) {
+            curl_setopt( $ch, CURLOPT_POSTFIELDS, $post_data );
+
+        }
+        curl_setopt( $ch, CURLOPT_RETURNTRANSFER, 1 );
+        curl_setopt( $ch, CURLOPT_HTTPHEADER, $headers );
+        $result = curl_exec( $ch );
+        //连接失败
+        curl_close( $ch );
+        return $result;
+    }
+
     include_once ROOT_PATH.'/includes/customize/common.lib.php';
 ?>
