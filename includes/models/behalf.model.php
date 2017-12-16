@@ -286,14 +286,40 @@ class BehalfModel extends BaseModel
                 }
 
                 // FIXME: 临时过滤，只留下“51代发”，后续应该想办法和PC端做成通用的逻辑
+                /*
                 if ($behalf['bh_id'] != '175809') {
                     unset($behalfs[$key]);
                 }
+                */
             }
+            // FIXME: 临时处理，与 PC 端复杂逻辑不一致
+            $this->calculate_delivery_fee($behalfs);
+
             //随机排列代发
             shuffle($behalfs);
         }
         return $behalfs;
+    }
+
+    // 应该从 shipping area 表中读取配置，根据用户指定的快递公司和寄送区域计算费用，现在简单处理，先写死
+    function calculate_delivery_fee($behalfs) {
+        $delivery_config = array(
+            '26' => array(5.5, 5),
+            '28' => array(23, 23),
+            '46' => array(5.5, 2),
+            '48' => array(5.5, 4),
+            '57' => array(6.5, 2),
+            '61' => array(10, 5));
+        foreach ($behalfs as $behalf_index => $behalf) {
+            foreach ($behalfs[$behalf_index]['deliveries'] as $delivery_id => $delivery) {
+                $behalfs[$behalf_index]['deliveries'][$delivery_id]['first_price'] = 5.5;
+                $behalfs[$behalf_index]['deliveries'][$delivery_id]['step_price'] = 2.5;
+                if ($delivery_config[$delivery['dl_id']]) {
+                    $behalfs[$behalf_index]['deliveries'][$delivery_id]['first_price'] = $delivery_config[$delivery['dl_id']][0];
+                    $behalfs[$behalf_index]['deliveries'][$delivery_id]['step_price'] = $delivery_config[$delivery['dl_id']][1];
+                }
+            }
+        }
     }
 
     /**

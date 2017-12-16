@@ -495,6 +495,8 @@ class Mobile_orderApp extends Mobile_frontendApp {
         $goods_info = array(
             'items'     =>  array(),    //商品列表
             'quantity'  =>  0,          //商品总量
+            'first_weight' => 1,        //首重，暂时写死1公斤
+            'weight'    =>  0,          //商品总重
             'amount'    =>  0,          //商品总价
             'store_id'  =>  0,          //所属店铺
             'store_name'=>  '',         //店铺名称
@@ -511,6 +513,7 @@ class Mobile_orderApp extends Mobile_frontendApp {
                 }
             }
             $goods_info['quantity'] = intval($goods_info['quantity']) + $value['quantity'];
+            $goods_info['weight'] = $goods_info['weight'] + intval($value['quantity']) * 0.5; // FIXME: 不能写死每件衣服重0.5公斤
             $goods_info['amount'] = floatval($goods_info['amount']) + $value['amount'];//2015-06-05 by tanaiquan,intval($goods_info['amount'])变为floatval($goods_info['amount'])
             $goods_info['store_name'] = $goods_info['store_name']." ".$value['store_name'];
             $goods_info['type'] = $value['type'];
