@@ -338,7 +338,11 @@ class BehalfModel extends BaseModel
         $weight = $goods_quantity * 0.5;
         $first_weight = 1;
 
-        return floatval((($first_weight * $first_price + ($weight - $first_weight) * $step_price) / 100.0));
+        if ($weight > $first_weight) {
+            return floatval((($first_weight * $first_price + ceil($weight - $first_weight) * $step_price) / 100.0));
+        } else {
+            return floatval(($first_weight * $first_price) / 100.0);
+        }
     }
 
     /**
