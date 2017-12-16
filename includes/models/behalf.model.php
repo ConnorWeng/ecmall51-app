@@ -286,14 +286,12 @@ class BehalfModel extends BaseModel
                 }
 
                 // FIXME: 临时过滤，只留下“51代发”，后续应该想办法和PC端做成通用的逻辑
-                /*
                 if ($behalf['bh_id'] != '175809') {
                     unset($behalfs[$key]);
                 }
-                */
             }
             // FIXME: 临时处理，与 PC 端复杂逻辑不一致
-            $this->calculate_delivery_fee($behalfs);
+            $behalfs = $this->calculate_delivery_fee($behalfs);
 
             //随机排列代发
             shuffle($behalfs);
@@ -320,6 +318,7 @@ class BehalfModel extends BaseModel
                 }
             }
         }
+        return $behalfs;
     }
 
     /**
