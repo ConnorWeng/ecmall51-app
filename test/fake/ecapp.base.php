@@ -21,6 +21,12 @@ define('ORDER_CANCELED', 0);     // 交易已取消
 
 class ECBaseApp {
     function __construct() {}
+
+    function getNoreply() {
+        return array(
+            'user_id' => '1',
+            'token' => 'faketoken');
+    }
 }
 
 ?>

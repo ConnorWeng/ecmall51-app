@@ -16,4 +16,9 @@ function &cache_server() {
     return $a;
 }
 
+function didiOrder($token,$data) {
+    return '';
+}
+
+
 ?>

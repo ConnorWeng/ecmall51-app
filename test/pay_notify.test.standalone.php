@@ -10,6 +10,7 @@ require_once(ROOT_PATH.'/test/fake/paylog.model.php');
 require_once(ROOT_PATH.'/test/fake/my_money.model.php');
 require_once(ROOT_PATH.'/test/fake/my_moneylog.model.php');
 require_once(ROOT_PATH.'/test/fake/ecmall.php');
+require_once(ROOT_PATH.'/test/fake/global.lib.php');
 require_once(ROOT_PATH.'/includes/libraries/time.lib.php');
 
 require_once(ROOT_PATH.'/app/pay_notify.app.php');
