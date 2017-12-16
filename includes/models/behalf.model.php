@@ -321,6 +321,26 @@ class BehalfModel extends BaseModel
         return $behalfs;
     }
 
+    function calculate_shipping_fee($bh_id, $dl_id, $goods_quantity) {
+        $delivery_config = array(
+            '26' => array(5.5, 5),
+            '28' => array(23, 23),
+            '46' => array(5.5, 2),
+            '48' => array(5.5, 4),
+            '57' => array(6.5, 2),
+            '61' => array(10, 5));
+        $first_price = intval(5.5 * 100);
+        $step_price = intval(2.5 * 100);
+        if ($delivery_config[$dl_id]) {
+            $first_price = intval($delivery_config[$dl_id][0] * 100);
+            $step_price = intval($delivery_config[$dl_id][1] * 100);
+        }
+        $weight = $goods_quantity * 0.5;
+        $first_weight = 1;
+
+        return floatval((($first_weight * $first_price + ($weight - $first_weight) * $step_price) / 100.0));
+    }
+
     /**
      * 判断商品是否在代发的拿货范围
      * @param 代发id    $bh_id

@@ -418,7 +418,7 @@ class BaseOrder extends Object
                 $this->_error('hack attemp;');
                 return false;
             }
-            $shipping_fee = $behalf_mod->calculate_behalf_delivery_fee($consignee_info['behalf'],$consignee_info['delivery'],$goods_info['quantity']);
+            $shipping_fee = $behalf_mod->calculate_shipping_fee($consignee_info['behalf'],$consignee_info['delivery'],$goods_info['quantity']);
         }
         else
         {
