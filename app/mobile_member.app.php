@@ -104,9 +104,11 @@ class Mobile_memberApp extends Mobile_frontendApp {
         $result = $auth_mod->edit($auth_info['user_id'], array(
             'avatar_url' => $avatar_url,
             'confusing_nick' => $nick,
-            'confusing_id' => $id));
+            'confusing_id' => $id,
+            'authorization_code' => 'trival'));
         if (!$result) {
             $this->_ajax_error(500, DB_ERROR, '更新登录信息失败');
+            return ;
         }
 
         $ms =& ms();
