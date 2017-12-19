@@ -105,7 +105,7 @@ class Mobile_memberApp extends Mobile_frontendApp {
             'avatar_url' => $avatar_url,
             'confusing_nick' => $nick,
             'confusing_id' => $id,
-            'authorization_code' => 'trival'));
+            'authorization_code' => uniqid()));
         if (!$result) {
             $this->_ajax_error(500, DB_ERROR, '更新登录信息失败');
             return ;
