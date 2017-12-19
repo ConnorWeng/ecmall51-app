@@ -79,22 +79,20 @@ class Mobile_memberApp extends Mobile_frontendApp {
             $id = $this->_make_sure_string('id', 255, '');
             $nick = $this->_make_sure_string('nick', 255, '');
             $avatar_url = $this->_make_sure_string('avatar_url', 255, '');
-            $authorization_code = $this->_make_sure_string('authorization_code', 255, '');
             if (empty($taobao_username) ||
                 empty($id) ||
                 empty($nick) ||
-                empty($avatar_url) ||
-                empty($authorization_code)) {
+                empty($avatar_url)) {
                 $this->_ajax_error(400, PARAMS_ERROR, '参数错误');
                 return ;
             }
-            $this->_check($taobao_username, $id, $nick, $avatar_url, $authorization_code);
+            $this->_check($taobao_username, $id, $nick, $avatar_url);
         } else {
             $this->_ajax_error(400, NOT_POST_ACTION, 'not a post action');
         }
     }
 
-    function _check($taobao_username, $id, $nick, $avatar_url, $authorization_code) {
+    function _check($taobao_username, $id, $nick, $avatar_url) {
         $auth_mod =& m('memberauth');
         $auth_info = $auth_mod->get(array(
             'conditions' => "state = 1 and vendor = 0 and vendor_user_nick = '{$taobao_username}'"));
@@ -106,8 +104,7 @@ class Mobile_memberApp extends Mobile_frontendApp {
         $result = $auth_mod->edit($auth_info['user_id'], array(
             'avatar_url' => $avatar_url,
             'confusing_nick' => $nick,
-            'confusing_id' => $id,
-            'authorization_code' => $authorization_code));
+            'confusing_id' => $id));
         if (!$result) {
             $this->_ajax_error(500, DB_ERROR, '更新登录信息失败');
         }
