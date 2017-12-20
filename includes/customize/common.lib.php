@@ -65,6 +65,7 @@ function exist_invoiceno($invoice_no)
  */
 function belong_behalfarea($store_id)
 {
+    /*
     $cache_server = & cache_server();
     $indexkey = 'store_belong_behalfarea_realityzone_brandarea_';
     $data = $cache_server->get($indexkey);
@@ -95,6 +96,8 @@ function belong_behalfarea($store_id)
     }
 
     return in_array($store_id, $stores);
+    */
+    return false; //所有商品都收取代发费
 }
 
 /**每年开年都会面临档口调整，代发无法拿货的问题。
